@@ -1,0 +1,21 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% tailwind_css %}
+    <link rel="stylesheet" href="https://unpkg.com/modern-css-reset/dist/reset.min.css" />
+    <link rel="stylesheet" href="{% static 'core/css/base.css' %}" />
+    <link rel="icon" type="image/png" href="{% static 'core/favicon.png' %}" />
+    <script defer type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script defer nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    {% block head %}{% endblock %}
+  </head>
+  <body>
+    <nav>
+      <img src="{% static 'core/favicon.png' %}"/>
+    </nav>
+    {% block content %}{% endblock %}
+  </body>
+</html>

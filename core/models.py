@@ -66,6 +66,7 @@ class User(AbstractUser):
         max_length=100,
         help_text=_("Obrigatório. 100 ou menos. Apenas letras e ponto"),
         validators=[name_validator],
+        unique=True
     )
 
     phone = CharField(max_length=11)
@@ -77,7 +78,7 @@ class User(AbstractUser):
         choices=UserTypes.choices, default=UserTypes.STUDENT, max_length=1
     )
     date_joined = DateField("Ano de ingresso na instituição", auto_now=True)
-    classes = ForeignKey("Course", PROTECT, related_name="+", null=True, default=None) # RENAMEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+    course = ForeignKey("Course", PROTECT, related_name="students", null=True, default=None)
     relatives = ManyToManyField("self")
 
     USERNAME_FIELD = "name"
@@ -92,9 +93,10 @@ class User(AbstractUser):
         return {"name": self.name, "email": self.email, "id": self.pk}
 
     class Meta:
+        abstract = False
         verbose_name = _("usuário")
         verbose_name_plural = _("usuários")
-        swappable = "AUTH_USER_MODEL"
+        # swappable = "AUTH_USER_MODEL"
 
 
 class Subject(Model):

@@ -16,3 +16,4 @@ Set the `DB_ENGINE` evironment variable as `mysql` or `sqlite3`. Though, if you'
 - `__str__()` methods on models.
 - `ordering` property on methods
 - Add `Class` date and order
+- Download or import fonts
