@@ -15,6 +15,10 @@ def index(request: HttpRequest):
         return render(request, "core/index.html")
 
 
+def login(request: HttpRequest):
+    return render(request, "core/login.html")
+
+
 @csrf_exempt  # add auth (not everyone shold be able to see EVERYONE)
 @require_POST
 def create_user(request: HttpRequest):
