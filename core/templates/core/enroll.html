@@ -1,0 +1,42 @@
+{% extends 'core/base.html' %} {% load static %} {% block content %}
+<main class="p-5 flex-1">
+  <h1 class="text-3xl font-sans font-bold from-sky-800 mb-3">Matrícula</h1>
+  <form action="sla" method="get" class="flex items-stretch gap-2">
+    <div class="field">
+      <label for="txtUsername">Nome:</label>
+      <input type="text" name="username" id="txtUsername" maxlength="150" />
+    </div>
+    <div class="field">
+      <label for="slGender">Gênero</label>
+      <input type="text" name="gender" id="slGender" />
+    </div>
+    <div
+      class="flex gap-3 relative"
+      x-data="{ input: '', clear() { this.input = '' } }"
+    >
+      <label for="slField" class="text-xl font-medium">Procurar por:</label>
+      <select name="query_field" id="slField">
+        <option value="name" selected>Nome</option>
+        <option value="email">Email ETEC</option>
+        <option value="email">Email pessoal</option>
+        <option value="parent">Nome do Pai/Mãe</option>
+        <option value="class">Classe</option>
+        <option value="grade">Série</option>
+        <option value="rm">RM</option>
+        <option value="custom">Customizado</option>
+      </select>
+    </div>
+  </form>
+
+  <table class="border-2 border-stone-700 p-3 mt-4 w-full">
+    <thead>
+      <tr>
+        <!-- List properties of students -->
+      </tr>
+    </thead>
+    <tr>
+      <td class="p-2">Faça uma pesquisa</td>
+    </tr>
+  </table>
+</main>
+{% endblock content %}

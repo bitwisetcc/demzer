@@ -15,7 +15,7 @@ from django.db.models.fields import (
     SlugField,
 )
 from django.contrib.auth.models import AbstractUser
-from django.forms import IntegerField
+from django.forms import BooleanField, IntegerField
 from django.utils.translation import gettext_lazy as _
 from django.utils.deconstruct import deconstructible
 from django.core.validators import RegexValidator
@@ -31,22 +31,6 @@ class NameValidator(RegexValidator):
 class User(AbstractUser):
     """
     The main character of the system. Can be a student, a parent, a teacher or an employee.
-
-    ```json
-    {
-        "pk": 31663,
-        "name": "John Doe",
-        "email": "john.doe@email.com",
-        "password": "s3kureP@$worT1972",
-        "phone": "11987654321",
-        "gender": "M",
-        "birthdate": "2005-08-31",
-        "user_type": 0,
-        "date_joined": "2021-02-02",
-        "classes": 212,
-        "relatives": ["..."]
-    }
-    ```
     """
 
     class GenderTypes(TextChoices):
@@ -62,35 +46,34 @@ class User(AbstractUser):
 
     name_validator = NameValidator()
 
-    name = CharField(
+    email = EmailField(_("Endereço de email"), unique=True)
+    username = CharField(
         max_length=100,
         help_text=_("Obrigatório. 100 ou menos. Apenas letras e ponto"),
         validators=[name_validator],
         unique=True
     )
 
+    rg = CharField(max_length=9, null=True)
+    cpf = CharField(max_length=11, null=True) # validate
     phone = CharField(max_length=11)
-    gender = CharField(blank=True, choices=GenderTypes.choices, max_length=2)
-    email = EmailField(_("Endereço de email"), blank=True, unique=True)
-    birthdate = DateField()
+    gender = CharField(null=True, choices=GenderTypes.choices, max_length=2)
+    birthdate = DateField(blank=True)
+    afro = BooleanField()
+    # naturalidade = 
 
-    user_type = SlugField(
-        choices=UserTypes.choices, default=UserTypes.STUDENT, max_length=1
-    )
-    date_joined = DateField("Ano de ingresso na instituição", auto_now=True)
     course = ForeignKey("Course", PROTECT, related_name="students", null=True, default=None)
     relatives = ManyToManyField("self")
-
-    USERNAME_FIELD = "name"
+    user_type = SlugField(choices=UserTypes.choices, default=UserTypes.STUDENT, max_length=1)
 
     def get_full_name(self):
-        return self.name.strip()
+        return self.username.strip()
 
     def get_short_name(self):
-        return self.name.split()[0]
+        return self.username.split()[0]
 
     def serialize_json(self):
-        return {"name": self.name, "email": self.email, "id": self.pk}
+        return {"username": self.username, "email": self.email, "id": self.pk}
 
     class Meta:
         abstract = False

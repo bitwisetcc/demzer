@@ -12,11 +12,15 @@ def index(request: HttpRequest):
     if request.user.is_authenticated:
         return render(request, "core/home.html") # Not implemented yet
     else:    
-        return render(request, "core/index.html")
+        return render(request, "core/home.html")
 
 
 def login(request: HttpRequest):
     return render(request, "core/login.html")
+
+
+def enroll(request: HttpRequest):
+    return render(request, "core/enroll.html")
 
 
 @csrf_exempt  # add auth (not everyone shold be able to see EVERYONE)
