@@ -23,3 +23,5 @@ Set the `DB_ENGINE` evironment variable as `mysql` or `sqlite3`. Though, if you'
 - Add auto reload on dvelopment mode
 - Create a docker image
 - Add prettier and editorconfig files
+- On enrollment, configure default birthday and city on `settungs.py`
+- Be able to fill in residence from CEP

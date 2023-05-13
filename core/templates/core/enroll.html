@@ -1,57 +1,9 @@
-{% extends 'core/base.html' %} {% load static %} {% block head %}
-<script>
-  function validateCPF(cpf) {
-    let remainder = 0;
-    let sum = 0;
-    const reset = () => (remainder *= !(remainder == 10 || remainder == 11));
-
-    if (cpf == "00000000000" || cpf.length != 11) return false;
-
-    for (let i = 1; i <= 9; i++)
-      sum += parseInt(cpf.substring(i - 1, i)) * (11 - i);
-    remainder = (sum * 10) % 11;
-
-    if (remainder == 10 || remainder == 11) remainder = 0;
-    if (remainder != parseInt(cpf.substring(9, 10))) return false;
-
-    sum = 0;
-
-    for (let i = 1; i <= 10; i++)
-      sum += parseInt(cpf.substring(i - 1, i)) * (12 - i);
-    remainder = (sum * 10) % 11;
-
-    if (remainder == 10 || remainder == 11) remainder = 0;
-
-    return remainder == parseInt(cpf.substring(10, 11));
-  }
-
-  document.addEventListener("alpine:init", () => {
-    Alpine.data("fields", () => ({
-      name: "",
-      cpf: "",
-      rg: "",
-      dismiss: true,
-      errors: [],
-      submit(e) {
-        const requirements = [
-          {
-            test: /^[a-zA-Z]+$/.test(this.name),
-            error: "Nome deve conter apenas letras",
-          },
-          { test: validateCPF(this.cpf), error: "CPF inválido" },
-        ];
-
-        for (const req of requirements) {
-          if (req.test) {
-            e.preventDefault();
-            this.errors.push(req.error);
-          }
-        }
-      },
-    }));
-  });
-</script>
-{% endblock %} {% block content %}
+{% extends 'core/base.html' %}
+{% load static %}
+{% block head %}
+<script defer src="{% static 'core/js/enroll.js' %}"></script>
+{% endblock %}
+{% block content %}
 <main class="p-5 flex-1">
   <h1 class="text-3xl font-sans font-bold mb-3">Matrícula</h1>
   <hr>
@@ -70,6 +22,7 @@
         name="username"
         id="txt-username"
         maxlength="150"
+        size="30"
         required
         x-model="name"
       />
@@ -78,7 +31,7 @@
       <label for="dt-nasc">Nascimento:</label>
       <input type="date" name="nasc" id="dt-nasc" value="2006-01-01" required />
     </div>
-    <div class="field flex items-center">
+    <div class="field">
       <label for="gender-box">Gênero:</label>
       <span id="gender-box" class="flex items-center">
         <input type="radio" name="gender" id="rd-masc" required checked />
@@ -91,13 +44,11 @@
     </div>
     <div class="field">
       <label for="txt-cpf">CPF:</label>
-      <input type="number" name="cpf" id="txt-cpf" required x-model="cpf" />
-    </div>
-    <div class="field">
+      <input type="number" name="cpf" id="txt-cpf" required x-model="cpf" size="11" />
       <label for="txt-rg">RG:</label>
-      <input type="number" name="rg" id="txt-rg" required x-model="rg" />
+      <input type="number" name="rg" id="txt-rg" required x-model="rg" size="9" />
     </div>
-    <div class="field flex items-center" x-data="{ check: false }">
+    <div class="field" x-data="{ check: false }">
       <label for="cb-afro">Afrodescendente:</label>
       <input type="checkbox" name="afro" id="cb-afro" x-model="check" />
       <span class="ml-1" x-text="check ? 'Sim' : 'Não'"></span>
@@ -111,7 +62,7 @@
         <option value="M">Ensino Médio</option>
       </select>
     </div>
-    <div class="field flex items-center">
+    <div class="field">
       <label for="nat-box">Naturalidade:</label>
       <span id="civil-box" class="flex items-center gap-1 ml-1">
         <input type="text" name="city" id="txt-city" required />
@@ -129,11 +80,11 @@
     </div>
     <div class="field">
       <label for="txt-nation">Nacionalidade:</label>
-      <input type="text" name="nation" id="txt-nation" value="Brasil"/>
+      <input type="text" name="nation" id="txt-nation" value="Brasil" required/>
     </div>
     <div class="field">
       <label for="txt-origin">País de origem:</label>
-      <input type="text" name="origin" id="txt-origin" value="Brasil" />
+      <input type="text" name="origin" id="txt-origin" value="Brasil" required />
     </div>
     <div class="field flex items-center">
       <label for="civil-box">Estado civíl:</label>
@@ -148,9 +99,57 @@
         <label for="rd-widow">Viúvo</label>
       </span>
     </div>
+
     <hr>
 
-    <input type="submit" class="bg-sky-800" value="Enviar" />
+    <h2 class="text-2xl font-sans font-semibold">Filiação</h2>
+    <div class="field">
+      <label for="txt-mom">Nome da mãe:</label>
+      <input type="text" name="mom" id="txt-mom" size="30" required>
+      <label for="tel-mom" class="ml-1">Telefone:</label>
+      <input type="tel" name="tel-mom" id="tel-mom" size="11" x-mask="(99)99999-9999" required>
+    </div>
+    <div class="field">
+      <label for="txt-mom">Nome do pai:</label>
+      <input type="text" name="mom" id="txt-mom" size="30">
+      <label for="tel-mom" class="ml-1">Telefone:</label>
+      <input type="tel" name="tel-mom" id="tel-mom" size="11" x-mask="(99)99999-9999">
+    </div>
+
+    <hr>
+
+    <h2 class="text-2xl font-sans font-semibold">Contato</h2>
+    <div class="field">
+      <label for="txt-email">Email:</label>
+      <input type="email" name="email" id="txt-email" size="28" required>
+      <label for="txt-cel">Celular:</label>
+      <input type="tel" name="cel" id="txt-cel" x-mask="(99)99999-9999" size="10" required>
+    </div>
+    <div class="field">
+      <label for="txt-cep">CEP:</label>
+      <input type="number" name="cep" id="txt-cep" maxlength="9" max="999999999" size="9" required>
+      <button class="bg-sky-600 dark:bg-sky-700 py-2 px-3 rounded">Fill in</button>
+    </div>
+    <div class="field">
+      <label for="txt-city">Cidade:</label>
+      <input type="text" name="city" id="txt-city">
+      <label for="txt-neighborhood">Bairro:</label>
+      <input type="text" name="neighborhood" id="txt-txt-neighborhood">
+    </div>
+    <div class="field">
+      <label for="txt-street">Rua:</label>
+      <input type="text" name="street" id="txt-street">
+      <label for="txt-street-number">Número:</label>
+      <input type="number" name="street-number" id="txt-street-number" size="4">
+    </div>
+    <div class="field">
+      <label for="txt-comp">Complemento:</label>
+      <input type="text" name="complement" id="txt-comp" size="10">
+      <label for="txt-distance">Distância:</label>
+      <input type="number" name="distance" id="txt-distance" size="3">
+    </div>
+
+    <input type="submit" class="bg-sky-600 dark:bg-sky-700" value="Enviar" />
   </form>
 </main>
 {% endblock %}

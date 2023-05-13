@@ -11,10 +11,6 @@
 }
 
 @layer base {
-  nav box-icon {
-    @apply w-auto px-8 hover:bg-sky-800;
-  }
-
   [type='text'],
   [type='email'],
   [type='url'],
@@ -31,14 +27,23 @@
   textarea,
   select {
     @apply shadow-sm rounded-md transition-all border
-    focus-visible:outline-none focus:border-cyan-500 hover:border-cyan-500;
+    focus-visible:outline-none focus:border-sky-500 hover:border-sky-500
+    dark:bg-slate-700;
   }
 
   [type='checkbox'], [type='radio'] {
     @apply ml-2 mr-1;
   }
+}
 
-  hr {
-    @apply my-3
-  }
+hr {
+  @apply my-3 dark:border-slate-500;
+}
+
+nav box-icon {
+  @apply w-auto px-8 hover:bg-sky-800;
+}
+
+.field {
+  @apply flex items-center gap-2;
 }
