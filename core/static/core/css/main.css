@@ -4,12 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --blueeslamaisclaro: #0f637c;
-  --sidebar-color: #003e63;
-  --hover-color: #002c49;
-}
-
 @layer base {
   [type='text'],
   [type='email'],
@@ -31,7 +25,7 @@
     dark:bg-slate-700;
   }
 
-  [type='checkbox'], [type='radio'] {
+  [type='radio'] {
     @apply ml-2 mr-1;
   }
 }

@@ -24,6 +24,10 @@ https://docs.djangoproject.com/en/4.1/topics/i18n
 from os import environ
 from pathlib import Path
 
+DEFAULT_NATURALITY_STATE = "SP"
+DEFAULT_NATURALITY_CITY = "São Caetano do Sul"
+DEFAULT_STUDENT_BIRTHDATE = "2006-01-01"
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!

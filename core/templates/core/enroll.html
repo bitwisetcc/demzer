@@ -14,6 +14,7 @@
     @submit.prevent="submit"
     x-data="fields"
   >
+    {% csrf_token %}
     <h2 class="text-2xl font-sans font-semibold">Identidade</h2>
     <div class="field">
       <label for="txt-username">Nome:</label>
@@ -29,7 +30,7 @@
     </div>
     <div class="field">
       <label for="dt-nasc">Nascimento:</label>
-      <input type="date" name="nasc" id="dt-nasc" value="2006-01-01" required />
+      <input type="date" name="nasc" id="dt-nasc" value="{{ birthdate }}" required />
     </div>
     <div class="field">
       <label for="gender-box">Gênero:</label>
@@ -65,14 +66,14 @@
     <div class="field">
       <label for="nat-box">Naturalidade:</label>
       <span id="civil-box" class="flex items-center gap-1 ml-1">
-        <input type="text" name="city" id="txt-city" required />
+        <input type="text" name="city" id="txt-city" value="{{ city }}" required />
         <select name="state" id="sl-state">
           <template x-for="code in [
             'RO','AC','AM','RR','PA','AP','TO','MA','PI',
             'CE','RN','PB','PE','AL','SE','BA','MG','ES',
             'RJ','SP','PR','SC','RS','MS','MT','GO','DF',
           ]">
-            <option :value="code" :selected="code == 'SP'" x-text="code"></option>
+            <option :value="code" :selected="code == '{{ state }}'" x-text="code"></option>
           </template>
           <option value=""></option>
         </select>

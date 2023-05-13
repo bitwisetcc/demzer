@@ -1,8 +1,12 @@
-from django.contrib.auth.models import Group
 from django.http import HttpResponse, HttpRequest, JsonResponse, Http404
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+from backend.settings import (
+    DEFAULT_NATURALITY_CITY as DEFAULT_CITY,
+    DEFAULT_NATURALITY_STATE as DEFAULT_STATE,
+    DEFAULT_STUDENT_BIRTHDATE,
+)
 import json
 
 from .models import *
@@ -10,8 +14,8 @@ from .models import *
 
 def index(request: HttpRequest):
     if request.user.is_authenticated:
-        return render(request, "core/home.html") # Not implemented yet
-    else:    
+        return render(request, "core/home.html")  # Not implemented yet
+    else:
         return render(request, "core/home.html")
 
 
@@ -20,7 +24,12 @@ def login(request: HttpRequest):
 
 
 def enroll(request: HttpRequest):
-    return render(request, "core/enroll.html")
+    context = {
+        "city": DEFAULT_CITY,
+        "state": DEFAULT_STATE,
+        "birthdate": DEFAULT_STUDENT_BIRTHDATE,
+    }
+    return render(request, "core/enroll.html", context)
 
 
 @csrf_exempt  # add auth (not everyone shold be able to see EVERYONE)
@@ -39,7 +48,7 @@ def create_user(request: HttpRequest):
             body["course"],
             ", ".join(c.slug for c in Course.objects.all()),
         )
-    
+
     new_user = User(
         name=body["name"],
         email=body["email"],
