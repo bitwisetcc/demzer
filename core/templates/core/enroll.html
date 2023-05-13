@@ -1,61 +1,156 @@
-{% extends 'core/base.html' %}
-{% load static %}
-{% block head %}
+{% extends 'core/base.html' %} {% load static %} {% block head %}
 <script>
   function validateCPF(cpf) {
     let remainder = 0;
     let sum = 0;
-    const reset = () => remainder *= !(remainder == 10 || remainder == 11);
+    const reset = () => (remainder *= !(remainder == 10 || remainder == 11));
 
     if (cpf == "00000000000" || cpf.length != 11) return false;
-  
-    for (let i = 1; i <= 9; i++) sum += parseInt(cpf.substring(i - 1, i)) * (11 - i);
-    remainder = sum * 10 % 11;
-  
+
+    for (let i = 1; i <= 9; i++)
+      sum += parseInt(cpf.substring(i - 1, i)) * (11 - i);
+    remainder = (sum * 10) % 11;
+
     if (remainder == 10 || remainder == 11) remainder = 0;
     if (remainder != parseInt(cpf.substring(9, 10))) return false;
-  
+
     sum = 0;
 
-    for (let i = 1; i <= 10; i++) sum += parseInt(cpf.substring(i - 1, i)) * (12 - i);
+    for (let i = 1; i <= 10; i++)
+      sum += parseInt(cpf.substring(i - 1, i)) * (12 - i);
     remainder = (sum * 10) % 11;
-     
+
     if (remainder == 10 || remainder == 11) remainder = 0;
 
     return remainder == parseInt(cpf.substring(10, 11));
   }
 
-  function submit(e) {
-    alert("sla man")
-    if (validateCPF($refs.value)) {
-      e.preventDefault();
-      alert("CPF não é válido");
-    }
-  }
+  document.addEventListener("alpine:init", () => {
+    Alpine.data("fields", () => ({
+      name: "",
+      cpf: "",
+      rg: "",
+      dismiss: true,
+      errors: [],
+      submit(e) {
+        const requirements = [
+          {
+            test: /^[a-zA-Z]+$/.test(this.name),
+            error: "Nome deve conter apenas letras",
+          },
+          { test: validateCPF(this.cpf), error: "CPF inválido" },
+        ];
+
+        for (const req of requirements) {
+          if (req.test) {
+            e.preventDefault();
+            this.errors.push(req.error);
+          }
+        }
+      },
+    }));
+  });
 </script>
-{% endblock %}
-{% block content %}
+{% endblock %} {% block content %}
 <main class="p-5 flex-1">
   <h1 class="text-3xl font-sans font-bold mb-3">Matrícula</h1>
-  <form action="sla" method="get" class="flex items-stretch gap-2" @submit="submit">
+  <hr>
+  <form
+    action="sla"
+    method="get"
+    class="flex flex-col gap-3"
+    @submit.prevent="submit"
+    x-data="fields"
+  >
+    <h2 class="text-2xl font-sans font-semibold">Identidade</h2>
     <div class="field">
       <label for="txt-username">Nome:</label>
-      <input type="text" name="username" id="txt-username" maxlength="150" />
+      <input
+        type="text"
+        name="username"
+        id="txt-username"
+        maxlength="150"
+        required
+        x-model="name"
+      />
     </div>
     <div class="field">
-      <label for="sl-gender">Gênero:</label>
-      <select name="gender" id="sl-gender">
-        <option value="NA" selected disabled>Não especificado</option>
-        <option value="M">Masculino</option>
-        <option value="F">Feminino</option>
-        <option value="NB">Não binário</option>
-      </select>
+      <label for="dt-nasc">Nascimento:</label>
+      <input type="date" name="nasc" id="dt-nasc" value="2006-01-01" required />
+    </div>
+    <div class="field flex items-center">
+      <label for="gender-box">Gênero:</label>
+      <span id="gender-box" class="flex items-center">
+        <input type="radio" name="gender" id="rd-masc" required checked />
+        <label for="rd-masc">Masculino</label>
+        <input type="radio" name="gender" id="rd-fem" />
+        <label for="rd-fem">Feminino</label>
+        <input type="radio" name="gender" id="rd-nb" />
+        <label for="rd-nb">Não binário</label>
+      </span>
     </div>
     <div class="field">
       <label for="txt-cpf">CPF:</label>
-      <input type="text" name="cpf" id="txt-cpf" x-ref="cpf">
+      <input type="number" name="cpf" id="txt-cpf" required x-model="cpf" />
     </div>
-    <button type="submit">Enviar</button>
+    <div class="field">
+      <label for="txt-rg">RG:</label>
+      <input type="number" name="rg" id="txt-rg" required x-model="rg" />
+    </div>
+    <div class="field flex items-center" x-data="{ check: false }">
+      <label for="cb-afro">Afrodescendente:</label>
+      <input type="checkbox" name="afro" id="cb-afro" x-model="check" />
+      <span class="ml-1" x-text="check ? 'Sim' : 'Não'"></span>
+    </div>
+    <div class="field">
+      <label for="sl-school">Escolaridade pública:</label>
+      <select name="school" id="sl-school">
+        <option value="C">Completo</option>
+        <option value="B">Ensino Básico</option>
+        <option value="F" selected>Ensino Fundamental</option>
+        <option value="M">Ensino Médio</option>
+      </select>
+    </div>
+    <div class="field flex items-center">
+      <label for="nat-box">Naturalidade:</label>
+      <span id="civil-box" class="flex items-center gap-1 ml-1">
+        <input type="text" name="city" id="txt-city" required />
+        <select name="state" id="sl-state">
+          <template x-for="code in [
+            'RO','AC','AM','RR','PA','AP','TO','MA','PI',
+            'CE','RN','PB','PE','AL','SE','BA','MG','ES',
+            'RJ','SP','PR','SC','RS','MS','MT','GO','DF',
+          ]">
+            <option :value="code" :selected="code == 'SP'" x-text="code"></option>
+          </template>
+          <option value=""></option>
+        </select>
+      </span>
+    </div>
+    <div class="field">
+      <label for="txt-nation">Nacionalidade:</label>
+      <input type="text" name="nation" id="txt-nation" value="Brasil"/>
+    </div>
+    <div class="field">
+      <label for="txt-origin">País de origem:</label>
+      <input type="text" name="origin" id="txt-origin" value="Brasil" />
+    </div>
+    <div class="field flex items-center">
+      <label for="civil-box">Estado civíl:</label>
+      <span id="civil-box" class="flex items-center">
+        <input type="radio" name="civil" id="rd-single" required checked />
+        <label for="rd-single">Solteiro</label>
+        <input type="radio" name="civil" id="rd-maried">
+        <label for="rd-maried">Casado</label>
+        <input type="radio" name="civil" id="rd-divorced">
+        <label for="rd-divorced">Divorciado</label>
+        <input type="radio" name="civil" id="rd-widow">
+        <label for="rd-widow">Viúvo</label>
+      </span>
+    </div>
+    <hr>
+
+    <input type="submit" class="bg-sky-800" value="Enviar" />
   </form>
 </main>
 {% endblock %}
