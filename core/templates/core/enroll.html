@@ -4,7 +4,7 @@
 <script defer src="{% static 'core/js/enroll.js' %}"></script>
 {% endblock %}
 {% block content %}
-<main class="p-5 flex-1">
+<main class="py-9 px-6 flex-1">
   <h1 class="text-3xl font-sans font-bold mb-3">Matrícula</h1>
   <hr>
   <form
@@ -27,8 +27,6 @@
         required
         x-model="name"
       />
-    </div>
-    <div class="field">
       <label for="dt-nasc">Nascimento:</label>
       <input type="date" name="nasc" id="dt-nasc" value="{{ birthdate }}" required />
     </div>
@@ -128,18 +126,23 @@
     </div>
     <div class="field">
       <label for="txt-cep">CEP:</label>
-      <input type="number" name="cep" id="txt-cep" maxlength="9" max="999999999" size="9" required>
-      <button class="bg-sky-600 dark:bg-sky-700 py-2 px-3 rounded">Fill in</button>
+      <input type="number" name="cep" id="txt-cep" size="11" required x-ref="cep">
+      <button
+        class="bg-sky-600 dark:bg-sky-700 py-2 px-3 rounded"
+        @click.prevent="() => fillCEP($refs.cep.value)"
+      >
+        Fill in
+      </button>
     </div>
     <div class="field">
       <label for="txt-city">Cidade:</label>
-      <input type="text" name="city" id="txt-city">
+      <input type="text" name="city" id="txt-city" x-model="city">
       <label for="txt-neighborhood">Bairro:</label>
-      <input type="text" name="neighborhood" id="txt-txt-neighborhood">
+      <input type="text" name="neighborhood" id="txt-txt-neighborhood" x-model="neighborhood">
     </div>
     <div class="field">
       <label for="txt-street">Rua:</label>
-      <input type="text" name="street" id="txt-street">
+      <input type="text" name="street" id="txt-street" x-model="street">
       <label for="txt-street-number">Número:</label>
       <input type="number" name="street-number" id="txt-street-number" size="4">
     </div>

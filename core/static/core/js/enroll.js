@@ -28,6 +28,9 @@ document.addEventListener("alpine:init", () => {
     name: "",
     cpf: "",
     rg: "",
+    city: "",
+    neighborhood: "",
+    street: "",
     dismiss: true,
     errors: [],
     submit(e) {
@@ -43,6 +46,17 @@ document.addEventListener("alpine:init", () => {
           this.errors.push(req.error);
         }
       }
+    },
+    fillCEP(cep) {
+      fetch(`https://viacep.com.br/ws/${cep}/json/`)
+        .then(res => res.json())
+        .then(data => {
+          console.log(data);
+          this.city = data.localidade;
+          this.neighborhood = data.bairro;
+          this.street = data.logradouro;
+        })
+        .catch(console.error);
     },
   }));
 });
