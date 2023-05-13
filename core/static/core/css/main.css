@@ -10,13 +10,29 @@
   --hover-color: #002c49;
 }
 
-@layer components {
+@layer base {
   nav box-icon {
     @apply w-auto px-8 hover:bg-sky-800;
   }
 
-  input, select {
-    @apply shadow-sm rounded px-2 py-1 transition-all border-2
+  [type='text'],
+  [type='email'],
+  [type='url'],
+  [type='password'],
+  [type='number'],
+  [type='date'],
+  [type='datetime-local'],
+  [type='month'],
+  [type='search'],
+  [type='tel'],
+  [type='time'],
+  [type='week'],
+  [multiple],
+  textarea,
+  select {
+    @apply shadow-sm rounded-lg transition-all border
     focus-visible:outline-none focus:border-cyan-500 hover:border-cyan-500
   }
+
+  [type='checkbox'], [type='radio'] {}
 }

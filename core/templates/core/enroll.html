@@ -1,42 +1,61 @@
-{% extends 'core/base.html' %} {% load static %} {% block content %}
+{% extends 'core/base.html' %}
+{% load static %}
+{% block head %}
+<script>
+  function validateCPF(cpf) {
+    let remainder = 0;
+    let sum = 0;
+    const reset = () => remainder *= !(remainder == 10 || remainder == 11);
+
+    if (cpf == "00000000000" || cpf.length != 11) return false;
+  
+    for (let i = 1; i <= 9; i++) sum += parseInt(cpf.substring(i - 1, i)) * (11 - i);
+    remainder = sum * 10 % 11;
+  
+    if (remainder == 10 || remainder == 11) remainder = 0;
+    if (remainder != parseInt(cpf.substring(9, 10))) return false;
+  
+    sum = 0;
+
+    for (let i = 1; i <= 10; i++) sum += parseInt(cpf.substring(i - 1, i)) * (12 - i);
+    remainder = (sum * 10) % 11;
+     
+    if (remainder == 10 || remainder == 11) remainder = 0;
+
+    return remainder == parseInt(cpf.substring(10, 11));
+  }
+
+  function submit(e) {
+    alert("sla man")
+    if (validateCPF($refs.value)) {
+      e.preventDefault();
+      alert("CPF não é válido");
+    }
+  }
+</script>
+{% endblock %}
+{% block content %}
 <main class="p-5 flex-1">
-  <h1 class="text-3xl font-sans font-bold from-sky-800 mb-3">Matrícula</h1>
-  <form action="sla" method="get" class="flex items-stretch gap-2">
+  <h1 class="text-3xl font-sans font-bold mb-3">Matrícula</h1>
+  <form action="sla" method="get" class="flex items-stretch gap-2" @submit="submit">
     <div class="field">
-      <label for="txtUsername">Nome:</label>
-      <input type="text" name="username" id="txtUsername" maxlength="150" />
+      <label for="txt-username">Nome:</label>
+      <input type="text" name="username" id="txt-username" maxlength="150" />
     </div>
     <div class="field">
-      <label for="slGender">Gênero</label>
-      <input type="text" name="gender" id="slGender" />
-    </div>
-    <div
-      class="flex gap-3 relative"
-      x-data="{ input: '', clear() { this.input = '' } }"
-    >
-      <label for="slField" class="text-xl font-medium">Procurar por:</label>
-      <select name="query_field" id="slField">
-        <option value="name" selected>Nome</option>
-        <option value="email">Email ETEC</option>
-        <option value="email">Email pessoal</option>
-        <option value="parent">Nome do Pai/Mãe</option>
-        <option value="class">Classe</option>
-        <option value="grade">Série</option>
-        <option value="rm">RM</option>
-        <option value="custom">Customizado</option>
+      <label for="sl-gender">Gênero:</label>
+      <select name="gender" id="sl-gender">
+        <option value="NA" selected disabled>Não especificado</option>
+        <option value="M">Masculino</option>
+        <option value="F">Feminino</option>
+        <option value="NB">Não binário</option>
       </select>
     </div>
+    <div class="field">
+      <label for="txt-cpf">CPF:</label>
+      <input type="text" name="cpf" id="txt-cpf" x-ref="cpf">
+    </div>
+    <button type="submit">Enviar</button>
   </form>
-
-  <table class="border-2 border-stone-700 p-3 mt-4 w-full">
-    <thead>
-      <tr>
-        <!-- List properties of students -->
-      </tr>
-    </thead>
-    <tr>
-      <td class="p-2">Faça uma pesquisa</td>
-    </tr>
-  </table>
 </main>
-{% endblock content %}
+{% endblock %}
