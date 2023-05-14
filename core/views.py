@@ -3,13 +3,14 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from backend.settings import (
-    DEFAULT_NATURALITY_CITY as DEFAULT_CITY,
-    DEFAULT_NATURALITY_STATE as DEFAULT_STATE,
+    DEFAULT_CITY,
+    DEFAULT_STATE,
     DEFAULT_STUDENT_BIRTHDATE,
 )
 import json
 
-from .models import *
+from core.forms import StudentEnrollmentForm
+from core.models import *
 
 
 def index(request: HttpRequest):
@@ -23,45 +24,21 @@ def login(request: HttpRequest):
     return render(request, "core/login.html")
 
 
+def register(request: HttpRequest):
+    form = StudentEnrollmentForm()
+    return render(request, "core/form.html", { "form": form.render() })
+
+
 def enroll(request: HttpRequest):
-    context = {
-        "city": DEFAULT_CITY,
-        "state": DEFAULT_STATE,
-        "birthdate": DEFAULT_STUDENT_BIRTHDATE,
-    }
-    return render(request, "core/enroll.html", context)
-
-
-@csrf_exempt  # add auth (not everyone shold be able to see EVERYONE)
-@require_POST
-def create_user(request: HttpRequest):
-    body = json.loads(request.body.decode())
-
-    try:
-        if "course" in body:
-            user_course = Course.objects.get(slug=body["course"])
-        else:
-            user_course = None
-    except Course.DoesNotExist:
-        return Http404(
-            "Curso com o campo slug=%s não existe.\nTente os seguintes valores: %s",
-            body["course"],
-            ", ".join(c.slug for c in Course.objects.all()),
-        )
-
-    new_user = User(
-        name=body["name"],
-        email=body["email"],
-        password=body["password"],  # check security
-        phone=body["phone"],  # validate
-        course=user_course,
-        gender=body["gender"],  # validate
-        birthdate=body["birthdate"],
-        user_type=body["user_type"],  # validate
-    )
-    new_user.save()
-
-    return HttpResponse(":D")
+    if request.method == "POST":
+        try:
+            for key in request.POST.keys():
+                print(key)
+            return HttpResponse("haiii")            
+        except: pass
+    else:
+        context = {"city": DEFAULT_CITY, "state": DEFAULT_STATE, "birthdate": DEFAULT_STUDENT_BIRTHDATE}
+        return render(request, "core/enroll.html", context)
 
 
 def detail(request: HttpRequest, user_id: int):

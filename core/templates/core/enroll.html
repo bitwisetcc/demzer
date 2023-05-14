@@ -8,10 +8,10 @@
   <h1 class="text-3xl font-sans font-bold mb-3">Matrícula</h1>
   <hr>
   <form
-    action="sla"
-    method="get"
+    action="{% url 'enroll' %}"
+    method="POST"
     class="flex flex-col gap-3"
-    @submit.prevent="submit"
+    @submit="submit"
     x-data="fields"
   >
     {% csrf_token %}
@@ -43,9 +43,9 @@
     </div>
     <div class="field">
       <label for="txt-cpf">CPF:</label>
-      <input type="number" name="cpf" id="txt-cpf" required x-model="cpf" size="11" />
+      <input type="number" name="cpf" id="txt-cpf" required x-model="cpf" size="13" />
       <label for="txt-rg">RG:</label>
-      <input type="number" name="rg" id="txt-rg" required x-model="rg" size="9" />
+      <input type="number" name="rg" id="txt-rg" required x-model="rg" size="11" />
     </div>
     <div class="field" x-data="{ check: false }">
       <label for="cb-afro">Afrodescendente:</label>
@@ -59,6 +59,7 @@
         <option value="B">Ensino Básico</option>
         <option value="F" selected>Ensino Fundamental</option>
         <option value="M">Ensino Médio</option>
+        <option value="N">Nenhuma</option>
       </select>
     </div>
     <div class="field">
@@ -152,6 +153,12 @@
       <label for="txt-distance">Distância:</label>
       <input type="number" name="distance" id="txt-distance" size="3">
     </div>
+
+    <ul>
+      <template x-for="err in errors">
+        <li x-text="err"></li>
+      </template>
+    </ul>
 
     <input type="submit" class="bg-sky-600 dark:bg-sky-700" value="Enviar" />
   </form>

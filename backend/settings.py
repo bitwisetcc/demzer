@@ -23,10 +23,12 @@ https://docs.djangoproject.com/en/4.1/topics/i18n
 
 from os import environ
 from pathlib import Path
+from datetime import date
 
-DEFAULT_NATURALITY_STATE = "SP"
-DEFAULT_NATURALITY_CITY = "São Caetano do Sul"
-DEFAULT_STUDENT_BIRTHDATE = "2006-01-01"
+DEFAULT_COUNTRY = "Brasil"
+DEFAULT_STATE = "SP"
+DEFAULT_CITY = "São Caetano do Sul"
+DEFAULT_STUDENT_BIRTHDATE = date(date.today().year - 15, 1, 1)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 

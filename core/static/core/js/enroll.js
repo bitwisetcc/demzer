@@ -35,13 +35,13 @@ document.addEventListener("alpine:init", () => {
     errors: [],
     submit(e) {
       const requirements = [
-        { test: /^[a-zA-Z]+$/.test(this.name), error: "Nome deve conter apenas letras"},
+        { test: /^[a-zA-Z\s]+$/.test(this.name), error: "Nome deve conter apenas letras"},
         { test: validateCPF(this.cpf), error: "CPF inválido" },
         { test: this.rg.length == 9, error: "RG inválido" },
       ];
 
       for (const req of requirements) {
-        if (req.test) {
+        if (!req.test) {
           e.preventDefault();
           this.errors.push(req.error);
         }
