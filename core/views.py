@@ -1,16 +1,29 @@
-from django.http import HttpResponse, HttpRequest, JsonResponse, Http404
-from django.shortcuts import render
+from django.http import (
+    HttpResponse,
+    HttpRequest,
+    HttpResponseBadRequest,
+    JsonResponse,
+    Http404,
+)
+from django.shortcuts import redirect, render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-from backend.settings import (
-    DEFAULT_CITY,
-    DEFAULT_STATE,
-    DEFAULT_STUDENT_BIRTHDATE,
-)
+from datetime import datetime
 import json
+import re
 
-from core.forms import StudentEnrollmentForm
 from core.models import *
+from backend.settings import (
+    DEFAULT_COUNTRY,
+    DEFAULT_STATE,
+    DEFAULT_CITY,
+    DEFAULT_BIRTHDATE,
+    EMAIL_PATTERN,
+)
+
+
+def default_value(field):
+    return User._meta.get_field(field).get_default()
 
 
 def index(request: HttpRequest):
@@ -24,31 +37,81 @@ def login(request: HttpRequest):
     return render(request, "core/login.html")
 
 
-def register(request: HttpRequest):
-    form = StudentEnrollmentForm()
-    return render(request, "core/form.html", { "form": form.render() })
-
-
+# TODO: Create actual emails + prevent email duplication
 def enroll(request: HttpRequest):
     if request.method == "POST":
-        try:
-            for key in request.POST.keys():
-                print(key)
-            return HttpResponse("haiii")            
-        except: pass
+        # try:
+            if len(re.sub(r"[a-zA-z\s]+", "", request.POST["username"])):
+                return HttpResponseBadRequest(
+                    "Nome de usuário deve conter apenas letras"
+                )
+
+            # TODO: Validate the rest
+
+            first_name = request.POST["username"].split()[0]
+            last_name = request.POST["username"].split()[-1]
+            birthdate = datetime.strptime(request.POST["birthdate"], "%Y-%m-%d").date()
+            try:
+                distance = int(request.POST["distance"])
+            except ValueError:
+                distance = None
+
+            user = User.objects.create(
+                username=request.POST["username"],
+                first_name=first_name,
+                last_name=last_name,
+                contact_email=request.POST["contact-email"],
+                email=EMAIL_PATTERN.format(first_name, last_name),
+                password=first_name + last_name + str(birthdate.year),
+                phone=re.sub(r"[^0-9]+", "", request.POST["phone"]),
+                birthdate=birthdate,
+                gender=request.POST["gender"],
+                rg=request.POST["rg"],
+                cpf=request.POST["cpf"],
+                public_schooling=request.POST["public-schooling"],
+                afro="afro" in request.POST,
+                civil_state=request.POST["civil-state"],
+                natural_state=request.POST["natural-state"],
+                natural_city=request.POST["natural-city"],
+                nationality=request.POST["nationality"],
+                country_of_origin=request.POST["country-of-origin"],
+                cep=request.POST["cep"],
+                city=request.POST["residence-city"],
+                neighborhood=request.POST["neighborhood"],
+                street=request.POST["street"],
+                street_number=request.POST["street-number"],
+                complement=request.POST["complement"],
+                distance=distance,
+            )
+
+            guardian = Relative.objects.create(
+                name=request.POST["name-guardian"],
+                email=request.POST["email-guardian"],
+                phone=request.POST["phone-guardian"],
+            )
+
+            user.save()
+            user.relatives.add(guardian)
+
+            return HttpResponse("haiii")
+        # except:
+        #     return HttpResponse("fudeu")
     else:
-        context = {"city": DEFAULT_CITY, "state": DEFAULT_STATE, "birthdate": DEFAULT_STUDENT_BIRTHDATE}
+        context = {
+            "birthdate": DEFAULT_BIRTHDATE,
+            "country": DEFAULT_COUNTRY,
+            "state": DEFAULT_STATE,
+            "city": DEFAULT_CITY,
+        }
         return render(request, "core/enroll.html", context)
 
 
 def detail(request: HttpRequest, user_id: int):
-    return JsonResponse(User.objects.get(id=user_id).serialize_json())
+    return JsonResponse(User.objects.get(id=user_id))
 
 
 def all_users(request: HttpRequest):
-    everyone = [user.serialize_json() for user in User.objects.all()]
-
-    return JsonResponse({"total": len(everyone), "users": everyone})
+    return HttpResponse(User.objects.first())
 
 
 def all_students(request: HttpRequest):

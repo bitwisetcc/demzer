@@ -28,7 +28,11 @@ from datetime import date
 DEFAULT_COUNTRY = "Brasil"
 DEFAULT_STATE = "SP"
 DEFAULT_CITY = "São Caetano do Sul"
-DEFAULT_STUDENT_BIRTHDATE = date(date.today().year - 15, 1, 1)
+DEFAULT_BIRTHDATE = date(date.today().year - 15, 1, 1)
+
+SCHOOL_NAME = "ETEC Jorge Street"
+EMAIL_PATTERN = "{}.{}@etec.sp.gov.br"
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 

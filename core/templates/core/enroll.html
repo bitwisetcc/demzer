@@ -27,17 +27,17 @@
         required
         x-model="name"
       />
-      <label for="dt-nasc">Nascimento:</label>
-      <input type="date" name="nasc" id="dt-nasc" value="{{ birthdate }}" required />
+      <label for="dt-birthdate">Nascimento:</label>
+      <input type="date" name="birthdate" id="dt-birthdate" value="{{ birthdate|date:'Y-m-d' }}" required />
     </div>
     <div class="field">
       <label for="gender-box">Gênero:</label>
       <span id="gender-box" class="flex items-center">
-        <input type="radio" name="gender" id="rd-masc" required checked />
+        <input type="radio" value="M" name="gender" id="rd-masc" required checked />
         <label for="rd-masc">Masculino</label>
-        <input type="radio" name="gender" id="rd-fem" />
+        <input type="radio" value="F" name="gender" id="rd-fem" />
         <label for="rd-fem">Feminino</label>
-        <input type="radio" name="gender" id="rd-nb" />
+        <input type="radio" value="NB" name="gender" id="rd-nb" />
         <label for="rd-nb">Não binário</label>
       </span>
     </div>
@@ -54,7 +54,7 @@
     </div>
     <div class="field">
       <label for="sl-school">Escolaridade pública:</label>
-      <select name="school" id="sl-school">
+      <select name="public-schooling" id="sl-school">
         <option value="C">Completo</option>
         <option value="B">Ensino Básico</option>
         <option value="F" selected>Ensino Fundamental</option>
@@ -64,9 +64,9 @@
     </div>
     <div class="field">
       <label for="nat-box">Naturalidade:</label>
-      <span id="civil-box" class="flex items-center gap-1 ml-1">
-        <input type="text" name="city" id="txt-city" value="{{ city }}" required />
-        <select name="state" id="sl-state">
+      <span id="nat-box" class="flex items-center gap-1 ml-1">
+        <input type="text" name="natural-city" id="txt-city" value="{{ city }}" required />
+        <select name="natural-state" id="sl-state">
           <template x-for="code in [
             'RO','AC','AM','RR','PA','AP','TO','MA','PI',
             'CE','RN','PB','PE','AL','SE','BA','MG','ES',
@@ -80,22 +80,22 @@
     </div>
     <div class="field">
       <label for="txt-nation">Nacionalidade:</label>
-      <input type="text" name="nation" id="txt-nation" value="Brasil" required/>
+      <input type="text" name="nationality" id="txt-nation" value="{{ country }}" required/>
     </div>
     <div class="field">
       <label for="txt-origin">País de origem:</label>
-      <input type="text" name="origin" id="txt-origin" value="Brasil" required />
+      <input type="text" name="country-of-origin" id="txt-origin" value="{{ country }}" required />
     </div>
     <div class="field flex items-center">
       <label for="civil-box">Estado civíl:</label>
       <span id="civil-box" class="flex items-center">
-        <input type="radio" name="civil" id="rd-single" required checked />
+        <input type="radio" value="S" name="civil-state" id="rd-single" required checked />
         <label for="rd-single">Solteiro</label>
-        <input type="radio" name="civil" id="rd-maried">
+        <input type="radio" value="M" name="civil-state" id="rd-maried">
         <label for="rd-maried">Casado</label>
-        <input type="radio" name="civil" id="rd-divorced">
+        <input type="radio" value="D" name="civil-state" id="rd-divorced">
         <label for="rd-divorced">Divorciado</label>
-        <input type="radio" name="civil" id="rd-widow">
+        <input type="radio" value="W" name="civil-state" id="rd-widow">
         <label for="rd-widow">Viúvo</label>
       </span>
     </div>
@@ -104,16 +104,12 @@
 
     <h2 class="text-2xl font-sans font-semibold">Filiação</h2>
     <div class="field">
-      <label for="txt-mom">Nome da mãe:</label>
-      <input type="text" name="mom" id="txt-mom" size="30" required>
-      <label for="tel-mom" class="ml-1">Telefone:</label>
-      <input type="tel" name="tel-mom" id="tel-mom" size="11" x-mask="(99)99999-9999" required>
-    </div>
-    <div class="field">
-      <label for="txt-mom">Nome do pai:</label>
-      <input type="text" name="mom" id="txt-mom" size="30">
-      <label for="tel-mom" class="ml-1">Telefone:</label>
-      <input type="tel" name="tel-mom" id="tel-mom" size="11" x-mask="(99)99999-9999">
+      <label for="txt-guardian">Responsável:</label>
+      <input type="text" name="name-guardian" id="txt-guardian" size="30" required>
+      <label for="tel-guardian" class="ml-1">Telefone:</label>
+      <input type="tel" name="phone-guardian" id="tel-guardian" size="11" x-mask="(99)99999-9999" required>
+      <label for="email-guardian">Email:</label>
+      <input type="email" name="email-guardian" id="email-guardian" maxlength="100" size="30" required>
     </div>
 
     <hr>
@@ -121,9 +117,9 @@
     <h2 class="text-2xl font-sans font-semibold">Contato</h2>
     <div class="field">
       <label for="txt-email">Email:</label>
-      <input type="email" name="email" id="txt-email" size="28" required>
-      <label for="txt-cel">Celular:</label>
-      <input type="tel" name="cel" id="txt-cel" x-mask="(99)99999-9999" size="10" required>
+      <input type="email" name="contact-email" id="txt-email" size="28" required>
+      <label for="txt-phone">Celular:</label>
+      <input type="tel" name="phone" id="txt-phone" x-mask="(99)99999-9999" size="10" required>
     </div>
     <div class="field">
       <label for="txt-cep">CEP:</label>
@@ -137,24 +133,24 @@
     </div>
     <div class="field">
       <label for="txt-city">Cidade:</label>
-      <input type="text" name="city" id="txt-city" x-model="city">
+      <input type="text" name="residence-city" id="txt-city" x-model="city" required>
       <label for="txt-neighborhood">Bairro:</label>
-      <input type="text" name="neighborhood" id="txt-txt-neighborhood" x-model="neighborhood">
+      <input type="text" name="neighborhood" id="txt-txt-neighborhood" x-model="neighborhood" required>
     </div>
     <div class="field">
       <label for="txt-street">Rua:</label>
       <input type="text" name="street" id="txt-street" x-model="street">
       <label for="txt-street-number">Número:</label>
-      <input type="number" name="street-number" id="txt-street-number" size="4">
+      <input type="number" name="street-number" id="txt-street-number" size="4" required>
     </div>
     <div class="field">
       <label for="txt-comp">Complemento:</label>
       <input type="text" name="complement" id="txt-comp" size="10">
       <label for="txt-distance">Distância:</label>
-      <input type="number" name="distance" id="txt-distance" size="3">
+      <input type="number" name="distance" id="txt-distance" size="5" step="0.1">
     </div>
 
-    <ul>
+    <ul class="border border-red-500 p-2" x-show="errors.length > 0">
       <template x-for="err in errors">
         <li x-text="err"></li>
       </template>

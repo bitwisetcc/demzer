@@ -13,9 +13,11 @@ from django.db.models.fields import (
     DateField,
     EmailField,
     SlugField,
+    BooleanField,
+    FloatField,
+    IntegerField,
 )
 from django.contrib.auth.models import AbstractUser
-from django.forms import BooleanField, FloatField, IntegerField
 from django.utils.translation import gettext_lazy as _
 from django.utils.deconstruct import deconstructible
 from django.core.validators import RegexValidator
@@ -23,7 +25,7 @@ from backend.settings import (
     DEFAULT_COUNTRY,
     DEFAULT_STATE,
     DEFAULT_CITY,
-    DEFAULT_STUDENT_BIRTHDATE,
+    DEFAULT_BIRTHDATE,
 )
 
 
@@ -69,14 +71,39 @@ class User(AbstractUser):
         DIVORCED = "D", _("Divorciado")
         WIDOWED = "W", _("Viúvo")
 
-    States = TextChoices(
-        "States",
-        "RO AC AM RR PA AP TO MA PI CE RN PB PE AL SE BA MG ES RJ SP PR SC RS MS MT GO DF",
-    )
+    class States(TextChoices):
+        RO = "RO"
+        AC = "AC"
+        AM = "AM"
+        RR = "RR"
+        PA = "PA"
+        AP = "AP"
+        TO = "TO"
+        MA = "MA"
+        PI = "PI"
+        CE = "CE"
+        RN = "RN"
+        PB = "PB"
+        PE = "PE"
+        AL = "AL"
+        SE = "SE"
+        BA = "BA"
+        MG = "MG"
+        ES = "ES"
+        RJ = "RJ"
+        SP = "SP"
+        PR = "PR"
+        SC = "SC"
+        RS = "RS"
+        MS = "MS"
+        MT = "MT"
+        GO = "GO"
+        DF = "DF"
 
     name_validator = NameValidator()
 
-    email = EmailField(_("Endereço de email"), unique=True)
+    email = EmailField(unique=True)
+    contact_email = EmailField(default="john.doe@email.com")
     username = CharField(
         max_length=100,
         help_text=_("Obrigatório. 100 ou menos. Apenas letras e ponto"),
@@ -84,17 +111,17 @@ class User(AbstractUser):
         unique=True,
     )
 
-    rg = IntegerField(max_value=99999999, min_value=10000000)
-    cpf = IntegerField(max_value=99999999999)
-    phone = IntegerField(max_value=99999999999)
+    rg = IntegerField(default=0)
+    cpf = IntegerField(default=0)
+    phone = IntegerField(default=0)
     gender = CharField(choices=Genders.choices, default=Genders.MASCULINE, max_length=2)
     public_schooling = CharField(
         choices=PublicSchoolingTypes.choices,
         default=PublicSchoolingTypes.MIDDLE,
         max_length=1,
     )
-    birthdate = DateField(default=DEFAULT_STUDENT_BIRTHDATE)
-    afro = BooleanField()
+    birthdate = DateField(default=DEFAULT_BIRTHDATE)
+    afro = BooleanField(default=False)
 
     natural_state = CharField(
         choices=States.choices, default=DEFAULT_STATE, max_length=2
@@ -106,13 +133,13 @@ class User(AbstractUser):
         choices=CivilStates.choices, default=CivilStates.SINGLE, max_length=1
     )
 
-    cep = IntegerField(max_value=99999999)
+    cep = IntegerField(default=0)
     city = CharField(max_length=60, default=DEFAULT_CITY)
-    neighborhood = CharField(max_length=40, blank=True)
-    street = CharField(max_length=40, blank=True)
-    street_number = IntegerField(max_value=8000, min_value=1)
-    complement = CharField(null=True, max_length=20)
-    distance = FloatField(max_value=100, min_value=0)
+    neighborhood = CharField(max_length=40)
+    street = CharField(max_length=40)
+    street_number = IntegerField(default=1)
+    complement = CharField(max_length=20)
+    distance = FloatField(default=0)
 
     relatives = ManyToManyField(Relative)
 
@@ -137,7 +164,6 @@ class User(AbstractUser):
 class Subject(Model):
     """
     The subject of a class; what the teacher is talking about.
-    { "name": "Física" }
     """
 
     name = CharField(max_length=63)
@@ -158,7 +184,6 @@ class Course(Model):
     The group of students that spend their time together. They go from room to room together etc.
     The naming doesn't imply it, but there can be many 'generations' of a course.
     Ex: 1st, 2nd and 3rd Philosophy and Sociology.
-    { "name": "2nd Information Technology", "slug": "2IT", "subjects": [...] }
     """
 
     name = CharField(max_length=63)
@@ -173,12 +198,6 @@ class Course(Model):
 class Class(Model):
     """
     A class that appears on the calendar. Not to be confused with `Course`.
-    {
-        "course": 232 -> "2GT",
-        "teacher": 65231 -> "Thomas Arson",
-        "student_group": None,
-        "subject": 5 -> "Web Development"
-    }
     """
 
     class Days(TextChoices):

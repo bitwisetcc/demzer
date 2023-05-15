@@ -6,7 +6,6 @@ urlpatterns = [
     path("login/", login, name="login"),
     path("enroll/", enroll, name="enroll"),
     path("u/all/", all_users),
-    path("testing/", register),
     path("u/students/", all_students),
     path("u/<int:user_id>/", detail),
     path("subjects/new/", create_subject),
