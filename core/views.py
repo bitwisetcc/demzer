@@ -40,7 +40,7 @@ def login(request: HttpRequest):
 # TODO: Create actual emails + prevent email duplication
 def enroll(request: HttpRequest):
     if request.method == "POST":
-        # try:
+        try:
             if len(re.sub(r"[a-zA-z\s]+", "", request.POST["username"])):
                 return HttpResponseBadRequest(
                     "Nome de usuário deve conter apenas letras"
@@ -94,8 +94,9 @@ def enroll(request: HttpRequest):
             user.relatives.add(guardian)
 
             return HttpResponse("haiii")
-        # except:
-        #     return HttpResponse("fudeu")
+        except:
+            # TODO: Actually handle errors
+            return HttpResponse("something nice (◕ᴗ◕✿)")
     else:
         context = {
             "birthdate": DEFAULT_BIRTHDATE,
