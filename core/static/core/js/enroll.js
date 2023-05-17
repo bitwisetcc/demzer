@@ -34,8 +34,10 @@ document.addEventListener("alpine:init", () => {
     dismiss: true,
     errors: [],
     submit(e) {
+      this.errors = [];
       const requirements = [
         { test: /^[a-zA-Z\s]+$/.test(this.name), error: "Nome deve conter apenas letras"},
+        { test: this.name.length <= 100, error: "Nome deve ter até 100 caracteres"},
         { test: validateCPF(this.cpf), error: "CPF inválido" },
         { test: this.rg.length == 9, error: "RG inválido" },
       ];
@@ -51,7 +53,6 @@ document.addEventListener("alpine:init", () => {
       fetch(`https://viacep.com.br/ws/${cep}/json/`)
         .then(res => res.json())
         .then(data => {
-          console.log(data);
           this.city = data.localidade;
           this.neighborhood = data.bairro;
           this.street = data.logradouro;

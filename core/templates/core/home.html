@@ -1,4 +1,6 @@
-{% extends 'core/base.html' %} {% load static %} {% block content %}
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
 <main class="p-5 flex-1">
   <h1 class="text-3xl font-sans font-bold from-sky-800 mb-3">Alunos</h1>
   <form action="sla" method="get" class="flex items-stretch justify-between">
@@ -43,15 +45,21 @@
     </a>
   </form>
 
-  <table class="border-2 border-stone-700 p-3 mt-4 w-full">
+  <table class="border-2 border-stone-700 table-auto mt-4">
     <thead>
       <tr>
-        <!-- List properties of students -->
+        <td>RM</td>
+        <td>Nome</td>
+        <td>Nascimento</td>
       </tr>
     </thead>
+    {% for user in users %}
     <tr>
-      <td class="p-2">Faça uma pesquisa</td>
+      <td class="p-2">{{ user.rm }}</td>
+      <td class="p-2">{{ user.username }}</td>
+      <td class="p-2">{{ user.birthdate|date:'Y/m/d' }}</td>
     </tr>
+    {% endfor %}
   </table>
 </main>
 {% endblock content %}

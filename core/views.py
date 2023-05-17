@@ -27,29 +27,20 @@ def default_value(field):
 
 
 def index(request: HttpRequest):
-    if request.user.is_authenticated:
-        return render(request, "core/home.html")  # Not implemented yet
-    else:
-        return render(request, "core/home.html")
+    return render(request, "core/home.html", {"users": [user.json() for user in  User.objects.all()]})
 
 
 def login(request: HttpRequest):
-    return render(request, "core/login.html")
+    return render(request, "core/login.html", {"no_links": True})
 
 
 # TODO: Create actual emails + prevent email duplication
 def enroll(request: HttpRequest):
     if request.method == "POST":
         try:
-            if len(re.sub(r"[a-zA-z\s]+", "", request.POST["username"])):
-                return HttpResponseBadRequest(
-                    "Nome de usuário deve conter apenas letras"
-                )
-
-            # TODO: Validate the rest
-
-            first_name = request.POST["username"].split()[0]
-            last_name = request.POST["username"].split()[-1]
+            username = request.POST["username"].strip()
+            first_name = username.split()[0]
+            last_name = username.split()[-1]
             birthdate = datetime.strptime(request.POST["birthdate"], "%Y-%m-%d").date()
             try:
                 distance = int(request.POST["distance"])
@@ -57,7 +48,7 @@ def enroll(request: HttpRequest):
                 distance = None
 
             user = User.objects.create(
-                username=request.POST["username"],
+                username=username.strip(),
                 first_name=first_name,
                 last_name=last_name,
                 contact_email=request.POST["contact-email"],
@@ -92,6 +83,7 @@ def enroll(request: HttpRequest):
 
             user.save()
             user.relatives.add(guardian)
+            user.save()
 
             return HttpResponse("haiii")
         except:

@@ -5,47 +5,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="{% static 'core/dist/css/main.css' %}" />
-    <link rel="icon" type="image/png" href="{% static 'core/favicon.png' %}" />
+    <link rel="icon" type="image/png" href="{% static 'core/images/logo.png' %}" />
     {% block head %}{% endblock %}
     <script defer src="{% static 'core/dist/js/page.js' %}"></script>
   </head>
-  <body class="bg-slate-50 flex h-screen dark:bg-slate-800 dark:text-slate-200">
-    <nav class="w-24 p-4 bg-sky-950 flex flex-col text-white close">
-      <header>
-        <img
-          src="{% static 'core/images/personal.png' %}"
-          alt="logo"
-          class="rounded-3xl bg-gray-100"
-        />
-        <span class="name">Aluno</span>
-        <span class="profession">3° P-Tech</span>
-
-        <i class="bx bx-chevron-right toggle"></i>
-      </header>
-
-      <ul class="list-none">
-        <li id="home-icon">
-          <a href="">
-            <box-icon name="user"></box-icon>
-          </a>
-        </li>
-        <li>
-          <a href="">
-            <box-icon name="home-alt"></box-icon>
-          </a>
-        </li>
-        <li>
-          <a href="">
-            <box-icon name="message-square-dots"></box-icon>
-          </a>
-        </li>
-        <li>
-          <a href="">
-            <box-icon name=""></box-icon>
-          </a>
-        </li>
-      </ul>
-    </nav>
+  {% include "core/navbar.html" with no_links=no_links %}
+  <body class="bg-cyan-50 flex flex-col h-screen dark:bg-slate-800 dark:text-slate-200">
     {% block content %}{% endblock %}
   </body>
 </html>

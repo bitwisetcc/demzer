@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.urls import path
 from core.views import *
 
@@ -12,3 +13,7 @@ urlpatterns = [
     path("courses/new/", create_course),
     path("classes/new/", create_class),
 ]
+
+
+def school_info(request):
+    return {"school_name": settings.SCHOOL_NAME}

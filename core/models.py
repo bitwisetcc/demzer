@@ -122,6 +122,7 @@ class User(AbstractUser):
     )
     birthdate = DateField(default=DEFAULT_BIRTHDATE)
     afro = BooleanField(default=False)
+    indigenous = BooleanField(default=False)
 
     natural_state = CharField(
         choices=States.choices, default=DEFAULT_STATE, max_length=2
@@ -148,6 +149,14 @@ class User(AbstractUser):
     user_type = SlugField(
         choices=UserTypes.choices, default=UserTypes.STUDENT, max_length=1
     )
+
+    def json(self):
+        return {
+            "rm": self.pk,
+            "username": self.username,
+            "birthdate": self.birthdate,
+            "phone": self.phone,
+        }
 
     def get_full_name(self):
         return self.username.strip()

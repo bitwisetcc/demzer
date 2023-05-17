@@ -1,0 +1,41 @@
+<nav class="p-4 bg-slate-300 dark:bg-cyan-900  flex justify-between">  
+  {% if not no_links|default:False %}
+    <ul class="list-none">
+      <li id="home-icon">
+        <a href="">
+          <box-icon name="user"></box-icon>
+        </a>
+      </li>
+      <li>
+        <a href="">
+          <box-icon name="home-alt"></box-icon>
+        </a>
+      </li>
+      <li>
+        <a href="">
+          <box-icon name="message-square-dots"></box-icon>
+        </a>
+      </li>
+      <li>
+        <a href="">
+          <box-icon name=""></box-icon>
+        </a>
+      </li>
+    </ul>
+  {% else %}
+    <div></div>
+  {% endif %}
+  
+  <span>
+    {{ school_name }}
+  </span>
+
+  {% if user.is_authenticated %}
+    <header>
+      <!-- TODO: icon here -->
+      Nome do aluno
+    </header>
+  {% else %}
+    <div></div>
+  {% endif %}
+</nav>
