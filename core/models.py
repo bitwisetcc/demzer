@@ -4,6 +4,7 @@ from django.db.models import (
     TextChoices,
     ForeignKey,
     ManyToManyField,
+    OneToOneField,
     PROTECT,
     CASCADE,
 )
@@ -17,10 +18,8 @@ from django.db.models.fields import (
     FloatField,
     IntegerField,
 )
-from django.contrib.auth.models import AbstractUser, UserManager
+from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
-from django.utils.deconstruct import deconstructible
-from django.core.validators import RegexValidator
 from backend.settings import (
     DEFAULT_COUNTRY,
     DEFAULT_STATE,
@@ -29,22 +28,15 @@ from backend.settings import (
 )
 
 
-@deconstructible
-class NameValidator(RegexValidator):
-    regex = r"^[\w\.?\s]+"
-    message = _("Digite um nome válido. Apenas letras e ponto")
-    flags = 0
-
-
 class Relative(Model):
     name = CharField(max_length=60, unique=True)
     email = EmailField()
     phone = CharField(max_length=11)
 
 
-class User(AbstractUser):
+class Member(Model):
     """
-    The main character of the system. Can be a student, a parent, a teacher or an employee.
+    The main character of the system. Can be a student, a teacher or an employee.
     """
 
     class Genders(TextChoices):
@@ -100,17 +92,8 @@ class User(AbstractUser):
         GO = "GO"
         DF = "DF"
 
-    name_validator = NameValidator()
-    objects = UserManager()
-
-    email = EmailField(unique=True)
+    user = OneToOneField(User, CASCADE, related_name="profile")
     contact_email = EmailField(default="john.doe@email.com")
-    username = CharField(
-        max_length=100,
-        help_text=_("Obrigatório. 100 ou menos. Apenas letras e ponto"),
-        validators=[name_validator],
-        unique=True,
-    )
 
     rg = IntegerField(default=0)
     cpf = IntegerField(default=0)
@@ -141,36 +124,25 @@ class User(AbstractUser):
     street = CharField(max_length=40)
     street_number = IntegerField(default=1)
     complement = CharField(max_length=20)
-    distance = FloatField(default=0)
+    distance = FloatField(default=0, null=True)
 
     relatives = ManyToManyField(Relative)
 
     course = ForeignKey("Course", PROTECT, related_name="students", null=True)
 
-    user_type = SlugField(
-        choices=UserTypes.choices, default=UserTypes.STUDENT, max_length=1
-    )
-
     def json(self):
         return {
             "rm": self.pk,
-            "username": self.username,
+            "username": self.user.username,
             "birthdate": self.birthdate,
             "gender": self.gender,
             "phone": self.phone,
-            "email": self.email,
+            "email": self.user.email,
             "rg": self.rg,
             "cpf": self.cpf,
         }
 
-    def get_full_name(self):
-        return self.username.strip()
-
-    def get_short_name(self):
-        return self.username.split()[0]
-
     class Meta:
-        abstract = False
         verbose_name = _("usuário")
         verbose_name_plural = _("usuários")
 

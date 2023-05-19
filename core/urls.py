@@ -1,9 +1,10 @@
 from django.conf import settings
-from django.urls import path
+from django.urls import include, path
 from core.views import *
 
 urlpatterns = [
     path("", index, name="home"),
+    # path("", include("django.contrib.auth.urls")),
     path("login/", login_user, name="login"),
     path("enroll/", enroll, name="enroll"),
     path("u/all/", all_users),

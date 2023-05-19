@@ -1,3 +1,4 @@
+from django.db import IntegrityError
 from django.http import (
     HttpResponse,
     HttpRequest,
@@ -26,7 +27,7 @@ def index(request: HttpRequest):
     return render(
         request,
         "core/home.html",
-        {"users": [user.json() for user in User.objects.all()]},
+        {"users": [user.json() for user in Member.objects.all()]},
     )
 
 
@@ -35,13 +36,15 @@ def login_user(request: HttpRequest):
         user_id = request.POST["user-id"]
         password = request.POST["password"]
         username = User.objects.get(pk=user_id).username
+        print(username)
 
         user = authenticate(request, username=username, password=password)
         if user is not None:
-            login(request, user) # DOESNT WORK!!!! TODO: RESEARCH CUSTOM USER MODEL
+            login(request, user)
             return redirect("home")
         else:
-            raise Http404(f"Algo deu errado. Username: {username}.")
+            # Error message
+            return redirect("login")
     else:
         return render(request, "core/login.html", {"no_links": True})
 
@@ -49,58 +52,73 @@ def login_user(request: HttpRequest):
 # TODO: Create actual emails + prevent email duplication
 def enroll(request: HttpRequest):
     if request.method == "POST":
+        username = request.POST["username"].strip()
+        first_name = username.split()[0]
+        last_name = username.split()[-1]
+        birthdate = datetime.strptime(request.POST["birthdate"], "%Y-%m-%d").date()
+
         try:
-            username = request.POST["username"].strip()
-            first_name = username.split()[0]
-            last_name = username.split()[-1]
-            birthdate = datetime.strptime(request.POST["birthdate"], "%Y-%m-%d").date()
-            try:
-                distance = int(request.POST["distance"])
-            except ValueError:
-                distance = None
+            distance = int(request.POST["distance"])
+        except ValueError:
+            distance = None
 
+        try:
             user = User.objects.create_user(
-                username=username.strip(),
-                email=EMAIL_PATTERN.format(first_name.lower(), last_name.lower()),
+                username=username, 
+                email=EMAIL_PATTERN.format(first_name.lower(), last_name.lower()), 
                 password=first_name + last_name + str(birthdate.year),
-                first_name=first_name,
-                last_name=last_name,
-                contact_email=request.POST["contact-email"],
-                phone=re.sub(r"[^0-9]+", "", request.POST["phone"]),
-                birthdate=birthdate,
-                gender=request.POST["gender"],
-                rg=request.POST["rg"],
-                cpf=request.POST["cpf"],
-                public_schooling=request.POST["public-schooling"],
-                afro="afro" in request.POST,
-                civil_state=request.POST["civil-state"],
-                natural_state=request.POST["natural-state"],
-                natural_city=request.POST["natural-city"],
-                nationality=request.POST["nationality"],
-                country_of_origin=request.POST["country-of-origin"],
-                cep=request.POST["cep"],
-                city=request.POST["residence-city"],
-                neighborhood=request.POST["neighborhood"],
-                street=request.POST["street"],
-                street_number=request.POST["street-number"],
-                complement=request.POST["complement"],
-                distance=distance,
             )
-
-            guardian = Relative.objects.create(
-                name=request.POST["name-guardian"],
-                email=request.POST["email-guardian"],
-                phone=request.POST["phone-guardian"],
-            )
-
+    
             user.save()
-            user.relatives.add(guardian)
-            user.save()
+        except IntegrityError as err:
+            raise Http404(f"Nome de usuário ou e-mail já existe: {err}")
 
-            return HttpResponse("haiii")
-        except:
+
+        # try:
+        profile = Member.objects.create(
+            user=user,
+            contact_email=request.POST["contact-email"],
+            phone=re.sub(r"[^0-9]+", "", request.POST["phone"]),
+            birthdate=birthdate,
+            gender=request.POST["gender"],
+            rg=request.POST["rg"],
+            cpf=request.POST["cpf"],
+            public_schooling=request.POST["public-schooling"],
+            afro="afro" in request.POST,
+            civil_state=request.POST["civil-state"],
+            natural_state=request.POST["natural-state"],
+            natural_city=request.POST["natural-city"],
+            nationality=request.POST["nationality"],
+            country_of_origin=request.POST["country-of-origin"],
+            cep=request.POST["cep"],
+            city=request.POST["residence-city"],
+            neighborhood=request.POST["neighborhood"],
+            street=request.POST["street"],
+            street_number=request.POST["street-number"],
+            complement=request.POST["complement"],
+            distance=distance,
+        )
+
+        print("good 4")
+
+        guardian = Relative.objects.create(  # TODO: Check if relative already exists
+            name=request.POST["name-guardian"],
+            email=request.POST["email-guardian"],
+            phone=re.sub(r"[^0-9]+", "", request.POST["phone-guardian"]),
+        )
+
+        print("good 5")
+
+        profile.save()
+        profile.relatives.add(guardian)
+        profile.save()
+
+        print("good 6")
+
+        return HttpResponse("haiii")
+        # except:
             # TODO: Actually handle errors
-            return HttpResponse("something nice (◕ᴗ◕✿)")
+            # return HttpResponse("something nice (◕ᴗ◕✿)")
     else:
         context = {
             "birthdate": DEFAULT_BIRTHDATE,
@@ -112,11 +130,11 @@ def enroll(request: HttpRequest):
 
 
 def detail(request: HttpRequest, user_id: int):
-    return JsonResponse(User.objects.get(id=user_id))
+    return JsonResponse(Member.objects.get(id=user_id))
 
 
 def all_users(request: HttpRequest):
-    return HttpResponse(User.objects.first())
+    return HttpResponse(Member.objects.first())
 
 
 def all_students(request: HttpRequest):
@@ -127,8 +145,8 @@ def all_students(request: HttpRequest):
 
     everyone = [
         user.serialize_json()
-        for user in User.objects.all()
-        if user.user_type == User.UserTypes.STUDENT
+        for user in Member.objects.all()
+        if user.user_type == Member.UserTypes.STUDENT
     ]
 
     return JsonResponse({"total": len(everyone), "users": everyone})
@@ -164,7 +182,7 @@ def create_class(request: HttpRequest):
     Class(
         course=Course.objects.get(slug=body["course"]),
         student_group=body["student_group"] or None,
-        teacher=User.objects.get(pk=body["teacher"]),
+        teacher=Member.objects.get(pk=body["teacher"]),
         subject=Subject.objects.get(slug=body["subject"]),
         day=body["day"],
         order=body["order"],
