@@ -41,3 +41,7 @@ nav box-icon {
 .field {
   @apply flex items-center gap-2;
 }
+
+td {
+  @apply border border-slate-700 dark:border-slate-600 p-3;
+}

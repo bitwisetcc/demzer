@@ -1,13 +1,12 @@
-rm,email,phone,password,name,course,gender,birthdate
-31509,srta.sarahmelo@etec.sp.gov.br,11988990446,123321,Sarita de Melo Herdeira,3GT,F,2005-06-20
-31510,brubo.leopardo@etec.sp.gov.br,11970874769,123321,Bruno Leonardo Martinho,3GT,M,2005-07-24
-31508,jorge.santana3@etec.sp.gov.br,11972762209,123321,Jorginho Terence Princeso,3GT,NB,2005-08-31
-31511,gigi.pita@etec.sp.gov.br,11943152005,123321,Giovanni de Pão Pita,3GT,M,2005-10-10
-31512,rachel.smile@etec.sp.gov.br,1191225232,123321,Raquel Mourato :),3GT,F,2005-12-31
-31513,vivi.pascoal@etec.sp.gov.br,11945178847,123321,Vicente Lover da Grazi ,3GT,M,2004-03-17
-31514,victor.shigueno@etec.sp.gov.br,11946708094,123321,Victor Chileno Joestar,3GT,M,2005-02-21
-31515,vini.tiozao@etec.sp.gov.br,11959558065,123321,Vinicius Crosato Pagodeiro,3GT,NB,2005-07-21
-31516,mariana.sla@etec.sp.gov.br,11933458765,123321,Mariana Sei Lá das Quanta,2GT,F,2006-08-21
-31517,lucas.owo@etec.sp.gov.br,11955578677,123321,Lucas Arnoni,3AD,M,2005-04-11
-31518,nuno.brow@etec.sp.gov.br,11960669165,123321,Nuno Cara Dahora,3GT,M,2006-01-09
-31519,gui.dahora@etec.sp.gov.br,11960558074,123321,Guilherme Zanettinho,2GT,M,2006-08-31
+username,email,password,contact_email,phone,birthdate,gender,rg,cpf,public_schooling,afro,civil_state,natural_state,natural_city,nationality,country_of_origin,cep,city,neighborhood,street,street_number,complement,distance,
+Jorge Terence Princeso,jorge.santana@etec.sp.gov.br,JorgeSantana2000,jorge.terence@outlook.com,11972779727,2000-01-01,M,gerar um rg pfv,gerar um cpf pfv,N,44766588819,0,S,SP,São Paulo,Brasil,Brasil,01010101,Tão Tão Distante,Jardim,Ipê,550,,5
+Sarita de Melo Herdeira,sarita.herdeira@etec.sp.gov.br
+Bruno Leopardo Martinho,bruno.martinho@etec.sp.gov.br
+Giovanni de Pão Pita,giovanni.pita@etec.sp.gov.br
+Raquel Docin Mourato,raquel.mourato@etec.sp.gov.br
+Vivi Pascoal Lover,vivi.lover@etec.sp.gov.br
+Victor Chileno Joestar,victor.joestar@etec.sp.gov.br
+Mariana Sei Lá das Quanta,mariana.quanta@etec.sp.gov.br
+Lucas Arnoni meu Querido,lucas.querido@etec.sp.gov.br
+C11111 Stalker do Busão,c11111.busão@etec.sp.gov.br
+Guilherme Zanettinho,quilherme.zanettinho@etec.sp.gov.br

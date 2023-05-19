@@ -1,6 +1,6 @@
-<nav class="p-4 bg-slate-300 dark:bg-cyan-900  flex justify-between">  
+<nav class="p-4 bg-slate-300 dark:bg-cyan-900 flex justify-between">  
   {% if not no_links|default:False %}
-    <ul class="list-none">
+    <ul class="list-none flex text-yellow-500">
       <li id="home-icon">
         <a href="">
           <box-icon name="user"></box-icon>
@@ -26,14 +26,14 @@
     <div></div>
   {% endif %}
   
-  <span>
+  <span class="text-lg font-semibold">
     {{ school_name }}
   </span>
 
   {% if user.is_authenticated %}
     <header>
       <!-- TODO: icon here -->
-      Nome do aluno
+      {{ user.username }}
     </header>
   {% else %}
     <div></div>

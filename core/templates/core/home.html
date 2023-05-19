@@ -23,7 +23,6 @@
         type="search"
         name="query"
         id="searchQuery"
-        class="bg-gray-200"
         x-model:="input"
       />
       <button
@@ -45,19 +44,25 @@
     </a>
   </form>
 
-  <table class="border-2 border-stone-700 table-auto mt-4">
-    <thead>
+  <table class="table-auto mt-4">
+    <thead class="bg-slate-300 dark:bg-slate-700">
       <tr>
         <td>RM</td>
         <td>Nome</td>
         <td>Nascimento</td>
+        <td>Gênero</td>
+        <td>E-mail</td>
+        <td>Telefone</td>
       </tr>
     </thead>
     {% for user in users %}
     <tr>
-      <td class="p-2">{{ user.rm }}</td>
-      <td class="p-2">{{ user.username }}</td>
-      <td class="p-2">{{ user.birthdate|date:'Y/m/d' }}</td>
+      <td>{{ user.rm }}</td>
+      <td>{{ user.username }}</td>
+      <td>{{ user.birthdate|date:'d/m/Y' }}</td>
+      <td>{{ user.gender }}</td>
+      <td>{{ user.email }}</td>
+      <td>{{ user.phone }}</td>
     </tr>
     {% endfor %}
   </table>

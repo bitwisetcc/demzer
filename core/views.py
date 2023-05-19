@@ -1,13 +1,13 @@
 from django.http import (
     HttpResponse,
     HttpRequest,
-    HttpResponseBadRequest,
     JsonResponse,
     Http404,
 )
 from django.shortcuts import redirect, render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+from django.contrib.auth import authenticate, login
 from datetime import datetime
 import json
 import re
@@ -22,16 +22,28 @@ from backend.settings import (
 )
 
 
-def default_value(field):
-    return User._meta.get_field(field).get_default()
-
-
 def index(request: HttpRequest):
-    return render(request, "core/home.html", {"users": [user.json() for user in  User.objects.all()]})
+    return render(
+        request,
+        "core/home.html",
+        {"users": [user.json() for user in User.objects.all()]},
+    )
 
 
-def login(request: HttpRequest):
-    return render(request, "core/login.html", {"no_links": True})
+def login_user(request: HttpRequest):
+    if request.method == "POST":
+        user_id = request.POST["user-id"]
+        password = request.POST["password"]
+        username = User.objects.get(pk=user_id).username
+
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user) # DOESNT WORK!!!! TODO: RESEARCH CUSTOM USER MODEL
+            return redirect("home")
+        else:
+            raise Http404(f"Algo deu errado. Username: {username}.")
+    else:
+        return render(request, "core/login.html", {"no_links": True})
 
 
 # TODO: Create actual emails + prevent email duplication
@@ -47,13 +59,13 @@ def enroll(request: HttpRequest):
             except ValueError:
                 distance = None
 
-            user = User.objects.create(
+            user = User.objects.create_user(
                 username=username.strip(),
+                email=EMAIL_PATTERN.format(first_name.lower(), last_name.lower()),
+                password=first_name + last_name + str(birthdate.year),
                 first_name=first_name,
                 last_name=last_name,
                 contact_email=request.POST["contact-email"],
-                email=EMAIL_PATTERN.format(first_name, last_name),
-                password=first_name + last_name + str(birthdate.year),
                 phone=re.sub(r"[^0-9]+", "", request.POST["phone"]),
                 birthdate=birthdate,
                 gender=request.POST["gender"],

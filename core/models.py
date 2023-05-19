@@ -17,7 +17,7 @@ from django.db.models.fields import (
     FloatField,
     IntegerField,
 )
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, UserManager
 from django.utils.translation import gettext_lazy as _
 from django.utils.deconstruct import deconstructible
 from django.core.validators import RegexValidator
@@ -101,6 +101,7 @@ class User(AbstractUser):
         DF = "DF"
 
     name_validator = NameValidator()
+    objects = UserManager()
 
     email = EmailField(unique=True)
     contact_email = EmailField(default="john.doe@email.com")
@@ -155,7 +156,11 @@ class User(AbstractUser):
             "rm": self.pk,
             "username": self.username,
             "birthdate": self.birthdate,
+            "gender": self.gender,
             "phone": self.phone,
+            "email": self.email,
+            "rg": self.rg,
+            "cpf": self.cpf,
         }
 
     def get_full_name(self):
