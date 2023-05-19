@@ -11,4 +11,3 @@ node_modules
 .parcel-cache
 tcc_front
 /static
-core/migrations
