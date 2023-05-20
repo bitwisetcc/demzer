@@ -11,6 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
 from datetime import datetime
 import json
 import re
@@ -56,8 +57,13 @@ def login_user(request: HttpRequest):
 
 
 def logout_user(request: HttpRequest):
+    first_name = request.user.username.split()[0]
     logout(request)
-    # success message
+    messages.add_message(
+        request,
+        messages.SUCCESS,
+        f"Você saiu da conta de {first_name}",
+    )
     return redirect("home")
 
 
@@ -83,9 +89,10 @@ def enroll(request: HttpRequest):
 
             user.save()
         except IntegrityError as err:
-            match err.split(".")[-1]:
+            match str(err).split(".")[-1]:
                 case "username":
-                    raise Http404(f"Nome de usuário já existe")
+                    messages.add_message(request, messages.ERROR, "Nome de usuário já existe")
+                    return redirect("enroll")
                 case "email":
                     raise Http404(
                         f"E-mail já existe"
