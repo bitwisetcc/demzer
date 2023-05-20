@@ -6,6 +6,7 @@ urlpatterns = [
     path("", index, name="home"),
     # path("", include("django.contrib.auth.urls")),
     path("login/", login_user, name="login"),
+    path("logout/", logout_user, name="logout"),
     path("enroll/", enroll, name="enroll"),
     path("u/all/", all_users),
     path("u/students/", all_students),

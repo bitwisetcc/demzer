@@ -9,8 +9,8 @@
     {% block head %}{% endblock %}
     <script defer src="{% static 'core/dist/js/page.js' %}"></script>
   </head>
-  {% include "core/navbar.html" with no_links=no_links %}
-  <body class="bg-cyan-50 flex flex-col h-screen dark:bg-slate-800 dark:text-slate-200">
+  <body class="bg-slate-100 flex flex-col h-screen dark:bg-slate-800 dark:text-slate-200">
+    {% include "core/navbar.html" with no_nav=no_nav %}
     {% block content %}{% endblock %}
   </body>
 </html>

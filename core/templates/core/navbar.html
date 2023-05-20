@@ -1,41 +1,44 @@
-<nav class="p-4 bg-slate-300 dark:bg-cyan-900 flex justify-between">  
-  {% if not no_links|default:False %}
-    <ul class="list-none flex text-yellow-500">
-      <li id="home-icon">
-        <a href="">
-          <box-icon name="user"></box-icon>
-        </a>
-      </li>
-      <li>
-        <a href="">
-          <box-icon name="home-alt"></box-icon>
-        </a>
-      </li>
-      <li>
-        <a href="">
-          <box-icon name="message-square-dots"></box-icon>
-        </a>
-      </li>
-      <li>
-        <a href="">
-          <box-icon name=""></box-icon>
-        </a>
-      </li>
-    </ul>
-  {% else %}
-    <div></div>
-  {% endif %}
-  
-  <span class="text-lg font-semibold">
-    {{ school_name }}
-  </span>
+{% if not no_nav|default:False %}
+<nav
+  class="py-3 px-8 bg-slate-300 dark:bg-cyan-900 flex justify-between items-center"
+>
+  <ul class="list-none flex text-yellow-500">
+    <li id="home-icon">
+      <a href="">
+        <box-icon name="user"></box-icon>
+      </a>
+    </li>
+    <li>
+      <a href="">
+        <box-icon name="home-alt"></box-icon>
+      </a>
+    </li>
+    <li>
+      <a href="">
+        <box-icon name="message-square-dots"></box-icon>
+      </a>
+    </li>
+    <li>
+      <a href="">
+        <box-icon name=""></box-icon>
+      </a>
+    </li>
+  </ul>
 
-  {% if user.is_authenticated %}
-    <header>
-      <!-- TODO: icon here -->
-      {{ user.username }}
-    </header>
-  {% else %}
-    <div></div>
-  {% endif %}
+  <span class="text-lg font-semibold">{{ school_name }}</span>
+
+  <header
+    class="cursor-pointer relative"
+    x-data="{ open: false, toggle() { this.open = !this.open }}"
+    @click="toggle()"
+  >
+    <box-icon name="user" color="white"></box-icon>
+    <span>{{ user.username.split.0 }}{{ user.username.split.1 }}</span>
+    <div x-show="open" class="absolute shadow bg-slate-300 dark:bg-slate-800 p-4 border border-slate-500">
+      <ul class="list-none">
+        <li><a href="{% url 'logout' %}">Log out</a></li>
+      </ul>
+    </div>
+  </header>
 </nav>
+{% endif %}

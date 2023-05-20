@@ -2,13 +2,15 @@ from django.db import IntegrityError
 from django.http import (
     HttpResponse,
     HttpRequest,
+    HttpResponseBadRequest,
     JsonResponse,
     Http404,
 )
 from django.shortcuts import redirect, render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout
 from datetime import datetime
 import json
 import re
@@ -23,6 +25,7 @@ from backend.settings import (
 )
 
 
+@login_required
 def index(request: HttpRequest):
     return render(
         request,
@@ -32,6 +35,9 @@ def index(request: HttpRequest):
 
 
 def login_user(request: HttpRequest):
+    if request.user.is_authenticated:
+        return redirect("home")
+
     if request.method == "POST":
         user_id = request.POST["user-id"]
         password = request.POST["password"]
@@ -46,7 +52,13 @@ def login_user(request: HttpRequest):
             # Error message
             return redirect("login")
     else:
-        return render(request, "core/login.html", {"no_links": True})
+        return render(request, "core/login.html", {"no_nav": True})
+
+
+def logout_user(request: HttpRequest):
+    logout(request)
+    # success message
+    return redirect("home")
 
 
 # TODO: Create actual emails + prevent email duplication
@@ -64,61 +76,68 @@ def enroll(request: HttpRequest):
 
         try:
             user = User.objects.create_user(
-                username=username, 
-                email=EMAIL_PATTERN.format(first_name.lower(), last_name.lower()), 
+                username=username,
+                email=EMAIL_PATTERN.format(first_name.lower(), last_name.lower()),
                 password=first_name + last_name + str(birthdate.year),
             )
-    
+
             user.save()
         except IntegrityError as err:
-            raise Http404(f"Nome de usuário ou e-mail já existe: {err}")
+            match err.split(".")[-1]:
+                case "username":
+                    raise Http404(f"Nome de usuário já existe")
+                case "email":
+                    raise Http404(
+                        f"E-mail já existe"
+                    )  # TODO: Add a number to the email
 
+        try:
+            profile = Member.objects.create(
+                user=user,
+                contact_email=request.POST["contact-email"],
+                phone=re.sub(r"[^0-9]+", "", request.POST["phone"]),
+                birthdate=birthdate,
+                gender=request.POST["gender"],
+                rg=request.POST["rg"],
+                cpf=request.POST["cpf"],
+                public_schooling=request.POST["public-schooling"],
+                afro="afro" in request.POST,
+                civil_state=request.POST["civil-state"],
+                natural_state=request.POST["natural-state"],
+                natural_city=request.POST["natural-city"],
+                nationality=request.POST["nationality"],
+                country_of_origin=request.POST["country-of-origin"],
+                cep=request.POST["cep"],
+                city=request.POST["residence-city"],
+                neighborhood=request.POST["neighborhood"],
+                street=request.POST["street"],
+                street_number=request.POST["street-number"],
+                complement=request.POST["complement"],
+                distance=distance,
+            )
+        except Exception as err:
+            return HttpResponseBadRequest(
+                "Algo deu errado tentando criar o seu perfil:\n" + err
+            )
 
-        # try:
-        profile = Member.objects.create(
-            user=user,
-            contact_email=request.POST["contact-email"],
-            phone=re.sub(r"[^0-9]+", "", request.POST["phone"]),
-            birthdate=birthdate,
-            gender=request.POST["gender"],
-            rg=request.POST["rg"],
-            cpf=request.POST["cpf"],
-            public_schooling=request.POST["public-schooling"],
-            afro="afro" in request.POST,
-            civil_state=request.POST["civil-state"],
-            natural_state=request.POST["natural-state"],
-            natural_city=request.POST["natural-city"],
-            nationality=request.POST["nationality"],
-            country_of_origin=request.POST["country-of-origin"],
-            cep=request.POST["cep"],
-            city=request.POST["residence-city"],
-            neighborhood=request.POST["neighborhood"],
-            street=request.POST["street"],
-            street_number=request.POST["street-number"],
-            complement=request.POST["complement"],
-            distance=distance,
-        )
+        try:
+            guardian = (
+                Relative.objects.create(  # TODO: Check if relative already exists
+                    name=request.POST["name-guardian"],
+                    email=request.POST["email-guardian"],
+                    phone=re.sub(r"[^0-9]+", "", request.POST["phone-guardian"]),
+                )
+            )
 
-        print("good 4")
+            profile.save()
+            profile.relatives.add(guardian)
+            profile.save()
+        except Exception as err:
+            return HttpResponseBadRequest(
+                "Algo deu errado tentando registrar o responsável:\n" + err
+            )
 
-        guardian = Relative.objects.create(  # TODO: Check if relative already exists
-            name=request.POST["name-guardian"],
-            email=request.POST["email-guardian"],
-            phone=re.sub(r"[^0-9]+", "", request.POST["phone-guardian"]),
-        )
-
-        print("good 5")
-
-        profile.save()
-        profile.relatives.add(guardian)
-        profile.save()
-
-        print("good 6")
-
-        return HttpResponse("haiii")
-        # except:
-            # TODO: Actually handle errors
-            # return HttpResponse("something nice (◕ᴗ◕✿)")
+        return redirect("home")
     else:
         context = {
             "birthdate": DEFAULT_BIRTHDATE,
