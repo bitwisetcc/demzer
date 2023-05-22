@@ -35,7 +35,7 @@ def index(request: HttpRequest):
     )
 
 
-def login_user(request: HttpRequest):
+def login_user(request: HttpRequest, failed=0):
     if request.user.is_authenticated:
         return redirect("home")
 
@@ -50,10 +50,10 @@ def login_user(request: HttpRequest):
             login(request, user)
             return redirect("home")
         else:
-            # Error message
-            return redirect("login")
+            messages.add_message(request, messages.WARNING, "Senha incorreta. Tente Novamente")
+            return redirect("login", failed=1)
     else:
-        return render(request, "core/login.html", {"no_nav": True})
+        return render(request, "core/login.html", {"no_nav": True, "failed": failed})
 
 
 def logout_user(request: HttpRequest):

@@ -1,6 +1,30 @@
-{% extends 'core/base.html' %} {% load static %} {% block content %}
+{% extends 'core/base.html' %} {% load static %} {% block head %}
+<script defer>
+  function onInit() {
+    const failed = Boolean(location.pathname.split("login/")[1][0]);
+    const attempts = Number(localStorage.getItem("attempts")) ?? 0;
+    const total = attempts + failed;
+    localStorage.setItem("attempts", total);
+
+    if (total < 3) return;
+    if (total == 3)
+      localStorage.setItem("locked", String(new Date().getMinutes()));
+
+    const lastLock = localStorage.getItem("locked");
+    const timeDiff = Math.abs(new Date().getMinutes() - lastLock);
+
+    if (lastLock === null || timeDiff > 15) {
+      localStorage.clear();
+      return;
+    }
+
+    alert("Espere até 15 minutos para tentar um login novamente");
+  }
+</script>
+{% endblock %} {% block content %}
 <main
   class="w-full h-full bg-gradient-to-br from-cyan-500 to-sky-600 p-5 sm:p-9"
+  x-init="onInit()"
 >
   <section
     class="w-full h-full bg-slate-100 dark:bg-slate-800 rounded-3xl shadow-sm shadow-slate-800 sm:flex justify-between relative"
@@ -29,15 +53,15 @@
         <div class="flex flex-col gap-1 mb-3">
           <label for="school-code">Código da escola:</label>
           <!-- TODO: Add a pop-up that helps find their school -->
-          <input type="number" name="school-code" id="school-code" />
+          <input type="number" name="school-code" id="school-code" required />
         </div>
         <div class="flex flex-col gap-1 mb-3">
           <label for="user-id">ID:</label>
-          <input type="text" name="user-id" id="user-id" />
+          <input type="text" name="user-id" id="user-id" required />
         </div>
         <div class="flex flex-col gap-1 mb-3">
           <label for="password">Senha:</label>
-          <input type="password" name="password" id="password" />
+          <input type="password" name="password" id="password" required />
         </div>
 
         <div class="flex flex-col md:block">
