@@ -1,4 +1,6 @@
-{% extends 'core/base.html' %} {% load static %} {% block head %}
+{% extends 'core/base.html' %}
+{% load static %}
+{% block head %}
 <script defer>
   function onInit() {
     const failed = Boolean(location.pathname.split("login/")[1][0]);
@@ -23,55 +25,53 @@
     alert("Espere até 15 minutos para tentar um login novamente");
   }
 </script>
-{% endblock %} {% block content %}
-<main class="w-full h-full bg-sky-600 dark:bg-sky-700 p-5 sm:p-9" x-init="onInit()">
+{% endblock %}
+{% block content %}
+<main class="w-full h-full bg-[#054499] p-5 sm:p-9" x-init="onInit()">
   <section
     class="w-full h-full bg-slate-100 dark:bg-slate-800 rounded-3xl shadow-md shadow-slate-800 sm:flex justify-between relative"
   >
     <form
       action="{% url 'login' %}"
       method="POST"
-      class="py-14 px-8 sm:p-14 flex flex-col items-center"
+      class="py-12 px-8 sm:pt-14 flex flex-col items-center"
     >
       {% csrf_token %}
-      <header class="flex gap-4 items-center mb-6">
+      <header class="flex flex-col gap-4 items-center mb-6">
         <img
           src="{% static 'core/images/logo.png' %}"
           alt="logo"
-          class="h-24"
+          class="h-16"
         />
-        <div>
-          <h1 class="text-3xl font-sans font-bold">Login</h1>
-          <h2 class="text-lg font-sans">
-            Entre com seu <br class="hide sm:block md:hidden" />
-            ID e senha
-          </h2>
-        </div>
+        <h1 class="text-3xl font-sans font-bold">Login</h1>
+        <h2 class="text-md font-sans">
+          Entre com seu <br class="hide sm:block md:hidden" />
+          ID e senha
+        </h2>
       </header>
-      <div class="flex flex-col justify-center sm:block">
+      <div class="flex flex-col justify-center items-center sm:block">
         <div class="flex flex-col gap-1 mb-3">
-          <label for="school-code">Código da escola:</label>
-          <!-- TODO: Add a pop-up that helps find their school -->
-          <input type="number" name="school-code" id="school-code" required />
+          <label for="school-code">Escola:</label>
+          <input type="text" name="school-code" id="school-code" required />
         </div>
-        <div class="flex flex-col gap-1 mb-3">
-          <label for="user-id">ID:</label>
-          <input type="text" name="user-id" id="user-id" required />
-        </div>
-        <div class="flex flex-col gap-1 mb-3">
-          <label for="password">Senha:</label>
-          <input type="password" name="password" id="password" required />
+        <div class="md:flex gap-2">
+          <div class="flex flex-col gap-1 mb-3">
+            <label for="user-id">ID:</label>
+            <input type="text" name="user-id" id="user-id" required />
+          </div>
+          <div class="flex flex-col gap-1 mb-3">
+            <label for="password">Senha:</label>
+            <input type="password" name="password" id="password" required />
+          </div>
         </div>
 
-        <div class="flex flex-col md:block">
-          <a href="new_password" class="text-sky-700 dark:text-sky-500"
-            >Enqueci a senha</a
-          >
+        <div class="flex flex-col">
+          <a href="new_password" class="text-sky-700 dark:text-sky-500">Enqueci a senha</a>
           <br />
           <input
             type="submit"
             value="Entrar"
-            class="bg-amber-400 dark:bg-amber-500 dark:text-black py-2 px-5 mt-4 rounded-2xl md:rounded-md hover:shadow-md cursor-pointer sm:rounded-3xl sm:"
+            class="bg-amber-400 dark:bg-amber-500 dark:text-black py-2 px-5 mt-4 md:rounded-md hover:shadow-md cursor-pointer rounded-3xl"
           />
         </div>
       </div>
