@@ -7,8 +7,10 @@
     localStorage.setItem("attempts", total);
 
     if (total < 3) return;
-    if (total == 3)
+    if (total == 3) {
+      localStorage.setItem("attempts", 10);
       localStorage.setItem("locked", String(new Date().getMinutes()));
+    }
 
     const lastLock = localStorage.getItem("locked");
     const timeDiff = Math.abs(new Date().getMinutes() - lastLock);
@@ -22,12 +24,9 @@
   }
 </script>
 {% endblock %} {% block content %}
-<main
-  class="w-full h-full bg-gradient-to-br from-cyan-500 to-sky-600 p-5 sm:p-9"
-  x-init="onInit()"
->
+<main class="w-full h-full bg-sky-600 dark:bg-sky-700 p-5 sm:p-9" x-init="onInit()">
   <section
-    class="w-full h-full bg-slate-100 dark:bg-slate-800 rounded-3xl shadow-sm shadow-slate-800 sm:flex justify-between relative"
+    class="w-full h-full bg-slate-100 dark:bg-slate-800 rounded-3xl shadow-md shadow-slate-800 sm:flex justify-between relative"
   >
     <form
       action="{% url 'login' %}"
