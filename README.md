@@ -1,6 +1,14 @@
 # DEMZER backend
 
-## Run it on your machine
+## Instruções
+
+Este projeto consiste em um servidor que pode ser gerido local ou remotamente. Para que funcione, precisará de algumas dependências:
+
+- [Node JS 18.16](https://nodejs.org/pt-br) (LTS)
+- [Python 3.11](https://www.python.org/)
+- MySQL (opcional)
+
+_No futuro o projeto usará uma ferramenta chamada Docker para rodar tudo independente da máquina base._
 
 ```sh
 npm i

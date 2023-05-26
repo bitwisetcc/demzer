@@ -34,7 +34,7 @@
     <form
       action="{% url 'login' %}"
       method="POST"
-      class="py-12 px-8 sm:pt-14 flex flex-col items-center"
+      class="py-9 px-8 sm:pt-10 md:p-14 sm:w-1/2 flex flex-col items-center justify-center"
     >
       {% csrf_token %}
       <header class="flex flex-col gap-4 items-center mb-6">
@@ -44,10 +44,7 @@
           class="h-16"
         />
         <h1 class="text-3xl font-sans font-bold">Login</h1>
-        <h2 class="text-md font-sans">
-          Entre com seu <br class="hide sm:block md:hidden" />
-          ID e senha
-        </h2>
+        <h2 class="text-md font-sans">Entre com seu ID e senha</h2>
       </header>
       <div class="flex flex-col justify-center items-center sm:block">
         <div class="flex flex-col gap-1 mb-3">
@@ -57,7 +54,7 @@
         <div class="md:flex gap-2">
           <div class="flex flex-col gap-1 mb-3">
             <label for="user-id">ID:</label>
-            <input type="text" name="user-id" id="user-id" required />
+            <input type="text" name="user-id" id="user-id" required class="md:w-24" />
           </div>
           <div class="flex flex-col gap-1 mb-3">
             <label for="password">Senha:</label>
@@ -65,13 +62,13 @@
           </div>
         </div>
 
-        <div class="flex flex-col">
+        <div class="flex flex-col gap-3 md:gap-2 w-full md:block">
           <a href="new_password" class="text-sky-700 dark:text-sky-500">Enqueci a senha</a>
-          <br />
+          <br class="hidden md:block">
           <input
             type="submit"
             value="Entrar"
-            class="bg-amber-400 dark:bg-amber-500 dark:text-black py-2 px-5 mt-4 md:rounded-md hover:shadow-md cursor-pointer rounded-3xl"
+            class="py-2 px-20 md:mt-3 md:mx-auto md:block hover:shadow-md cursor-pointer rounded-3xl"
           />
         </div>
       </div>
