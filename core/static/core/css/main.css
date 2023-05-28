@@ -30,7 +30,7 @@
   }
 
   [type='submit'] {
-    @apply bg-amber-400 dark:bg-amber-500 dark:text-black;
+    @apply bg-amber-400 dark:bg-amber-500 dark:text-black rounded-3xl hover:shadow-md cursor-pointer;
   }
 }
 

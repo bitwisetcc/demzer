@@ -54,7 +54,7 @@
         <div class="md:flex gap-2">
           <div class="flex flex-col gap-1 mb-3">
             <label for="user-id">ID:</label>
-            <input type="text" name="user-id" id="user-id" required class="md:w-24" />
+            <input type="text" name="user-id" id="user-id" class="md:w-24" required />
           </div>
           <div class="flex flex-col gap-1 mb-3">
             <label for="password">Senha:</label>
@@ -64,12 +64,8 @@
 
         <div class="flex flex-col gap-3 md:gap-2 w-full md:block">
           <a href="new_password" class="text-sky-700 dark:text-sky-500">Enqueci a senha</a>
-          <br class="hidden md:block">
-          <input
-            type="submit"
-            value="Entrar"
-            class="py-2 px-20 md:mt-3 md:mx-auto md:block hover:shadow-md cursor-pointer rounded-3xl"
-          />
+          <br class="hidden md:block" />
+          <input type="submit" value="Entrar" class="py-2 px-20 md:mt-3 md:mx-auto md:block" />
         </div>
       </div>
     </form>

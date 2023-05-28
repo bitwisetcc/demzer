@@ -43,14 +43,15 @@ def login_user(request: HttpRequest, failed=0):
         user_id = request.POST["user-id"]
         password = request.POST["password"]
         username = User.objects.get(pk=user_id).username
-        print(username)
 
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
             return redirect("home")
         else:
-            messages.add_message(request, messages.WARNING, "Senha incorreta. Tente Novamente")
+            messages.add_message(
+                request, messages.WARNING, "Senha incorreta. Tente Novamente"
+            )
             return redirect("login", failed=1)
     else:
         return render(request, "core/login.html", {"no_nav": True, "failed": failed})
@@ -91,7 +92,9 @@ def enroll(request: HttpRequest):
         except IntegrityError as err:
             match str(err).split(".")[-1]:
                 case "username":
-                    messages.add_message(request, messages.ERROR, "Nome de usuário já existe")
+                    messages.add_message(
+                        request, messages.ERROR, "Nome de usuário já existe"
+                    )
                     return redirect("enroll")
                 case "email":
                     raise Http404(

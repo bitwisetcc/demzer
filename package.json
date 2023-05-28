@@ -13,6 +13,10 @@
       "distDir": "./static/core/dist"
     }
   },
+  "prettier": {
+    "arrowParens": "avoid",
+    "bracketSameLine": true
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "parcel watch"

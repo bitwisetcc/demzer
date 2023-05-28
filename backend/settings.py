@@ -96,16 +96,21 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "backend.wsgi.application"
 
-DB_ENGINE = environ["BD_ENGINE"]
-DATABASES = {
-    "default": {
-        "ENGINE": f"django.db.backends.{DB_ENGINE}",
-        "NAME": BASE_DIR / "db.sqlite3" if DB_ENGINE == "sqlite3" else "tcc",
-        "USER": "root",
-        "PASSWORD": "password123",
-        "HOST": "localhost",
+DB_ENGINE = environ.get("DB_ENGINE", "sqlite3")
+
+
+if DB_ENGINE == "sqlite3":
+    DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": "tcc"}}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.{}".format(DB_ENGINE),
+            "NAME": environ.get("DB_NAME", "tcc"),
+            "USER": environ.get("DB_USER", "root"),
+            "PASSWORD": environ.get("DB_PASSWORD", "root"),
+            "HOST": environ.get("DB_PASSWORD", "localhost"),
+        }
     }
-}
 
 
 AUTH_PASSWORD_VALIDATORS = [

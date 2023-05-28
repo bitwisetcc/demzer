@@ -1,0 +1,13 @@
+{
+  "recommendations": [
+    "EditorConfig.EditorConfig",
+    "esbenp.prettier-vscode",
+    "ms-vsliveshare.vsliveshare",
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "ms-python.isort",
+    "bradlc.vscode-tailwindcss",
+    "adrianwilczynski.alpine-js-intellisense",
+    "sperovita.alpinejs-syntax-highlight",
+  ]
+}
