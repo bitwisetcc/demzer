@@ -1,5 +1,3 @@
-Meu Drive
-
 # DEMZER - um sistema acadêmico geral
 
 ## Dependências

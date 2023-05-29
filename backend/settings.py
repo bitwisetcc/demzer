@@ -100,7 +100,7 @@ DB_ENGINE = environ.get("DB_ENGINE", "sqlite3")
 
 
 if DB_ENGINE == "sqlite3":
-    DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": "tcc"}}
+    DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": BASE_DIR / "db.sqlite3"}}
 else:
     DATABASES = {
         "default": {

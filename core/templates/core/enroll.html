@@ -1,12 +1,7 @@
-{% extends 'core/base.html' %}
-{% load static %}
-{% block head %}
+{% extends 'core/base.html' %} {% load static %} {% block head %}
 <script defer src="{% static 'core/js/enroll.js' %}"></script>
-{% endblock %}
-{% block content %}
-<main class="py-9 px-6 flex-1">
-  <h1 class="text-3xl font-sans font-bold mb-3">Matrícula</h1>
-  <hr>
+{% endblock %} {% block content %}
+<main class="m-8 mb-20 framed">
   <form
     action="{% url 'enroll' %}"
     method="POST"
@@ -14,117 +9,226 @@
     @submit="submit"
     x-data="fields"
   >
+    <nav class="flex gap-10">
+      <h1 class="text-3xl font-sans font-bold mb-3">Matrícula</h1>
+      <ul class="flex gap-6">
+        <li>Identidade</li>
+        <li>Contato</li>
+      </ul>
+    </nav>
     {% csrf_token %}
-    <h2 class="text-2xl font-sans font-semibold">Identidade</h2>
-    <div class="field">
-      <label for="txt-username">Nome:</label>
-      <input
-        type="text"
-        name="username"
-        id="txt-username"
-        maxlength="150"
-        minlength="10"
-        size="30"
-        required
-        x-model="name"
-      />
-      <label for="dt-birthdate">Nascimento:</label>
-      <input type="date" name="birthdate" id="dt-birthdate" value="{{ birthdate|date:'Y-m-d' }}" required />
-    </div>
-    <div class="field">
-      <label for="gender-box">Gênero:</label>
-      <span id="gender-box" class="flex items-center">
-        <input type="radio" value="M" name="gender" id="rd-masc" required checked />
-        <label for="rd-masc">Masculino</label>
-        <input type="radio" value="F" name="gender" id="rd-fem" />
-        <label for="rd-fem">Feminino</label>
-        <input type="radio" value="NB" name="gender" id="rd-nb" />
-        <label for="rd-nb">Não binário</label>
-      </span>
-    </div>
-    <div class="field">
-      <label for="txt-cpf">CPF:</label>
-      <input type="number" name="cpf" id="txt-cpf" required x-model="cpf" size="13" />
-      <label for="txt-rg">RG:</label>
-      <input type="number" name="rg" id="txt-rg" required x-model="rg" size="11" />
-    </div>
-    <div class="field" x-data="{ check: false }">
-      <label for="cb-afro">Afrodescendente:</label>
-      <input type="checkbox" name="afro" id="cb-afro" x-model="check" />
-      <span class="ml-1" x-text="check ? 'Sim' : 'Não'"></span>
-    </div>
-    <div class="field">
-      <label for="sl-school">Escolaridade pública:</label>
-      <select name="public-schooling" id="sl-school">
-        <option value="C">Completo</option>
-        <option value="B">Ensino Básico</option>
-        <option value="F" selected>Ensino Fundamental</option>
-        <option value="M">Ensino Médio</option>
-        <option value="N">Nenhuma</option>
-      </select>
-    </div>
-    <div class="field">
-      <label for="nat-box">Naturalidade:</label>
-      <span id="nat-box" class="flex items-center gap-1 ml-1">
-        <input type="text" name="natural-city" id="txt-city" value="{{ city }}" required />
-        <select name="natural-state" id="sl-state">
-          <template x-for="code in [
+    <section>
+      <h2 class="text-2xl font-sans font-semibold">Informações pessoais</h2>
+
+      <div class="field">
+        <label for="txt-username">Nome</label>
+        <input
+          type="text"
+          name="username"
+          id="txt-username"
+          maxlength="150"
+          minlength="5"
+          size="30"
+          @keydown="validateName"
+          required
+        />
+        <label for="dt-birthdate">Nascimento</label>
+        <input
+          type="date"
+          name="birthdate"
+          id="dt-birthdate"
+          value="{{ birthdate|date:'Y-m-d' }}"
+          required
+        />
+      </div>
+      <div class="field">
+        <label for="gender-box">Gênero</label>
+        <span id="gender-box" class="flex items-center">
+          <input
+            type="radio"
+            value="M"
+            name="gender"
+            id="rd-masc"
+            required
+            checked
+          />
+          <label for="rd-masc">Masculino</label>
+          <input type="radio" value="F" name="gender" id="rd-fem" />
+          <label for="rd-fem">Feminino</label>
+          <input type="radio" value="NB" name="gender" id="rd-nb" />
+          <label for="rd-nb">Não binário</label>
+        </span>
+      </div>
+      <div class="field">
+        <label for="txt-cpf">CPF</label>
+        <input
+          type="number"
+          name="cpf"
+          id="txt-cpf"
+          required
+          x-model="cpf"
+          size="13"
+        />
+        <label for="txt-rg">RG:</label>
+        <input
+          type="number"
+          name="rg"
+          id="txt-rg"
+          required
+          x-model="rg"
+          size="11"
+        />
+      </div>
+      <div class="field" x-data="{ check: false }">
+        <label for="cb-afro">Afrodescendente:</label>
+        <input type="checkbox" name="afro" id="cb-afro" x-model="check" />
+        <span class="ml-1" x-text="check ? 'Sim' : 'Não'"></span>
+      </div>
+      <div class="field">
+        <label for="sl-school">Escolaridade pública:</label>
+        <select name="public-schooling" id="sl-school">
+          <option value="C">Completo</option>
+          <option value="B">Ensino Básico</option>
+          <option value="F" selected>Ensino Fundamental</option>
+          <option value="M">Ensino Médio</option>
+          <option value="N">Nenhuma</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="nat-box">Naturalidade:</label>
+        <span id="nat-box" class="flex items-center gap-1 ml-1">
+          <input
+            type="text"
+            name="natural-city"
+            id="txt-city"
+            value="{{ city }}"
+            required
+          />
+          <select name="natural-state" id="sl-state">
+            <template
+              x-for="code in [
             'RO','AC','AM','RR','PA','AP','TO','MA','PI',
             'CE','RN','PB','PE','AL','SE','BA','MG','ES',
             'RJ','SP','PR','SC','RS','MS','MT','GO','DF',
-          ]">
-            <option :value="code" :selected="code == '{{ state }}'" x-text="code"></option>
-          </template>
-          <option value=""></option>
-        </select>
-      </span>
-    </div>
-    <div class="field">
-      <label for="txt-nation">Nacionalidade:</label>
-      <input type="text" name="nationality" id="txt-nation" value="{{ country }}" required/>
-    </div>
-    <div class="field">
-      <label for="txt-origin">País de origem:</label>
-      <input type="text" name="country-of-origin" id="txt-origin" value="{{ country }}" required />
-    </div>
-    <div class="field flex items-center">
-      <label for="civil-box">Estado civíl:</label>
-      <span id="civil-box" class="flex items-center">
-        <input type="radio" value="S" name="civil-state" id="rd-single" required checked />
-        <label for="rd-single">Solteiro</label>
-        <input type="radio" value="M" name="civil-state" id="rd-maried">
-        <label for="rd-maried">Casado</label>
-        <input type="radio" value="D" name="civil-state" id="rd-divorced">
-        <label for="rd-divorced">Divorciado</label>
-        <input type="radio" value="W" name="civil-state" id="rd-widow">
-        <label for="rd-widow">Viúvo</label>
-      </span>
-    </div>
+          ]"
+            >
+              <option
+                :value="code"
+                :selected="code == '{{ state }}'"
+                x-text="code"
+              ></option>
+            </template>
+            <option value=""></option>
+          </select>
+        </span>
+      </div>
+      <div class="field">
+        <label for="txt-nation">Nacionalidade:</label>
+        <input
+          type="text"
+          name="nationality"
+          id="txt-nation"
+          value="{{ country }}"
+          required
+        />
+      </div>
+      <div class="field">
+        <label for="txt-origin">País de origem:</label>
+        <input
+          type="text"
+          name="country-of-origin"
+          id="txt-origin"
+          value="{{ country }}"
+          required
+        />
+      </div>
+      <div class="field flex items-center">
+        <label for="civil-box">Estado civíl:</label>
+        <span id="civil-box" class="flex items-center">
+          <input
+            type="radio"
+            value="S"
+            name="civil-state"
+            id="rd-single"
+            required
+            checked
+          />
+          <label for="rd-single">Solteiro</label>
+          <input type="radio" value="M" name="civil-state" id="rd-maried" />
+          <label for="rd-maried">Casado</label>
+          <input type="radio" value="D" name="civil-state" id="rd-divorced" />
+          <label for="rd-divorced">Divorciado</label>
+          <input type="radio" value="W" name="civil-state" id="rd-widow" />
+          <label for="rd-widow">Viúvo</label>
+        </span>
+      </div>
+    </section>
 
-    <hr>
+    <hr />
 
     <h2 class="text-2xl font-sans font-semibold">Filiação</h2>
     <div class="field">
       <label for="txt-guardian">Responsável:</label>
-      <input type="text" name="name-guardian" id="txt-guardian" size="30" required>
+      <input
+        type="text"
+        name="name-guardian"
+        id="txt-guardian"
+        size="30"
+        @keydown="validateName"
+        required
+      />
       <label for="tel-guardian" class="ml-1">Telefone:</label>
-      <input type="tel" name="phone-guardian" id="tel-guardian" size="11" x-mask="(99)99999-9999" required>
+      <input
+        type="tel"
+        name="phone-guardian"
+        id="tel-guardian"
+        size="11"
+        x-mask="(99)99999-9999"
+        required
+      />
       <label for="email-guardian">Email:</label>
-      <input type="email" name="email-guardian" id="email-guardian" maxlength="100" size="30" required>
+      <input
+        type="email"
+        name="email-guardian"
+        id="email-guardian"
+        maxlength="100"
+        size="30"
+        required
+      />
     </div>
 
-    <hr>
+    <hr />
 
     <h2 class="text-2xl font-sans font-semibold">Contato</h2>
     <div class="field">
       <label for="txt-email">Email:</label>
-      <input type="email" name="contact-email" id="txt-email" size="28" required>
+      <input
+        type="email"
+        name="contact-email"
+        id="txt-email"
+        size="28"
+        required
+      />
       <label for="txt-phone">Celular:</label>
-      <input type="tel" name="phone" id="txt-phone" x-mask="(99)99999-9999" size="10" required>
+      <input
+        type="tel"
+        name="phone"
+        id="txt-phone"
+        x-mask="(99)99999-9999"
+        size="10"
+        required
+      />
     </div>
     <div class="field">
       <label for="txt-cep">CEP:</label>
-      <input type="number" name="cep" id="txt-cep" size="11" required x-ref="cep">
+      <input
+        type="number"
+        name="cep"
+        id="txt-cep"
+        size="11"
+        required
+        x-ref="cep"
+      />
       <button
         class="bg-sky-600 dark:bg-sky-700 py-2 px-3 rounded"
         @click.prevent="() => fillCEP($refs.cep.value)"
@@ -134,21 +238,45 @@
     </div>
     <div class="field">
       <label for="txt-city">Cidade:</label>
-      <input type="text" name="residence-city" id="txt-city" x-model="city" required>
+      <input
+        type="text"
+        name="residence-city"
+        id="txt-city"
+        x-model="city"
+        required
+      />
       <label for="txt-neighborhood">Bairro:</label>
-      <input type="text" name="neighborhood" id="txt-txt-neighborhood" x-model="neighborhood" required>
+      <input
+        type="text"
+        name="neighborhood"
+        id="txt-txt-neighborhood"
+        x-model="neighborhood"
+        required
+      />
     </div>
     <div class="field">
       <label for="txt-street">Rua:</label>
-      <input type="text" name="street" id="txt-street" x-model="street">
+      <input type="text" name="street" id="txt-street" x-model="street" />
       <label for="txt-street-number">Número:</label>
-      <input type="number" name="street-number" id="txt-street-number" size="4" required>
+      <input
+        type="number"
+        name="street-number"
+        id="txt-street-number"
+        size="4"
+        required
+      />
     </div>
     <div class="field">
       <label for="txt-comp">Complemento:</label>
-      <input type="text" name="complement" id="txt-comp" size="10">
+      <input type="text" name="complement" id="txt-comp" size="10" />
       <label for="txt-distance">Distância:</label>
-      <input type="number" name="distance" id="txt-distance" size="5" step="0.1">
+      <input
+        type="number"
+        name="distance"
+        id="txt-distance"
+        size="5"
+        step="0.1"
+      />
     </div>
 
     <ul class="border border-red-500 p-2" x-show="errors.length > 0">
