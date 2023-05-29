@@ -17,150 +17,155 @@
       </ul>
     </nav>
     {% csrf_token %}
-    <section>
-      <h2 class="text-2xl font-sans font-semibold">Informações pessoais</h2>
-
-      <div class="field">
-        <label for="txt-username">Nome</label>
-        <input
-          type="text"
-          name="username"
-          id="txt-username"
-          maxlength="150"
-          minlength="5"
-          size="30"
-          @keydown="validateName"
-          required
-        />
-        <label for="dt-birthdate">Nascimento</label>
-        <input
-          type="date"
-          name="birthdate"
-          id="dt-birthdate"
-          value="{{ birthdate|date:'Y-m-d' }}"
-          required
-        />
-      </div>
-      <div class="field">
-        <label for="gender-box">Gênero</label>
-        <span id="gender-box" class="flex items-center">
-          <input
-            type="radio"
-            value="M"
-            name="gender"
-            id="rd-masc"
-            required
-            checked
-          />
-          <label for="rd-masc">Masculino</label>
-          <input type="radio" value="F" name="gender" id="rd-fem" />
-          <label for="rd-fem">Feminino</label>
-          <input type="radio" value="NB" name="gender" id="rd-nb" />
-          <label for="rd-nb">Não binário</label>
-        </span>
-      </div>
-      <div class="field">
-        <label for="txt-cpf">CPF</label>
-        <input
-          type="number"
-          name="cpf"
-          id="txt-cpf"
-          required
-          x-model="cpf"
-          size="13"
-        />
-        <label for="txt-rg">RG:</label>
-        <input
-          type="number"
-          name="rg"
-          id="txt-rg"
-          required
-          x-model="rg"
-          size="11"
-        />
-      </div>
-      <div class="field" x-data="{ check: false }">
-        <label for="cb-afro">Afrodescendente:</label>
-        <input type="checkbox" name="afro" id="cb-afro" x-model="check" />
-        <span class="ml-1" x-text="check ? 'Sim' : 'Não'"></span>
-      </div>
-      <div class="field">
-        <label for="sl-school">Escolaridade pública:</label>
-        <select name="public-schooling" id="sl-school">
-          <option value="C">Completo</option>
-          <option value="B">Ensino Básico</option>
-          <option value="F" selected>Ensino Fundamental</option>
-          <option value="M">Ensino Médio</option>
-          <option value="N">Nenhuma</option>
-        </select>
-      </div>
-      <div class="field">
-        <label for="nat-box">Naturalidade:</label>
-        <span id="nat-box" class="flex items-center gap-1 ml-1">
+    <section class="grid grid-cols-2 gap-4">
+      <div class="p-8 border border-slate-300 dark:border-slate-600">
+        <h2 class="text-2xl font-sans font-semibold">Informações pessoais</h2>
+        <div class="field">
+          <label for="txt-username">Nome</label>
           <input
             type="text"
-            name="natural-city"
-            id="txt-city"
-            value="{{ city }}"
+            name="username"
+            id="txt-username"
+            maxlength="150"
+            minlength="5"
+            size="30"
+            @keydown="validateName"
             required
           />
-          <select name="natural-state" id="sl-state">
-            <template
-              x-for="code in [
-            'RO','AC','AM','RR','PA','AP','TO','MA','PI',
-            'CE','RN','PB','PE','AL','SE','BA','MG','ES',
-            'RJ','SP','PR','SC','RS','MS','MT','GO','DF',
-          ]"
-            >
-              <option
-                :value="code"
-                :selected="code == '{{ state }}'"
-                x-text="code"
-              ></option>
-            </template>
-            <option value=""></option>
-          </select>
-        </span>
-      </div>
-      <div class="field">
-        <label for="txt-nation">Nacionalidade:</label>
-        <input
-          type="text"
-          name="nationality"
-          id="txt-nation"
-          value="{{ country }}"
-          required
-        />
-      </div>
-      <div class="field">
-        <label for="txt-origin">País de origem:</label>
-        <input
-          type="text"
-          name="country-of-origin"
-          id="txt-origin"
-          value="{{ country }}"
-          required
-        />
-      </div>
-      <div class="field flex items-center">
-        <label for="civil-box">Estado civíl:</label>
-        <span id="civil-box" class="flex items-center">
+          <label for="dt-birthdate">Nascimento</label>
           <input
-            type="radio"
-            value="S"
-            name="civil-state"
-            id="rd-single"
+            type="date"
+            name="birthdate"
+            id="dt-birthdate"
+            value="{{ birthdate|date:'Y-m-d' }}"
+            :max="new Date().toISOString().split('T')[0]"
             required
-            checked
           />
-          <label for="rd-single">Solteiro</label>
-          <input type="radio" value="M" name="civil-state" id="rd-maried" />
-          <label for="rd-maried">Casado</label>
-          <input type="radio" value="D" name="civil-state" id="rd-divorced" />
-          <label for="rd-divorced">Divorciado</label>
-          <input type="radio" value="W" name="civil-state" id="rd-widow" />
-          <label for="rd-widow">Viúvo</label>
-        </span>
+        </div>
+        <div class="field">
+          <label for="gender-box">Gênero</label>
+          <span id="gender-box" class="flex items-center">
+            <input
+              type="radio"
+              value="M"
+              name="gender"
+              id="rd-masc"
+              required
+              checked
+            />
+            <label for="rd-masc">Masculino</label>
+            <input type="radio" value="F" name="gender" id="rd-fem" />
+            <label for="rd-fem">Feminino</label>
+            <input type="radio" value="NB" name="gender" id="rd-nb" />
+            <label for="rd-nb">Não binário</label>
+          </span>
+        </div>
+        <div class="field">
+          <label for="txt-cpf">CPF</label>
+          <input
+            type="text"
+            name="cpf"
+            id="txt-cpf"
+            required
+            x-model="cpf"
+            x-mask="999.999.999-99"
+            size="12"
+          />
+          <label for="txt-rg">RG:</label>
+          <input
+            type="text"
+            name="rg"
+            id="txt-rg"
+            required
+            x-model="rg"
+            size="11"
+          />
+        </div>
+        <div class="field" x-data="{ check: false }">
+          <label for="cb-afro">Afrodescendente:</label>
+          <input type="checkbox" name="afro" id="cb-afro" x-model="check" />
+          <span class="ml-1" x-text="check ? 'Sim' : 'Não'"></span>
+        </div>
+        <div class="field">
+          <label for="sl-school">Escolaridade pública:</label>
+          <select name="public-schooling" id="sl-school">
+            <option value="C">Completo</option>
+            <option value="B">Ensino Básico</option>
+            <option value="F" selected>Ensino Fundamental</option>
+            <option value="M">Ensino Médio</option>
+            <option value="N">Nenhuma</option>
+          </select>
+        </div>
+      </div>
+      <div class="p-8 border border-slate-300 dark:border-slate-600">
+        <div class="field">
+          <label for="nat-box">Naturalidade:</label>
+          <span id="nat-box" class="flex items-center gap-1 ml-1">
+            <input
+              type="text"
+              name="natural-city"
+              id="txt-city"
+              value="{{ city }}"
+              required
+            />
+            <select name="natural-state" id="sl-state">
+              <template
+                x-for="code in [
+              'RO','AC','AM','RR','PA','AP','TO','MA','PI',
+              'CE','RN','PB','PE','AL','SE','BA','MG','ES',
+              'RJ','SP','PR','SC','RS','MS','MT','GO','DF',
+            ]"
+              >
+                <option
+                  :value="code"
+                  :selected="code == '{{ state }}'"
+                  x-text="code"
+                ></option>
+              </template>
+              <option value=""></option>
+            </select>
+          </span>
+        </div>
+        <div class="field">
+          <label for="txt-nation">Nacionalidade:</label>
+          <input
+            type="text"
+            name="nationality"
+            id="txt-nation"
+            value="{{ country }}"
+            required
+          />
+        </div>
+        <div class="field">
+          <label for="txt-origin">País de origem:</label>
+          <input
+            type="text"
+            name="country-of-origin"
+            id="txt-origin"
+            value="{{ country }}"
+            required
+          />
+        </div>
+        <div class="field flex items-center">
+          <label for="civil-box">Estado civíl:</label>
+          <span id="civil-box" class="flex items-center">
+            <input
+              type="radio"
+              value="S"
+              name="civil-state"
+              id="rd-single"
+              required
+              checked
+            />
+            <label for="rd-single">Solteiro</label>
+            <input type="radio" value="M" name="civil-state" id="rd-maried" />
+            <label for="rd-maried">Casado</label>
+            <input type="radio" value="D" name="civil-state" id="rd-divorced" />
+            <label for="rd-divorced">Divorciado</label>
+            <input type="radio" value="W" name="civil-state" id="rd-widow" />
+            <label for="rd-widow">Viúvo</label>
+          </span>
+        </div>
       </div>
     </section>
 

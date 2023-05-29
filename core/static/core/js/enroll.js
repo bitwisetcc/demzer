@@ -40,8 +40,8 @@ document.addEventListener("alpine:init", () => {
     submit(e) {
       this.errors = [];
       const requirements = [
-        { test: validateCPF(this.cpf), error: "CPF inválido" },
-        { test: this.rg.length == 9, error: "RG inválido" },
+        { test: validateCPF(this.cpf.replace(/[\./-]/g, "")), error: "CPF inválido" },
+        { test: this.rg.length == 12, error: "RG inválido" },
       ];
 
       for (const req of requirements) {
