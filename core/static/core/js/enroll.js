@@ -29,6 +29,17 @@ function validateCPF(cpf) {
 const validateName = (e) =>
   !/[A-Za-záàâãéèêíóôõúçñ\s]+$/.test(e.key) && e.preventDefault();
 
+/**
+ * Validates a number input and blocks letters
+ * @param {Event} e
+ */
+const validateNumber = (e) => {
+  e.key != "Backspace" &&
+    e.key != "Delete" &&
+    !/[0-9]+$/.test(e.key) &&
+    e.preventDefault();
+};
+
 document.addEventListener("alpine:init", () => {
   Alpine.data("fields", () => ({
     cpf: "",

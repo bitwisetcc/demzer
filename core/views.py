@@ -26,6 +26,10 @@ from backend.settings import (
 )
 
 
+def doc_to_num(doc: str):
+    return int(re.sub(r"[\./-]", "", doc))
+
+
 @login_required
 def index(request: HttpRequest):
     return render(
@@ -57,19 +61,24 @@ def login_user(request: HttpRequest, failed=0):
         return render(request, "core/login.html", {"no_nav": True, "failed": failed})
 
 
+@login_required
 def logout_user(request: HttpRequest):
     first_name = request.user.username.split()[0]
     logout(request)
-    messages.add_message(
+    messages.success(
         request,
-        messages.SUCCESS,
         f"Você saiu da conta de {first_name}",
     )
     return redirect("home")
 
 
 # TODO: Create actual emails + prevent email duplication
+@login_required
 def enroll(request: HttpRequest):
+    if not request.user.is_staff or not request.user.is_superuser:
+        messages.warning(request, "Apenas administradores podem acessar essa página")
+        return redirect("home")
+
     if request.method == "POST":
         username = request.POST["username"].strip()
         first_name = username.split()[0]
@@ -108,8 +117,8 @@ def enroll(request: HttpRequest):
                 phone=re.sub(r"[^0-9]+", "", request.POST["phone"]),
                 birthdate=birthdate,
                 gender=request.POST["gender"],
-                rg=request.POST["rg"],
-                cpf=request.POST["cpf"],
+                rg=doc_to_num(request.POST["rg"]),
+                cpf=doc_to_num(request.POST["cpf"]),
                 public_schooling=request.POST["public-schooling"],
                 afro="afro" in request.POST,
                 civil_state=request.POST["civil-state"],

@@ -1,11 +1,9 @@
-{% extends 'core/base.html' %}
-{% load static %}
-{% block content %}
-<main class="p-5 flex-1">
-  <h1 class="text-3xl font-sans font-bold from-sky-800 mb-3">Alunos</h1>
+{% extends 'core/base.html' %} {% load static %} {% block content %}
+<main class="flex-1 p-5">
+  <h1 class="mb-3 from-sky-800 font-sans text-3xl font-bold">Alunos</h1>
   <form action="sla" method="get" class="flex items-stretch justify-between">
     <div
-      class="flex gap-3 relative"
+      class="relative flex gap-3"
       x-data="{ input: '', clear() { this.input = '' } }"
     >
       <label for="slField" class="text-xl font-medium">Procurar por:</label>
@@ -19,12 +17,7 @@
         <option value="rm">RM</option>
         <option value="custom">Customizado</option>
       </select>
-      <input
-        type="search"
-        name="query"
-        id="searchQuery"
-        x-model:="input"
-      />
+      <input type="search" name="query" id="searchQuery" x-model:="input" />
       <button
         class="absolute right-2 top-2 transition-all"
         :class="input || 'scale-0'"
@@ -33,18 +26,13 @@
         <box-icon name="x-circle" color="gray" />
       </button>
     </div>
-    <a
-      href="{% url 'enroll' %}"
-      class="bg-cyan-700 rounded text-slate-50 py-2 px-3 
-      flex items-center transition-all duration-300 
-      hover:shadow-md hover:bg-cyan-800"
-    >
-      <span class="font-semibold mr-1">Matricular</span>
+    <a href="{% url 'enroll' %}" class="btn flex items-center font-semibold">
+      <span class="mr-1 font-semibold">Matricular</span>
       <box-icon name="user-plus" color="white" />
     </a>
   </form>
 
-  <table class="table-auto mt-4">
+  <table class="mt-4 table-auto">
     <thead class="bg-slate-300 dark:bg-slate-700">
       <tr>
         <td>RM</td>

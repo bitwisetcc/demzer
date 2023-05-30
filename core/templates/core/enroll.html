@@ -2,7 +2,7 @@
 <script defer src="{% static 'core/js/enroll.js' %}"></script>
 <link rel="stylesheet" href="{% static 'core/dist/css/enroll.css' %}" />
 {% endblock %} {% block content %}
-<main class="m-8 mb-20 p-7 framed">
+<main class="framed m-8 mb-20 p-7">
   <form
     action="{% url 'enroll' %}"
     method="POST"
@@ -10,10 +10,18 @@
     @submit="submit"
     x-data="fields"
   >
-    <nav class="flex gap-10 items-center justify-between">
-      <h1 class="text-3xl font-sans font-bold mb-2">Matrícula</h1>
-      <ul class="flex gap-3 items-center">
-        <li><button @click.prevent="tab = 'identidade'" :class="tab == 'identidade' && 'text-cyan-500'" class="transition-all">Identidade</button></li>
+    <nav class="flex items-center justify-between gap-10">
+      <h1 class="mb-2 font-sans text-3xl font-bold">Matrícula</h1>
+      <ul class="flex items-center gap-3">
+        <li>
+          <button
+            @click.prevent="tab = 'identidade'"
+            :class="tab == 'identidade' && 'text-cyan-500'"
+            class="transition-all"
+          >
+            Identidade
+          </button>
+        </li>
         <li>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -21,7 +29,7 @@
             viewBox="0 0 24 24"
             stroke-width="4"
             stroke="currentColor"
-            class="w-4 h-4"
+            class="h-4 w-4"
           >
             <path
               stroke-linecap="round"
@@ -30,7 +38,15 @@
             />
           </svg>
         </li>
-        <li><button @click.prevent="tab = 'contato'" :class="tab == 'contato' && 'text-cyan-500'" class="transition-all">Contato</button></li>
+        <li>
+          <button
+            @click.prevent="tab = 'contato'"
+            :class="tab == 'contato' && 'text-cyan-500'"
+            class="transition-all"
+          >
+            Contato
+          </button>
+        </li>
         <li>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -38,7 +54,7 @@
             viewBox="0 0 24 24"
             stroke-width="4"
             stroke="currentColor"
-            class="w-4 h-4"
+            class="h-4 w-4"
           >
             <path
               stroke-linecap="round"
@@ -47,19 +63,24 @@
             />
           </svg>
         </li>
-        <li><button :disabled="true" :class="tab == 'confirmação' && 'text-cyan-500'" class="transition-all">Confirmação</button></li>
+        <li>
+          <button
+            :disabled="true"
+            :class="tab == 'confirmação' && 'text-cyan-500'"
+            class="transition-all"
+          >
+            Confirmação
+          </button>
+        </li>
       </ul>
-      <a
-        href="import_users"
-        class="bg-cyan-700 rounded text-slate-50 py-2 px-3 flex gap-2 items-center transition-all duration-300 hover:shadow-md hover:bg-cyan-800 font-semibold"
-      >
+      <a href="import_users" class="btn flex items-center gap-2 font-semibold">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
-          stroke-width="1.5"
+          stroke-width="2.5"
           stroke="currentColor"
-          class="w-5 h-5"
+          class="h-5 w-5"
         >
           <path
             stroke-linecap="round"
@@ -73,7 +94,7 @@
     {% csrf_token %}
     <section class="grid grid-cols-2 gap-4" x-show="tab === 'identidade'">
       <article>
-        <h2 class="text-2xl font-sans font-bold mb-2">Informações pessoais</h2>
+        <h2 class="mb-2 font-sans text-2xl font-bold">Informações pessoais</h2>
         <div class="flex gap-3">
           <div class="field grow">
             <label for="txt-username">Nome</label>
@@ -144,7 +165,7 @@
             <label for="rd-nb">Não binário</label>
           </span>
         </div>
-        <div class="flex items-center gap-1 mt-4" x-data="{ check: false }">
+        <div class="mt-4 flex items-center gap-1" x-data="{ check: false }">
           <label for="cb-afro">Afrodescendente:</label>
           <input
             type="checkbox"
@@ -159,7 +180,7 @@
             x-text="check ? '(Sim)' : '(Não)'"
           ></span>
         </div>
-        <div class="flex gap-3 items-center my-3">
+        <div class="my-3 flex items-center gap-3">
           <label for="sl-school">Escolaridade pública:</label>
           <select name="public-schooling" id="sl-school">
             <option value="C">Completo</option>
@@ -172,7 +193,7 @@
       </article>
 
       <article>
-        <h2 class="text-2xl font-sans font-bold mb-2">Cidadania</h2>
+        <h2 class="mb-2 font-sans text-2xl font-bold">Cidadania</h2>
         <div class="field">
           <label for="nat-box">Naturalidade</label>
           <span id="nat-box" class="flex items-center gap-2">
@@ -223,7 +244,7 @@
             />
           </div>
         </div>
-        <div class="field flex items-center mt-4">
+        <div class="field mt-4 flex items-center">
           <label for="civil-box">Estado civíl:</label>
           <span id="civil-box" class="flex items-center">
             <input
@@ -244,7 +265,7 @@
           </span>
         </div>
         <button
-          class="bg-cyan-700 hover:bg-cyan-800 px-8 py-3 mt-9 shadow hover:shadow-md transition-all duration-300 rounded-lg font-semibold"
+          class="btn mt-9 rounded-lg font-semibold"
           @click="tab = 'contato'"
         >
           Próximo
@@ -258,7 +279,7 @@
       x-data="address"
     >
       <article>
-        <h2 class="text-2xl font-sans font-bold mb-2">Contato</h2>
+        <h2 class="mb-2 font-sans text-2xl font-bold">Contato</h2>
 
         <div class="flex gap-3">
           <div class="field grow">
@@ -283,7 +304,7 @@
             />
           </div>
         </div>
-        <div class="flex gap-3 items-end my-3">
+        <div class="my-3 flex items-end gap-3">
           <div class="field">
             <label for="txt-cep">CEP:</label>
             <input
@@ -293,12 +314,10 @@
               size="11"
               required
               x-ref="cep"
+              @keydown="validateNumber"
             />
           </div>
-          <button
-            class="block bg-cyan-700 text-slate-100 py-2 px-3 rounded-md"
-            @click.prevent="fillCEP($refs.cep.value)"
-          >
+          <button class="btn block" @click.prevent="fillCEP($refs.cep.value)">
             Completar
           </button>
 
@@ -367,7 +386,7 @@
         </div>
       </article>
       <article>
-        <h2 class="text-2xl font-sans font-bold mb-2">Responsáveis</h2>
+        <h2 class="mb-2 font-sans text-2xl font-bold">Responsáveis</h2>
 
         <div class="field">
           <label for="txt-guardian">Nome</label>
@@ -405,19 +424,21 @@
             />
           </div>
         </div>
-        <ul class="border border-red-500 p-2 mt-4 rounded-md" x-show="errors.length > 0">
+        <ul
+          class="mt-4 rounded-md border border-red-500 p-2"
+          x-show="errors.length > 0"
+        >
           <template x-for="err in errors">
             <li x-text="err"></li>
           </template>
         </ul>
         <input
           type="submit"
-          class="bg-cyan-700 hover:bg-cyan-800 px-8 py-3 mt-9 shadow hover:shadow-md transition-all duration-300 rounded-lg font-semibold text-slate-100"
+          class="mt-9 rounded-lg bg-cyan-700 px-8 py-3 font-semibold text-slate-100 shadow transition-all duration-300 hover:bg-cyan-800 hover:shadow-md"
           value="Enviar"
         />
       </article>
     </section>
-
   </form>
 </main>
 {% endblock %}
