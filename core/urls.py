@@ -8,6 +8,7 @@ urlpatterns = [
     path("login/", login_user, name="login"),
     path("logout/", logout_user, name="logout"),
     path("enroll/", enroll, name="enroll"),
+    path("alunos/", alunos, name="alunos"),
     path("u/all/", all_users),
     path("u/students/", all_students),
     path("u/<int:user_id>/", detail),

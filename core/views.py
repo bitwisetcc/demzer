@@ -218,3 +218,9 @@ def create_class(request: HttpRequest):
     ).save()
 
     return HttpResponse(":D")
+
+@login_required
+def alunos(request: HttpRequest):
+    return render(
+        request,
+        "core/base.html")
