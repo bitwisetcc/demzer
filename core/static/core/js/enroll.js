@@ -20,7 +20,7 @@ function validateCPF(cpf) {
   if (remainder == 10 || remainder == 11) remainder = 0;
 
   return remainder == parseInt(cpf.substring(10, 11));
-};
+}
 
 /**
  * Validates username input and blocks special characters
@@ -34,24 +34,26 @@ document.addEventListener("alpine:init", () => {
     cpf: "",
     rg: "",
     tab: "identidade",
-    city: "",
-    neighborhood: "",
-    street: "",
     errors: [],
     submit(e) {
       this.errors = [];
-      const requirements = [
-        { test: validateCPF(this.cpf.replace(/[\./-]/g, "")), error: "CPF inválido" },
-        { test: this.rg.length == 12, error: "RG inválido" },
-      ];
 
-      for (const req of requirements) {
-        if (!req.test) {
-          e.preventDefault();
-          this.errors.push(req.error);
-        }
+      if (!validateCPF(this.cpf.replace(/[\./-]/g, ""))) {
+        e.preventDefault();
+        this.errors.push("CPF inválido");
+      }
+
+      if (this.rg.length != 12) {
+        e.preventDefault();
+        this.errors.push("RG inválido");
       }
     },
+  }));
+
+  Alpine.data("address", () => ({
+    city: "",
+    neighborhood: "",
+    street: "",
     fillCEP(cep) {
       fetch(`https://viacep.com.br/ws/${cep}/json/`)
         .then((res) => res.json())

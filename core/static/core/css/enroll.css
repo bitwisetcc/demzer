@@ -1,5 +1,5 @@
 main.framed {
-  @apply border border-slate-400 dark:border-slate-600 shadow-md dark:shadow-gray-500;
+  @apply border border-slate-400 dark:border-slate-600 shadow-md dark:shadow dark:shadow-slate-600;
 }
 
 form > section > article > * {

@@ -10,12 +10,65 @@
     @submit="submit"
     x-data="fields"
   >
-    <nav class="flex gap-10 items-center">
+    <nav class="flex gap-10 items-center justify-between">
       <h1 class="text-3xl font-sans font-bold mb-2">Matrícula</h1>
-      <ul class="flex gap-6 items-center">
-        <li><button @click.prevent="tab = 'identidade'">Identidade</button></li>
-        <li><button @click.prevent="tab = 'contato'">Contato</button></li>
+      <ul class="flex gap-3 items-center">
+        <li><button @click.prevent="tab = 'identidade'" :class="tab == 'identidade' && 'text-cyan-500'" class="transition-all">Identidade</button></li>
+        <li>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="4"
+            stroke="currentColor"
+            class="w-4 h-4"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M8.25 4.5l7.5 7.5-7.5 7.5"
+            />
+          </svg>
+        </li>
+        <li><button @click.prevent="tab = 'contato'" :class="tab == 'contato' && 'text-cyan-500'" class="transition-all">Contato</button></li>
+        <li>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="4"
+            stroke="currentColor"
+            class="w-4 h-4"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M8.25 4.5l7.5 7.5-7.5 7.5"
+            />
+          </svg>
+        </li>
+        <li><button :disabled="true" :class="tab == 'confirmação' && 'text-cyan-500'" class="transition-all">Confirmação</button></li>
       </ul>
+      <a
+        href="import_users"
+        class="bg-cyan-700 rounded text-slate-50 py-2 px-3 flex gap-2 items-center transition-all duration-300 hover:shadow-md hover:bg-cyan-800 font-semibold"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-5 h-5"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
+          />
+        </svg>
+        <span>Importar</span>
+      </a>
     </nav>
     {% csrf_token %}
     <section class="grid grid-cols-2 gap-4" x-show="tab === 'identidade'">
@@ -69,10 +122,11 @@
               class="w-full"
               required
               x-model="rg"
+              x-mask="99.999.999-9"
             />
           </div>
         </div>
-        <div class="field">
+        <div class="field mt-4">
           <label for="gender-box">Gênero:</label>
           <span id="gender-box" class="flex items-center">
             <input
@@ -90,7 +144,7 @@
             <label for="rd-nb">Não binário</label>
           </span>
         </div>
-        <div class="flex items-center gap-1" x-data="{ check: false }">
+        <div class="flex items-center gap-1 mt-4" x-data="{ check: false }">
           <label for="cb-afro">Afrodescendente:</label>
           <input
             type="checkbox"
@@ -104,6 +158,16 @@
             class="ml-1"
             x-text="check ? '(Sim)' : '(Não)'"
           ></span>
+        </div>
+        <div class="flex gap-3 items-center my-3">
+          <label for="sl-school">Escolaridade pública:</label>
+          <select name="public-schooling" id="sl-school">
+            <option value="C">Completo</option>
+            <option value="B">Ensino Básico</option>
+            <option value="F" selected>Ensino Fundamental</option>
+            <option value="M">Ensino Médio</option>
+            <option value="N">Nenhuma</option>
+          </select>
         </div>
       </article>
 
@@ -159,17 +223,7 @@
             />
           </div>
         </div>
-        <div class="flex gap-3 items-center my-3">
-          <label for="sl-school">Escolaridade pública:</label>
-          <select name="public-schooling" id="sl-school">
-            <option value="C">Completo</option>
-            <option value="B">Ensino Básico</option>
-            <option value="F" selected>Ensino Fundamental</option>
-            <option value="M">Ensino Médio</option>
-            <option value="N">Nenhuma</option>
-          </select>
-        </div>
-        <div class="field flex items-center">
+        <div class="field flex items-center mt-4">
           <label for="civil-box">Estado civíl:</label>
           <span id="civil-box" class="flex items-center">
             <input
@@ -189,10 +243,20 @@
             <label for="rd-widow">Viúvo</label>
           </span>
         </div>
+        <button
+          class="bg-cyan-700 hover:bg-cyan-800 px-8 py-3 mt-9 shadow hover:shadow-md transition-all duration-300 rounded-lg font-semibold"
+          @click="tab = 'contato'"
+        >
+          Próximo
+        </button>
       </article>
     </section>
 
-    <section class="grid grid-cols-2 gap-4" x-show="tab === 'contato'">
+    <section
+      class="grid grid-cols-2 gap-4"
+      x-show="tab === 'contato'"
+      x-data="address"
+    >
       <article>
         <h2 class="text-2xl font-sans font-bold mb-2">Contato</h2>
 
@@ -219,22 +283,37 @@
             />
           </div>
         </div>
-        <div class="flex gap-3 items-center my-3">
-          <label for="txt-cep">CEP:</label>
-          <input
-            type="number"
-            name="cep"
-            id="txt-cep"
-            size="11"
-            required
-            x-ref="cep"
-          />
+        <div class="flex gap-3 items-end my-3">
+          <div class="field">
+            <label for="txt-cep">CEP:</label>
+            <input
+              type="number"
+              name="cep"
+              id="txt-cep"
+              size="11"
+              required
+              x-ref="cep"
+            />
+          </div>
           <button
-            class="bg-sky-600 dark:bg-sky-700 py-2 px-3 rounded-md"
-            @click.prevent="() => fillCEP($refs.cep.value)"
+            class="block bg-cyan-700 text-slate-100 py-2 px-3 rounded-md"
+            @click.prevent="fillCEP($refs.cep.value)"
           >
-            Fill in
+            Completar
           </button>
+
+          <div class="field">
+            <label for="txt-distance">Distância:</label>
+            <input
+              type="number"
+              name="distance"
+              id="txt-distance"
+              size="4"
+              min="0"
+              max="100"
+              step="0.1"
+            />
+          </div>
         </div>
         <div class="flex gap-3">
           <div class="field grow">
@@ -261,9 +340,15 @@
           </div>
         </div>
         <div class="flex gap-3">
-          <div class="field">
+          <div class="field grow">
             <label for="txt-street">Rua</label>
-            <input type="text" name="street" id="txt-street" x-model="street" />
+            <input
+              type="text"
+              name="street"
+              id="txt-street"
+              class="w-full"
+              x-model="street"
+            />
           </div>
           <div class="field">
             <label for="txt-street-number">Número</label>
@@ -277,20 +362,8 @@
           </div>
           <div class="field">
             <label for="txt-comp">Complemento:</label>
-            <input type="text" name="complement" id="txt-comp" size="10" />
+            <input type="text" name="complement" id="txt-comp" size="8" />
           </div>
-        </div>
-        <div class="field">
-          <label for="txt-distance">Distância:</label>
-          <input
-            type="number"
-            name="distance"
-            id="txt-distance"
-            size="4"
-            min="0"
-            max="100"
-            step="0.1"
-          />
         </div>
       </article>
       <article>
@@ -302,43 +375,49 @@
             type="text"
             name="name-guardian"
             id="txt-guardian"
+            class="w-full"
             size="30"
             @keydown="validateName"
             required
           />
         </div>
-        <div class="field">
-          <label for="tel-guardian" class="ml-1">Telefone</label>
-          <input
-            type="tel"
-            name="phone-guardian"
-            id="tel-guardian"
-            size="12"
-            x-mask="(99)99999-9999"
-            required
-          />
+        <div class="flex gap-3">
+          <div class="field grow">
+            <label for="email-guardian">Email</label>
+            <input
+              type="email"
+              name="email-guardian"
+              id="email-guardian"
+              maxlength="100"
+              class="w-full"
+              required
+            />
+          </div>
+          <div class="field">
+            <label for="tel-guardian" class="ml-1">Telefone</label>
+            <input
+              type="tel"
+              name="phone-guardian"
+              id="tel-guardian"
+              size="12"
+              x-mask="(99)99999-9999"
+              required
+            />
+          </div>
         </div>
-        <div class="field">
-          <label for="email-guardian">Email</label>
-          <input
-            type="email"
-            name="email-guardian"
-            id="email-guardian"
-            maxlength="100"
-            size="30"
-            required
-          />
-        </div>
+        <ul class="border border-red-500 p-2 mt-4 rounded-md" x-show="errors.length > 0">
+          <template x-for="err in errors">
+            <li x-text="err"></li>
+          </template>
+        </ul>
+        <input
+          type="submit"
+          class="bg-cyan-700 hover:bg-cyan-800 px-8 py-3 mt-9 shadow hover:shadow-md transition-all duration-300 rounded-lg font-semibold text-slate-100"
+          value="Enviar"
+        />
       </article>
     </section>
 
-    <ul class="border border-red-500 p-2" x-show="errors.length > 0">
-      <template x-for="err in errors">
-        <li x-text="err"></li>
-      </template>
-    </ul>
-
-    <input type="submit" class="bg-sky-600 dark:bg-sky-700" value="Enviar" />
   </form>
 </main>
 {% endblock %}
