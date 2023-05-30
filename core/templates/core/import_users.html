@@ -1,0 +1,62 @@
+{% extends 'core/base.html' %} {% load static %} {% block head %}
+<script defer src="{% static 'core/js/import_users.js' %}"></script>
+{% endblock %} {% block content %}
+<main class="p-7" x-data="userData">
+  <form
+    action="{% url 'import_users' %}"
+    method="POST"
+    class="flex flex-col gap-3"
+  >
+    {% csrf_token %}
+    <label
+      for="file-users"
+      class="btn flex w-max cursor-pointer items-center gap-1"
+    >
+      <span>Selecionar arquivo</span>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="2.2"
+        stroke="currentColor"
+        class="h-5 w-5"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15"
+        />
+      </svg>
+    </label>
+    <input
+      type="file"
+      name="users"
+      id="file-users"
+      accept=".xls,.xlsx,.csv"
+      hidden
+      @input="readFile"
+    />
+  </form>
+
+  <table class="mt-3 block w-full h-full table-auto overflow-x-auto">
+    <thead class="bg-slate-300 dark:bg-slate-700">
+      <tr>
+        <template x-for="header in table[0].split(',')">
+          <td>
+            <input type="text" :name="`txt-${header}`" :id="`txt-${header}`" :value="header">
+          </td>
+        </template>
+      </tr>
+    </thead>
+    <tbody>
+      <template x-for="row in table.slice(1)">
+        <tr>
+          <template x-for="data in row.split(',')">
+            <td x-text="data"></td>
+          </template>
+        </tr>
+      </template>
+    </tbody>
+  </table>
+</main>
+{% endblock %}

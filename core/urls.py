@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.urls import include, path
+from django.urls import path
 from core.views import *
 
 urlpatterns = [
@@ -8,12 +8,8 @@ urlpatterns = [
     path("login/", login_user, name="login"),
     path("logout/", logout_user, name="logout"),
     path("enroll/", enroll, name="enroll"),
-    path("u/all/", all_users),
-    path("u/students/", all_students),
-    path("u/<int:user_id>/", detail),
-    path("subjects/new/", create_subject),
-    path("courses/new/", create_course),
-    path("classes/new/", create_class),
+    path("enroll/import/", bulk_enroll, name="import_users"),
+    path("courses/", courses_editor, name="courses"),
 ]
 
 
