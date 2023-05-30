@@ -1,0 +1,11 @@
+main.framed {
+  @apply border border-slate-400 dark:border-slate-600 shadow-md dark:shadow-gray-500;
+}
+
+form > section > article > * {
+  @apply mb-2 last:mb-0;
+}
+
+form section article {
+  @apply px-11 py-9 border border-slate-300 dark:border-slate-600 bg-slate-200 dark:bg-gray-800;
+}

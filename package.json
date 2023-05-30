@@ -8,7 +8,8 @@
     "frontend": {
       "source": [
         "core/static/core/js/page.js",
-        "core/static/core/css/main.css"
+        "core/static/core/css/main.css",
+        "core/static/core/css/enroll.css"
       ],
       "distDir": "./static/core/dist"
     }

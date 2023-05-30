@@ -26,7 +26,7 @@
   }
 
   [type='radio'] {
-    @apply ml-2 mr-1;
+    @apply ml-3 first:ml-0 mr-1 hover:bg-none hover:border-sky-600 checked:bg-cyan-600 hover:checked:bg-cyan-600;
   }
 
   [type='submit'] {
@@ -48,8 +48,4 @@ nav svg {
 
 td {
   @apply border border-slate-400 dark:border-slate-600 p-3;
-}
-
-main.framed {
-  @apply py-9 px-6 border border-slate-400 dark:border-slate-600 shadow-md dark:shadow-gray-500;
 }

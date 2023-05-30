@@ -33,6 +33,7 @@ document.addEventListener("alpine:init", () => {
   Alpine.data("fields", () => ({
     cpf: "",
     rg: "",
+    tab: "identidade",
     city: "",
     neighborhood: "",
     street: "",
