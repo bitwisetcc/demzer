@@ -9,7 +9,8 @@
       "source": [
         "core/static/core/js/page.js",
         "core/static/core/css/main.css",
-        "core/static/core/css/enroll.css"
+        "core/static/core/css/enroll.css",
+        "core/static/core/css/import_users.css"
       ],
       "distDir": "./static/core/dist"
     }

@@ -1,0 +1,7 @@
+@tailwind base;
+
+@layer base {
+  [type="text"] {
+    @apply border-0 shadow-sm transition-all focus-visible:outline-none dark:bg-slate-700 p-2;
+  }
+}
