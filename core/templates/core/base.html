@@ -9,11 +9,11 @@
     {% block head %}{% endblock %}
     <script defer src="{% static 'core/dist/js/page.js' %}"></script>
   </head>
-  <body class="bg-cyan-400 flex">
+  <body class="bg-slate-100 flex flex-row h-screen dark:bg-red-600 relative">
     {% include "core/messages.html" %}
-    {% include "core/navbar.html"%}
-    <div class="">
-      <img class="pt-11 h-80 w-24" src="../../static/core/images/plantas.png">
+    {% include "core/navbar.html"%} 
+    <div class="fixed h-80 w-24">
+      <img class="" src="../../static/core/images/plantas.png">
     </div>
     {% block content %}{% endblock %}
   </body>
