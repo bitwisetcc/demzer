@@ -1,24 +1,47 @@
 {% if not no_nav|default:False %}
-<nav class="bg-slate-600">
-  <div class="h-auto w-60 px-3 py-4 z-10">
+<nav class="bg-color-primary text-white text-lg rounded-r-[47px] z-10">
+  <div class="h-auto w-80 px-8 py-12 z-10">
     <header>
-      <div>
-        <h1>Menu</h1>
+      <div class="pb-1">
+        <p class="text-2xl font-bold">Menu</p>
       </div>
 
       <div>
-        <span class="name">{{ user.username.split.0 }}{{ user.username.split.1 }}</span>
-        <span class="school">{{ school_name }}</span>
+        <span class="name">Perfil</span>
       </div>
     </header>
 
-    <div class="menu">
-      <li class="">
-        <a href="#">
-          <i class='bx-home-alt icon'></i>
-          <span class="text">Dashboard</span>
-        </a> 
-      </li>
+    <div class="pt-20 pb-52 pl-5">
+      <ul class="font-semibold list-none space-y-4">
+        <li>
+          <a href="#"><span class="text">Home</span></a> 
+        </li>
+        <li>
+          <a href="#"><span class="text">Comunicados</span></a> 
+        </li>
+        <li>
+          <a href="#"><span class="text">Boletim</span></a> 
+        </li>
+        <li>
+          <a href="#"><span class="text">Calendário</span></a> 
+        </li>
+        <li>
+          <a href="#"><span class="text">Denúncias</span></a> 
+        </li>
+        <li>
+          <a href="#"><span class="text">Diário</span></a> 
+        </li>
+      </ul>
+    </div>
+
+    <hr class="h-[2px] bg-color-secundary">
+
+    <div class="pt-2 font-semibold">
+      <a href="#"><span class="text">Configurações</span></a> 
+    </div>
+
+    <div class="pt-7 font-semibold">
+      <a href="#"><span class="text">Sair</span></a>
     </div>
   </div>
 </nav>
