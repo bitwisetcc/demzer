@@ -5,7 +5,8 @@ document.addEventListener("alpine:init", () => {
     readFile(e) {
       let reader = new FileReader();
       reader.addEventListener("load", () => {
-        this.table = reader.result.split("\n");
+        let data = reader.result.split("\n");
+        this.table = data.map((row) => row.split(","));
       });
       reader.addEventListener("error", () => console.error(reader.error));
 

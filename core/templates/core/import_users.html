@@ -1,5 +1,6 @@
 {% extends 'core/base.html' %} {% load static %} {% block head %}
 <script defer src="{% static 'core/js/import_users.js' %}"></script>
+<link rel="stylesheet" href="{% static 'core/dist/css/import_users.css' %}" />
 {% endblock %} {% block content %}
 <main class="p-7" x-data="userData">
   <form
@@ -38,12 +39,18 @@
     />
   </form>
 
-  <table class="mt-3 block w-full h-full table-auto overflow-x-auto">
+  <table class="mt-3 block h-full w-full table-auto overflow-x-auto">
     <thead class="bg-slate-300 dark:bg-slate-700">
       <tr>
-        <template x-for="header in table[0].split(',')">
-          <td>
-            <input type="text" :name="`txt-${header}`" :id="`txt-${header}`" :value="header">
+        <template x-for="header in table[0]">
+          <td class="p-0">
+            <input
+              type="text"
+              :name="`txt-${header}`"
+              :id="`txt-${header}`"
+              :value="header"
+              class="w-max p-3"
+            />
           </td>
         </template>
       </tr>
@@ -51,7 +58,7 @@
     <tbody>
       <template x-for="row in table.slice(1)">
         <tr>
-          <template x-for="data in row.split(',')">
+          <template x-for="data in row">
             <td x-text="data"></td>
           </template>
         </tr>
