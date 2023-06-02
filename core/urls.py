@@ -14,6 +14,7 @@ urlpatterns = [
     path("subjects/new/", create_subject),
     path("courses/new/", create_course),
     path("classes/new/", create_class),
+    path("professores/", professores, name="professores"),
 ]
 
 

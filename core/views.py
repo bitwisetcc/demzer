@@ -218,3 +218,10 @@ def create_class(request: HttpRequest):
     ).save()
 
     return HttpResponse(":D")
+
+@login_required
+def professores(request: HttpRequest):
+    return render(
+        request,
+        "core/base.html",
+    )
