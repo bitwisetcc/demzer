@@ -3,10 +3,119 @@
 <link rel="stylesheet" href="{% static 'core/dist/css/import_users.css' %}" />
 {% endblock %} {% block content %}
 <main class="p-7" x-data="userData">
+  <h2 class="mb-2 text-xl font-bold">Campos necessários</h2>
+
+  <section
+    class="relative mb-3 overflow-x-auto rounded-lg bg-slate-700 p-4 shadow"
+  >
+    <table class="table-auto">
+      <tr>
+        <td class="font-semibold">Campo</td>
+        <template x-for="field in required">
+          <td x-text="field" class="font-mono"></td>
+        </template>
+      </tr>
+      <tr>
+        <td class="font-semibold">Presente</td>
+        <template x-for="field in required">
+          <td class="text-center">
+            <template x-if="headers.includes(field)">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="mx-auto h-6 w-6 text-lime-500"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </template>
+            <template x-if="!headers.includes(field)">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="mx-auto h-6 w-6 text-red-600"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </template>
+          </td>
+        </template>
+      </tr>
+    </table>
+  </section>
+
+  <h2 class="mb-2 text-xl font-bold">Campos necessários</h2>
+
+  <section
+    class="relative mb-3 overflow-x-auto rounded-lg bg-slate-700 p-4 shadow"
+  >
+    <table class="table-auto">
+      <tr>
+        <td class="font-semibold">Campo</td>
+        <template x-for="field in optional">
+          <td x-text="field" class="font-mono"></td>
+        </template>
+      </tr>
+      <tr>
+        <td class="font-semibold">Presente</td>
+        <template x-for="field in optional">
+          <td class="text-center">
+            <template x-if="headers.includes(field)">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="mx-auto h-6 w-6 text-lime-500"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </template>
+            <template x-if="!headers.includes(field)">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="mx-auto h-6 w-6 text-amber-500"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+                />
+              </svg>
+            </template>
+          </td>
+        </template>
+      </tr>
+    </table>
+  </section>
+
   <form
     action="{% url 'import_users' %}"
     method="POST"
     class="flex flex-col gap-3"
+    @submit.prevent="submit"
   >
     {% csrf_token %}
     <label
@@ -37,33 +146,37 @@
       hidden
       @input="readFile"
     />
+    <input type="submit" value="Enviar" class="btn">
   </form>
 
-  <table class="mt-3 block h-full w-full table-auto overflow-x-auto">
-    <thead class="bg-slate-300 dark:bg-slate-700">
-      <tr>
-        <template x-for="header in table[0]">
-          <td class="p-0">
-            <input
-              type="text"
-              :name="`txt-${header}`"
-              :id="`txt-${header}`"
-              :value="header"
-              class="w-max p-3"
-            />
-          </td>
-        </template>
-      </tr>
-    </thead>
-    <tbody>
-      <template x-for="row in table.slice(1)">
+  <div class="mt-4 overflow-x-auto border-slate-400 dark:border-slate-600">
+    <table class="table-auto">
+      <thead class="bg-slate-300 dark:bg-slate-700">
         <tr>
-          <template x-for="data in row">
-            <td x-text="data"></td>
+          <template x-for="(header, i) in headers">
+            <td class="w-max p-0 hover:text-sky-500">
+              <input
+                type="text"
+                :name="`txt-${header}`"
+                :id="`txt-${header}`"
+                :value="header"
+                :size="Math.max(Math.max(...rows.map((s) => s[i].length)), header.length - 2)"
+                class="p-3"
+              />
+            </td>
           </template>
         </tr>
-      </template>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        <template x-for="row in rows">
+          <tr>
+            <template x-for="data in row">
+              <td x-text="data"></td>
+            </template>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+  </div>
 </main>
 {% endblock %}
