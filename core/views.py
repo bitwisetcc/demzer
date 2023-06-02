@@ -1,6 +1,5 @@
 from django.db import IntegrityError
 from django.http import (
-    HttpResponse,
     HttpRequest,
     HttpResponseBadRequest,
     JsonResponse,
@@ -170,7 +169,10 @@ def enroll(request: HttpRequest):
 def courses_editor(request: HttpRequest):
     return render(request, "core/courses.html")
 
-def bulk_enroll(request: HttpRequest):
-    return render(request, "core/import_users.html")
-    pass
 
+def bulk_enroll(request: HttpRequest):
+    if request.method == "POST":
+        print(json.loads(request.body.decode()))
+        # User.objects.bulk_create()
+        # Member.objects.bulk_create()
+    return render(request, "core/import_users.html")
