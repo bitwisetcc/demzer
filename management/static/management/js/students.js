@@ -46,14 +46,12 @@ document.addEventListener("alpine:init", () => {
      * @param {SubmitEvent} e
      */
     submit(e) {
-      const csrfToken = document.cookie.substring(
-        document.cookie.indexOf("=") + 1
-      );
+      const csrfToken = document.cookie.slice(document.cookie.indexOf("=") + 1);
 
       fetch(e.target.action, {
-        body: JSON.stringify({"message": "wanna do something after work? 🍨"}),
+        body: JSON.stringify({ message: "wanna do something after work? 🍨" }),
         method: "POST",
-        headers: {"X-CSRFToken": csrfToken},
+        headers: { "X-CSRFToken": csrfToken },
       });
     },
   }));

@@ -1,3 +1,34 @@
-{% extends 'core/base.html' %} {% load static %} {% block content %}
-<main class="p-7"></main>
+{% extends 'core/base.html' %} {% load static %} {% block head %}
+<link
+  rel="stylesheet"
+  href="{% static 'management/dist/css/dashboard.css' %}"
+/>
+<script>
+  var urls = {
+    // {% comment %} # TODO: Doesn't work. Use data- attributes
+    // students: "{% url 'management/query/students' %}",
+    // teachers: "{% url 'management/query/teachers' %}",
+    // courses: "{% url 'management/query/courses' %}",
+    // classrooms: "{% url 'management/query/classrooms' %}",
+    // {% endcomment %}
+    students: "{% url 'management/students' %}",
+    teachers: "{% url 'management/students' %}",
+    courses: "{% url 'management/students' %}",
+    classrooms: "{% url 'management/students' %}",
+  };
+</script>
+<script defer src="{% static 'management/js/dashboard.js' %}"></script>
+{% endblock %} {% block content %}
+<main>
+  <h1 class="m-5 text-2xl font-bold">Dashboard</h1>
+  <header id="sectors" class="bg-slate-300 p-5 dark:bg-stone-800">
+    <ul id="sectors" class="flex select-none gap-4">
+      <!-- TODO: update URL without reloading -->
+      <li>Alunos</li>
+      <li>Professores</li>
+      <li>Cursos</li>
+      <li>Turmas</li>
+    </ul>
+  </header>
+</main>
 {% endblock %}
