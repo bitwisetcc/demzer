@@ -2,6 +2,7 @@
 function toggleCalendar() {
   var calendarContent = document.getElementById("calendar-content");
   var arrowRotate = document.getElementById("arrow_rotate");
+  var bottomContent = document.getElementById("bottom-content");
 
   if (calendarContent.classList.contains("hidden")) {
     calendarContent.classList.remove("hidden");
@@ -15,7 +16,13 @@ function toggleCalendar() {
     arrowRotate.classList.add("rotate-180");
   }
 
-
+  if(bottomContent.classList.contains("mt-32")){
+    bottomContent.classList.remove("mt-32")
+    bottomContent.classList.add("mt-14");
+  } else{
+    bottomContent.classList.remove("mt-14")
+    bottomContent.classList.add("mt-32");
+  }
 }
 
 

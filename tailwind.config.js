@@ -7,7 +7,8 @@ module.exports = {
         "color-primary": "#32659A", //Blue Color
         "color-secundary": "#E2A161", //Orange Color
         "main-color": "#E6E3E3", //Background Color
-        "around-color": "#CD9028", //HOVER Color
+        "dark-gold": "#CD9028", //HOVER Color
+        "light-gold": "#E8C17E", 
       }
     },
   },
