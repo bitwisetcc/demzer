@@ -5,13 +5,19 @@
   "main": "main.js",
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "targets": {
-    "frontend": {
+    "core": {
       "source": [
         "core/static/core/js/page.js",
         "core/static/core/css/main.css",
         "core/static/core/css/enroll.css"
       ],
       "distDir": "./static/core/dist"
+    },
+    "management": {
+      "source": [
+        "management/static/management/css/dashboard.css"
+      ],
+      "distDir": "./static/management/dist/css"
     }
   },
   "scripts": {
