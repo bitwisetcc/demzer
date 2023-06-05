@@ -164,15 +164,3 @@ def enroll(request: HttpRequest):
             "city": DEFAULT_CITY,
         }
         return render(request, "core/enroll.html", context)
-
-
-def courses_editor(request: HttpRequest):
-    return render(request, "core/courses.html")
-
-
-def bulk_enroll(request: HttpRequest):
-    if request.method == "POST":
-        print(json.loads(request.body.decode()))
-        # User.objects.bulk_create()
-        # Member.objects.bulk_create()
-    return render(request, "core/import_users.html")

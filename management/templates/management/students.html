@@ -1,6 +1,6 @@
 {% extends 'core/base.html' %} {% load static %} {% block head %}
-<script defer src="{% static 'core/js/import_users.js' %}"></script>
-<link rel="stylesheet" href="{% static 'core/dist/css/import_users.css' %}" />
+<script defer src="{% static 'management/js/students.js' %}"></script>
+<link rel="stylesheet" href="{% static 'management/dist/css/students.css' %}" />
 {% endblock %} {% block content %}
 <main class="p-7" x-data="userData">
   <h2 class="mb-2 text-xl font-bold">Campos necessários</h2>
@@ -112,7 +112,7 @@
   </section>
 
   <form
-    action="{% url 'import_users' %}"
+    action="{% url 'management/students' %}"
     method="POST"
     class="flex flex-col gap-3"
     @submit.prevent="submit"
@@ -146,7 +146,7 @@
       hidden
       @input="readFile"
     />
-    <input type="submit" value="Enviar" class="btn">
+    <input type="submit" value="Enviar" class="btn" />
   </form>
 
   <div class="mt-4 overflow-x-auto border-slate-400 dark:border-slate-600">
@@ -161,7 +161,7 @@
                 :id="`txt-${header}`"
                 :value="header"
                 :size="Math.max(Math.max(...rows.map((s) => s[i].length)), header.length - 2)"
-                class="p-3"
+                class="rounded-none border-0 p-3 shadow-sm transition-all focus-visible:outline-none dark:bg-slate-700"
               />
             </td>
           </template>
