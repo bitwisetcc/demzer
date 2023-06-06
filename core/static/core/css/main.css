@@ -46,6 +46,10 @@ nav svg {
   @apply flex flex-col items-start gap-1;
 }
 
+thead {
+  @apply bg-slate-300;
+}
+
 td {
   @apply border border-slate-400 p-3 dark:border-slate-600;
 }

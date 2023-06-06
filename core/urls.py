@@ -4,6 +4,7 @@ from core.views import *
 
 urlpatterns = [
     path("", index, name="home"),
+    path("dashboard/", dashboard, name="dashboard"),
     path("login/<int:failed>/", login_user, name="login"),
     path("login/", login_user, name="login"),
     path("logout/", logout_user, name="logout"),

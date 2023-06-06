@@ -1,6 +1,4 @@
-{% extends 'core/base.html' %}
-{% load static %}
-{% block head %}
+{% extends 'core/base.html' %} {% load static %} {% block head %}
 <script defer>
   function onInit() {
     const failed = Boolean(location.pathname.split("login/")[1][0]);
@@ -25,57 +23,64 @@
     alert("Espere até 15 minutos para tentar um login novamente");
   }
 </script>
-{% endblock %}
-{% block content %}
-<main class="w-full h-full bg-[#054499] p-5 sm:p-9" x-init="onInit()">
+{% endblock %} {% block content %}
+<main class="h-full w-full bg-[#054499] p-5 sm:p-9" x-init="onInit()">
   <section
-    class="w-full h-full bg-slate-100 dark:bg-slate-800 rounded-3xl shadow-md shadow-slate-800 sm:flex justify-between relative"
+    class="relative h-full w-full justify-between rounded-3xl bg-slate-100 shadow-md shadow-slate-800 sm:flex"
   >
     <form
       action="{% url 'login' %}"
       method="POST"
-      class="py-9 px-8 sm:pt-10 md:p-14 sm:w-1/2 flex flex-col items-center justify-center"
+      class="flex flex-col items-center justify-center px-8 py-9 sm:w-1/2 sm:pt-10 md:p-14"
     >
       {% csrf_token %}
-      <header class="flex flex-col gap-4 items-center mb-6">
+      <header class="mb-6 flex flex-col items-center gap-4">
         <img
           src="{% static 'core/images/logo.png' %}"
           alt="logo"
           class="h-16"
         />
-        <h1 class="text-3xl font-sans font-bold">Login</h1>
+        <h1 class="font-sans text-3xl font-bold">Login</h1>
         <h2 class="text-md font-sans">Entre com seu ID e senha</h2>
       </header>
-      <div class="flex flex-col justify-center items-center sm:block">
-        <div class="flex flex-col gap-1 mb-3">
+      <div class="flex flex-col items-center justify-center sm:block">
+        <div class="mb-3 flex flex-col gap-1">
           <label for="school-code">Escola:</label>
           <input type="text" name="school-code" id="school-code" required />
         </div>
-        <div class="md:flex gap-2">
-          <div class="flex flex-col gap-1 mb-3">
+        <div class="gap-2 md:flex">
+          <div class="mb-3 flex flex-col gap-1">
             <label for="user-id">ID:</label>
-            <input type="text" name="user-id" id="user-id" class="md:w-24" required />
+            <input
+              type="text"
+              name="user-id"
+              id="user-id"
+              class="md:w-24"
+              required
+            />
           </div>
-          <div class="flex flex-col gap-1 mb-3">
+          <div class="mb-3 flex flex-col gap-1">
             <label for="password">Senha:</label>
             <input type="password" name="password" id="password" required />
           </div>
         </div>
 
-        <div class="flex flex-col gap-3 md:gap-2 w-full md:block">
-          <a href="new_password" class="text-sky-700 dark:text-sky-500">Enqueci a senha</a>
+        <div class="flex w-full flex-col gap-3 md:block md:gap-2">
+          <a href="new_password" class="text-sky-700">Enqueci a senha</a>
           <br class="hidden md:block" />
-          <input type="submit" value="Entrar" class="py-2 px-20 md:mt-3 md:mx-auto md:block" />
+          <input
+            type="submit"
+            value="Entrar"
+            class="px-20 py-2 md:mx-auto md:mt-3 md:block"
+          />
         </div>
       </div>
     </form>
-    <aside
-      class="bg-gray-200 dark:bg-slate-700 rounded-3xl w-1/2 hidden sm:block"
-    ></aside>
+    <aside class="hidden w-1/2 rounded-3xl bg-gray-200 sm:block"></aside>
     <img
       src="{% static 'core/images/desenho.png' %}"
       alt="lineart de alunos em sala de aula"
-      class="w-4/6 sm:w-1/2 absolute bottom-0 right-10 hidden sm:block"
+      class="absolute bottom-0 right-10 hidden w-4/6 sm:block sm:w-1/2"
     />
   </section>
 </main>

@@ -1,5 +1,6 @@
 document.addEventListener("alpine:init", () => {
-  Alpine.data("userData", () => ({
+  Alpine.data("dashboard", () => ({
     active: "students",
+    
   }));
 });

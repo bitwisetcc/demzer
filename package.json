@@ -9,15 +9,10 @@
       "source": [
         "core/static/core/js/page.js",
         "core/static/core/css/main.css",
-        "core/static/core/css/enroll.css"
+        "core/static/core/css/enroll.css",
+        "core/static/core/css/dashboard.css"
       ],
       "distDir": "./static/core/dist"
-    },
-    "management": {
-      "source": [
-        "management/static/management/css/dashboard.css"
-      ],
-      "distDir": "./static/management/dist/css"
     }
   },
   "scripts": {

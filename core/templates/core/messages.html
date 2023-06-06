@@ -1,5 +1,5 @@
 {% if messages %}
-<ul class="absolute z-10 left-10 top-10 sm:left-14 sm:top-14">
+<ul class="absolute left-10 top-10 z-10 sm:left-14 sm:top-14">
   {% for msg in messages %}
   <li
     x-data="{
@@ -13,13 +13,24 @@
         closed: false,
         hide() { this.closed = true },
       }"
-    class="p-4 pr-6 bg-slate-200 dark:bg-slate-800 border rounded-lg shadow-md shadow-gray-800 relative mb-1"
+    class="relative mb-1 rounded-lg border bg-slate-200 p-4 pr-6 shadow-md shadow-gray-800"
     :class="`border-${colors['{{ msg.level_tag }}']}-500 ` + (closed && 'hidden')"
   >
     <span>{{ msg }}</span>
-    <button @click="hide()" class="absolute top-2 right-2">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+    <button @click="hide()" class="absolute right-2 top-2">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="h-4 w-4"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M6 18L18 6M6 6l12 12"
+        />
       </svg>
     </button>
   </li>

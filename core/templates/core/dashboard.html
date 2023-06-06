@@ -17,18 +17,36 @@
     classrooms: "{% url 'management/students' %}",
   };
 </script>
-<script defer src="{% static 'management/js/dashboard.js' %}"></script>
+<script defer src="{% static 'core/js/dashboard.js' %}"></script>
 {% endblock %} {% block content %}
-<main>
+<main x-data="dashboard">
   <h1 class="m-5 text-2xl font-bold">Dashboard</h1>
-  <header id="sectors" class="bg-slate-300 p-5 dark:bg-stone-800">
+  <header id="sectors" class="bg-slate-300 p-5">
     <ul id="sectors" class="flex select-none gap-4">
-      <!-- TODO: update URL without reloading -->
       <li>Alunos</li>
       <li>Professores</li>
       <li>Cursos</li>
       <li>Turmas</li>
     </ul>
   </header>
+  <section class="p-5">
+    <h2 x-text="active" class="mb-4 text-xl font-semibold"></h2>
+    <table>
+      <thead>
+        <template x-if="active == 'students'">
+          <tr>
+            <td>RM</td>
+            <td>Nome</td>
+            <td>Idade</td>
+            <td>Gênero</td>
+            <td>Celular</td>
+            <td>E-mail</td>
+            <td>CPF</td>
+            <td>RG</td>
+          </tr>
+        </template>
+      </thead>
+    </table>
+  </section>
 </main>
 {% endblock %}
