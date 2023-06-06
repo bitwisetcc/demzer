@@ -1,28 +1,16 @@
-from django.db import IntegrityError
-from django.http import (
-    HttpRequest,
-    HttpResponseBadRequest,
-    JsonResponse,
-    Http404,
-)
-from django.shortcuts import redirect, render
-from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login, logout
-from django.contrib import messages
-from datetime import datetime
-import json
 import re
+from datetime import datetime
 
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.db import IntegrityError
+from django.http import Http404, HttpRequest, HttpResponseBadRequest
+from django.shortcuts import redirect, render
+
+from backend.settings import (DEFAULT_BIRTHDATE, DEFAULT_CITY, DEFAULT_COUNTRY,
+                              DEFAULT_STATE, EMAIL_PATTERN)
 from core.models import *
-from backend.settings import (
-    DEFAULT_COUNTRY,
-    DEFAULT_STATE,
-    DEFAULT_CITY,
-    DEFAULT_BIRTHDATE,
-    EMAIL_PATTERN,
-)
 
 
 def doc_to_num(doc: str):
@@ -164,3 +152,7 @@ def enroll(request: HttpRequest):
             "city": DEFAULT_CITY,
         }
         return render(request, "core/enroll.html", context)
+
+
+def dashboard(request: HttpRequest):
+    return render(request, "core/dashboard.html")

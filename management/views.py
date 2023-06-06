@@ -18,10 +18,6 @@ def students(request: HttpRequest, row=1):
     )
 
 
-def dashboard(request: HttpRequest):
-    return render(request, "management/dashboard.html")
-
-
 # TODO: Select students class? (optionally?)
 def import_students(request: HttpRequest):
     if request.method == "POST":
