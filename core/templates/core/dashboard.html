@@ -22,29 +22,23 @@
 <main x-data="dashboard">
   <h1 class="m-5 text-2xl font-bold">Dashboard</h1>
   <header id="sectors" class="bg-slate-300 p-5">
+    {% csrf_token %}
     <ul id="sectors" class="flex select-none gap-4">
-      <li>Alunos</li>
-      <li>Professores</li>
-      <li>Cursos</li>
-      <li>Turmas</li>
+      <li data-url="{% url 'query/students' %}" data-section="students" @click="reload">Alunos</li>
+      <li data-section="teachers" @click="reload">Professores</li>
+      <li data-section="courses" @click="reload">Cursos</li>
+      <li data-section="classrooms" @click="reload">Turmas</li>
     </ul>
   </header>
   <section class="p-5">
     <h2 x-text="active" class="mb-4 text-xl font-semibold"></h2>
     <table>
       <thead>
-        <template x-if="active == 'students'">
-          <tr>
-            <td>RM</td>
-            <td>Nome</td>
-            <td>Idade</td>
-            <td>Gênero</td>
-            <td>Celular</td>
-            <td>E-mail</td>
-            <td>CPF</td>
-            <td>RG</td>
-          </tr>
-        </template>
+        <tr>
+          <template x-for="header in headers">
+            <td x-text="header"></td>
+          </template>
+        </tr>
       </thead>
     </table>
   </section>
