@@ -16,13 +16,11 @@ function toggleCalendar() {
     arrowRotate.classList.add("rotate-180");
   }
 
-  if(bottomContent.classList.contains("mt-32")){
-    bottomContent.classList.remove("mt-32")
+  if(bottomContent.classList.contains("mt-28")){
+    bottomContent.classList.remove("mt-28");
     bottomContent.classList.add("mt-14");
   } else{
-    bottomContent.classList.remove("mt-14")
-    bottomContent.classList.add("mt-32");
+    bottomContent.classList.remove("mt-14");
+    bottomContent.classList.add("mt-28");
   }
 }
-
-

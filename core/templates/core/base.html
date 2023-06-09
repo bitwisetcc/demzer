@@ -5,11 +5,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="{% static 'core/dist/css/main.css' %}" />
+    <link rel="stylesheet" href="{% static 'core/dist/css/navbar.css' %}" />
     <link rel="icon" type="image/png" href="{% static 'core/images/logo.png' %}" />
     {% block head %}{% endblock %}
     <script defer src="{% static 'core/dist/js/page.js' %}"></script>
   </head>
-  <body class="bg-slate-100 flex flex-row h-screen dark:bg-main-color relative">
+  <body class="bg-main-color flex flex-row h-screen dark:bg-main-color relative">
     {% include "core/messages.html" %}
     {% include "core/navbar.html"%} 
     
