@@ -21,8 +21,7 @@
   textarea,
   select {
     @apply rounded-xl border border-gray-400 shadow-sm transition-all
-    hover:border-sky-600 focus:border-sky-600 focus-visible:outline-none
-    dark:border-gray-500 dark:bg-slate-700;
+    hover:border-sky-600 focus:border-sky-600 focus-visible:outline-none;
   }
 
   [type="radio"] {
@@ -30,12 +29,12 @@
   }
 
   [type="submit"] {
-    @apply cursor-pointer rounded-3xl bg-amber-400 hover:shadow-md dark:bg-amber-500 dark:text-black;
+    @apply cursor-pointer rounded-3xl bg-amber-400 hover:shadow-md;
   }
 }
 
 hr {
-  @apply my-3 dark:border-slate-500;
+  @apply my-3;
 }
 
 nav svg {
@@ -51,7 +50,7 @@ thead {
 }
 
 td {
-  @apply border border-slate-400 p-3 dark:border-slate-600;
+  @apply border border-slate-400 p-3;
 }
 
 .btn {
