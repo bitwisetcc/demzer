@@ -148,9 +148,9 @@
     <input type="submit" value="Enviar" class="btn" />
   </form>
 
-  <div class="mt-4 overflow-x-auto border-slate-400 dark:border-slate-600">
+  <div class="mt-4 overflow-x-auto border-slate-400">
     <table class="table-auto">
-      <thead class="bg-slate-300 dark:bg-slate-700">
+      <thead class="bg-slate-300">
         <tr>
           <template x-for="(header, i) in headers">
             <td class="w-max p-0 hover:text-sky-500">
@@ -160,7 +160,7 @@
                 :id="`txt-${header}`"
                 :value="header"
                 :size="Math.max(Math.max(...rows.map((s) => s[i].length)), header.length - 2)"
-                class="rounded-none border-0 p-3 shadow-sm transition-all focus-visible:outline-none dark:bg-slate-700"
+                class="rounded-none border-0 p-3 shadow-sm transition-all focus-visible:outline-none"
               />
             </td>
           </template>

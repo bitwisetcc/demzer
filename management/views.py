@@ -12,8 +12,12 @@ def students(request: HttpRequest, row=1):
     # Do this here or somewhere else?
     return JsonResponse(
         {
-            "users": user.json()
-            for user in Member.objects.filter(pk__gte=40 * (row - 1), pk__lte=40 * row)
+            "users": [
+                user.json()
+                for user in Member.objects.filter(
+                    pk__gte=40 * (row - 1), pk__lte=40 * row
+                )
+            ]
         }
     )
 

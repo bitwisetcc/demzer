@@ -1,31 +1,60 @@
+function getAge(birthday) {
+  let ageDifMs = Date.now() - birthday.getTime();
+  let ageDate = new Date(ageDifMs);
+  return Math.abs(ageDate.getUTCFullYear() - 1970);
+}
+
 document.addEventListener("alpine:init", () => {
   Alpine.data("dashboard", () => ({
     active: "Alunos",
-    headers: ["RM", "Nome", "Idade", "Gênero", "Celular", "E-mail", "CPF", "RG"],
+    headers: [""],
+    rows: [[]],
     /**
      * @param {Event} e
      */
-    reload(e) {
-      this.active = e.target.innerText;
+    reload(section, active, url) {
+      this.active = active;
       const csrfToken = document.cookie.slice(document.cookie.indexOf("=") + 1);
-      
-      switch (e.target.dataset.section) {
-        case "students":
-          this.headers = ["RM", "Nome", "Idade", "Gênero", "Celular", "E-mail", "CPF", "RG"];
-          break;
-      
+
+      switch (section) {
         case "courses":
-          this.headers = ["Código", "Nome", "Descrição"];
+          this.headers = ["Código", "Nome", "Descrição", "Turmas", "Alunos"];
           break;
-      
+
+        case "classrooms":
+          this.headers = ["Código", "Alunos", "Notas"];
+          break;
+
         default:
+          this.headers = [
+            "RM",
+            "Nome",
+            "Idade",
+            "Gênero",
+            "Celular",
+            "E-mail",
+            "CPF",
+            "RG",
+          ];
+
+          fetch(url, { headers: { "X-CSRFToken": csrfToken } })
+            .then((res) => res.json())
+            .then((data) => {
+              data.users.forEach((user) => {
+                this.rows.push([
+                  user.rm,
+                  user.username,
+                  getAge(new Date(user.birthdate)),
+                  user.gender,
+                  user.phone,
+                  user.email,
+                  user.cpf,
+                  user.rg,
+                ]);
+              });
+            });
           break;
       }
-
-      fetch(e.target.dataset.url, { headers: { "X-CSRFToken": csrfToken } })
-        .then((res) => res.json())
-        .then(console.log)
-        .catch(console.error);
     },
   }));
 });
