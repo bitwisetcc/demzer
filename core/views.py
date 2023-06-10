@@ -181,44 +181,6 @@ def all_students(request: HttpRequest):
     return JsonResponse({"total": len(everyone), "users": everyone})
 
 
-@csrf_exempt
-@require_POST
-def create_subject(request: HttpRequest):
-    body = json.loads(request.body.decode())
-    Subject(name=body["name"], slug=body["slug"]).save()
-    return HttpResponse(":D")
-
-
-@csrf_exempt
-@require_POST
-def create_course(request: HttpRequest):
-    body = json.loads(request.body.decode())
-    course = Course(name=body["name"], slug=body["slug"])
-    course.save()
-
-    _subjects = [Subject.objects.get(slug=s) for s in body["subjects"]]
-    course.subjects.add(*_subjects)
-    course.save()
-
-    return HttpResponse(":D")
-
-
-@csrf_exempt
-@require_POST
-def create_class(request: HttpRequest):
-    body = json.loads(request.body.decode())
-
-    Class(
-        course=Course.objects.get(slug=body["course"]),
-        student_group=body["student_group"] or None,
-        teacher=Member.objects.get(pk=body["teacher"]),
-        subject=Subject.objects.get(slug=body["subject"]),
-        day=body["day"],
-        order=body["order"],
-    ).save()
-
-    return HttpResponse(":D")
-
 @login_required
 def professores(request: HttpRequest):
     return render(
