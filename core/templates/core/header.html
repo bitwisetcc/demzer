@@ -1,45 +1,46 @@
 {% if not no_nav|default:False %}
-<nav
-  class="flex items-center justify-between rounded-b-3xl bg-slate-200 px-8 py-5 text-color-primary"
+<header
+  class="relative flex items-center justify-between rounded-b-3xl bg-slate-100 px-8 py-5 shadow-sm"
+  x-data="{ open: false }"
+  @click="open = !open"
+  @click.away="open = false"
+  @keypress.space="open = false"
 >
-  <ul class="flex list-none items-center gap-4 stroke-gray-400">
-    <li><p>Bem Vindo, {{ user.username.split.0 }}!</p></li>
-  </ul>
-
-  <header
-    class="relative flex cursor-pointer items-center"
-    x-data="{ open: false, toggle() { this.open = !this.open }, hide() { this.open = false }}"
-    @click="toggle()"
-    @click.away="hide()"
-    @keypress.space="hide()"
-  >
-    <span class="ml-1 mr-2">Professor | {{ school_name }}</span>
-
-    <div class="rounded-[20px] border border-color-secondary p-1.5">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="h-6 w-6 text-color-secondary"
-      >
-        <path
-          class="color-secondary"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0M3.124 7.5A8.969 8.969 0 015.292 3m13.416 0a8.969 8.969 0 012.168 4.5"
-        />
-      </svg>
-    </div>
-    <div
-      x-show="open"
-      class="absolute right-0 top-7 border border-slate-500 bg-slate-300 p-3 shadow dark:bg-slate-800"
+  <div class="flex w-full flex-col justify-between md:flex-row">
+    <p class="text-color-primary">
+      Bem Vindo, {{ user.username.split.0.title }}!
+    </p>
+    <span
+      class="text-sm text-gray-400 md:ml-1 md:mr-3 md:text-base md:text-color-primary"
     >
-      <ul class="list-none">
-        <li><a href="{% url 'logout' %}">Log out</a></li>
-      </ul>
-    </div>
-  </header>
-</nav>
+      Professor | {{ school_name }}
+    </span>
+  </div>
+
+  <div class="rounded-2xl border border-color-secondary p-1.5">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+      class="h-6 w-6 text-color-secondary"
+    >
+      <path
+        class="color-secondary"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0M3.124 7.5A8.969 8.969 0 015.292 3m13.416 0a8.969 8.969 0 012.168 4.5"
+      />
+    </svg>
+  </div>
+  <div
+    x-show="open"
+    class="absolute right-0 top-7 border border-slate-500 bg-slate-300 p-3 shadow"
+  >
+    <ul class="list-none">
+      <li><a href="{% url 'logout' %}">Log out</a></li>
+    </ul>
+  </div>
+</header>
 {% endif %}
