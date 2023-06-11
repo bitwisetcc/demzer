@@ -1,10 +1,8 @@
-{% if not no_nav|default:False %}
 <header
-  class="relative flex items-center justify-between rounded-b-3xl bg-slate-100 px-8 py-5 shadow-sm"
+  class="relative flex items-center justify-between rounded-br-3xl bg-slate-100 px-8 py-5 shadow-sm"
   x-data="{ open: false }"
   @click="open = !open"
   @click.away="open = false"
-  @keypress.space="open = false"
 >
   <div class="flex w-full flex-col justify-between md:flex-row">
     <p class="text-color-primary">
@@ -43,4 +41,3 @@
     </ul>
   </div>
 </header>
-{% endif %}

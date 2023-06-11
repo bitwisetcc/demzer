@@ -37,8 +37,12 @@ hr {
   @apply my-3;
 }
 
+nav ul li a {
+  @apply flex gap-3 hover:text-color-secondary transition-all duration-300;
+}
+
 nav svg {
-  @apply h-6 w-6;
+  @apply h-6 w-6 transition-transform duration-300;
 }
 
 .field {
