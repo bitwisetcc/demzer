@@ -8,7 +8,14 @@
     <span
       class="text-sm text-gray-400 md:ml-1 md:mr-3 md:text-base md:text-color-primary"
     >
-      Professor | {{ school_name }}
+      {% if user.is_superuser %}
+        Coordenador
+      {% elif user.is_staff %}
+        Professor
+      {% else %}
+        Aluno
+      {% endif %}
+       | {{ school_name }}
     </span>
   </div>
 
