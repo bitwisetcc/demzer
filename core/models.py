@@ -132,7 +132,7 @@ class Member(Model):
 
     def json(self):
         return {
-            "rm": self.pk,
+            "rm": self.user.pk,
             "username": self.user.username,
             "birthdate": self.birthdate,
             "gender": self.gender,
