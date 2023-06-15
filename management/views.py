@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.http import HttpRequest, JsonResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
+from django.contrib.auth.models import User
 import json
 
 from core.models import Member
@@ -15,8 +16,8 @@ def students(request: HttpRequest, row=1):
             "users": [
                 user.json()
                 for user in Member.objects.filter(
-                    pk__gte=40 * (row - 1), pk__lte=40 * row
-                )
+                    user__is_staff=False, user__is_superuser=False
+                )[40 * (row - 1) : 40 * row]
             ]
         }
     )
@@ -25,7 +26,13 @@ def students(request: HttpRequest, row=1):
 # TODO: Select students class? (optionally?)
 def import_students(request: HttpRequest):
     if request.method == "POST":
-        print(json.loads(request.body.decode()))
-        # User.objects.bulk_create()
+        data = json.loads(request.body.decode()) 
+        print(data)
+        return HttpResponse(data)
+        # User.objects.bulk_create(
+        #     [
+        #         User(username=data["username"], email=data["email"], password=data["password"])
+        #     ]
+        # )
         # Member.objects.bulk_create()
     return render(request, "management/students.html")

@@ -48,8 +48,18 @@ document.addEventListener("alpine:init", () => {
     submit(e) {
       const csrfToken = document.cookie.slice(document.cookie.indexOf("=") + 1);
 
+      // console.log(
+      //   this.headers.map((header, i) => {
+      //     data: this.rows.map((row) => row[i]), header;
+      //   })
+      // );
+      data = this.headers.map((header, i) => ({
+        data: this.rows.map((row) => row[i]),
+        header: header,
+      }));
+
       fetch(e.target.action, {
-        body: JSON.stringify({ message: "wanna do something after work? 🍨" }),
+        body: JSON.stringify(data),
         method: "POST",
         headers: { "X-CSRFToken": csrfToken },
       });

@@ -10,10 +10,7 @@
         class="flex w-full items-start"
         :class="open ? 'justify-between' : 'justify-center'"
       >
-        <span
-          class="origin-left text-xl font-bold transition-all"
-          :class="open || 'hidden'"
-        >
+        <span class="truncate text-xl font-bold" :class="open || 'hidden'">
           {{ user.username.split.0.title }} {{ user.username.split.1.title }}
         </span>
         <button
@@ -32,7 +29,7 @@
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
-              d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+              d="M8.25 4.5l7.5 7.5-7.5 7.5"
             />
           </svg>
         </button>
@@ -52,10 +49,9 @@
         </span>
       </div>
     </header>
-    <hr :class="open || 'scale-0'" />
     <ul class="flex flex-col gap-4" :class="open || 'scale-0'">
       <li>
-        <a href="">
+        <a href="{% url 'dashboard' %}">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -139,7 +135,7 @@
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                d="M12 4.5v15m0 0l6.75-6.75M12 19.5l-6.75-6.75"
+                d="M19.5 8.25l-7.5 7.5-7.5-7.5"
               />
             </svg>
           </button>

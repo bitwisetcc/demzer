@@ -13,7 +13,7 @@
         closed: false,
         hide() { this.closed = true },
       }"
-    class="relative mb-1 rounded-lg border bg-slate-200 p-4 pr-6 shadow-md shadow-gray-800"
+    class="relative mb-1 rounded-lg border border-slate-400 bg-slate-200 p-4 pr-6 shadow-md"
     :class="`border-${colors['{{ msg.level_tag }}']}-500 ` + (closed && 'hidden')"
   >
     <span>{{ msg }}</span>

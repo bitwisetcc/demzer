@@ -14,7 +14,7 @@
     {% if not no_nav|default:False %}
       {% include "core/navbar.html" %}
     {% endif %}
-    <div class="w-full">
+    <div class="w-full overflow-y-scroll">
       {% if not no_nav|default:False %}
         {% include "core/header.html" %}
       {% endif %}
