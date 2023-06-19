@@ -32,6 +32,7 @@ document.addEventListener("alpine:init", () => {
     errors: [],
     readFile(e) {
       let reader = new FileReader();
+
       reader.addEventListener("load", () => {
         const rows = reader.result.split("\n").map((row) => row.split(","));
         const headers = rows.shift();
@@ -42,27 +43,32 @@ document.addEventListener("alpine:init", () => {
 
       reader.readAsText(e.target.files[0]);
     },
+
     /**
      * @param {SubmitEvent} e
      */
     submit(e) {
       const csrfToken = document.cookie.slice(document.cookie.indexOf("=") + 1);
-
-      // console.log(
-      //   this.headers.map((header, i) => {
-      //     data: this.rows.map((row) => row[i]), header;
-      //   })
-      // );
-      data = this.headers.map((header, i) => ({
-        data: this.rows.map((row) => row[i]),
-        header: header,
-      }));
+      data = this.rows.map((row) => {
+        console.log();
+        const header = this.rows.header((header) => header[i]);
+        return { header: row };
+      });
+      // data = this.headers.map((header, i) => ({
+      //   data: this.rows.map((row) => row[i]),
+      //   header: header,
+      // }));
+      console.log(data);
+      return;
 
       fetch(e.target.action, {
         body: JSON.stringify(data),
         method: "POST",
         headers: { "X-CSRFToken": csrfToken },
-      });
+      })
+        .then((res) => res.json())
+        .then(console.log)
+        .catch(console.error);
     },
   }));
 });

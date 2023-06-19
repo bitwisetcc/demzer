@@ -25,7 +25,7 @@
                 viewBox="0 0 24 24"
                 stroke-width="1.5"
                 stroke="currentColor"
-                class="mx-auto h-6 w-6 text-lime-500"
+                class="mx-auto h-6 w-6 text-lime-600"
               >
                 <path
                   stroke-linecap="round"
@@ -79,7 +79,7 @@
                 viewBox="0 0 24 24"
                 stroke-width="1.5"
                 stroke="currentColor"
-                class="mx-auto h-6 w-6 text-lime-500"
+                class="mx-auto h-6 w-6 text-lime-600"
               >
                 <path
                   stroke-linecap="round"
@@ -95,7 +95,7 @@
                 viewBox="0 0 24 24"
                 stroke-width="1.5"
                 stroke="currentColor"
-                class="mx-auto h-6 w-6 text-amber-500"
+                class="mx-auto h-6 w-6 text-amber-600"
               >
                 <path
                   stroke-linecap="round"
@@ -114,7 +114,7 @@
     action="{% url 'management/students' %}"
     method="POST"
     class="flex flex-col gap-3"
-    @submit.prevent="submit"
+    enctype="multipart/form-data"
   >
     {% csrf_token %}
     <label
@@ -142,8 +142,8 @@
       name="users"
       id="file-users"
       accept=".xls,.xlsx,.csv"
-      hidden
       @input="readFile"
+      hidden
     />
     <input type="submit" value="Enviar" class="btn" />
   </form>
@@ -153,16 +153,7 @@
       <thead class="bg-slate-300">
         <tr>
           <template x-for="(header, i) in headers">
-            <td class="w-max p-0 hover:text-sky-500">
-              <input
-                type="text"
-                :name="`txt-${header}`"
-                :id="`txt-${header}`"
-                :value="header"
-                :size="Math.max(Math.max(...rows.map((s) => s[i].length)), header.length - 2)"
-                class="rounded-none border-0 p-3 shadow-sm transition-all focus-visible:outline-none"
-              />
-            </td>
+            <td class="w-max p-3 hover:text-sky-500" x-text="header"></td>
           </template>
         </tr>
       </thead>
