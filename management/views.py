@@ -1,3 +1,5 @@
+from django.contrib.auth.hashers import make_password
+from datetime import datetime
 import re
 
 from django.contrib.auth.models import User
@@ -5,6 +7,10 @@ from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, JsonR
 from django.shortcuts import redirect, render
 
 from core.models import Member
+
+
+def clear_students():
+    User.objects.filter(is_superuser=False).delete()
 
 
 # General queries with auth included
@@ -45,11 +51,17 @@ def import_students(request: HttpRequest):
             # TODO: Validate emails, CPF, RG, gender etc.
             for line in lines[1:]:
                 row = dict(zip(headers, line))
+                birthdate = datetime.strptime(row["birthdate"], "%Y-%m-%d").date()
 
                 row["phone"] = re.sub(r"[^0-9]+", "", row["phone"])
                 row["afro"] = row["afro"] == "true"
                 row["cpf"] = re.sub(r"[\./-]", "", row["cpf"])
                 row["rg"] = re.sub(r"[\./-]", "", row["rg"])
+                row["password"] = make_password(
+                    row["username"].split()[0]
+                    + row["username"].split()[-1]
+                    + str(birthdate.year)
+                )
 
                 data.append(row)
 
@@ -59,27 +71,25 @@ def import_students(request: HttpRequest):
             return HttpResponse(f"Erro ao ler arquivo: {error}")
 
         try:
-            users_data = map(
-                lambda d: filter_dict(d, ["username", "email", "password"]), data
-            )
-            users = [User(**user) for user in users_data]
+            users = [
+                User(**filter_dict(user, ["username", "email", "password"]))
+                for user in data
+            ]
             User.objects.bulk_create(users)
         except Exception as error:
             return HttpResponse(f"Erro ao criar usuários: {error}")
 
         try:
             # TODO: Optionally reset passwords if they're ancrypted + send reset email
-            members_data = map(
-                lambda d: filter_dict(d, ["username", "email", "password"], True),
-                data,
+            Member.objects.bulk_create(
+                Member(
+                    **filter_dict(
+                        member, ["username", "email", "password"], exclude=True
+                    ),
+                    user=users[i],
+                )
+                for i, member in enumerate(data)
             )
-            print(list(members_data)[0]) # it's not creating the members
-            members = [
-                Member(**member, user=User.objects.get(username=users[i].username))
-                for i, member in members_data
-            ]
-            Member.objects.bulk_create(members)
-            print(Member.objects.first())
         except Exception as error:
             return HttpResponse(f"Erro ao criar perfis: {error}")
 

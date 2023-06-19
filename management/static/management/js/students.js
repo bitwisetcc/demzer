@@ -3,7 +3,6 @@ document.addEventListener("alpine:init", () => {
     required: [
       "username",
       "email",
-      "password",
       "contact_email",
       "phone",
       "birthdate",
@@ -16,6 +15,7 @@ document.addEventListener("alpine:init", () => {
       "cep",
     ],
     optional: [
+      "password",
       "natural_state",
       "natural_city",
       "nationality",
