@@ -13,6 +13,7 @@ document.addEventListener("alpine:init", () => {
      * @param {Event} e
      */
     reload(section, active, url) {
+      this.rows = [[]];
       this.active = active;
       const csrfToken = document.cookie.slice(document.cookie.indexOf("=") + 1);
 

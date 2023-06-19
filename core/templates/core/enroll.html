@@ -16,7 +16,7 @@
         <li>
           <button
             @click.prevent="tab = 'identidade'"
-            :class="tab == 'identidade' && 'text-cyan-500'"
+            :class="tab == 'identidade' && 'text-cyan-600'"
             class="transition-all"
           >
             Identidade
@@ -41,7 +41,7 @@
         <li>
           <button
             @click.prevent="tab = 'contato'"
-            :class="tab == 'contato' && 'text-cyan-500'"
+            :class="tab == 'contato' && 'text-cyan-600'"
             class="transition-all"
           >
             Contato
@@ -66,7 +66,7 @@
         <li>
           <button
             :disabled="true"
-            :class="tab == 'confirmação' && 'text-cyan-500'"
+            :class="tab == 'confirmação' && 'text-cyan-600'"
             class="transition-all"
           >
             Confirmação
@@ -135,7 +135,7 @@
             />
           </div>
           <div class="field flex-1">
-            <label for="txt-rg">RG:</label>
+            <label for="txt-rg">RG</label>
             <input
               type="text"
               name="rg"
@@ -306,7 +306,7 @@
         </div>
         <div class="my-3 flex items-end gap-3">
           <div class="field">
-            <label for="txt-cep">CEP:</label>
+            <label for="txt-cep">CEP</label>
             <input
               type="number"
               name="cep"
@@ -322,7 +322,7 @@
           </button>
 
           <div class="field">
-            <label for="txt-distance">Distância:</label>
+            <label for="txt-distance">Distância</label>
             <input
               type="number"
               name="distance"
@@ -380,7 +380,7 @@
             />
           </div>
           <div class="field">
-            <label for="txt-comp">Complemento:</label>
+            <label for="txt-comp">Complemento</label>
             <input type="text" name="complement" id="txt-comp" size="8" />
           </div>
         </div>

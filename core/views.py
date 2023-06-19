@@ -33,15 +33,20 @@ def login_user(request: HttpRequest, failed=0):
     if request.method == "POST":
         user_id = request.POST["user-id"]
         password = request.POST["password"]
-        username = User.objects.get(pk=user_id).username
+
+        try:
+            username = User.objects.get(pk=user_id).username
+        except User.DoesNotExist as err:
+            messages.warning(request, f"Usuário com RM {user_id} não existe")
+            return redirect("login")
 
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
             return redirect("home")
         else:
-            messages.add_message(
-                request, messages.WARNING, "Senha incorreta. Tente Novamente"
+            messages.warning(
+                request, "Senha incorreta. Tente Novamente"
             )
             return redirect("login", failed=1)
     else:

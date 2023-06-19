@@ -1,10 +1,5 @@
-{% if not no_nav|default:False %}
 <header
-  class="relative flex items-center justify-between rounded-b-3xl bg-slate-100 px-8 py-5 shadow-sm"
-  x-data="{ open: false }"
-  @click="open = !open"
-  @click.away="open = false"
-  @keypress.space="open = false"
+  class="relative flex items-center justify-between rounded-br-3xl bg-slate-100 px-8 py-5 shadow-sm"
 >
   <div class="flex w-full flex-col justify-between md:flex-row">
     <p class="text-color-primary">
@@ -13,7 +8,14 @@
     <span
       class="text-sm text-gray-400 md:ml-1 md:mr-3 md:text-base md:text-color-primary"
     >
-      Professor | {{ school_name }}
+      {% if user.is_superuser %}
+        Coordenador
+      {% elif user.is_staff %}
+        Professor
+      {% else %}
+        Aluno
+      {% endif %}
+       | {{ school_name }}
     </span>
   </div>
 
@@ -34,13 +36,4 @@
       />
     </svg>
   </div>
-  <div
-    x-show="open"
-    class="absolute right-0 top-7 border border-slate-500 bg-slate-300 p-3 shadow"
-  >
-    <ul class="list-none">
-      <li><a href="{% url 'logout' %}">Log out</a></li>
-    </ul>
-  </div>
 </header>
-{% endif %}
