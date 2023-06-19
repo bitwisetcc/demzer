@@ -165,6 +165,7 @@ class Subject(Model):
     # ...
 
 
+# TODO: o curso deve ter um horário (M, T, N)
 class Course(Model):
     """
     The group of students that spend their time together. They go from room to room together etc.

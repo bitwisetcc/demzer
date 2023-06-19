@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "core",
     "management",
+    "alert",
 ]
 
 REST_FRAMEWORK = {

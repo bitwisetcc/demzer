@@ -1,0 +1,26 @@
+{% extends 'core/base.html' %}
+{% block head %}
+<title>Gerar denúncia</title>
+{% endblock %}
+{% block content %}
+<h1 class="m-5 text-2xl font-bold">Gerar denúncia</h1>
+<form action="{% url 'new_alert' %}" method="post" class="px-6 py-1">
+  <div class="my-3 flex items-center gap-3">
+    <label for="txt-emiter">Emissor</label>
+    <input type="text" name="emiter" id="txt-emiter" value="{{ user.username }}" disabled class="bg-slate-300 text-slate-700">
+  </div>
+  <div class="my-3 flex items-center gap-3">
+    <label for="txt-target">Para:</label>
+    <select name="target" id="txt-target">
+      <option value="student">Aluno</option>
+      <option value="teacher">Professor</option>
+      <option value="secretary">Secretaria</option>
+      <option value="administration">Coordenação</option>
+      <option value="direction">Direção</option>
+      <option value="course">Curso</option>
+      <option value="classroom">Turma</option>
+      <option value="hr">RH</option>
+    </select>
+  </div>
+</form>
+{% endblock %}
