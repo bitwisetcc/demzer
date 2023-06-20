@@ -51,17 +51,19 @@ def import_students(request: HttpRequest):
             # TODO: Validate emails, CPF, RG, gender etc.
             for line in lines[1:]:
                 row = dict(zip(headers, line))
-                birthdate = datetime.strptime(row["birthdate"], "%Y-%m-%d").date()
 
                 row["phone"] = re.sub(r"[^0-9]+", "", row["phone"])
                 row["afro"] = row["afro"] == "true"
                 row["cpf"] = re.sub(r"[\./-]", "", row["cpf"])
                 row["rg"] = re.sub(r"[\./-]", "", row["rg"])
-                row["password"] = make_password(
-                    row["username"].split()[0]
-                    + row["username"].split()[-1]
-                    + str(birthdate.year)
-                )
+
+                if "reset-password" in request.POST or "password" not in row:
+                    birthdate = datetime.strptime(row["birthdate"], "%Y-%m-%d").date()
+                    row["password"] = make_password(
+                        row["username"].split()[0]
+                        + row["username"].split()[-1]
+                        + str(birthdate.year)
+                    )
 
                 data.append(row)
 
