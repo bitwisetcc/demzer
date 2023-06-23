@@ -8,6 +8,7 @@
   class="flex flex-col gap-3 px-6 py-1"
   x-data="{ alertTarget: '' }"
 >
+  {% csrf_token %}
   <div class="flex items-center gap-3">
     <label for="txt-emiter">Emissor:</label>
     <input

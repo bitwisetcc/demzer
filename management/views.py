@@ -1,5 +1,6 @@
 from django.contrib.auth.hashers import make_password
 from datetime import datetime
+import os
 import re
 
 from django.contrib.auth.models import User
@@ -31,7 +32,7 @@ def students(request: HttpRequest, row=1):
 
 
 def csv_data(line: bytes) -> list[str]:
-    return line.decode().replace("\n", "").split(",")
+    return line.decode().replace(os.linesep, "").split(",")
 
 
 def filter_dict(d: dict, keys: list[str], exclude=False) -> dict:
