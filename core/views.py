@@ -161,3 +161,9 @@ def enroll(request: HttpRequest):
 
 def dashboard(request: HttpRequest):
     return render(request, "core/dashboard.html")
+
+def comunicados(request: HttpRequest):
+    return render(request, "core/comunicados.html")
+
+def perfil(request: HttpRequest):
+    return render(request, "core/perfil.html")
