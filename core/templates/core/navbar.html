@@ -2,7 +2,7 @@
 <nav
   class="sticky left-0 top-0 flex flex-col justify-between overflow-y-scroll rounded-r-lg bg-color-primary py-5 text-slate-100 transition-all"
   x-data="{ open: false }"
-  :class="open ? 'w-80 px-5' : 'w-24 px-1'"
+  :class="open ? 'w-80 px-5' : 'w-20 px-1'"
 >
   <div>
     <header class="flex flex-col items-center">
@@ -38,8 +38,8 @@
         <img
           src="{% static '/core/images/profile.jpg' %}"
           alt="Imagem de {{ user.username.split.0.title }}"
-          class="mb-5 shadow-md transition-all duration-200"
-          :class="open ? 'h-20 w-20 rounded-3xl' : 'h-14 w-14 rounded-2xl'"
+          class="mb-5 h-20 w-20 rounded-3xl shadow-md transition-all duration-200"
+          :class="open || 'scale-0'"
         />
         <span
           class="absolute -right-2 -top-2 flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-center shadow"

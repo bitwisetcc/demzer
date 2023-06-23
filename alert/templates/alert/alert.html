@@ -1,19 +1,31 @@
-{% extends 'core/base.html' %}
-{% block head %}
+{% extends 'core/base.html' %} {% block head %}
 <title>Gerar denúncia</title>
-{% endblock %}
-{% block content %}
+{% endblock %} {% block content %}
 <h1 class="m-5 text-2xl font-bold">Gerar denúncia</h1>
-<form action="{% url 'new_alert' %}" method="post" class="px-6 py-1">
-  <div class="my-3 flex items-center gap-3">
-    <label for="txt-emiter">Emissor</label>
-    <input type="text" name="emiter" id="txt-emiter" value="{{ user.username }}" disabled class="bg-slate-300 text-slate-700">
+<form
+  action="{% url 'new_alert' %}"
+  method="post"
+  class="flex flex-col gap-3 px-6 py-1"
+  x-data="{ alertTarget: '' }"
+>
+  <div class="flex items-center gap-3">
+    <label for="txt-emiter">Emissor:</label>
+    <input
+      type="text"
+      name="emiter"
+      id="txt-emiter"
+      value="{{ user.username }}"
+      disabled
+      class="bg-slate-300 text-slate-700"
+    />
   </div>
-  <div class="my-3 flex items-center gap-3">
+  <div class="flex items-center gap-3">
     <label for="txt-target">Para:</label>
-    <select name="target" id="txt-target">
-      <option value="student">Aluno</option>
+    <select name="target" id="txt-target" x-model="alertTarget">
+      <option disabled value="@" selected>Geral</option>
+      <option value="student" selected>Estudante</option>
       <option value="teacher">Professor</option>
+      <option value="employee">Funcionário</option>
       <option value="secretary">Secretaria</option>
       <option value="administration">Coordenação</option>
       <option value="direction">Direção</option>
@@ -21,6 +33,69 @@
       <option value="classroom">Turma</option>
       <option value="hr">RH</option>
     </select>
+  </div>
+  <div
+    class="field"
+    x-data="{ search: '', entries: ['Alberto', 'Ângela', 'Simone', 'Raquel', 'Marcelo'], normalize(str) { return str.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase() } }"
+  >
+    <label for="txt-recipient">Destinatário</label>
+    <div class="flex flex-col">
+      <input
+        type="search"
+        name="recipient"
+        id="txt-recipient"
+        x-model="search"
+        autocomplete="off"
+      />
+      <ul
+        class="border border-slate-400 bg-slate-200"
+        :class="search == '' && 'hidden'"
+      >
+      <template x-for="entry in entries">
+        <li
+          x-text="entry"
+          x-show="normalize(entry).startsWith(normalize(search))"
+        ></li>
+      </template>
+    </ul>
+    </div>
+  </div>
+  <div class="field">
+    <label for="txt-content">Descrição:</label>
+    <textarea name="content" id="txt-content" cols="50" rows="6"></textarea>
+  </div>
+
+  <label
+    for="file-users"
+    class="btn flex w-max cursor-pointer items-center gap-1"
+  >
+    <span>Anexar arquivo</span>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="2.2"
+      stroke="currentColor"
+      class="h-5 w-5"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15"
+      />
+    </svg>
+  </label>
+  <input
+    type="file"
+    name="users"
+    id="file-users"
+    accept=".xls,.xlsx,.csv"
+    @input="readFile"
+    hidden
+  />
+
+  <div>
+    <input type="submit" value="Enviar" class="btn px-16 font-semibold" />
   </div>
 </form>
 {% endblock %}

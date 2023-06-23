@@ -45,17 +45,19 @@ class Member(Model):
         NON_BINARY = "NB", _("Não Binário")
 
     class UserTypes(TextChoices):
-        STUDENT = "0", _("Aluno")
-        TEACHER = "1", _("Professor")
-        EMPLOYEE = "2", _("Funcionário")
-        ADMIN = "3", _("Administrador")
+        STUDENT = "0", _("Estudante")
+        EMPLOYEE = "1", _("Funcionário")
+        TEACHER = "2", _("Professor")
+        SECRETARY = "3", _("Secretaría")
+        COORDINATOR = "4", _("Coordenação")
+        ADMIN = "5", _("Administração")
 
     class PublicSchoolingTypes(TextChoices):
         FULL = "C", _("Completo")
         NONE = "N", _("Nenhuma")
         ELEMENTARY = "E", _("Ensino Primário")
         MIDDLE = "M", _("Ensino Fundamental")
-        HIGH = "H", _("Ensino Média")
+        HIGH = "H", _("Ensino Médio")
 
     class CivilStates(TextChoices):
         SINGLE = "S", _("Solteiro")

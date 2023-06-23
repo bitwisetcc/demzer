@@ -45,11 +45,11 @@ def import_students(request: HttpRequest):
         try:
             lines: list[bytes] = list(map(csv_data, request.FILES["users"].readlines()))
 
-            headers: list[str] = lines[0]
+            headers: list[str] = lines.pop(0)
             data: list[dict] = []
 
             # TODO: Validate emails, CPF, RG, gender etc.
-            for line in lines[1:]:
+            for line in lines:
                 row = dict(zip(headers, line))
 
                 row["phone"] = re.sub(r"[^0-9]+", "", row["phone"])

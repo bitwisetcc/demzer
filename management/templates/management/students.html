@@ -110,17 +110,16 @@
     </table>
   </section>
 
-  
   <form
-  action="{% url 'management/students' %}"
-  method="POST"
-  class="flex flex-col gap-3"
+    action="{% url 'management/students' %}"
+    method="POST"
+    class="flex flex-col gap-3"
     enctype="multipart/form-data"
   >
-  {% csrf_token %}
+    {% csrf_token %}
     <label
-    for="file-users"
-    class="btn flex w-max cursor-pointer items-center gap-1"
+      for="file-users"
+      class="btn flex w-max cursor-pointer items-center gap-1"
     >
       <span>Selecionar arquivo</span>
       <svg
@@ -131,39 +130,40 @@
         stroke="currentColor"
         class="h-5 w-5"
       >
-      <path
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15"
-      />
-    </svg>
-  </label>
-  <input
-  type="file"
-  name="users"
-  id="file-users"
-  accept=".xls,.xlsx,.csv"
-  @input="readFile"
-  hidden
-  />
-  <div class="flex gap-3 items-center">
-    <label for="ch-reset">Resetar senhas:</label>
-    <input type="checkbox" name="reset-password" id="ch-reset" />
-    <p class="my-4">
-      Exemplo: Leonardo da Silva Figueira, 20/4/2001. Senha: LeonardoFigueira2001
-    </p>
-  </div>
-  <input type="submit" value="Enviar" class="btn" />
-</form>
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15"
+        />
+      </svg>
+    </label>
+    <input
+      type="file"
+      name="users"
+      id="file-users"
+      accept=".xls,.xlsx,.csv"
+      @input="readFile"
+      hidden
+    />
+    <div class="flex items-center gap-3">
+      <label for="ch-reset">Resetar senhas:</label>
+      <input type="checkbox" name="reset-password" id="ch-reset" />
+      <p class="my-4">
+        Exemplo: Leonardo da Silva Figueira, 20/4/2001. Senha:
+        LeonardoFigueira2001
+      </p>
+    </div>
+    <input type="submit" value="Enviar" class="btn" />
+  </form>
 
-<div class="mt-4 overflow-x-auto border-slate-400">
-  <table class="table-auto">
-    <thead class="bg-slate-300">
-      <tr>
-        <template x-for="(header, i) in headers">
-          <td class="w-max p-3 hover:text-sky-500" x-text="header"></td>
-        </template>
-      </tr>
+  <div class="mt-4 overflow-x-auto border-slate-400">
+    <table class="table-auto">
+      <thead class="bg-slate-300">
+        <tr>
+          <template x-for="(header, i) in headers">
+            <td class="w-max p-3 hover:text-sky-500" x-text="header"></td>
+          </template>
+        </tr>
       </thead>
       <tbody>
         <template x-for="row in rows">
