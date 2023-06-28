@@ -9,60 +9,16 @@
   x-data="{ alertTarget: '' }"
 >
   {% csrf_token %}
-  <div class="flex items-center gap-3">
-    <label for="txt-emiter">Emissor:</label>
-    <input
-      type="text"
-      name="emiter"
-      id="txt-emiter"
-      value="{{ user.username }}"
-      disabled
-      class="bg-slate-300 text-slate-700"
-    />
-  </div>
-  <div class="flex items-center gap-3">
-    <label for="txt-target">Para:</label>
-    <select name="target" id="txt-target" x-model="alertTarget">
-      <option disabled value="@" selected>Geral</option>
-      <option value="student" selected>Estudante</option>
-      <option value="teacher">Professor</option>
-      <option value="employee">Funcionário</option>
-      <option value="secretary">Secretaria</option>
-      <option value="administration">Coordenação</option>
-      <option value="direction">Direção</option>
-      <option value="course">Curso</option>
-      <option value="classroom">Turma</option>
-      <option value="hr">RH</option>
-    </select>
-  </div>
-  <div
-    class="field"
-    x-data="{ search: '', entries: ['Alberto', 'Ângela', 'Simone', 'Raquel', 'Marcelo'], normalize(str) { return str.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase() } }"
-  >
-    <label for="txt-recipient">Destinatário</label>
-    <div class="flex flex-col">
-      <input
-        type="search"
-        name="recipient"
-        id="txt-recipient"
-        x-model="search"
-        autocomplete="off"
-      />
-      <ul
-        class="border border-slate-400 bg-slate-200"
-        :class="search == '' && 'hidden'"
-      >
-      <template x-for="entry in entries">
-        <li
-          x-text="entry"
-          x-show="normalize(entry).startsWith(normalize(search))"
-        ></li>
-      </template>
-    </ul>
-    </div>
+  <div class="field">
+    <label for="txt-title">Título</label>
+    <input type="text" name="title" id="txt-title" maxlength="30"></input>
   </div>
   <div class="field">
-    <label for="txt-content">Descrição:</label>
+    <label for="txt-tags" title="Lista separada por vírgulas text" class="decoration-dashed underline decoration-slate-700">Tags</label>
+    <input type="text" name="tags" id="txt-tags" maxlength="50"></input>
+  </div>
+  <div class="field">
+    <label for="txt-content">Descrição</label>
     <textarea name="content" id="txt-content" cols="50" rows="6"></textarea>
   </div>
 

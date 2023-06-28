@@ -7,14 +7,19 @@ from alert.models import Alert
 
 def new_alert(request: HttpRequest):
     if request.method == "POST":
-        emiter = request.user
-        description = request.POST["content"]
-        try:
-            recipient = User.objects.filter(username__startswith=request.POST["recipient"])
-        except:
-            return HttpResponseBadRequest("Destinatário não existe: {}".format(request.POST["recipient"]))
-        
-        alert = Alert(emiter=emiter, description=description, recipients=recipient)
-        return HttpResponse("Emiter: {}<br>Recipient: {}<br>Description: {}".format(emiter, recipient, description))
+        alert = Alert(
+            emiter=request.user,
+            title=request.POST["title"],
+            description=request.POST["content"],
+            tags=request.POST["tags"],
+        )
+
+        alert.save()
+
+        return HttpResponse(
+            "Emiter: {}<br>Title: {}<br>Description: {}".format(
+                alert.emiter, alert.title, alert.description
+            )
+        )
 
     return render(request, "alert/alert.html")

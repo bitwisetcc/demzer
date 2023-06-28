@@ -1,5 +1,7 @@
 from django.conf import settings
+from django.shortcuts import redirect
 from django.urls import path
+
 from core.views import *
 
 urlpatterns = [
@@ -12,5 +14,5 @@ urlpatterns = [
 ]
 
 
-def school_info(request):
+def school_info(request: HttpRequest):
     return {"school_name": settings.SCHOOL_NAME}
