@@ -9,10 +9,10 @@
     {% block head %}{% endblock %}
     <script defer src="{% static 'core/dist/js/page.js' %}"></script>
   </head>
-  <body class="relative flex h-screen bg-slate-200">
+  <body class="relative flex h-screen bg-slate-200" x-data="{ open: false }">
     {% include "core/messages.html" %}
     {% if not no_nav|default:False %}
-      {% include "core/navbar.html" %}
+    {% include "core/navbar.html" %}
     {% endif %}
     <div class="w-full overflow-y-scroll">
       {% if not no_nav|default:False %}
