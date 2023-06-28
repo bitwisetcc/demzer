@@ -224,7 +224,13 @@
         </ul>
       </li>
       <li>
-        <a href="{% url 'new_alert' %}">
+        <a 
+          {% if user.is_superuser %}
+          href="{% url 'list_alerts' %}"
+          {% else %}
+          href="{% url 'new_alert' %}"
+          {% endif %}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

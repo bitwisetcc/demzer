@@ -31,28 +31,5 @@
       <box-icon name="user-plus" color="white" />
     </a>
   </form>
-
-  <table class="mt-4 table-auto">
-    <thead>
-      <tr>
-        <td>RM</td>
-        <td>Nome</td>
-        <td>Nascimento</td>
-        <td>Gênero</td>
-        <td>E-mail</td>
-        <td>Telefone</td>
-      </tr>
-    </thead>
-    {% for user in users %}
-    <tr>
-      <td>{{ user.rm }}</td>
-      <td>{{ user.username }}</td>
-      <td>{{ user.birthdate|date:'d/m/Y' }}</td>
-      <td>{{ user.gender }}</td>
-      <td>{{ user.email }}</td>
-      <td>{{ user.phone }}</td>
-    </tr>
-    {% endfor %}
-  </table>
 </main>
 {% endblock content %}

@@ -23,3 +23,6 @@ def new_alert(request: HttpRequest):
         )
 
     return render(request, "alert/alert.html")
+
+def list_alerts(request: HttpRequest):
+    return render(request, "alert/list.html", {"alerts": Alert.objects.all()[:20]})

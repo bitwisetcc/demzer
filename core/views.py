@@ -7,9 +7,15 @@ from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import Http404, HttpRequest, HttpResponseBadRequest
 from django.shortcuts import redirect, render
+from alert.models import Alert
 
-from backend.settings import (DEFAULT_BIRTHDATE, DEFAULT_CITY, DEFAULT_COUNTRY,
-                              DEFAULT_STATE, EMAIL_PATTERN)
+from backend.settings import (
+    DEFAULT_BIRTHDATE,
+    DEFAULT_CITY,
+    DEFAULT_COUNTRY,
+    DEFAULT_STATE,
+    EMAIL_PATTERN,
+)
 from core.models import *
 
 
@@ -19,11 +25,9 @@ def doc_to_num(doc: str):
 
 @login_required
 def index(request: HttpRequest):
-    return render(
-        request,
-        "core/home.html",
-        {"users": [user.json() for user in Member.objects.all()]},
-    )
+    if request.user.is_superuser:
+        return render(request, "core/admin.html")
+    return render(request, "core/home.html")
 
 
 def login_user(request: HttpRequest, failed=0):
@@ -45,9 +49,7 @@ def login_user(request: HttpRequest, failed=0):
             login(request, user)
             return redirect("home")
         else:
-            messages.warning(
-                request, "Senha incorreta. Tente Novamente"
-            )
+            messages.warning(request, "Senha incorreta. Tente Novamente")
             return redirect("login", failed=1)
     else:
         return render(request, "core/login.html", {"no_nav": True, "failed": failed})

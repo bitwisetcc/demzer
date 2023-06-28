@@ -1,0 +1,21 @@
+{% extends 'core/base.html' %} {% load static %} {% block content %}
+<main class="flex-1 p-5">
+  <h1 class="mb-3 font-sans text-3xl font-bold">Administrador</h1>
+  <section
+    class="grid grid-cols-2 divide-x-2 divide-gray-600"
+    x-data="{ title: '{{ alerts.0.title }}' }"
+  >
+    <ul class="flex">
+      {% for alert in alerts %}
+      <li class="rounded-lg border bg-slate-300 p-3">
+        <span>{{ alert.title }}</span>
+        <span class="text-slate-500">por {{ alert.emiter }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    <article>
+      <h2 x-text="title"></h2>
+    </article>
+  </section>
+</main>
+{% endblock content %}
