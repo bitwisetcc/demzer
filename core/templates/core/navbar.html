@@ -52,6 +52,7 @@
       </div>
     </header>
     <ul class="flex flex-col gap-4" :class="open || 'scale-0'">
+      {% if user.is_superuser%}
       <li>
         <a href="{% url 'dashboard' %}">
           <svg
@@ -70,6 +71,7 @@
           <span>Dashboard</span>
         </a>
       </li>
+      {% endif %}
       <li>
         <a href="{% url 'comunicados' %}">
           <svg

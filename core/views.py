@@ -29,6 +29,7 @@ def index(request: HttpRequest):
 def login_user(request: HttpRequest, failed=0):
     if request.user.is_authenticated:
         return redirect("home")
+    
 
     if request.method == "POST":
         user_id = request.POST["user-id"]
@@ -44,6 +45,7 @@ def login_user(request: HttpRequest, failed=0):
         if user is not None:
             login(request, user)
             return redirect("home")
+        
         else:
             messages.warning(
                 request, "Senha incorreta. Tente Novamente"
@@ -159,11 +161,17 @@ def enroll(request: HttpRequest):
         return render(request, "core/enroll.html", context)
 
 
+@login_required
 def dashboard(request: HttpRequest):
-    return render(request, "core/dashboard.html")
+    if not request.user.is_staff or not request.user.is_superuser:
+        messages.warning(request, "Apenas administradores podem acessar essa página")
+        return redirect("home")
 
 def comunicados(request: HttpRequest):
     return render(request, "core/comunicados.html")
 
 def perfil(request: HttpRequest):
     return render(request, "core/perfil.html")
+
+
+
