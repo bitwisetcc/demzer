@@ -7,7 +7,6 @@ from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import Http404, HttpRequest, HttpResponseBadRequest
 from django.shortcuts import redirect, render
-from alert.models import Alert
 
 from backend.settings import (
     DEFAULT_BIRTHDATE,

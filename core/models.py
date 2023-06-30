@@ -5,7 +5,7 @@ from django.db.models import (
     ForeignKey,
     ManyToManyField,
     OneToOneField,
-    PROTECT,
+    SET_NULL,
     CASCADE,
 )
 from django.db.models.fields import (
@@ -130,7 +130,7 @@ class Member(Model):
 
     relatives = ManyToManyField(Relative)
 
-    course = ForeignKey("Course", PROTECT, related_name="students", null=True)
+    course = ForeignKey("Course", SET_NULL, related_name="students", null=True)
 
     def json(self):
         return {
@@ -197,9 +197,9 @@ class Class(Model):
         SUNDAY = "SUN", _("Sexta-feira")
 
     course = ForeignKey("Course", CASCADE, related_name="+")
-    teacher = ForeignKey(settings.AUTH_USER_MODEL, PROTECT)
+    teacher = ForeignKey(settings.AUTH_USER_MODEL, SET_NULL, null=True)
     student_group = PositiveSmallIntegerField(null=True)
-    subject = ForeignKey("Subject", PROTECT, related_name="+")
+    subject = ForeignKey("Subject", SET_NULL, related_name="+", null=True)
     day = CharField(max_length=15, choices=Days.choices, default=Days.MONDAY)
     order = PositiveSmallIntegerField()
 

@@ -1,11 +1,13 @@
-from django.contrib.auth.hashers import make_password
-from datetime import datetime
 import os
 import re
+from datetime import datetime
 
+from django.contrib import messages
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import redirect, render
+from rolepermissions.roles import assign_role
 
 from core.models import Member
 
@@ -29,6 +31,11 @@ def students(request: HttpRequest, row=1):
             ]
         }
     )
+
+
+def purge(request: HttpRequest, role: str):
+    User.objects.filter(is_superuser=False).delete()
+    return redirect("dashboard")
 
 
 def csv_data(line: bytes) -> list[str]:
@@ -95,6 +102,15 @@ def import_students(request: HttpRequest):
             )
         except Exception as error:
             return HttpResponse(f"Erro ao criar perfis: {error}")
+
+        try:
+            # TODO: allow for diferent user groups
+            for user in users:
+                assign_role(user, "student")
+        except Exception as error:
+            print(error)
+            messages.error(request, "Falha ao designar grupos aos usuários: " + str(error))
+            return redirect("management/students")
 
         return redirect("dashboard")
     else:

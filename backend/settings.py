@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rolepermissions",
     "core",
     "management",
     "alert",
@@ -145,3 +146,5 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "auth.User"
 
 LOGIN_URL = "/login/"
+
+PERMISSIONS_MODULE = "core.roles"
