@@ -147,4 +147,4 @@ AUTH_USER_MODEL = "auth.User"
 
 LOGIN_URL = "/login/"
 
-PERMISSIONS_MODULE = "core.roles"
+ROLEPERMISSIONS_MODULE = "core.roles"

@@ -7,6 +7,9 @@ from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import Http404, HttpRequest, HttpResponseBadRequest
 from django.shortcuts import redirect, render
+from rolepermissions.decorators import has_permission_decorator as check_permission
+from rolepermissions.decorators import has_role_decorator as check_role
+from rolepermissions.roles import assign_role
 
 from backend.settings import (
     DEFAULT_BIRTHDATE,
@@ -22,16 +25,9 @@ def doc_to_num(doc: str):
     return int(re.sub(r"[\./-]", "", doc))
 
 
-@login_required
-def index(request: HttpRequest):
-    if request.user.is_superuser:
-        return render(request, "core/admin.html")
-    return render(request, "core/home.html")
-
-
 def login_user(request: HttpRequest, failed=0):
     if request.user.is_authenticated:
-        return redirect("home")
+        return redirect("dashboard")
 
     if request.method == "POST":
         user_id = request.POST["user-id"]
@@ -46,7 +42,7 @@ def login_user(request: HttpRequest, failed=0):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect("home")
+            return redirect("dashboard")
         else:
             messages.warning(request, "Senha incorreta. Tente Novamente")
             return redirect("login", failed=1)
@@ -62,16 +58,12 @@ def logout_user(request: HttpRequest):
         request,
         f"Você saiu da conta de {first_name}",
     )
-    return redirect("home")
+    return redirect("dashboard")
 
 
 # TODO: Create actual emails + prevent email duplication
-@login_required
+@check_permission("create_user", redirect_url="dashboard")
 def enroll(request: HttpRequest):
-    if not request.user.is_staff or not request.user.is_superuser:
-        messages.warning(request, "Apenas administradores podem acessar essa página")
-        return redirect("home")
-
     if request.method == "POST":
         username = request.POST["username"].strip()
         first_name = username.split()[0]
@@ -146,10 +138,17 @@ def enroll(request: HttpRequest):
             profile.save()
         except Exception as err:
             return HttpResponseBadRequest(
-                "Algo deu errado tentando registrar o responsável:\n" + err
+                "Algo deu errado ao registrar o responsável:\n" + err
             )
 
-        return redirect("home")
+        try:
+            assign_role(user, "student")
+        except Exception as error:
+            # TODO: Doesn't work
+            messages.error(request, "Falha ao designar grupo ao usuário: " + str(error))
+            return redirect("management/students")
+
+        return redirect("dashboard")
     else:
         context = {
             "birthdate": DEFAULT_BIRTHDATE,
@@ -160,5 +159,10 @@ def enroll(request: HttpRequest):
         return render(request, "core/enroll.html", context)
 
 
+@login_required
 def dashboard(request: HttpRequest):
     return render(request, "core/dashboard.html")
+
+
+def super_secret(request: HttpRequest):
+    return render(request, "core/secret.html", {"no_nav": True})

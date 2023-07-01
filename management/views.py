@@ -34,7 +34,7 @@ def students(request: HttpRequest, row=1):
 
 
 def purge(request: HttpRequest, role: str):
-    User.objects.filter(is_superuser=False).delete()
+    User.objects.filter(groups__name=role).delete()
     return redirect("dashboard")
 
 
@@ -109,6 +109,7 @@ def import_students(request: HttpRequest):
                 assign_role(user, "student")
         except Exception as error:
             print(error)
+            # TODO: Doesn't work
             messages.error(request, "Falha ao designar grupos aos usuários: " + str(error))
             return redirect("management/students")
 
