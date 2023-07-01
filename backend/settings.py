@@ -32,6 +32,7 @@ DEFAULT_BIRTHDATE = date(date.today().year - 15, 1, 1)
 
 SCHOOL_NAME = "ETEC Jorge Street"
 EMAIL_PATTERN = "{}.{}@etec.sp.gov.br"
+SECURITY_KEY = "1234"
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent

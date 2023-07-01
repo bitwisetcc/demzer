@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-from django.http import Http404, HttpRequest, HttpResponseBadRequest
+from django.http import Http404, HttpRequest, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import redirect, render
 from rolepermissions.decorators import has_permission_decorator as check_permission
 from rolepermissions.decorators import has_role_decorator as check_role
@@ -165,4 +165,9 @@ def dashboard(request: HttpRequest):
 
 
 def super_secret(request: HttpRequest):
+    if request.method == "POST":
+        if request.POST["key"] == settings.SECURITY_KEY:
+            return HttpResponse("✨")
+        else:
+            return Http404("booooo")
     return render(request, "core/secret.html", {"no_nav": True})

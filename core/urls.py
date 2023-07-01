@@ -7,7 +7,7 @@ from core.views import *
 urlpatterns = [
     path("", lambda _: redirect("dashboard"), name="empty"),
     path("dashboard/", dashboard, name="dashboard"),
-    path("secret/", super_secret, name="secret_login"),
+    path("secret/", super_secret, name="secret"),
     path("login/<int:failed>/", login_user, name="login"),
     path("login/", login_user, name="login"),
     path("logout/", logout_user, name="logout"),
