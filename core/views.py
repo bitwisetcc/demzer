@@ -144,9 +144,8 @@ def enroll(request: HttpRequest):
         try:
             assign_role(user, "student")
         except Exception as error:
-            # TODO: Doesn't work
-            messages.error(request, "Falha ao designar grupo ao usuário: " + str(error))
-            return redirect("management/students")
+            messages.error(request, "Falha ao designar grupo ao usuário")
+            return redirect("enroll")
 
         return redirect("dashboard")
     else:
@@ -167,6 +166,14 @@ def dashboard(request: HttpRequest):
 def super_secret(request: HttpRequest):
     if request.method == "POST":
         if request.POST["key"] == settings.SECURITY_KEY:
+            try:
+                admin = User.objects.create_superuser(
+                    username=username,
+                    email=EMAIL_PATTERN.format(first_name.lower(), last_name.lower()),
+                    password=first_name + last_name + str(birthdate.year),
+                )
+            except Exception as error:
+                return HttpResponse("Erro ao cadastrar administrador")
             return HttpResponse("✨")
         else:
             return Http404("booooo")
