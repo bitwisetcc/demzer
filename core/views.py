@@ -8,7 +8,6 @@ from django.db import IntegrityError
 from django.http import Http404, HttpRequest, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import redirect, render
 from rolepermissions.decorators import has_permission_decorator as check_permission
-from rolepermissions.decorators import has_role_decorator as check_role
 from rolepermissions.roles import assign_role
 
 from backend.settings import (
@@ -25,6 +24,11 @@ def doc_to_num(doc: str):
     return int(re.sub(r"[\./-]", "", doc))
 
 
+@login_required
+def dashboard(request: HttpRequest):
+    return render(request, "core/dashboard.html")
+
+
 def login_user(request: HttpRequest, failed=0):
     if request.user.is_authenticated:
         return redirect("dashboard")
@@ -36,7 +40,7 @@ def login_user(request: HttpRequest, failed=0):
         try:
             username = User.objects.get(pk=user_id).username
         except User.DoesNotExist:
-            messages.warning(request, f"Usuário com RM {user_id} não existe")
+            messages.warning(request, "Usuário com RM {} não existe".format(user_id))
             return redirect("login")
 
         user = authenticate(request, username=username, password=password)
@@ -54,10 +58,7 @@ def login_user(request: HttpRequest, failed=0):
 def logout_user(request: HttpRequest):
     first_name = request.user.username.split()[0]
     logout(request)
-    messages.success(
-        request,
-        f"Você saiu da conta de {first_name}",
-    )
+    messages.success(request, "Você saiu da conta de {}".format(first_name))
     return redirect("dashboard")
 
 
@@ -86,14 +87,11 @@ def enroll(request: HttpRequest):
         except IntegrityError as err:
             match str(err).split(".")[-1]:
                 case "username":
-                    messages.add_message(
-                        request, messages.ERROR, "Nome de usuário já existe"
-                    )
+                    messages.error(request, "Nome de usuário já existe")
                     return redirect("enroll")
                 case "email":
-                    raise Http404(
-                        f"E-mail já existe"
-                    )  # TODO: Add a number to the email
+                    # TODO: Add a number to the email
+                    raise Http404("E-mail '{}' já existe".format(user.email))
 
         try:
             profile = Member.objects.create(
@@ -119,26 +117,23 @@ def enroll(request: HttpRequest):
                 complement=request.POST["complement"],
                 distance=distance,
             )
-        except Exception as err:
-            return HttpResponseBadRequest(
-                "Algo deu errado tentando criar o seu perfil:\n" + err
-            )
+        except Exception as error:
+            return HttpResponseBadRequest("Falha ao criar perfil: {}".format(error))
 
         try:
-            guardian = (
-                Relative.objects.create(  # TODO: Check if relative already exists
-                    name=request.POST["name-guardian"],
-                    email=request.POST["email-guardian"],
-                    phone=re.sub(r"[^0-9]+", "", request.POST["phone-guardian"]),
-                )
+            # TODO: Check if relative already exists
+            guardian = Relative.objects.create(
+                name=request.POST["name-guardian"],
+                email=request.POST["email-guardian"],
+                phone=re.sub(r"[^0-9]+", "", request.POST["phone-guardian"]),
             )
 
             profile.save()
             profile.relatives.add(guardian)
             profile.save()
-        except Exception as err:
+        except Exception as error:
             return HttpResponseBadRequest(
-                "Algo deu errado ao registrar o responsável:\n" + err
+                "Falha ao registrar o responsável: {}".format(error)
             )
 
         try:
@@ -158,23 +153,54 @@ def enroll(request: HttpRequest):
         return render(request, "core/enroll.html", context)
 
 
-@login_required
-def dashboard(request: HttpRequest):
-    return render(request, "core/dashboard.html")
-
-
 def super_secret(request: HttpRequest):
     if request.method == "POST":
         if request.POST["key"] == settings.SECURITY_KEY:
+            username = request.POST["username"].strip()
+            first_name = username.split()[0]
+            last_name = username.split()[-1]
+            birthdate = datetime.strptime(request.POST["birthdate"], "%Y-%m-%d").date()
             try:
                 admin = User.objects.create_superuser(
                     username=username,
                     email=EMAIL_PATTERN.format(first_name.lower(), last_name.lower()),
-                    password=first_name + last_name + str(birthdate.year),
+                    password=request.POST["password"],
                 )
+
+                admin.save()
             except Exception as error:
-                return HttpResponse("Erro ao cadastrar administrador")
-            return HttpResponse("✨")
+                return HttpResponse(
+                    "Falha ao cadastrar administrador: {}".format(error)
+                )
+
+            try:
+                profile = Member.objects.create(
+                    user=admin,
+                    contact_email=request.POST["contact-email"],
+                    phone=re.sub(r"[^0-9]+", "", request.POST["phone"]),
+                    birthdate=birthdate,
+                    gender=request.POST["gender"],
+                    rg=doc_to_num(request.POST["rg"]),
+                    cpf=doc_to_num(request.POST["cpf"]),
+                    afro="afro" in request.POST,
+                    cep=request.POST["cep"],
+                    city=request.POST["residence-city"],
+                    neighborhood=request.POST["neighborhood"],
+                    street=request.POST["street"],
+                    street_number=request.POST["street-number"],
+                    complement=request.POST["complement"],
+                )
+                profile.save()
+            except Exception as error:
+                return HttpResponseBadRequest("Falha ao criar perfil: {}".format(error))
+
+            try:
+                assign_role(admin, "admin")
+            except Exception as error:
+                return Http404("Falha ao designar grupo ao usuário: {}".format(error))
+
+            messages.success(request, "Usuário {} criado com sucesso".format(admin.pk))
+            return redirect("login")
         else:
-            return Http404("booooo")
+            return Http404("Chave de segurança incorreta")
     return render(request, "core/secret.html", {"no_nav": True})
