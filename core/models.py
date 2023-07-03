@@ -5,7 +5,7 @@ from django.db.models import (
     ForeignKey,
     ManyToManyField,
     OneToOneField,
-    PROTECT,
+    SET_NULL,
     CASCADE,
 )
 from django.db.models.fields import (
@@ -46,17 +46,19 @@ class Member(Model):
         NON_BINARY = "NB", _("Não Binário")
 
     class UserTypes(TextChoices):
-        STUDENT = "0", _("Aluno")
-        TEACHER = "1", _("Professor")
-        EMPLOYEE = "2", _("Funcionário")
-        ADMIN = "3", _("Administrador")
+        STUDENT = "0", _("Estudante")
+        EMPLOYEE = "1", _("Funcionário")
+        TEACHER = "2", _("Professor")
+        SECRETARY = "3", _("Secretaría")
+        COORDINATOR = "4", _("Coordenação")
+        ADMIN = "5", _("Administração")
 
     class PublicSchoolingTypes(TextChoices):
         FULL = "C", _("Completo")
         NONE = "N", _("Nenhuma")
         ELEMENTARY = "E", _("Ensino Primário")
         MIDDLE = "M", _("Ensino Fundamental")
-        HIGH = "H", _("Ensino Média")
+        HIGH = "H", _("Ensino Médio")
 
     class CivilStates(TextChoices):
         SINGLE = "S", _("Solteiro")
@@ -129,7 +131,7 @@ class Member(Model):
 
     relatives = ManyToManyField(Relative)
 
-    course = ForeignKey("Course", PROTECT, related_name="students", null=True)
+    course = ForeignKey("Course", SET_NULL, related_name="students", null=True)
 
     def json(self):
         return {
@@ -167,6 +169,7 @@ class Subject(Model):
     # ...
 
 
+# TODO: o curso deve ter um horário (M, T, N)
 class Course(Model):
     """
     The group of students that spend their time together. They go from room to room together etc.
@@ -196,9 +199,9 @@ class Class(Model):
         SUNDAY = "SUN", _("Sexta-feira")
 
     course = ForeignKey("Course", CASCADE, related_name="+")
-    teacher = ForeignKey(settings.AUTH_USER_MODEL, PROTECT)
+    teacher = ForeignKey(settings.AUTH_USER_MODEL, SET_NULL, null=True)
     student_group = PositiveSmallIntegerField(null=True)
-    subject = ForeignKey("Subject", PROTECT, related_name="+")
+    subject = ForeignKey("Subject", SET_NULL, related_name="+", null=True)
     day = CharField(max_length=15, choices=Days.choices, default=Days.MONDAY)
     order = PositiveSmallIntegerField()
 

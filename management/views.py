@@ -1,19 +1,20 @@
-from django.contrib.auth.hashers import make_password
-from datetime import datetime
+import os
 import re
+from datetime import datetime
 
+from django.contrib import messages
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import redirect, render
+from rolepermissions.decorators import has_permission_decorator as check_permission
+from rolepermissions.roles import assign_role
 
 from core.models import Member
 
 
-def clear_students():
-    User.objects.filter(is_superuser=False).delete()
-
-
 # General queries with auth included
+# NEXT TODO: Be able to query any kind of user by an URL parameter
 def students(request: HttpRequest, row=1):
     # TODO: check for authorization. If it's an admin, allow everything
     # If it's a teacher, check the classes they're connected to and then get the students
@@ -30,14 +31,21 @@ def students(request: HttpRequest, row=1):
     )
 
 
+@check_permission("delete_user", redirect_url="dashboard")
+def purge(request: HttpRequest, role: str):
+    User.objects.filter(groups__name=role).delete()
+    return redirect("dashboard")
+
+
 def csv_data(line: bytes) -> list[str]:
-    return line.decode().replace("\n", "").split(",")
+    return line.decode().replace(os.linesep, "").split(",")
 
 
 def filter_dict(d: dict, keys: list[str], exclude=False) -> dict:
     return {k: v for k, v in d.items() if (k not in keys if exclude else k in keys)}
 
 
+# NEXT TODO: be able to import any kind of user, not just students 
 # TODO: Select students class? (optionally?)
 # TODO: be able to suppress certain errors and leave blank fields
 def import_students(request: HttpRequest):
@@ -45,11 +53,11 @@ def import_students(request: HttpRequest):
         try:
             lines: list[bytes] = list(map(csv_data, request.FILES["users"].readlines()))
 
-            headers: list[str] = lines[0]
+            headers: list[str] = lines.pop(0)
             data: list[dict] = []
 
             # TODO: Validate emails, CPF, RG, gender etc.
-            for line in lines[1:]:
+            for line in lines:
                 row = dict(zip(headers, line))
 
                 row["phone"] = re.sub(r"[^0-9]+", "", row["phone"])
@@ -94,6 +102,16 @@ def import_students(request: HttpRequest):
             )
         except Exception as error:
             return HttpResponse(f"Erro ao criar perfis: {error}")
+
+        try:
+            # TODO: allow for diferent user groups
+            for user in users:
+                assign_role(user, "student")
+        except Exception as error:
+            print(error)
+            # TODO: Doesn't work
+            messages.error(request, "Falha ao designar grupos aos usuários: " + str(error))
+            return redirect("management/students")
 
         return redirect("dashboard")
     else:
