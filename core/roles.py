@@ -2,7 +2,7 @@ from rolepermissions.roles import AbstractUserRole
 
 
 class Admin(AbstractUserRole):
-    available_permissions = {"create_user": True, "see_alerts": True}
+    available_permissions = {"create_user": True, "see_alerts": True, "delete_user": True}
 
 
 class Coordinator(AbstractUserRole):

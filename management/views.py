@@ -7,16 +7,14 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import redirect, render
+from rolepermissions.decorators import has_permission_decorator as check_permission
 from rolepermissions.roles import assign_role
 
 from core.models import Member
 
 
-def clear_students():
-    User.objects.filter(is_superuser=False).delete()
-
-
 # General queries with auth included
+# NEXT TODO: Be able to query any kind of user by an URL parameter
 def students(request: HttpRequest, row=1):
     # TODO: check for authorization. If it's an admin, allow everything
     # If it's a teacher, check the classes they're connected to and then get the students
@@ -33,6 +31,7 @@ def students(request: HttpRequest, row=1):
     )
 
 
+@check_permission("delete_user", redirect_url="dashboard")
 def purge(request: HttpRequest, role: str):
     User.objects.filter(groups__name=role).delete()
     return redirect("dashboard")
@@ -46,6 +45,7 @@ def filter_dict(d: dict, keys: list[str], exclude=False) -> dict:
     return {k: v for k, v in d.items() if (k not in keys if exclude else k in keys)}
 
 
+# NEXT TODO: be able to import any kind of user, not just students 
 # TODO: Select students class? (optionally?)
 # TODO: be able to suppress certain errors and leave blank fields
 def import_students(request: HttpRequest):

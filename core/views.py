@@ -63,6 +63,7 @@ def logout_user(request: HttpRequest):
 
 
 # TODO: Create actual emails + prevent email duplication
+# NEXT TODO: Be able to enroll any kind of user - Ex: teachers, staff etc.
 @check_permission("create_user", redirect_url="dashboard")
 def enroll(request: HttpRequest):
     if request.method == "POST":
