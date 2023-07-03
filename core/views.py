@@ -205,3 +205,15 @@ def super_secret(request: HttpRequest):
         else:
             return Http404("Chave de segurança incorreta")
     return render(request, "core/secret.html", {"no_nav": True})
+
+
+def comunicados(request: HttpRequest):
+    return render(request, "core/comunicados.html")
+
+
+def perfil(request: HttpRequest):
+    return render(request, "core/perfil.html")
+
+
+def boletim(request: HttpRequest):
+    return render(request, "core/boletim.html")
