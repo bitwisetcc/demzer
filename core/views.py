@@ -36,7 +36,7 @@ def login_user(request: HttpRequest, failed=0):
 
         try:
             username = User.objects.get(pk=user_id).username
-        except User.DoesNotExist as err:
+        except User.DoesNotExist:
             messages.warning(request, f"Usuário com RM {user_id} não existe")
             return redirect("login")
 

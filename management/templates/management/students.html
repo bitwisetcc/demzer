@@ -25,7 +25,7 @@
                 viewBox="0 0 24 24"
                 stroke-width="1.5"
                 stroke="currentColor"
-                class="mx-auto h-6 w-6 text-lime-500"
+                class="mx-auto h-6 w-6 text-lime-600"
               >
                 <path
                   stroke-linecap="round"
@@ -79,7 +79,7 @@
                 viewBox="0 0 24 24"
                 stroke-width="1.5"
                 stroke="currentColor"
-                class="mx-auto h-6 w-6 text-lime-500"
+                class="mx-auto h-6 w-6 text-lime-600"
               >
                 <path
                   stroke-linecap="round"
@@ -95,7 +95,7 @@
                 viewBox="0 0 24 24"
                 stroke-width="1.5"
                 stroke="currentColor"
-                class="mx-auto h-6 w-6 text-amber-500"
+                class="mx-auto h-6 w-6 text-amber-600"
               >
                 <path
                   stroke-linecap="round"
@@ -110,16 +110,17 @@
     </table>
   </section>
 
+  
   <form
-    action="{% url 'management/students' %}"
-    method="POST"
-    class="flex flex-col gap-3"
-    @submit.prevent="submit"
+  action="{% url 'management/students' %}"
+  method="POST"
+  class="flex flex-col gap-3"
+    enctype="multipart/form-data"
   >
-    {% csrf_token %}
+  {% csrf_token %}
     <label
-      for="file-users"
-      class="btn flex w-max cursor-pointer items-center gap-1"
+    for="file-users"
+    class="btn flex w-max cursor-pointer items-center gap-1"
     >
       <span>Selecionar arquivo</span>
       <svg
@@ -130,41 +131,39 @@
         stroke="currentColor"
         class="h-5 w-5"
       >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15"
-        />
-      </svg>
-    </label>
-    <input
-      type="file"
-      name="users"
-      id="file-users"
-      accept=".xls,.xlsx,.csv"
-      hidden
-      @input="readFile"
-    />
-    <input type="submit" value="Enviar" class="btn" />
-  </form>
+      <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15"
+      />
+    </svg>
+  </label>
+  <input
+  type="file"
+  name="users"
+  id="file-users"
+  accept=".xls,.xlsx,.csv"
+  @input="readFile"
+  hidden
+  />
+  <div class="flex gap-3 items-center">
+    <label for="ch-reset">Resetar senhas:</label>
+    <input type="checkbox" name="reset-password" id="ch-reset" />
+    <p class="my-4">
+      Exemplo: Leonardo da Silva Figueira, 20/4/2001. Senha: LeonardoFigueira2001
+    </p>
+  </div>
+  <input type="submit" value="Enviar" class="btn" />
+</form>
 
-  <div class="mt-4 overflow-x-auto border-slate-400">
-    <table class="table-auto">
-      <thead class="bg-slate-300">
-        <tr>
-          <template x-for="(header, i) in headers">
-            <td class="w-max p-0 hover:text-sky-500">
-              <input
-                type="text"
-                :name="`txt-${header}`"
-                :id="`txt-${header}`"
-                :value="header"
-                :size="Math.max(Math.max(...rows.map((s) => s[i].length)), header.length - 2)"
-                class="rounded-none border-0 p-3 shadow-sm transition-all focus-visible:outline-none"
-              />
-            </td>
-          </template>
-        </tr>
+<div class="mt-4 overflow-x-auto border-slate-400">
+  <table class="table-auto">
+    <thead class="bg-slate-300">
+      <tr>
+        <template x-for="(header, i) in headers">
+          <td class="w-max p-3 hover:text-sky-500" x-text="header"></td>
+        </template>
+      </tr>
       </thead>
       <tbody>
         <template x-for="row in rows">
