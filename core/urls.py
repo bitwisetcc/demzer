@@ -12,9 +12,9 @@ urlpatterns = [
     path("login/", login_user, name="login"),
     path("logout/", logout_user, name="logout"),
     path("enroll/", enroll, name="enroll"),
-    path("comunicados/", comunicados, name="comunicados"),
-    path("perfil/", perfil, name="perfil"),
-    path("boletim/", boletim, name="boletim")
+    #path("comunicados/", comunicados, name="comunicados"),
+    #path("perfil/", perfil, name="perfil"),
+    #path("boletim/", boletim, name="boletim")
 ]
 
 
