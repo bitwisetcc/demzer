@@ -255,8 +255,8 @@
           />
         </svg>
         <div class="flex-col px-1 text-sm">
-          <span>Giovanni Cicero</span>
-          <span>giovani.cicero@etec.sp.gov.br</span>
+          <span>{{ user.username.split.0.title }} {{ user.username.split.1.title }}</span>
+          <span>{{ user.email }}</span>
         </div>
         <a href="{% url 'logout' %}" class="group">
           <svg

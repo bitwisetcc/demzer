@@ -140,6 +140,7 @@ class Member(Model):
             "email": self.user.email,
             "rg": self.rg,
             "cpf": self.cpf,
+            "is_staff" : self.user.is_staff,
         }
 
     class Meta:
@@ -227,3 +228,4 @@ New TO-DOs
     Control checksums with a key variable (boolean)
 
 """
+
