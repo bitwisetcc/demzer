@@ -13,6 +13,7 @@ from backend.settings import (DEFAULT_BIRTHDATE, DEFAULT_CITY, DEFAULT_COUNTRY,
 from core.models import *
 
 
+
 def doc_to_num(doc: str):
     return int(re.sub(r"[\./-]", "", doc))
 
@@ -173,5 +174,6 @@ def comunicados(request: HttpRequest):
 def perfil(request: HttpRequest):
     return render(request, "core/perfil.html")
 
-
+def boletim(request: HttpRequest):
+    return render(request, "core/boletim.html")
 

@@ -12,6 +12,9 @@ module.exports = {
         "color-secondary": "#E6A82E",
         "color-txt-perfil": "#054499",
         "color-bg-perfil": "#F5F5F5",
+        "color-boletim": "#D7D4D4",
+        "color-name-boletim": "#4A73AC",
+        "color-dark-orange": "#D0A661",
       }
     },
   },
