@@ -28,6 +28,7 @@ from backend.settings import (
 )
 
 
+
 class Relative(Model):
     name = CharField(max_length=60, unique=True)
     email = EmailField()
@@ -212,6 +213,7 @@ class Presence(Model):
 
 class Assessment(Model):
     pass
+
 
 
 """

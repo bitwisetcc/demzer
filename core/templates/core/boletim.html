@@ -1,0 +1,52 @@
+{% extends 'core/base.html' %} {% load static %} {% block head %}
+
+{% endblock %} {% block content %}
+<div class="flex justify-center">
+  <div class="grid grid-cols-3 gap-10 pt-44">
+    <div class="col-span-2 h-[450px] w-[900px] rounded-3xl bg-color-boletim">
+      <table class="table-auto border-separate pl-2">
+        <thead>
+          <tr>
+            <th class="bg-color-boletim rounded-l-3xl"></th>
+            <th class="bg-color-dark-orange" > 1 ºBim </th>
+            <th> 2 ºBim </th>
+            <th> 3 ºBim </th>
+            <th> 4 ºBim </th>
+          </tr>
+        </thead>
+        <tbody >
+          <tr>
+            <td class="bg-color-name-boletim rounded-3xl ">Lingua Portuguêsa</td>
+          </tr>
+          <tr>
+            <td class="bg-color-name-boletim rounded-3xl">Lingua Inglesa</td>
+          </tr>
+          <tr>
+            <td class="bg-color-name-boletim rounded-3xl">Matemática</td>
+          <tr>
+            <td class="bg-color-name-boletim rounded-3xl">TCC</td>
+          </tr>
+          <tr>
+            <td class="bg-color-name-boletim rounded-3xl">Programação WEB</td>
+          </tr>
+          <tr>
+            <td class="bg-color-name-boletim rounded-3xl">Banco de Dados</td>
+          </tr>
+          <tr>
+            <td class="bg-color-name-boletim rounded-3xl">Programação Mobile</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="h-[100px] w-[300px] rounded-3xl bg-color-boletim">
+      2
+    </div>
+    <div class="col-span-3 h-[100px] rounded-3xl bg-color-boletim">
+      3
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+
