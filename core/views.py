@@ -70,7 +70,7 @@ def enroll(request: HttpRequest):
     if not request.user.is_staff or not request.user.is_superuser:
         messages.warning(request, "Apenas administradores podem acessar essa página")
         return redirect("home")
-
+    
     if request.method == "POST":
         username = request.POST["username"].strip()
         first_name = username.split()[0]
@@ -158,6 +158,100 @@ def enroll(request: HttpRequest):
         }
         return render(request, "core/enroll.html", context)
 
+def enrollprofessores(request: HttpRequest):
+    if not request.user.is_staff or not request.user.is_superuser:
+        messages.warning(request, "Apenas administradores podem acessar essa página")
+        return redirect("home")
+    
+    if request.method == "POST":
+        username = request.POST["username"].strip()
+        first_name = username.split()[0]
+        last_name = username.split()[-1]
+        birthdate = datetime.strptime(request.POST["birthdate"], "%Y-%m-%d").date()
+
+        try:
+            distance = int(request.POST["distance"])
+        except ValueError:
+            distance = None
+
+        try:
+            user = User.objects.create_user(
+                username=username,
+                email=EMAIL_PATTERN.format(first_name.lower(), last_name.lower()),
+                password=first_name + last_name + str(birthdate.year),
+            )
+            user.is_staff = True
+            user.save()
+        except IntegrityError as err:
+            match str(err).split(".")[-1]:
+                case "username":
+                    messages.add_message(
+                        request, messages.ERROR, "Nome de usuário já existe"
+                    )
+                    return redirect("enrollprofessores")
+                case "email":
+                    raise Http404(
+                        f"E-mail já existe"
+                    )  # TODO: Add a number to the email
+
+        try:
+            profile = Member.objects.create(
+                user=user,
+                contact_email=request.POST["contact-email"],
+                phone=re.sub(r"[^0-9]+", "", request.POST["phone"]),
+                birthdate=birthdate,
+                gender=request.POST["gender"],
+                rg=doc_to_num(request.POST["rg"]),
+                cpf=doc_to_num(request.POST["cpf"]),
+                public_schooling=request.POST["public-schooling"],
+                afro="afro" in request.POST,
+                civil_state=request.POST["civil-state"],
+                natural_state=request.POST["natural-state"],
+                natural_city=request.POST["natural-city"],
+                nationality=request.POST["nationality"],
+                country_of_origin=request.POST["country-of-origin"],
+                cep=request.POST["cep"],
+                city=request.POST["residence-city"],
+                neighborhood=request.POST["neighborhood"],
+                street=request.POST["street"],
+                street_number=request.POST["street-number"],
+                complement=request.POST["complement"],
+                distance=distance,
+            )
+        except Exception as err:
+            return HttpResponseBadRequest(
+                "Algo deu errado tentando criar o seu perfil:\n" + err
+            )
+
+        try:
+            guardian = (
+                Relative.objects.create(  # TODO: Check if relative already exists
+                    name=request.POST["name-guardian"],
+                    email=request.POST["email-guardian"],
+                    phone=re.sub(r"[^0-9]+", "", request.POST["phone-guardian"]),
+                )
+            )
+
+            profile.save()
+            profile.relatives.add(guardian)
+            profile.save()
+        except Exception as err:
+            return HttpResponseBadRequest(
+                "Algo deu errado tentando registrar o responsável:\n" + err
+            )
+
+        return redirect("home")
+    else:
+        context = {
+            "birthdate": DEFAULT_BIRTHDATE,
+            "country": DEFAULT_COUNTRY,
+            "state": DEFAULT_STATE,
+            "city": DEFAULT_CITY,
+        }
+        return render(request, "core/enrollprofessores.html", context)
+
 
 def dashboard(request: HttpRequest):
     return render(request, "core/dashboard.html")
+
+

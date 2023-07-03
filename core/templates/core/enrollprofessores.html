@@ -1,0 +1,235 @@
+{% extends 'core/base.html' %} {% load static %} {% block head %}
+<script defer src="{% static 'core/js/enroll.js' %}"></script>
+<link rel="stylesheet" href="{% static 'core/dist/css/enroll.css' %}" />
+{% endblock %} {% block content %}
+
+<main class="framed m-8 mb-20 p-7">
+  <form action="{% url 'enrollprofessores' %}" method="POST" class="flex flex-col gap-3" @submit="submit" x-data="fields">
+    <nav class="flex items-center justify-between gap-10">
+      <h1 class="mb-2 font-sans text-3xl font-bold">Matrícula Professores</h1>
+      <ul class="flex items-center gap-3">
+        <li>
+          <button @click.prevent="tab = 'identidade'" :class="tab == 'identidade' && 'text-cyan-600'"
+            class="transition-all">
+            Identidade
+          </button>
+        </li>
+        <li>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="4" stroke="currentColor"
+            class="h-4 w-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+          </svg>
+        </li>
+        <li>
+          <button @click.prevent="tab = 'contato'" :class="tab == 'contato' && 'text-cyan-600'" class="transition-all">
+            Contato
+          </button>
+        </li>
+        <li>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="4" stroke="currentColor"
+            class="h-4 w-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+          </svg>
+        </li>
+        <li>
+          <button :disabled="true" :class="tab == 'confirmação' && 'text-cyan-600'" class="transition-all">
+            Confirmação
+          </button>
+        </li>
+      </ul>
+      <a href="{% url 'management/students' %}" class="btn flex items-center gap-2 font-semibold">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"
+          class="h-5 w-5">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+        </svg>
+        <span>Importar</span>
+      </a>
+    </nav>
+    {% csrf_token %}
+    <section class="grid grid-cols-2 gap-4" x-show="tab === 'identidade'">
+      <article>
+        <h2 class="mb-2 font-sans text-2xl font-bold">Informações pessoais</h2>
+        <div class="flex gap-3">
+          <div class="field grow">
+            <label for="txt-username">Nome</label>
+            <input type="text" name="username" id="txt-username" maxlength="150" minlength="5" class="w-full"
+              @keydown="validateName" required />
+          </div>
+          <div class="field">
+            <label for="dt-birthdate">Nascimento</label>
+            <input type="date" name="birthdate" id="dt-birthdate" value="{{ birthdate|date:'Y-m-d' }}"
+              :max="new Date().toISOString().split('T')[0]" required />
+          </div>
+        </div>
+        <div class="flex gap-3">
+          <div class="field flex-1">
+            <label for="txt-cpf">CPF</label>
+            <input type="text" name="cpf" id="txt-cpf" class="w-full" required x-model="cpf" x-mask="999.999.999-99" />
+          </div>
+          <div class="field flex-1">
+            <label for="txt-rg">RG</label>
+            <input type="text" name="rg" id="txt-rg" class="w-full" required x-model="rg" x-mask="99.999.999-9" />
+          </div>
+        </div>
+        <div class="field mt-4">
+          <label for="gender-box">Gênero:</label>
+          <span id="gender-box" class="flex items-center">
+            <input type="radio" value="M" name="gender" id="rd-masc" required checked />
+            <label for="rd-masc">Masculino</label>
+            <input type="radio" value="F" name="gender" id="rd-fem" />
+            <label for="rd-fem">Feminino</label>
+            <input type="radio" value="NB" name="gender" id="rd-nb" />
+            <label for="rd-nb">Não binário</label>
+          </span>
+        </div>
+        <div class="mt-4 flex items-center gap-1" x-data="{ check: false }">
+          <label for="cb-afro">Afrodescendente:</label>
+          <input type="checkbox" name="afro" id="cb-afro" x-model="check" aria-describedby="ch-afro-desc" />
+          <span id="ch-afro-desc" class="ml-1" x-text="check ? '(Sim)' : '(Não)'"></span>
+        </div>
+        <div class="my-3 flex items-center gap-3">
+          <label for="sl-school">Escolaridade pública:</label>
+          <select name="public-schooling" id="sl-school">
+            <option value="C">Completo</option>
+            <option value="B">Ensino Básico</option>
+            <option value="F" selected>Ensino Fundamental</option>
+            <option value="M">Ensino Médio</option>
+            <option value="N">Nenhuma</option>
+          </select>
+        </div>
+      </article>
+
+      <article>
+        <h2 class="mb-2 font-sans text-2xl font-bold">Cidadania</h2>
+        <div class="field">
+          <label for="nat-box">Naturalidade</label>
+          <span id="nat-box" class="flex items-center gap-2">
+            <input type="text" name="natural-city" id="txt-city" value="{{ city }}" required />
+            <select name="natural-state" id="sl-state">
+              <template x-for="code in [
+              'RO','AC','AM','RR','PA','AP','TO','MA','PI',
+              'CE','RN','PB','PE','AL','SE','BA','MG','ES',
+              'RJ','SP','PR','SC','RS','MS','MT','GO','DF',
+            ]">
+                <option :value="code" :selected="code == '{{ state }}'" x-text="code"></option>
+              </template>
+              <option value=""></option>
+            </select>
+          </span>
+        </div>
+        <div class="flex gap-3">
+          <div class="field">
+            <label for="txt-nation">Nacionalidade</label>
+            <input type="text" name="nationality" id="txt-nation" value="{{ country }}" required />
+          </div>
+          <div class="field">
+            <label for="txt-origin">País de origem</label>
+            <input type="text" name="country-of-origin" id="txt-origin" value="{{ country }}" required />
+          </div>
+        </div>
+        <div class="field mt-4 flex items-center">
+          <label for="civil-box">Estado civíl:</label>
+          <span id="civil-box" class="flex items-center">
+            <input type="radio" value="S" name="civil-state" id="rd-single" required checked />
+            <label for="rd-single">Solteiro</label>
+            <input type="radio" value="M" name="civil-state" id="rd-maried" />
+            <label for="rd-maried">Casado</label>
+            <input type="radio" value="D" name="civil-state" id="rd-divorced" />
+            <label for="rd-divorced">Divorciado</label>
+            <input type="radio" value="W" name="civil-state" id="rd-widow" />
+            <label for="rd-widow">Viúvo</label>
+          </span>
+        </div>
+        <button class="btn mt-9 rounded-lg font-semibold" @click="tab = 'contato'">
+          Próximo
+        </button>
+      </article>
+    </section>
+
+    <section class="grid grid-cols-2 gap-4" x-show="tab === 'contato'" x-data="address">
+      <article>
+        <h2 class="mb-2 font-sans text-2xl font-bold">Contato</h2>
+
+        <div class="flex gap-3">
+          <div class="field grow">
+            <label for="txt-email">Email</label>
+            <input type="email" name="contact-email" id="txt-email" class="w-full" required />
+          </div>
+          <div class="field">
+            <label for="txt-phone">Celular</label>
+            <input type="tel" name="phone" id="txt-phone" x-mask="(99)99999-9999" size="12" required />
+          </div>
+        </div>
+        <div class="my-3 flex items-end gap-3">
+          <div class="field">
+            <label for="txt-cep">CEP</label>
+            <input type="number" name="cep" id="txt-cep" size="11" required x-ref="cep" @keydown="validateNumber" />
+          </div>
+          <button class="btn block" @click.prevent="fillCEP($refs.cep.value)">
+            Completar
+          </button>
+
+          <div class="field">
+            <label for="txt-distance">Distância</label>
+            <input type="number" name="distance" id="txt-distance" size="4" min="0" max="100" step="0.1" />
+          </div>
+        </div>
+        <div class="flex gap-3">
+          <div class="field grow">
+            <label for="txt-city">Cidade</label>
+            <input type="text" name="residence-city" id="txt-city" class="w-full" x-model="city" required />
+          </div>
+          <div class="field grow">
+            <label for="txt-neighborhood">Bairro</label>
+            <input type="text" name="neighborhood" id="txt-txt-neighborhood" class="w-full" x-model="neighborhood"
+              required />
+          </div>
+        </div>
+        <div class="flex gap-3">
+          <div class="field grow">
+            <label for="txt-street">Rua</label>
+            <input type="text" name="street" id="txt-street" class="w-full" x-model="street" />
+          </div>
+          <div class="field">
+            <label for="txt-street-number">Número</label>
+            <input type="number" name="street-number" id="txt-street-number" size="4" required />
+          </div>
+          <div class="field">
+            <label for="txt-comp">Complemento</label>
+            <input type="text" name="complement" id="txt-comp" size="8" />
+          </div>
+        </div>
+      </article>
+      <article>
+        <h2 class="mb-2 font-sans text-2xl font-bold">Responsáveis</h2>
+
+        <div class="field">
+          <label for="txt-guardian">Nome</label>
+          <input type="text" name="name-guardian" id="txt-guardian" class="w-full" size="30" @keydown="validateName"
+            required />
+        </div>
+        <div class="flex gap-3">
+          <div class="field grow">
+            <label for="email-guardian">Email</label>
+            <input type="email" name="email-guardian" id="email-guardian" maxlength="100" class="w-full" required />
+          </div>
+          <div class="field">
+            <label for="tel-guardian" class="ml-1">Telefone</label>
+            <input type="tel" name="phone-guardian" id="tel-guardian" size="12" x-mask="(99)99999-9999" required />
+          </div>
+        </div>
+        <ul class="mt-4 rounded-md border border-red-500 p-2" x-show="errors.length > 0">
+          <template x-for="err in errors">
+            <li x-text="err"></li>
+          </template>
+        </ul>
+        <input type="submit"
+          class="mt-9 rounded-lg bg-cyan-700 px-8 py-3 font-semibold text-slate-100 shadow transition-all duration-300 hover:bg-cyan-800 hover:shadow-md"
+          value="Enviar" />
+      </article>
+    </section>
+  </form>
+</main>
+{% endblock %}
+
