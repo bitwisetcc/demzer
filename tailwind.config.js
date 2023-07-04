@@ -15,7 +15,11 @@ module.exports = {
         "color-boletim": "#D7D4D4",
         "color-name-boletim": "#4A73AC",
         "color-dark-orange": "#D0A661",
+        "color-grey": "#EDECEC",
       }
+    },
+    fontFamily: {
+      'glacial': ['Glacial'],
     },
   },
   plugins: [require("@tailwindcss/forms")],

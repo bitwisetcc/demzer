@@ -9,7 +9,7 @@
     {% block head %}{% endblock %}
     <script defer src="{% static 'core/dist/js/page.js' %}"></script>
   </head>
-  <body class="relative flex h-screen bg-slate-200" x-data="{ open: false }">
+  <body class="font-glacial relative flex h-screen bg-slate-200" x-data="{ open: false }">
     {% include "core/messages.html" %}
     {% if not no_nav|default:False %}
     {% include "core/navbar.html" %}
