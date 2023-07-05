@@ -71,11 +71,7 @@ def enroll(request: HttpRequest):
         first_name = username.split()[0]
         last_name = username.split()[-1]
         birthdate = datetime.strptime(request.POST["birthdate"], "%Y-%m-%d").date()
-
-        try:
-            distance = int(request.POST["distance"])
-        except ValueError:
-            distance = None
+        distance = int(request.POST.get("distance", 0)) or None
 
         try:
             user = User.objects.create_user(
@@ -103,13 +99,13 @@ def enroll(request: HttpRequest):
                 gender=request.POST["gender"],
                 rg=doc_to_num(request.POST["rg"]),
                 cpf=doc_to_num(request.POST["cpf"]),
-                public_schooling=request.POST["public-schooling"],
+                public_schooling=request.POST.get("public-schooling"),
                 afro="afro" in request.POST,
                 civil_state=request.POST["civil-state"],
-                natural_state=request.POST["natural-state"],
-                natural_city=request.POST["natural-city"],
-                nationality=request.POST["nationality"],
-                country_of_origin=request.POST["country-of-origin"],
+                natural_state=request.POST.get("natural-state"),
+                natural_city=request.POST.get("natural-city"),
+                nationality=request.POST.get("nationality"),
+                country_of_origin=request.POST.get("country-of-origin"),
                 cep=request.POST["cep"],
                 city=request.POST["residence-city"],
                 neighborhood=request.POST["neighborhood"],
