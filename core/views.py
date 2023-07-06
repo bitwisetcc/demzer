@@ -18,6 +18,7 @@ from backend.settings import (
     EMAIL_PATTERN,
 )
 from core.models import *
+from core.utils import email_address
 
 
 def doc_to_num(doc: str):
@@ -62,83 +63,81 @@ def logout_user(request: HttpRequest):
     return redirect("dashboard")
 
 
-# TODO: Create actual emails + prevent email duplication
-# NEXT TODO: Be able to enroll any kind of user - Ex: teachers, staff etc.
+# TODO: Create actual emails
 @check_permission("create_user", redirect_url="dashboard")
 def enroll(request: HttpRequest):
     if request.method == "POST":
-        username = request.POST["username"].strip()
+        username = request.POST.get("username").strip()
         first_name = username.split()[0]
         last_name = username.split()[-1]
         birthdate = datetime.strptime(request.POST["birthdate"], "%Y-%m-%d").date()
-        distance = int(request.POST.get("distance", 0)) or None
 
         try:
             user = User.objects.create_user(
                 username=username,
-                email=EMAIL_PATTERN.format(first_name.lower(), last_name.lower()),
+                email=email_address(username),
                 password=first_name + last_name + str(birthdate.year),
             )
 
-            user.save()
-        except IntegrityError as err:
-            match str(err).split(".")[-1]:
-                case "username":
-                    messages.error(request, "Nome de usuário já existe")
-                    return redirect("enroll")
-                case "email":
-                    # TODO: Add a number to the email
-                    raise Http404("E-mail '{}' já existe".format(user.email))
+        except IntegrityError:
+            messages.error(request, "Nome de usuário já existe")
+            return redirect("enroll")
 
         try:
-            profile = Member.objects.create(
+            profile = Member(
                 user=user,
-                contact_email=request.POST["contact-email"],
-                phone=re.sub(r"[^0-9]+", "", request.POST["phone"]),
+                contact_email=request.POST.get("contact-email"),
+                phone=re.sub(r"[^0-9]+", "", request.POST.get("phone")),
                 birthdate=birthdate,
-                gender=request.POST["gender"],
-                rg=doc_to_num(request.POST["rg"]),
-                cpf=doc_to_num(request.POST["cpf"]),
-                public_schooling=request.POST.get("public-schooling"),
+                gender=request.POST.get("gender"),
+                rg=doc_to_num(request.POST.get("rg")),
+                cpf=doc_to_num(request.POST.get("cpf")),
                 afro="afro" in request.POST,
-                civil_state=request.POST["civil-state"],
-                natural_state=request.POST.get("natural-state"),
-                natural_city=request.POST.get("natural-city"),
-                nationality=request.POST.get("nationality"),
-                country_of_origin=request.POST.get("country-of-origin"),
-                cep=request.POST["cep"],
-                city=request.POST["residence-city"],
-                neighborhood=request.POST["neighborhood"],
-                street=request.POST["street"],
-                street_number=request.POST["street-number"],
-                complement=request.POST["complement"],
-                distance=distance,
+                civil_state=request.POST.get("civil-state"),
+                cep=request.POST.get("cep"),
+                city=request.POST.get("residence-city"),
+                neighborhood=request.POST.get("neighborhood"),
+                street=request.POST.get("street"),
+                street_number=request.POST.get("street-number"),
+                complement=request.POST.get("complement"),
             )
+
+            if request.POST.get("role") == "student":
+                profile.public_schooling = request.POST.get("public-schooling")
+                profile.natural_state = (request.POST.get("natural-state"),)
+                profile.natural_city = (request.POST.get("natural-city"),)
+                profile.nationality = (request.POST.get("nationality"),)
+                profile.country_of_origin = (request.POST.get("country-of-origin"),)
+                profile.distance = int(request.POST.get("distance", 0)) or None
+
+                try:
+                    guardian = Relative.objects.get_or_create(
+                        name=request.POST.get("name-guardian"),
+                        defaults={
+                            "email": request.POST.get("email-guardian"),
+                            "phone": re.sub(
+                                r"[^0-9]+", "", request.POST.get("phone-guardian")
+                            ),
+                        },
+                    )
+
+                    profile.save()
+                    profile.relatives.add(guardian)
+
+                except Exception as error:
+                    messages.warning("Falha ao associar responsável")
+
+            profile.save()
+
+            try:
+                assign_role(user, request.POST.get("role"))
+            except Exception as error:
+                messages.warning(request, "Falha ao designar grupo ao usuário")
+
         except Exception as error:
             return HttpResponseBadRequest("Falha ao criar perfil: {}".format(error))
 
-        try:
-            # TODO: Check if relative already exists
-            guardian = Relative.objects.create(
-                name=request.POST["name-guardian"],
-                email=request.POST["email-guardian"],
-                phone=re.sub(r"[^0-9]+", "", request.POST["phone-guardian"]),
-            )
-
-            profile.save()
-            profile.relatives.add(guardian)
-            profile.save()
-        except Exception as error:
-            return HttpResponseBadRequest(
-                "Falha ao registrar o responsável: {}".format(error)
-            )
-
-        try:
-            assign_role(user, "student")
-        except Exception as error:
-            messages.error(request, "Falha ao designar grupo ao usuário")
-            return redirect("enroll")
-
+        messages.success("Usuário {} criado com sucesso".format(user.pk))
         return redirect("dashboard")
     else:
         context = {
