@@ -1,9 +1,9 @@
 {% extends 'core/base.html' %} {% load static %} {% block head %}
 
 {% endblock %} {% block content %}
-<div class="flex justify-center">
-  <div class="grid grid-cols-3 gap-10 pt-44">
-    <div class="col-span-2 h-auto w-max rounded-3xl bg-color-boletim">
+<div class="flex justify-center pb-40 ">
+  <div class="grid grid-cols-10 gap-10 pt-44">
+    <div class="col-span-6 col-start-2 h-auto w-max rounded-3xl bg-color-boletim">
       <table class=" border-separate border-spacing-3 pl-2">
         <thead>
             <tr>
@@ -99,7 +99,7 @@
       </table>
     </div>
 
-    <div class="flex h-auto w-max rounded-3xl bg-color-boletim">
+    <div class="flex col-span-2 h-auto w-max rounded-3xl bg-color-boletim">
       <table class="border-separate border-spacing-3">
         <thead>
           <tr>
@@ -110,7 +110,7 @@
         </thead>
         <tbody >
           <tr>
-            <td class="h-[40px] bg-color-grey rounded-t-lg border-none"></td>
+            <td class="h-[50px] bg-color-grey rounded-t-lg border-none"></td>
             <td class=" bg-color-grey rounded-t-lg border-none"></td>
             <td class=" bg-color-grey rounded-t-lg border-none"></td>
           </tr>
@@ -146,8 +146,89 @@
           </tr>
       </table>
     </div>
-    <div class="justify-self-center h-[100px] rounded-3xl bg-color-boletim">
-      3
+
+    
+
+    <div class="col-span-6 col-start-3 h-[150px] w-full rounded-[50px] bg-color-boletim">
+      <div class="flex">
+        <p class="px-10 py-[58px] text-2xl">Total:</p
+        >
+        <div class="grid grid-cols-4 gap-10 w-full text-center pr-5 py-3"> <!-- ficaram faltando o alinhamento ao centro, pois acabei não conseguindo (bruno)-->
+          <div class="col-span-1">
+            <div class="h-14 mb-4 rounded-3xl bg-color-dark-orange"><span class="font-semibold">Aulas Dadas </span></div>
+            <div class="h-14 rounded-3xl bg-color-grey"><span class="text-3xl"> 222 </span></div>
+          </div>
+          <div class="col-span-1">
+            <div class="h-14 mb-4 rounded-3xl bg-color-dark-orange"><span class="font-semibold">Faltas </span></div>
+            <div class="h-14 rounded-3xl bg-color-grey"><span class="text-3xl"> 222 </span></div>
+          </div>
+          <div class="col-span-1">
+            <div class="h-14 mb-4 rounded-3xl bg-color-dark-orange"><span class="font-semibold">Frequência </span></div>
+            <div class="h-14 rounded-3xl bg-color-grey"><span class="text-3xl"> 222 </span></div>
+          </div>
+          <div class="col-span-1">
+            <div class="h-14 mb-4 rounded-3xl bg-color-dark-orange"><span class="font-semibold">Faltas Permitidas </span></div>
+            <div class="h-14 rounded-3xl bg-color-grey"><span class="text-3xl"> 222 </span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+
+    <div class="col-start-2 col-end-10 pb-6 h-auto w-full rounded-[50px] bg-color-boletim"> <!-- FICHA DE DESEMPENHO -->
+      <div class="flex justify-center">
+        <div class="w-11/12 h-10 mt-4 rounded-full font-semibold text-center p-2 bg-color-dark-orange"> Ficha de Desempanho - Sala de Aula </div>
+      </div>
+      <div class="grid grid-cols-11 gap-5 text-center pt-5">
+        <div class="col-span-3 col-start-2 h-10 pt-2 bg-color-name-boletim rounded-full">Instrumento</div>
+
+        <div class="col-span-2 pt-2 bg-color-name-boletim rounded-full">Data</div>
+
+        <div class="col-span-2 pt-2 bg-color-name-boletim rounded-full">Menção</div>
+
+        <div class="col-span-2 pt-2 bg-color-name-boletim rounded-full">Observação</div>
+      </div>
+
+      <div class="grid grid-cols-11 gap-5 text-center pt-5">
+        <div class="col-span-3 col-start-2 h-10 pt-2 bg-color-grey rounded-full">asdasd</div>
+
+        <div class="col-span-2 pt-2 bg-color-grey rounded-full">asdasd</div>
+
+        <div class="col-span-2 pt-2 bg-color-grey rounded-full">asdasd</div>
+
+        <div class="col-span-2 pt-2 bg-color-grey rounded-full">asdasd</div>
+      </div>
+
+      <div class="grid grid-cols-11 gap-5 text-center pt-2">
+        <div class="col-span-3 col-start-2 h-10 pt-2 bg-color-grey rounded-full">asdasd</div>
+
+        <div class="col-span-2 pt-2 bg-color-grey rounded-full">asdasd</div>
+
+        <div class="col-span-2 pt-2 bg-color-grey rounded-full">asdasd</div>
+
+        <select class="col-span-2 pt-2 bg-color-grey rounded-full">
+          <option value="op1">Oi</option>
+          <option value="op2">Tudo</option>
+          <option value="op3">Bem</option>
+          <option value="op4">Com</option>
+          <option value="op5">Você</option>
+          <option value="op6">?</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="col-span-2 w-0">
+    </div>
+    <div class="flex flex-col col-start-3 col-end-9 h-[75px] w-full rounded-[50px] bg-white"> <!-- RECONSIDERAÇÃO DE NOTAS -->
+      <label class="ml-10 text-3xl font-semibold w-[700px] text-color-dark-orange">Reconsideração de Notas (Aberto até 00/00/0000) </label>
+      <div class="flex justify-end relative">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+        </svg>
+      </div>      
+      <br>
+      <label class="ml-10 text-lg"> Clique no botão para conseguir sua reconsideração de nota </label>
     </div>
   </div>
 </div>
