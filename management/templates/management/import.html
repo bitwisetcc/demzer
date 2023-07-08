@@ -1,5 +1,6 @@
 {% extends 'core/base.html' %} {% load static %} {% block head %}
-<script defer src="{% static 'management/js/students.js' %}"></script>
+<script defer src="{% static 'management/js/import.js' %}"></script>
+<title>Importar usuários</title>
 {% endblock %} {% block content %}
 <main class="p-7" x-data="userData">
   <h2 class="mb-2 text-xl font-bold">Campos necessários</h2>
@@ -111,10 +112,11 @@
   </section>
 
   <form
-    action="{% url 'management/students' %}"
+    action="{% url 'import/users' %}"
     method="POST"
     class="flex flex-col gap-3"
     enctype="multipart/form-data"
+    @submit.prevent="submit"
   >
     {% csrf_token %}
     <label
@@ -152,6 +154,16 @@
         Exemplo: Leonardo da Silva Figueira, 20/4/2001. Senha:
         LeonardoFigueira2001
       </p>
+    </div>
+    <div class="flex items-center gap-3">
+      <label for="ch-reset">Cargo:</label>
+      <select name="role" id="sl-role" x-model="role">
+        <option selected value="student">Estudante</option>
+        <option value="teacher">Professor</option>
+        <option value="staff">Funcionário</option>
+        <option value="secretary">Secretário</option>
+        <option value="coordinator">Coordenador</option>
+      </select>
     </div>
     <input type="submit" value="Enviar" class="btn" />
   </form>
