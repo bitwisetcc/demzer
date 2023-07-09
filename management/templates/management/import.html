@@ -116,7 +116,7 @@
     method="POST"
     class="flex flex-col gap-3"
     enctype="multipart/form-data"
-    @submit.prevent="submit"
+    @submit="submit"
   >
     {% csrf_token %}
     <label

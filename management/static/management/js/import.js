@@ -27,46 +27,115 @@ function validateCPF(cpf) {
 
 const validations = [
   {
-    i: 0,
-    test: (s) => /[A-Za-záàâãéèêíóôõúçñ\s]+$/.test(s),
+    id: "username",
+    test: (s) => /[A-Za-záàâãéèêíóôõúçñ\s]+$/.test(s) && s.length <= 150,
     tip: "Apenas letras, espaços e pontos.",
   },
   {
-    i: 1,
+    id: "email",
     test: (s) => emailRegex.test(s),
     tip: "Endereço de e-mail inválido.",
   },
   {
-    i: 3,
+    id: "contact_email",
     test: (s) => emailRegex.test(s),
     tip: "Endereço de e-mail inválido.",
   },
   {
-    i: 4,
-    test: (s) => s.length == 11 && !s.split().some(isNaN),
+    id: "phone",
+    test: (s) => s.length == 11 && Boolean(Number(s)),
     tip: "Deve conter 11 digitos sem pontuação.",
   },
   {
-    i: 5,
+    id: "birthdate",
     test: (s) => Boolean(Date.parse(s)),
     tip: "Deve estar no formato 'YYYY-mm-dd'",
   },
   {
-    i: 6,
+    id: "gender",
     test: (s) => ["M", "F", "NB"].includes(s),
     tip: "Deve ser 'M', 'F' ou 'NB'",
   },
   {
-    i: 7,
-    test: (s) => s.length == 9 && !s.split().some(isNaN),
+    id: "rg",
+    test: (s) => s.length == 9 && Boolean(Number(s)),
     tip: "Deve conter 9 digitos sem pontuação.",
   },
   {
-    i: 8,
+    id: "cpf",
     test: validateCPF,
-    tip: "Deve conter 9 digitos sem pontuação.",
+    tip: "Deve conter 11 digitos sem pontuação.",
   },
-  // TODO: 'public_schooling forward'
+  {
+    id: "public_schooling",
+    test: (s) => ["C", "N", "E", "M", "H"].includes(s),
+    tip: "Deve ser 'C' (completo), 'N' (nenhum), 'E' (primário), 'M' (fundamental) ou 'H' (médio).",
+  },
+  {
+    id: "afro",
+    test: (s) => ["1", "0", "true", "false"].includes(s),
+    tip: "Deve ser '1', '0', 'true' ou 'false'",
+  },
+  {
+    id: "civil_state",
+    test: (s) => ["S", "M", "D", "W"].includes(s),
+    tip: "Deve ser 'S' (solteiro), 'M' (Casado), 'D' (divorciado) ou 'W' (viúvo)",
+  },
+  {
+    id: "natural_state",
+    test: (s) => s.length == 2,
+    tip: "Deve ser a abreviação de algum estado brasileiro",
+  },
+  {
+    id: "natural_city",
+    test: (s) => s.length <= 50,
+    tip: "Deve ter até 50 caracteres.",
+  },
+  {
+    id: "nationality",
+    test: (s) => s.length <= 40,
+    tip: "Deve ter até 40 caracteres.",
+  },
+  {
+    id: "country_of_origin",
+    test: (s) => s.length <= 40,
+    tip: "Deve ter até 40 caracteres.",
+  },
+  {
+    id: "cep",
+    test: (s) => s.length <= 8 && Boolean(Number(s)),
+    tip: "Deve ter até 8 caracteres.",
+  },
+  {
+    id: "city",
+    test: (s) => s.length <= 60,
+    tip: "Deve ter até 60 caracteres.",
+  },
+  {
+    id: "neighborhood",
+    test: (s) => s.length <= 40,
+    tip: "Deve ter até 40 caracteres.",
+  },
+  {
+    id: "street",
+    test: (s) => s.length <= 40,
+    tip: "Deve ter até 40 caracteres.",
+  },
+  {
+    id: "street_number",
+    test: (s) => Boolean(Number(s)),
+    tip: "Deve ser um número.",
+  },
+  {
+    id: "complement",
+    test: (s) => s.length <= 20,
+    tip: "Deve ter até 20 caracteres.",
+  },
+  {
+    id: "distance",
+    test: (s) => Boolean(Number(s)),
+    tip: "Deve ser um número.",
+  },
 ];
 
 document.addEventListener("alpine:init", () => {
@@ -100,6 +169,7 @@ document.addEventListener("alpine:init", () => {
     ],
     rows: [],
     headers: [],
+    data: [],
     errors: [],
     role: "student",
     readFile(e) {
@@ -110,25 +180,36 @@ document.addEventListener("alpine:init", () => {
         const headers = rows.shift();
         this.rows = rows;
         this.headers = headers;
-      });
-      reader.addEventListener("error", () => console.error(reader.error));
 
+        this.data = rows.map((row) =>
+          row.reduce((acc, cur, i) => {
+            acc[headers[i]] = cur;
+            return acc;
+          }, {})
+        );
+      });
+
+      reader.addEventListener("error", () => console.error(reader.error));
       reader.readAsText(e.target.files[0]);
     },
 
     submit(e) {
-      for (const user of this.rows) {
-        for (const v of validations) {
-          if (!v.test(String(user[v.i])))
-            this.errors.push(
-              `Usuário: ${user[0]}\nCampo: ${this.headers[v.i]}\nDica: ${v.tip}`
-            );
-        }
-      }
+      for (const user of this.data)
+        for (const v of validations)
+          if (this.headers.includes(v.id) && !v.test(String(user[v.id])))
+            this.errors.push({
+              user: user[0],
+              field: this.headers[v.id],
+              msg: v.tip,
+            });
 
-      if (this.errors.length != 0) {
-        e.preventDefault();
-      }
+      const passing = this.errors.length != 0;
+      const headersOk = this.required.reduce(
+        (acc, cur) => acc && this.headers.includes(cur),
+        true
+      );
+
+      if (!passing || !headersOk) e.preventDefault();
     },
   }));
 });

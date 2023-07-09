@@ -63,9 +63,7 @@ No seu navegador, visite `http://localhost:8000` e comece a testar o app! ⚡️
 
 ## Criando um usuário admin
 
-Para registrar alunos e funcionários, é necessário um usuário de origem. Para isso, digite no terminal `django manage.py createsuperuser`. Você entrará em um prompt no terminal; digite um nome, email e senha para concluir o processo. Depois disso, conseguirá entrar na aplicação.
-
-Na tela de login, entre com qualquer escola, um ID igual a 1 e a senha que você digitou. Então será capaz de adicionar novos alunos na tela de matrícula, assim como professores e funcionários 🧑‍🏫
+O site possui uma área secreta em `/secret`, onde são criadas as contas de administradores. Ao finalizar o formulário, será necessária uma chave de segurança, que é definida em `settings.py` em `SECURITY_KEY`.
 
 ---
 
