@@ -6,7 +6,7 @@
 <div>
 <header class="flex flex-col items-center py-5">
   <div class="flex items-center">
-    <div class="flex items-center mt-2 w-max" :class="open ? 'mr-32' : 'mr-0'">
+    <div class="flex items-center mt-1 w-max" :class="open ? 'mr-32' : 'mr-0'">
       <img
         src="{% static '/core/images/logomenu.png' %}"
         alt="Imagem de {{ user.username.split.0.title }}"
@@ -21,7 +21,7 @@
 </header>
 <ul class="flex flex-col gap-4" :class="open || 'scale-0'">
   <li>
-    <a href="{% url 'dashboard' %}">
+    <a href="{% url 'homeprofessores' %}">
       <svg 
         xmlns="http://www.w3.org/2000/svg" 
         fill="none" 

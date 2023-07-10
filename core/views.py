@@ -255,3 +255,7 @@ def dashboard(request: HttpRequest):
     return render(request, "core/dashboard.html")
 
 
+def homeprofessores(request: HttpRequest):
+    return render(request, "core/homeprofessores.html")
+
+

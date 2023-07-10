@@ -10,6 +10,7 @@ urlpatterns = [
     path("logout/", logout_user, name="logout"),
     path("enroll/", enroll, name="enroll"),
     path("enrollprofessores/", enrollprofessores, name="enrollprofessores"),
+    path("homeprofessores/", homeprofessores, name="homeprofessores"),
 ]
 
 
