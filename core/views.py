@@ -19,9 +19,6 @@ from backend.settings import (
 )
 from core.models import *
 
-def hello(olaaa):
-    return HttpResponse("olá")
-
 
 def doc_to_num(doc: str):
     return int(re.sub(r"[\./-]", "", doc))
