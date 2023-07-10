@@ -14,9 +14,9 @@ urlpatterns = [
     path("enroll/", enroll, name="enroll"),
     path("comunicados/", comunicados, name="comunicados"),
     path("perfil/", perfil, name="perfil"),
-    path("boletim/", boletim, name="boletim")
+    path("boletim/", boletim, name="boletim"),
 ]
 
 
-def school_info(request: HttpRequest):
+def school_info(_):
     return {"school_name": settings.SCHOOL_NAME}

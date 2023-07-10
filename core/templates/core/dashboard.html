@@ -1,5 +1,5 @@
 
-{% extends 'core/base.html' %} {% load static %} {% block head %}
+{% extends 'core/base.html' %} {% load static %} {% load permission_tags %} {% block head %}
 <script src="{% static 'core/js/dashboard.js' %}"></script>
 <link rel="stylesheet" href="{% static 'core/dist/css/dashboard.css' %}" />
 <title>Dashboard</title>
@@ -11,8 +11,8 @@
     <ul id="sectors" class="flex select-none gap-4">
       <li
         class="control bg-gray-200"
-        @click="reload('students', 'Alunos', `{% url 'query/students' %}`)"
-        x-init="reload('students', 'Alunos', `{% url 'query/students' %}`)"
+        @click="reload('students', 'Alunos', `{% url 'query' 'student' '1' %}`)"
+        x-init="reload('students', 'Alunos', `{% url 'query' 'student' '1' %}`)"
       >
         Alunos
       </li>
@@ -21,12 +21,15 @@
       </li>
       <li class="control bg-gray-200 " data-section="courses" @click="reload">Cursos</li>
       <li class="control bg-gray-200 " data-section="classrooms" @click="reload">Turmas</li>
+      {% if user|can:'create_user' %}
       <li class="btn control bg-cyan-600">
         <a href="{% url 'enroll' %}" class="flex items-center font-semibold">
           <span class="mr-1 font-semibold">Matricular</span>
           <box-icon name="user-plus" color="white" />
         </a>
       </li>
+      {% endif %}
+      {% if user|can:'delete_user' %}
       <li class="btn control">
         <a href="{% url 'purge' 'student' %}" class="flex items-center font-semibold">
           <span class="mr-1 font-semibold">Limpar</span>
@@ -35,6 +38,7 @@
           </svg>          
         </a>
       </li>
+      {% endif %}
     </ul>
   </header>
   <section class="p-5">

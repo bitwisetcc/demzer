@@ -29,9 +29,11 @@ npm i
 O projeto é baseado em um framework web chamado **Django**. Ele é baseado em Python e é responsável por conectar os laços entre banco de dados, lógica backend e o que o usuário final vê. Os modelos para a base de dados estão descritos na forma de classes em Python em `core/models.py`. Para aplicar esses modelos, use esses comandos em um terminal:
 
 ```shell
-python3 manage.py makemigrations core # preparar códgio SQL
-python3 manage.py migrate core
-python3 manage.py migrate # aplicar mudanças em toda a aplicação
+python manage.py makemigrations core # preparar códgio SQL
+python manage.py migrate core
+python manage.py makemigrations alert
+python manage.py migrate alert
+python manage.py migrate # aplicar mudanças em toda a aplicação
 ```
 
 Caso os modelos sejam atualizados em qualquer ponto do desenvolvimento, faça questão de aplicar novamente as migrações. Durante o desenvolvimento, essa base de dados estará salva em `db.sqlite3`. Porém, em um ambiente de produção deve haver algumas variáveis de ambiente para que a aplicação se conecte com uma base de dados na nuvem.
@@ -63,9 +65,7 @@ No seu navegador, visite `http://localhost:8000` e comece a testar o app! ⚡️
 
 ## Criando um usuário admin
 
-Para registrar alunos e funcionários, é necessário um usuário de origem. Para isso, digite no terminal `django manage.py createsuperuser`. Você entrará em um prompt no terminal; digite um nome, email e senha para concluir o processo. Depois disso, conseguirá entrar na aplicação.
-
-Na tela de login, entre com qualquer escola, um ID igual a 1 e a senha que você digitou. Então será capaz de adicionar novos alunos na tela de matrícula, assim como professores e funcionários 🧑‍🏫
+O site possui uma área secreta em `/secret`, onde são criadas as contas de administradores. Ao finalizar o formulário, será necessária uma chave de segurança, que é definida em `settings.py` em `SECURITY_KEY`.
 
 ---
 
