@@ -18,5 +18,5 @@ urlpatterns = [
 ]
 
 
-def school_info(request: HttpRequest):
+def school_info(_):
     return {"school_name": settings.SCHOOL_NAME}

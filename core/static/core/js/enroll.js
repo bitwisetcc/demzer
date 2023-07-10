@@ -34,6 +34,7 @@ const validateNumber = (e) => {
 
 document.addEventListener("alpine:init", () => {
   Alpine.data("fields", () => ({
+    role: "student",
     cpf: "",
     rg: "",
     tab: "identidade",

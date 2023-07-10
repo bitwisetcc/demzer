@@ -28,7 +28,6 @@ from backend.settings import (
 )
 
 
-
 class Relative(Model):
     name = CharField(max_length=60, unique=True)
     email = EmailField()
@@ -44,14 +43,6 @@ class Member(Model):
         MASCULINE = "M", _("Masculino")
         FEMININE = "F", _("Feminino")
         NON_BINARY = "NB", _("Não Binário")
-
-    class UserTypes(TextChoices):
-        STUDENT = "0", _("Estudante")
-        EMPLOYEE = "1", _("Funcionário")
-        TEACHER = "2", _("Professor")
-        SECRETARY = "3", _("Secretaría")
-        COORDINATOR = "4", _("Coordenação")
-        ADMIN = "5", _("Administração")
 
     class PublicSchoolingTypes(TextChoices):
         FULL = "C", _("Completo")
@@ -106,17 +97,18 @@ class Member(Model):
         choices=PublicSchoolingTypes.choices,
         default=PublicSchoolingTypes.MIDDLE,
         max_length=1,
+        null=True,
     )
     birthdate = DateField(default=DEFAULT_BIRTHDATE)
     afro = BooleanField(default=False)
     indigenous = BooleanField(default=False)
 
     natural_state = CharField(
-        choices=States.choices, default=DEFAULT_STATE, max_length=2
+        choices=States.choices, default=DEFAULT_STATE, max_length=2, null=True
     )
-    natural_city = CharField(default=DEFAULT_CITY, max_length=50)
-    nationality = CharField(default=DEFAULT_COUNTRY, max_length=40)
-    country_of_origin = CharField(default=DEFAULT_COUNTRY, max_length=40)
+    natural_city = CharField(default=DEFAULT_CITY, max_length=50, null=True)
+    nationality = CharField(default=DEFAULT_COUNTRY, max_length=40, null=True)
+    country_of_origin = CharField(default=DEFAULT_COUNTRY, max_length=40, null=True)
     civil_state = CharField(
         choices=CivilStates.choices, default=CivilStates.SINGLE, max_length=1
     )
@@ -143,7 +135,7 @@ class Member(Model):
             "email": self.user.email,
             "rg": self.rg,
             "cpf": self.cpf,
-            "is_staff" : self.user.is_staff,
+            "is_staff": self.user.is_staff,
         }
 
     class Meta:
@@ -218,7 +210,6 @@ class Assessment(Model):
     pass
 
 
-
 """
 - is_staff ?
 - is_active ? -> celery
@@ -233,4 +224,3 @@ New TO-DOs
     Control checksums with a key variable (boolean)
 
 """
-
