@@ -1,0 +1,90 @@
+{% extends 'core/base.html' %} {% load static %} {% block head %}
+
+<!--Não está finalizado-->
+
+<link rel="stylesheet" href="{% static 'core/dist/css/homeprofessores.css' %}" />
+
+{% endblock %} {% block content %}
+<main class="framed m-8 mb-20 px-5">
+  <h1 class="text-color-primary font-bold text-[40px] text-left mt-12 ml-10 mb-10">Turmas</h1>
+  <div class="flex justify-center">
+    <div class="h-[90px] w-[85%]">
+      <div class="swiper mySwiper carousel2">
+        <div class="swiper-wrapper px-12">
+          <div class="swiper-slide">
+            <div class="flex flex-col h-[70px] w-[230px] justify-center items-center border border-color-secondary rounded-full hover:bg-color-secondary-dimm">
+              <span class="text-color-secondary font-bold text-[24px]">1º GT</span>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div
+              class="flex flex-col h-[70px] w-[230px] justify-center items-center border border-color-secondary rounded-full hover:bg-color-secondary-dimm">
+              <span class="text-color-secondary font-bold text-[24px]">2º HT</span>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div
+              class="flex flex-col h-[70px] w-[230px] justify-center items-center border border-color-secondary rounded-full hover:bg-color-secondary-dimm">
+              <span class="text-color-secondary font-bold text-[24px]">3º GT</span>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div
+              class="flex flex-col h-[70px] w-[230px] justify-center items-center border border-color-secondary rounded-full hover:bg-color-secondary-dimm">
+              <span class="text-color-secondary font-bold text-[24px]">3º HT</span>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div
+              class="flex flex-col h-[70px] w-[230px] justify-center items-center border border-color-secondary rounded-full hover:bg-color-secondary-dimm">
+              <span class="text-color-secondary font-bold text-[24px]">1º GT</span>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div
+              class="flex flex-col h-[70px] w-[230px] justify-center items-center border border-color-secondary rounded-full hover:bg-color-secondary-dimm">
+              <span class="text-color-secondary font-bold text-[24px]">1º GT</span>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div
+              class="flex flex-col h-[70px] w-[230px] justify-center items-center border border-color-secondary rounded-full hover:bg-color-secondary-dimm">
+              <span class="text-color-secondary font-bold text-[24px]">1º GT</span>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div
+              class="flex flex-col h-[70px] w-[230px] justify-center items-center border border-color-secondary rounded-full hover:bg-color-secondary-dimm">
+              <span class="text-color-secondary font-bold text-[24px]">1º GT</span>
+            </div>
+          </div>
+        </div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+      </div>
+    </div>
+  </div>
+  <div class="flex justify-center">
+    <div class="flex h-[90px] w-[85%] justify-center items-center mt-5">
+      <div class="mx-10">
+        <span class="text-xl text-color-primary">Turma: </span>
+        <select name="Turma" class="rounded-full px-16">
+          <option>A</option>
+          <option>B</option>
+        </select>
+      </div>
+      <div class="mx-10">
+        <span class="text-xl text-color-primary">Aula: </span>
+        <select name="Aula" class="rounded-full px-16">
+          <option>PW1</option>
+          <option>PW2</option>
+        </select>
+      </div>
+      <div class="mx-10">
+        <span class="text-xl text-color-primary">Data: </span>
+        <input type="date" class="rounded-full">
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}

@@ -258,4 +258,10 @@ def dashboard(request: HttpRequest):
 def homeprofessores(request: HttpRequest):
     return render(request, "core/homeprofessores.html")
 
+def turmaprofessores(request: HttpRequest):
+    return render(request, "core/turmaprofessores.html")
+
+def reporte(request: HttpRequest):
+    return render(request, "core/reporte.html")
+
 

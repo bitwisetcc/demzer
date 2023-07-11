@@ -11,6 +11,8 @@ urlpatterns = [
     path("enroll/", enroll, name="enroll"),
     path("enrollprofessores/", enrollprofessores, name="enrollprofessores"),
     path("homeprofessores/", homeprofessores, name="homeprofessores"),
+    path("turmaprofessores/", turmaprofessores, name="turmaprofessores"),
+    path("reporte/", reporte, name="reporte"),
 ]
 
 

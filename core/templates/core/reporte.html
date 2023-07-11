@@ -1,0 +1,26 @@
+{% extends 'core/base.html' %} {% load static %} {% block head %}
+
+<link rel="stylesheet" href="{% static 'core/dist/css/reporte.css' %}" />
+
+{% endblock %} {% block content %}
+<main class="framed m-8 mb-20 px-5">
+  <h1 class="text-color-primary font-bold text-[40px] mt-12 ml-10 mb-10 md:mx-auto md:block">Reporte de Problemas</h1>
+  <div class="flex flex-col justify-center">
+    <span class="text-color-primary text-[30px] text-center mb-5">Assunto</span>
+    <div class="flex justify-center">
+      <div class="flex-col h-[120px] w-[600] rounded-2xl bg-white px-6 py-10">
+    
+      </div>
+    </div>
+    <span class="text-color-primary text-[30px] text-center mt-10 mb-5">Sobre</span>
+    <div class="flex justify-center">
+      <div class="flex-col h-[370px] w-[600] rounded-2xl bg-white px-6 py-10">
+    
+      </div>
+    </div>
+    <div class="flex w-full flex-col gap-3 mt-5 md:block md:gap-2">
+      <input type="submit" value="Enviar" class="px-20 py-2 text-bold bg-color-secondary-dimm border border-color-secondary md:mx-auto md:mt-3 md:block" />
+    </div>
+  </div>
+</main>
+{% endblock %}
