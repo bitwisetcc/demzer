@@ -150,6 +150,7 @@ class Subject(Model):
 
     name = CharField(max_length=63)
     slug = CharField(max_length=5)
+    description = CharField(max_length=127, null=True)
 
     def __str__(self) -> str:
         return self.slug
@@ -169,9 +170,15 @@ class Course(Model):
     Ex: 1st, 2nd and 3rd Philosophy and Sociology.
     """
 
+    class Timing(TextChoices):
+        MORNING = "M", _("Manhã")
+        EVENING = "E", _("Tarde")
+        NIGHT = "N", _("Noite")
+
     name = CharField(max_length=63)
     slug = SlugField(max_length=7, default="-")
     subjects = ManyToManyField(Subject)
+    time = CharField(max_length=1, choices=Timing.choices, default=Timing.MORNING)
 
     class Meta:
         verbose_name = _("curso")

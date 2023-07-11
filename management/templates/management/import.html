@@ -168,6 +168,16 @@
     <input type="submit" value="Enviar" class="btn" />
   </form>
 
+  <ul>
+    <template x-for="err in errors">
+      <li>
+        <em x-text="err.user.split()[0]" class="text-slate-500"></em>
+        <strong x-text="err.field"></strong>
+        <span x-text="err.msg"></span>
+      </li>
+    </template>
+  </ul>
+
   <div class="mt-4 overflow-x-auto border-slate-400">
     <table class="table-auto">
       <thead class="bg-slate-300">

@@ -1,7 +1,3 @@
-main.framed {
-  @apply border border-slate-400 shadow-md;
-}
-
 form > section > article > * {
   @apply mb-2 last:mb-0;
 }

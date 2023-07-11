@@ -33,6 +33,10 @@
   }
 }
 
+main.framed {
+  @apply border border-slate-400 shadow-md;
+}
+
 hr {
   @apply my-3 mx-1;
 }

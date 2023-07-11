@@ -18,7 +18,9 @@
       {% if not no_nav|default:False %}
         {% include "core/header.html" %}
       {% endif %}
-      {% block content %}{% endblock %}
+      <div class="pt-20">
+        {% block content %}{% endblock %}
+      </div>
     </div>
   </body>
 </html>
