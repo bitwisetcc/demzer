@@ -111,6 +111,7 @@ def enroll(request: HttpRequest):
                 profile.distance = int(request.POST.get("distance") or 0) or None
 
                 try:
+                    # TODO: Still can't create relatives
                     guardian = Relative.objects.get_or_create(
                         name=request.POST.get("name-guardian"),
                         defaults={

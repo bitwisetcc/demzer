@@ -7,11 +7,11 @@
 </script>
 {% endblock %} {% block content %}
 <main
-  class="framed m-8"
+  class="framed m-8 min-h-fit"
   x-data="{ courseDialog: false, subjectDialog: false, importDialog: false }"
 >
   <div class="flex">
-    <aside>
+    <aside class="w-1/6 border-r-gray-600">
       <ul>
         {% for course in courses %}
         <li>{{ course.slug }}</li>
@@ -152,7 +152,9 @@
     </button>
     <ul class="flex gap-2 text-slate-600">
       {% for subj in subjects %}
-      <li class="rounded-lg bg-slate-300 p-2">{{ subj.slug }}</li>
+      <li class="rounded-lg bg-slate-300 p-2">
+        <abbr title="{{ subj.name }}" class="decoration-transparent">{{ subj.slug }}</abbr>
+      </li>
       {% endfor %}
       <li class="rounded-lg bg-slate-300 p-2">...</li>
     </ul>
