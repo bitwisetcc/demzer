@@ -46,7 +46,7 @@ def read_csv(request: HttpRequest, file: str) -> tuple[list[list[str]], list[str
     return lines, lines.pop(0)
 
 
-def filter_dict(d: dict, keys: list[str], exclude=False) -> dict:
+def dfilter(d: dict, keys: list[str], exclude=False) -> dict:
     return {k: v for k, v in d.items() if (k not in keys if exclude else k in keys)}
 
 
@@ -86,7 +86,7 @@ def import_users(request: HttpRequest):
 
         try:
             users = [
-                User(**filter_dict(user, ["username", "email", "password"]))
+                User(**dfilter(user, ["username", "email", "password"]))
                 for user in data
             ]
             User.objects.bulk_create(users)
@@ -96,7 +96,7 @@ def import_users(request: HttpRequest):
         try:
             Member.objects.bulk_create(
                 Member(
-                    **filter_dict(member, ["username", "email", "password"], True),
+                    **dfilter(member, ["username", "email", "password"], True),
                     user=users[i],
                 )
                 for i, member in enumerate(data)
@@ -147,9 +147,7 @@ def create_subject(request: HttpRequest):
     else:
         try:
             subj = Subject.objects.create(
-                name=request.POST.get("name"),
-                slug=request.POST.get("slug"),
-                description=request.POST.get("desc"),
+                **dfilter(request.POST, ["name", "slug", "description"])
             )
         except Exception as error:
             messages.error(request, "Falha ao criar matéria: {}".format(error))
