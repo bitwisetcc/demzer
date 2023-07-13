@@ -214,11 +214,8 @@ def perfil(request: HttpRequest):
 def boletim(request: HttpRequest):
     return render(request, "core/boletim.html")
 
-<<<<<<< HEAD
-
 def eventos(request: HttpRequest):
     return render(request, "core/eventos.html")
-=======
+
 def horario(request: HttpRequest):
     return render(request, "core/horario.html")
->>>>>>> d01ee1d43c58ef8ec01c4bfd085858c6bab2e719
