@@ -213,3 +213,6 @@ def perfil(request: HttpRequest):
 
 def boletim(request: HttpRequest):
     return render(request, "core/boletim.html")
+
+def horario(request: HttpRequest):
+    return render(request, "core/horario.html")
