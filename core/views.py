@@ -217,3 +217,6 @@ def boletim(request: HttpRequest):
 
 def eventos(request: HttpRequest):
     return render(request, "core/eventos.html")
+
+def horario(request: HttpRequest):
+    return render(request, "core/horario.html")

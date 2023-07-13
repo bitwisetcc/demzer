@@ -17,7 +17,6 @@ urlpatterns = [
     path("boletim/", boletim, name="boletim"),
     path("eventos/", eventos, name="eventos"),
     path("horario/", horario, name="horario"),
-
 ]
 
 
