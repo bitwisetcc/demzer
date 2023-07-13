@@ -3,7 +3,7 @@
 <script defer src="{% static 'core/js/enroll.js' %}"></script>
 <link rel="stylesheet" href="{% static 'core/dist/css/enroll.css' %}" />
 {% endblock %} {% block content %}
-<main class="framed m-8 mb-0 p-7">
+<main class="framed m-8 p-7">
   <form
     action="{% url 'enroll' %}"
     method="POST"
@@ -13,7 +13,7 @@
   >
     <nav class="flex items-center justify-between gap-10">
       <div class="flex gap-4">
-        <h1 class="mb-2 font-sans text-3xl font-bold">Matrícula</h1>
+        <h1 class="font-sans mb-2 text-3xl font-bold">Matrícula</h1>
         <select name="role" id="sl-role" x-model="role">
           <option selected value="student">Estudante</option>
           <option value="teacher">Professor</option>
@@ -107,7 +107,7 @@
     {% csrf_token %}
     <section class="grid grid-cols-2 gap-4" x-show="tab === 'identidade'">
       <article>
-        <h2 class="mb-2 font-sans text-2xl font-bold">Informações pessoais</h2>
+        <h2 class="font-sans mb-2 text-2xl font-bold">Informações pessoais</h2>
         <div class="flex gap-3">
           <div class="field grow">
             <label for="txt-username">Nome</label>
@@ -215,72 +215,72 @@
         </div>
       </article>
 
-        <article>
-          <h2 class="mb-2 font-sans text-2xl font-bold">Cidadania</h2>
-          <div class="field">
-            <label for="nat-box">Naturalidade</label>
-            <span id="nat-box" class="flex items-center gap-2">
-              <input
-                type="text"
-                name="natural-city"
-                id="txt-city"
-                value="{{ city }}"
-              />
-              <select name="natural-state" id="sl-state">
-                <template
-                  x-for="code in [
+      <article>
+        <h2 class="font-sans mb-2 text-2xl font-bold">Cidadania</h2>
+        <div class="field">
+          <label for="nat-box">Naturalidade</label>
+          <span id="nat-box" class="flex items-center gap-2">
+            <input
+              type="text"
+              name="natural-city"
+              id="txt-city"
+              value="{{ city }}"
+            />
+            <select name="natural-state" id="sl-state">
+              <template
+                x-for="code in [
                 'RO','AC','AM','RR','PA','AP','TO','MA','PI',
                 'CE','RN','PB','PE','AL','SE','BA','MG','ES',
                 'RJ','SP','PR','SC','RS','MS','MT','GO','DF',
               ]"
-                >
-                  <option
-                    :value="code"
-                    :selected="code == '{{ state }}'"
-                    x-text="code"
-                  ></option>
-                </template>
-                <option value=""></option>
-              </select>
-            </span>
-          </div>
-          <div class="flex gap-3">
-            <div class="field">
-              <label for="txt-nation">Nacionalidade</label>
-              <input
-                type="text"
-                name="nationality"
-                id="txt-nation"
-                value="{{ country }}"
-              />
-            </div>
-            <div class="field">
-              <label for="txt-origin">País de origem</label>
-              <input
-                type="text"
-                name="country-of-origin"
-                id="txt-origin"
-                value="{{ country }}"
-              />
-            </div>
-          </div>
-          <div class="my-3 flex items-center gap-3">
-            <label for="sl-school">Escolaridade pública:</label>
-            <select name="public-schooling" id="sl-school">
-              <option value="C">Completo</option>
-              <option value="B">Ensino Básico</option>
-              <option value="F" selected>Ensino Fundamental</option>
-              <option value="M">Ensino Médio</option>
-              <option value="N">Nenhuma</option>
+              >
+                <option
+                  :value="code"
+                  :selected="code == '{{ state }}'"
+                  x-text="code"
+                ></option>
+              </template>
+              <option value=""></option>
             </select>
+          </span>
+        </div>
+        <div class="flex gap-3">
+          <div class="field">
+            <label for="txt-nation">Nacionalidade</label>
+            <input
+              type="text"
+              name="nationality"
+              id="txt-nation"
+              value="{{ country }}"
+            />
           </div>
-          <button
-            class="btn mt-2 rounded-lg font-semibold"
-            @click="tab = 'contato'"
-          >
-            Próximo
-          </button>
-        </article>
+          <div class="field">
+            <label for="txt-origin">País de origem</label>
+            <input
+              type="text"
+              name="country-of-origin"
+              id="txt-origin"
+              value="{{ country }}"
+            />
+          </div>
+        </div>
+        <div class="my-3 flex items-center gap-3">
+          <label for="sl-school">Escolaridade pública:</label>
+          <select name="public-schooling" id="sl-school">
+            <option value="C">Completo</option>
+            <option value="B">Ensino Básico</option>
+            <option value="F" selected>Ensino Fundamental</option>
+            <option value="M">Ensino Médio</option>
+            <option value="N">Nenhuma</option>
+          </select>
+        </div>
+        <button
+          class="btn mt-2 rounded-lg font-semibold"
+          @click="tab = 'contato'"
+        >
+          Próximo
+        </button>
+      </article>
     </section>
 
     <section
@@ -289,7 +289,7 @@
       x-data="address"
     >
       <article>
-        <h2 class="mb-2 font-sans text-2xl font-bold">Contato</h2>
+        <h2 class="font-sans mb-2 text-2xl font-bold">Contato</h2>
 
         <div class="flex gap-3">
           <div class="field grow">
@@ -398,7 +398,7 @@
 
       <template x-if="role == 'student'">
         <article>
-          <h2 class="mb-2 font-sans text-2xl font-bold">Responsáveis</h2>
+          <h2 class="font-sans mb-2 text-2xl font-bold">Responsáveis</h2>
 
           <div class="field">
             <label for="txt-guardian">Nome</label>

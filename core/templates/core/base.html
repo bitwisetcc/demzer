@@ -17,8 +17,12 @@
     <div class="w-full overflow-y-scroll">
       {% if not no_nav|default:False %}
         {% include "core/header.html" %}
+      <div class="pt-20">
+      {% else %}
+      <div>
       {% endif %}
-      {% block content %}{% endblock %}
+        {% block content %}{% endblock %}
+      </div>
     </div>
   </body>
 </html>

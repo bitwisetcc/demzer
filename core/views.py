@@ -84,7 +84,7 @@ def enroll(request: HttpRequest):
             return redirect("enroll")
 
         try:
-            profile = Member(
+            profile = Member.objects.create(
                 user=user,
                 contact_email=request.POST.get("contact-email"),
                 phone=re.sub(r"[^0-9]+", "", request.POST.get("phone")),
@@ -104,13 +104,14 @@ def enroll(request: HttpRequest):
 
             if request.POST.get("role") == "student":
                 profile.public_schooling = request.POST.get("public-schooling")
-                profile.natural_state = (request.POST.get("natural-state"),)
-                profile.natural_city = (request.POST.get("natural-city"),)
-                profile.nationality = (request.POST.get("nationality"),)
-                profile.country_of_origin = (request.POST.get("country-of-origin"),)
-                profile.distance = int(request.POST.get("distance", 0)) or None
+                profile.natural_state = request.POST.get("natural-state")
+                profile.natural_city = request.POST.get("natural-city")
+                profile.nationality = request.POST.get("nationality")
+                profile.country_of_origin = request.POST.get("country-of-origin")
+                profile.distance = int(request.POST.get("distance") or 0) or None
 
                 try:
+                    # TODO: Still can't create relatives
                     guardian = Relative.objects.get_or_create(
                         name=request.POST.get("name-guardian"),
                         defaults={
@@ -125,7 +126,7 @@ def enroll(request: HttpRequest):
                     profile.relatives.add(guardian)
 
                 except Exception as error:
-                    messages.warning("Falha ao associar responsável")
+                    messages.warning(request, "Falha ao associar responsável")
 
             profile.save()
 
@@ -135,9 +136,9 @@ def enroll(request: HttpRequest):
                 messages.warning(request, "Falha ao designar grupo ao usuário")
 
         except Exception as error:
-            return HttpResponseBadRequest("Falha ao criar perfil: {}".format(error))
+            return HttpResponseBadRequest("Falha ao criar perfil: {}".format(error.args[0]))
 
-        messages.success("Usuário {} criado com sucesso".format(user.pk))
+        messages.success(request, "Usuário {} criado com sucesso".format(user.pk))
         return redirect("dashboard")
     else:
         context = {
@@ -166,7 +167,7 @@ def super_secret(request: HttpRequest):
                 admin.save()
             except Exception as error:
                 return HttpResponse(
-                    "Falha ao cadastrar administrador: {}".format(error)
+                    "Falha ao cadastrar administrador: {}".format(error.args[0])
                 )
 
             try:
@@ -188,12 +189,12 @@ def super_secret(request: HttpRequest):
                 )
                 profile.save()
             except Exception as error:
-                return HttpResponseBadRequest("Falha ao criar perfil: {}".format(error))
+                return HttpResponseBadRequest("Falha ao criar perfil: {}".format(error.args[0]))
 
             try:
                 assign_role(admin, "admin")
             except Exception as error:
-                return Http404("Falha ao designar grupo ao usuário: {}".format(error))
+                return Http404("Falha ao designar grupo ao usuário: {}".format(error.args[0]))
 
             messages.success(request, "Usuário {} criado com sucesso".format(admin.pk))
             return redirect("login")
@@ -213,6 +214,11 @@ def perfil(request: HttpRequest):
 def boletim(request: HttpRequest):
     return render(request, "core/boletim.html")
 
+<<<<<<< HEAD
 
 def eventos(request: HttpRequest):
     return render(request, "core/eventos.html")
+=======
+def horario(request: HttpRequest):
+    return render(request, "core/horario.html")
+>>>>>>> d01ee1d43c58ef8ec01c4bfd085858c6bab2e719

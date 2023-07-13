@@ -203,7 +203,7 @@ document.addEventListener("alpine:init", () => {
               msg: v.tip,
             });
 
-      const passing = this.errors.length != 0;
+      const passing = this.errors.length == 0;
       const headersOk = this.required.reduce(
         (acc, cur) => acc && this.headers.includes(cur),
         true

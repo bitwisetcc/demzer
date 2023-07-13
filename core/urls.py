@@ -15,7 +15,11 @@ urlpatterns = [
     path("comunicados/", comunicados, name="comunicados"),
     path("perfil/", perfil, name="perfil"),
     path("boletim/", boletim, name="boletim"),
+<<<<<<< HEAD
     path("eventos/", eventos, name="eventos"),
+=======
+    path("horario/", horario, name="horario"),
+>>>>>>> d01ee1d43c58ef8ec01c4bfd085858c6bab2e719
 ]
 
 
