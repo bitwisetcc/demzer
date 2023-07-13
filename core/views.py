@@ -212,3 +212,7 @@ def perfil(request: HttpRequest):
 
 def boletim(request: HttpRequest):
     return render(request, "core/boletim.html")
+
+
+def eventos(request: HttpRequest):
+    return render(request, "core/eventos.html")
