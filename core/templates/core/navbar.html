@@ -1,5 +1,4 @@
-pip install -r requirements.txt
-npm i{% load static %}
+{% load static %}
 <nav
   class="sticky left-0 top-0 flex flex-col justify-between rounded-br-xl bg-color-primary py-5 text-slate-100 transition-all"
   :class="open ? 'w-80 px-5' : 'w-0 px-0'"
@@ -152,7 +151,7 @@ npm i{% load static %}
         </a>
       </li>
       <li>
-        <a href="">
+        <a href="{% url 'eventos' %}">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
