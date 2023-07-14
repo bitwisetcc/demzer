@@ -1,215 +1,44 @@
 {% extends 'core/base.html' %} {% load static %} {% load permission_tags %} {% block head %}
 
-<script>
-  $('.card').on('click', function() {
-  if ($(this).hasClass('open')) {
-    $('.card').removeClass('open');
-    $('.card').removeClass('shadow-2');
-    $(this).addClass('shadow-1');
-    return false;
-  } else {
-    $('.card').removeClass('open');
-    $('.card').removeClass('shadow-2');
-    $(this).addClass('open');
-    $(this).addClass('shadow-2');
-  }
-});
-</script>
 
 {% endblock %} {% block content %}
 
 <div class="flex justify-center min-h-full pt-24">
   <div class="text-[30px] text-color-txt-perfil font-semibold w-[50%]">Eventos</div>
-
-</div>
-<div class="all">
-  <div class="cards">
-    <div class="card shadow-1"></div>
-    <div class="card shadow-1"></div>
-    <div class="card shadow-1"></div>
-  </div>
 </div>
 
-<style>
-  html,
-body {
-  margin: 0;
-  background: #fafafa;
-  z-index: -1;
-  position: relative;
-}
+<div class>
+  <div class="mr-8">
+    <br><br>
+<div class="bg-white max-w-xl mx-auto border border-black-200" x-data="{selected:1}">
+		<ul class="shadow-box">
+						
+		<li class="relative border-b border-black-200">
 
-.shadow-1:before {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: inherit;
-  height: inherit;
-  z-index: -2;
-  box-sizing: border-box;
-  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.13);
-}
+			<button type="button" class="w-full px-8 py-6 text-left" @click="selected !== 1 ? selected = 1 : selected = null">
+				<div class="flex items-center justify-between">
+					<span> Reunião de Pais e Responsáveis
+          <br>25/11/2005</span>
+					<span class="ico-plus"></span>
+				</div>
+			</button>
 
-.shadow-1:after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: inherit;
-  height: inherit;
-  z-index: -2;
-  box-sizing: border-box;
-  box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.08);
-}
+			<div class="relative overflow-hidden transition-all max-h-0 duration-500" style="" x-ref="container1" x-bind:style="selected == 1 ? 'max-height: ' + $refs.container1.scrollHeight + 'px' : ''">
+				<div class="p-6">
+					<p>Trazer sei lá o que, sei lá o que mais só para adicionar e ter mais cosia aqui, beijos flw</p>
+				</div>
+			</div>
 
-.shadow-2:before {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: inherit;
-  height: inherit;
-  z-index: -2;
-  box-sizing: border-box;
-  box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.1);
-}
+		</li>
+    </ul>
 
-.shadow-2:after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: inherit;
-  height: inherit;
-  z-index: -2;
-  box-sizing: border-box;
-  box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.1);
-}
+    <style>
+      .max-h-0 {
+      max-height: 0;
+      }
+    </style>
 
-.shadow-3:before {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: inherit;
-  height: inherit;
-  z-index: -2;
-  box-sizing: border-box;
-  box-shadow: 0 12px 15px 0 rgba(0, 0, 0, 0.12);
-}
-
-.shadow-3:after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: inherit;
-  height: inherit;
-  z-index: -2;
-  box-sizing: border-box;
-  box-shadow: 0 17px 50px 0 rgba(0, 0, 0, 0.1);
-}
-
-.shadow-4:before {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: inherit;
-  height: inherit;
-  z-index: -2;
-  box-sizing: border-box;
-  box-shadow: 0 16px 28px 0 rgba(0, 0, 0, 0.11);
-}
-
-.shadow-4:after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: inherit;
-  height: inherit;
-  z-index: -2;
-  box-sizing: border-box;
-  box-shadow: 0 25px 55px 0 rgba(0, 0, 0, 0.11);
-}
-
-.shadow-5:before {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: inherit;
-  height: inherit;
-  z-index: -2;
-  box-sizing: border-box;
-  box-shadow: 0 27px 24px 0 rgba(0, 0, 0, 0.1);
-}
-
-.shadow-5:after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: inherit;
-  height: inherit;
-  z-index: -2;
-  box-sizing: border-box;
-  box-shadow: 0 40px 77px 0 rgba(0, 0, 0, 0.11);
-}
-
-.card {
-  position: relative;
-  height: 100px;
-  background: #fcfcfc;
-  margin: 20px 40px;
-  transition: 0.4s all;
-}
-
-.card.open {
-  height: 200px;
-  background: #ffffff;
-}
-
-@media only screen and (min-width: 600px) {
-  .card {
-    width: 500px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-}
-
-@media only screen and (max-device-width: 800px) and (orientation: portrait) {
-  .card {
-    margin: 12px 10px;
-  }
-}
-</style>
-
-
+    
 {% endblock %}
 
 
