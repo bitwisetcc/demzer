@@ -4,43 +4,56 @@
 
 
 
-<div class="pt-32 grid place-items-center">
+<div class="flex pt-32 ml-60">
   <p class="pb-8 text-5xl text-color-txt-perfil font-semibold">
     Perfil 
   </p>
-  <div class="flex flex-col h-[420] w-[320] rounded-3xl bg-color-bg-perfil">
-    <div class=" pl-16 ">
+</div>
+
+<div class="grid grid-cols-2 grid-rows-3 gap-5 px-32">
+  <div class="flex w-auto h-auto col-span-2 bg-gray-500">
+    <div class="flex-1">
       <svg 
       xmlns="http://www.w3.org/2000/svg" 
       fill="none" 
       viewBox="0 0 24 24" 
       stroke-width="1.5" 
-      stroke="currentColor" 
-      class="w-[200px] h-[200px]"
-      >
-        <path stroke-linecap="round"
+      stroke="currentColor"
+       class="w-44 h-44"
+       >
+        <path 
+        stroke-linecap="round" 
         stroke-linejoin="round" 
         d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" 
         />
       </svg>
     </div>
 
-    <div class="pl-5 items-center">
-      <ul>
-        <li class="pb-3">
-          <label class="text-color-txt-perfil font-bold">RM:</label> {{ user.pk }}
-        </li>
-        <li>
-          <label class="text-color-txt-perfil font-bold">Nome:</label> {{ user.username.split.0.title }} {{ user.username.split.1.title }}
-        </li>
-      </ul> 
+    <div class="flex-1 mt-5">
+      <span> {{ user.username.split.0.title }} {{ user.username.split.1.title }}</span> </br>
+      <label>RM: {{ user.pk }}</label> </br>
+      <label>E-mail: {{ user.email}}</label> </br>
+      <label>Curso:</label>
+      <select class="col-span-2 pt-2 bg-color-grey rounded-full">
+        <option value="op1">Coloque os cursos</option>
+        <option value="op2">AQUI!!!!</option>
+      </select>
+    </div>
+
+    <div class="flex-1">
+      <label>Modulo/Série: {{ user.rg }} </label> </br>
+      <label>Turma: Coloque a turma</label>
     </div>
   </div>
+
+  <div class="flex">
+    <p class="pb-8 text-5xl text-color-txt-perfil font-semibold">
+      Perfil 
+    </p>
+  </div>
+  <div class="flex w-auto h-auto col-span-1 bg-color-grey">
+  </div>
+  <div class="flex w-auto h-auto col-span-1 bg-color-grey">
+  </div>
 </div>
-
-<span>
-  {{user.profile.rg}}
-</span>
-
-
 {% endblock %}
