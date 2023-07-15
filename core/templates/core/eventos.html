@@ -16,16 +16,43 @@
 		<li class="relative border-b border-black-200">
 
 			<button type="button" class="w-full px-8 py-6 text-left" @click="selected !== 1 ? selected = 1 : selected = null">
-				<div class="flex items-center justify-between">
-					<span> Reunião de Pais e Responsáveis
-          <br>25/11/2005</span>
-					<span class="ico-plus"></span>
-				</div>
+				<div class="flex items-center justify-between, text-[20px] text-color-txt-perfil font-semibold w-[70%]">
+          <img
+            src="{% static '/core/images/reuniao.jpg' %}"
+            alt="Reunião"
+            width="100"
+          />
+          <div>
+					<b style="padding-left: 30px;"> Reunião de Pais e Responsáveis</b>
+          
+				<p class="text-color-secondary" style="padding-left: 30px;">25/11/2005 </p>
+        
+        </div>
+      </div>
 			</button>
 
-			<div class="relative overflow-hidden transition-all max-h-0 duration-500" style="" x-ref="container1" x-bind:style="selected == 1 ? 'max-height: ' + $refs.container1.scrollHeight + 'px' : ''">
+			<div class="relative overflow-hidden transition-all max-h-0 duration-500" x-ref="container1" x-bind:style="selected == 1 ? 'max-height: ' + $refs.container1.scrollHeight + 'px' : ''">
 				<div class="p-6">
-					<p>Trazer sei lá o que, sei lá o que mais só para adicionar e ter mais cosia aqui, beijos flw</p>
+          <table>
+            <tr>
+              <td class="text-color-secondary">
+                <table style="width: 5px; padding:none;">
+                  <tr>
+                    <td style="color:rgb(230 168 46)">Categoria:</td>
+                    <td style="color:rgb(230 168 46)">Reunião</td>
+                  </tr>
+                  <tr>
+                    <td style="color:rgb(230 168 46)">Local:</td>
+                    <td style="color:rgb(230 168 46)">Auditório</td>
+                  </tr>
+                  <tr>
+                    <td style="color:rgb(230 168 46)">Horário</td>
+                    <td style="color:rgb(230 168 46)">18h00</td>
+                  </tr>
+                </table>
+              <td>Trazer sei lá o que, sei lá o que mais só para adicionar e ter mais cosia aqui, beijos flw</td>
+            </tr>
+          </table>
 				</div>
 			</div>
 
@@ -33,11 +60,38 @@
     </ul>
 
     <style>
-      .max-h-0 {
-      max-height: 0;
-      }
+    .max-h-0 {
+    max-height: 0;
+    }
+    .max-w-xl {
+    max-width: 60rem/* 576px */;
+    }
+    table, td{
+      border: none;
+      color: rgb(5 68 153);
+      padding-left: 50px;
+      text-align: left;
+      vertical-align: top;
+    }
+    td{
+      font-size: 19px;
+      width: 550px;
+    }
+    .border {
+    border-width: 1px;
+    border-radius: 50px;
+    }
+	  .p-8{
+		color: orange;
+	  }
+    .p-7{
+		color: rgb(230 168 46);
+	  }
+    img{
+      border-radius: 200px;
+      height: 90px;
+    }
     </style>
-
     
 {% endblock %}
 
