@@ -221,5 +221,5 @@ def eventos(request: HttpRequest):
 def horario(request: HttpRequest):
     return render(request, "core/horario.html")
 
-def provasatividades(request: HttpRequest):
-    return render(request, "core/provasatividades.html")
+def provas(request: HttpRequest):
+    return render(request, "core/provas.html")
