@@ -1,18 +1,4 @@
-input[type="radio"] {
-  visibility: hidden;
-}
-
-label {
-  display: block;
-  border: 4px solid #666;
-  width: 60px;
-  float: left;
-}
-
 input[type="radio"]:checked+label {
-  border-color: #ccf;
+  background-color: #68a4f3;
 }
 
-img {
-  height: 50px;
-}

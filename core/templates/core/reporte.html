@@ -1,6 +1,6 @@
 {% extends 'core/base.html' %} {% load static %} {% block head %}
 
-<link rel="stylesheet" href="{% static 'core/dist/css/reporte.css' %}" />
+<link rel="stylesheet" href="{% static 'core/css/reporte.css' %}" />
 
 {% endblock %} {% block content %}
 <main class="framed m-8 mb-20 px-5">
@@ -8,18 +8,50 @@
   <div class="flex flex-col justify-center">
     <span class="text-color-primary text-[30px] text-center mb-5">Assunto</span>
     <div class="flex justify-center">
-      <div class="flex-col h-[120px] w-[600] rounded-2xl bg-white px-6 py-10">
-    
+      <div class="flex flex-col h-[800px] w-[880] rounded-2xl bg-white justify-center items-center md:flex-row md:justify-center md:h-[180px]">
+        <input type="radio" name="imagem" id="i1" class="hidden" />
+        <label for="i1" class="flex flex-col items-center rounded-2xl">
+          <img src="{% static '/core/images/professor.png' %}" class="h-16 w-16">
+          <span class="mx-2 px-4 py-4">Professor(a)</span>
+        </label>
+        <input type="radio" name="imagem" id="i2" class="hidden" />
+        <label for="i2" class="flex flex-col items-center rounded-2xl">
+          <img src="{% static '/core/images/aluno.png' %}" class="h-16 w-16">
+          <span class="mx-2 px-7 py-4">Aluno(a)</span>
+        </label>
+        <input type="radio" name="imagem" id="i3" class="hidden" />
+        <label for="i3" class="flex flex-col items-center rounded-2xl">
+          <img src="{% static '/core/images/funcionario.png' %}" class="h-16 w-16">
+          <span class="mx-2 px-2 py-4">Funcionário(a)</span>
+        </label>
+        <input type="radio" name="imagem" id="i4" class="hidden" />
+        <label for="i4" class="flex flex-col items-center rounded-2xl">
+          <img src="{% static '/core/images/concerto.png' %}" class="h-16 w-16">
+          <span class="mx-2 px-7 py-4">Concerto</span>
+        </label>
+        <input type="radio" name="imagem" id="i5" class="hidden" />
+        <label for="i5" class="flex flex-col items-center rounded-2xl">
+          <img src="{% static '/core/images/limpeza.png' %}" class="h-16 w-16">
+          <span class="mx-2 px-7 py-4">Limpeza</span>
+        </label>
+        <input type="radio" name="imagem" id="i6" class="hidden"/>
+        <label for="i6" class="flex flex-col items-center rounded-2xl">
+          <img src="{% static '/core/images/outros.png' %}" class="h-16 w-16">
+          <span class="mx-2 px-8 py-4">Outros</span>
+        </label>
       </div>
     </div>
     <span class="text-color-primary text-[30px] text-center mt-10 mb-5">Sobre</span>
     <div class="flex justify-center">
-      <div class="flex-col h-[370px] w-[600] rounded-2xl bg-white px-6 py-10">
-    
+      <div class="block h-[400px] w-[880px] rounded-2xl bg-white px-6 py-8">
+        <div class="field flex-grow">
+          <textarea id="reclamacao" name="reclamacao" class="w-full h-80 border border-gray-300 rounded px-4 py-2"
+            placeholder="Digite sua reclamação aqui"></textarea>
+        </div>
       </div>
     </div>
-    <div class="flex w-full flex-col gap-3 mt-5 md:block md:gap-2">
-      <input type="submit" value="Enviar" class="px-20 py-2 text-bold bg-color-secondary-dimm border border-color-secondary md:mx-auto md:mt-3 md:block" />
+    <div class="flex w-full flex-col gap-3 mt-10 md:block md:gap-2">
+      <input type="submit" value="Enviar" class="font-bold px-12 py-4 text-[21px] text-bold text-color-secondary rounded-full bg-color-secondary-dimm border border-color-secondary md:mx-auto md:mt-3 md:block" />
     </div>
   </div>
 </main>
