@@ -223,3 +223,6 @@ def horario(request: HttpRequest):
 
 def provas(request: HttpRequest):
     return render(request, "core/provas.html")
+
+def reporte(request: HttpRequest):
+    return render(request, "core/reporte.html")

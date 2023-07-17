@@ -18,6 +18,7 @@ urlpatterns = [
     path("eventos/", eventos, name="eventos"),
     path("horario/", horario, name="horario"),
     path("provas/", provas, name="provas"),
+    path("reporte/", reporte, name="reporte"),
 ]
 
 
