@@ -22,17 +22,9 @@ function validateCPF(cpf) {
   return remainder == parseInt(cpf.substring(10, 11));
 }
 
-/**
- * Validates username input and blocks special characters
- * @param {Event} e
- */
 const validateName = (e) =>
   !/[A-Za-záàâãéèêíóôõúçñ\s]+$/.test(e.key) && e.preventDefault();
 
-/**
- * Validates a number input and blocks letters
- * @param {Event} e
- */
 const validateNumber = (e) => {
   e.key != "Backspace" &&
     e.key != "Delete" &&
@@ -42,6 +34,7 @@ const validateNumber = (e) => {
 
 document.addEventListener("alpine:init", () => {
   Alpine.data("fields", () => ({
+    role: "student",
     cpf: "",
     rg: "",
     tab: "identidade",

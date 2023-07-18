@@ -4,43 +4,70 @@
 
 
 
-<div class="pt-32 grid place-items-center">
+<div class="flex pt-32 ml-60">
   <p class="pb-8 text-5xl text-color-txt-perfil font-semibold">
     Perfil 
   </p>
-  <div class="flex flex-col h-[420] w-[320] rounded-3xl bg-color-bg-perfil">
-    <div class=" pl-16 ">
+</div>
+
+<div class="grid grid-cols-2 grid-rows-3 gap-5 px-32">
+  <div class="flex w-auto h-auto col-span-2 bg-gray-500">
+    <div class="flex-1">
       <svg 
       xmlns="http://www.w3.org/2000/svg" 
       fill="none" 
       viewBox="0 0 24 24" 
       stroke-width="1.5" 
-      stroke="currentColor" 
-      class="w-[200px] h-[200px]"
-      >
-        <path stroke-linecap="round"
+      stroke="currentColor"
+       class="w-44 h-44"
+       >
+        <path 
+        stroke-linecap="round" 
         stroke-linejoin="round" 
         d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" 
         />
       </svg>
     </div>
 
-    <div class="pl-5 items-center">
-      <ul>
-        <li class="pb-3">
-          <label class="text-color-txt-perfil font-bold">RM:</label> {{ user.pk }}
-        </li>
-        <li>
-          <label class="text-color-txt-perfil font-bold">Nome:</label> {{ user.username.split.0.title }} {{ user.username.split.1.title }}
-        </li>
-      </ul> 
+    <div class="flex-1 mt-5">
+      <span> {{ user.username.split.0.title }} {{ user.username.split.1.title }}</span> </br>
+      <p>RM: {{ user.pk }}</p> 
+      <p>E-mail: {{ user.email}}</p> 
+      <label>Curso:</label>
+      <select class="col-span-2 pt-2 bg-color-grey rounded-full">
+        <option value="op1">Coloque os cursos</option>
+        <option value="op2">AQUI!!!!</option>
+      </select>
+    </div>
+
+    <div class="flex-1">
+      <p>Modulo/Série: {{ user.rg }} </p>
+      <p>Turma: Coloque a turma</p>
     </div>
   </div>
+
+
+  <div class="col-span-1">
+    <h1 class="text-xl text-color-dark-orange font-semibold"> Informações Pessoais 
+      <div class="text-base text-color-txt-perfil mt-5 px-8 py-5 w-auto h-max rounded-3xl bg-color-grey">
+        <p class="mb-2">Nascimento: <label class="text-base text-gray-400"> Infos aqui! </label> </p>
+        <p class="mb-2">RA SED:     <label class="text-base text-gray-400"> Infos aqui! </label> </p>
+        <p class="mb-2">CPF:        <label class="text-base text-gray-400"> Infos aqui! </label> </p>
+        <p>RG:                      <label class="text-base text-gray-400"> Infos aqui! </label> </p>
+      </div>
+    </h1>
+  </div>
+  <div class="col-span-1">
+    <h1 class="text-xl text-color-dark-orange font-semibold"> Informações Pessoais 
+      <div class="text-base text-color-txt-perfil mt-5 px-8 py-5 w-auto h-max rounded-3xl bg-color-grey">
+        <label class="mb-2 pr-3">Senha Atual: </label> <input type="password" name="password" class="w-[400px] h-6 mb-2"> </br>
+        <label class="mb-2 pr-3">Nova Senha:  </label> <input type="password" name="respassword" class="w-[400px] h-6 mb-2"> </br>
+        <label class="mb-2 pr-[26px]">Confirmar:   </label> <input type="password" name="respassword2" class="w-[400px] h-6 mb-2"> </br>
+        <div class="flex w-max pl-56 pt-3">
+          <button class="w-32 h-10 border rounded-full border-color-dark-orange"> Alterar </button>
+        </div>
+      </div>
+    </h1>
+  </div>
 </div>
-
-<span>
-  {{user.profile.rg}}
-</span>
-
-
 {% endblock %}

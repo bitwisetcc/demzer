@@ -5,7 +5,7 @@ from django.db.models import (
     ForeignKey,
     ManyToManyField,
     OneToOneField,
-    PROTECT,
+    SET_NULL,
     CASCADE,
 )
 from django.db.models.fields import (
@@ -28,7 +28,6 @@ from backend.settings import (
 )
 
 
-
 class Relative(Model):
     name = CharField(max_length=60, unique=True)
     email = EmailField()
@@ -45,18 +44,12 @@ class Member(Model):
         FEMININE = "F", _("Feminino")
         NON_BINARY = "NB", _("Não Binário")
 
-    class UserTypes(TextChoices):
-        STUDENT = "0", _("Aluno")
-        TEACHER = "1", _("Professor")
-        EMPLOYEE = "2", _("Funcionário")
-        ADMIN = "3", _("Administrador")
-
     class PublicSchoolingTypes(TextChoices):
         FULL = "C", _("Completo")
         NONE = "N", _("Nenhuma")
         ELEMENTARY = "E", _("Ensino Primário")
         MIDDLE = "M", _("Ensino Fundamental")
-        HIGH = "H", _("Ensino Média")
+        HIGH = "H", _("Ensino Médio")
 
     class CivilStates(TextChoices):
         SINGLE = "S", _("Solteiro")
@@ -104,17 +97,18 @@ class Member(Model):
         choices=PublicSchoolingTypes.choices,
         default=PublicSchoolingTypes.MIDDLE,
         max_length=1,
+        null=True,
     )
     birthdate = DateField(default=DEFAULT_BIRTHDATE)
     afro = BooleanField(default=False)
     indigenous = BooleanField(default=False)
 
     natural_state = CharField(
-        choices=States.choices, default=DEFAULT_STATE, max_length=2
+        choices=States.choices, default=DEFAULT_STATE, max_length=2, null=True
     )
-    natural_city = CharField(default=DEFAULT_CITY, max_length=50)
-    nationality = CharField(default=DEFAULT_COUNTRY, max_length=40)
-    country_of_origin = CharField(default=DEFAULT_COUNTRY, max_length=40)
+    natural_city = CharField(default=DEFAULT_CITY, max_length=50, null=True)
+    nationality = CharField(default=DEFAULT_COUNTRY, max_length=40, null=True)
+    country_of_origin = CharField(default=DEFAULT_COUNTRY, max_length=40, null=True)
     civil_state = CharField(
         choices=CivilStates.choices, default=CivilStates.SINGLE, max_length=1
     )
@@ -129,7 +123,7 @@ class Member(Model):
 
     relatives = ManyToManyField(Relative)
 
-    course = ForeignKey("Course", PROTECT, related_name="students", null=True)
+    course = ForeignKey("Course", SET_NULL, related_name="students", null=True)
 
     def json(self):
         return {
@@ -141,6 +135,7 @@ class Member(Model):
             "email": self.user.email,
             "rg": self.rg,
             "cpf": self.cpf,
+            "is_staff": self.user.is_staff,
         }
 
     class Meta:
@@ -155,6 +150,7 @@ class Subject(Model):
 
     name = CharField(max_length=63)
     slug = CharField(max_length=5)
+    description = CharField(max_length=127, null=True)
 
     def __str__(self) -> str:
         return self.slug
@@ -166,6 +162,7 @@ class Subject(Model):
     # ...
 
 
+# TODO: o curso deve ter um horário (M, T, N)
 class Course(Model):
     """
     The group of students that spend their time together. They go from room to room together etc.
@@ -173,9 +170,15 @@ class Course(Model):
     Ex: 1st, 2nd and 3rd Philosophy and Sociology.
     """
 
+    class Timing(TextChoices):
+        MORNING = "M", _("Manhã")
+        EVENING = "E", _("Tarde")
+        NIGHT = "N", _("Noite")
+
     name = CharField(max_length=63)
     slug = SlugField(max_length=7, default="-")
     subjects = ManyToManyField(Subject)
+    time = CharField(max_length=1, choices=Timing.choices, default=Timing.MORNING)
 
     class Meta:
         verbose_name = _("curso")
@@ -195,9 +198,9 @@ class Class(Model):
         SUNDAY = "SUN", _("Sexta-feira")
 
     course = ForeignKey("Course", CASCADE, related_name="+")
-    teacher = ForeignKey(settings.AUTH_USER_MODEL, PROTECT)
+    teacher = ForeignKey(settings.AUTH_USER_MODEL, SET_NULL, null=True)
     student_group = PositiveSmallIntegerField(null=True)
-    subject = ForeignKey("Subject", PROTECT, related_name="+")
+    subject = ForeignKey("Subject", SET_NULL, related_name="+", null=True)
     day = CharField(max_length=15, choices=Days.choices, default=Days.MONDAY)
     order = PositiveSmallIntegerField()
 
@@ -212,7 +215,6 @@ class Presence(Model):
 
 class Assessment(Model):
     pass
-
 
 
 """

@@ -1,3 +1,3 @@
-header#sectors ul li {
-  @apply w-40 cursor-pointer rounded-xl bg-gray-200 p-4 text-lg shadow;
+.control {
+  @apply w-40 cursor-pointer rounded-xl p-4 text-lg shadow;
 }

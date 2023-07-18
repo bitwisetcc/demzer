@@ -32,6 +32,7 @@ DEFAULT_BIRTHDATE = date(date.today().year - 15, 1, 1)
 
 SCHOOL_NAME = "ETEC Jorge Street"
 EMAIL_PATTERN = "{}.{}@etec.sp.gov.br"
+SECURITY_KEY = "1234"
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -57,8 +58,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rolepermissions",
     "core",
     "management",
+    "alert",
 ]
 
 REST_FRAMEWORK = {
@@ -144,3 +147,5 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "auth.User"
 
 LOGIN_URL = "/login/"
+
+ROLEPERMISSIONS_MODULE = "core.roles"

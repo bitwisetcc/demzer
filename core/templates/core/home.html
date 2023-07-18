@@ -44,6 +44,7 @@
       </tr>
     </thead>
     {% for user in users %}
+    {% if not user.is_staff %}
     <tr>
       <td>{{ user.rm }}</td>
       <td>{{ user.username }}</td>
@@ -52,6 +53,57 @@
       <td>{{ user.email }}</td>
       <td>{{ user.phone }}</td>
     </tr>
+    {% endif %}
+    {% endfor %}
+  </table>
+
+  <h1 class="mt-5 mb-3 from-sky-800 font-sans text-3xl font-bold">Professores</h1>
+  <form action="sla" method="get" class="flex items-stretch justify-between">
+    <div class="relative flex gap-3" x-data="{ input: '', clear() { this.input = '' } }">
+      <label for="slField" class="text-xl font-medium">Procurar por:</label>
+      <select name="query_field" id="slField">
+        <option value="name" selected>Nome</option>
+        <option value="email">Email ETEC</option>
+        <option value="email">Email pessoal</option>
+        <option value="parent">Nome do Pai/Mãe</option>
+        <option value="class">Classe</option>
+        <option value="grade">Série</option>
+        <option value="rm">RM</option>
+        <option value="custom">Customizado</option>
+      </select>
+      <input type="search" name="query" id="searchQuery" x-model:="input" />
+      <button class="absolute right-2 top-2 transition-all" :class="input || 'scale-0'" @click.prevent="clear()">
+        <box-icon name="x-circle" color="gray" />
+      </button>
+    </div>
+    <a href="{% url 'enrollprofessores' %}" class="btn flex items-center font-semibold">
+      <span class="mr-1 font-semibold">Matricular</span>
+      <box-icon name="user-plus" color="white" />
+    </a>
+  </form>
+  
+  <table class="mt-4 table-auto">
+    <thead>
+      <tr>
+        <td>RM</td>
+        <td>Nome</td>
+        <td>Nascimento</td>
+        <td>Gênero</td>
+        <td>E-mail</td>
+        <td>Telefone</td>
+      </tr>
+    </thead>
+    {% for user in users %}
+    {% if user.is_staff %}
+    <tr>
+      <td>{{ user.rm }}</td>
+      <td>{{ user.username }}</td>
+      <td>{{ user.birthdate|date:'d/m/Y' }}</td>
+      <td>{{ user.gender }}</td>
+      <td>{{ user.email }}</td>
+      <td>{{ user.phone }}</td>
+    </tr>
+    {% endif %}
     {% endfor %}
   </table>
 </main>
