@@ -213,3 +213,7 @@ def perfil(request: HttpRequest):
 
 def boletim(request: HttpRequest):
     return render(request, "core/boletim.html")
+
+def obs_aluno(request):
+    obs = request.POST.get('obs')
+    return obs
