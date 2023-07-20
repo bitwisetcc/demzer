@@ -10,6 +10,7 @@ from django.shortcuts import redirect, render
 from django.views.decorators.http import require_POST
 from rolepermissions.decorators import has_permission_decorator as check_permission
 from rolepermissions.roles import assign_role
+from rolepermissions.checkers import has_role
 
 
 from core.models import Class, Course, Member, Subject
@@ -119,6 +120,33 @@ def import_users(request: HttpRequest):
 
 
 def courses_editor(request: HttpRequest):
+    if request.method == "POST":
+        pk = request.POST.get("coordinator")
+        if pk:
+            try:
+                coordinator = User.objects.get(pk=int(pk))
+            except User.DoesNotExist:
+                messages.warning("Usuário com o ID {} não encontrado".format(pk))
+            except ValueError:
+                try:
+                    coordinator = User.objects.get(username__startswith=pk)
+                except User.DoesNotExist:
+                    coordinator = None
+                    messages.warning("Usuário com o nome {} não encontrado".format(pk))
+            except TypeError:
+                coordinator = None
+
+        course = Course(**dfilter(request.POST, ["name", "slug", "time"]))
+
+        if coordinator is not None and has_role(coordinator, ["coordinator", "admin"]):
+            messages.warning("Usuário {} não tem privilégios para ser um coordenador")
+        else:
+            course.coordinator = coordinator
+
+        course.save()
+        messages.success("Curso {} criado com sucesso".format(request.POST.get("slug")))
+        return redirect("courses_editor")
+
     return render(
         request,
         "management/courses_editor.html",
@@ -130,6 +158,7 @@ def courses_editor(request: HttpRequest):
 
 
 @require_POST
+@check_permission("create_subject")
 def create_subject(request: HttpRequest):
     if "import" in request.POST:
         lines, headers = read_csv(request, "import_file")
