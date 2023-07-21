@@ -138,10 +138,10 @@ def courses_editor(request: HttpRequest):
 
         course = Course(**dfilter(request.POST, ["name", "slug", "time"]))
 
-        if coordinator is not None and has_role(coordinator, ["coordinator", "admin"]):
-            messages.warning(request, "Usuário {} não tem privilégios para ser um coordenador")
-        else:
+        if coordinator is not None and has_role(coordinator, ["coordinator", "admin", "teacher"]):
             course.coordinator = coordinator
+        else:
+            messages.warning(request, "Usuário {} não tem privilégios para ser um coordenador")
 
         course.save()
         messages.success(request, "Curso {} criado com sucesso".format(request.POST.get("slug")))
