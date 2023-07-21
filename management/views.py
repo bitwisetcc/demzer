@@ -126,25 +126,25 @@ def courses_editor(request: HttpRequest):
             try:
                 coordinator = User.objects.get(pk=int(pk))
             except User.DoesNotExist:
-                messages.warning("Usuário com o ID {} não encontrado".format(pk))
+                messages.warning(request, "Usuário com o ID {} não encontrado".format(pk))
             except ValueError:
                 try:
                     coordinator = User.objects.get(username__startswith=pk)
                 except User.DoesNotExist:
                     coordinator = None
-                    messages.warning("Usuário com o nome {} não encontrado".format(pk))
+                    messages.warning(request, "Usuário com o nome {} não encontrado".format(pk))
             except TypeError:
                 coordinator = None
 
         course = Course(**dfilter(request.POST, ["name", "slug", "time"]))
 
         if coordinator is not None and has_role(coordinator, ["coordinator", "admin"]):
-            messages.warning("Usuário {} não tem privilégios para ser um coordenador")
+            messages.warning(request, "Usuário {} não tem privilégios para ser um coordenador")
         else:
             course.coordinator = coordinator
 
         course.save()
-        messages.success("Curso {} criado com sucesso".format(request.POST.get("slug")))
+        messages.success(request, "Curso {} criado com sucesso".format(request.POST.get("slug")))
         return redirect("courses_editor")
 
     return render(

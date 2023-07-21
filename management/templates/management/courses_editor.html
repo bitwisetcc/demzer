@@ -7,7 +7,7 @@
 </script>
 {% endblock %} {% block content %}
 <main
-  class="framed m-8 min-h-fit"
+  class="framed m-8 min-h-fit p-3"
   x-data="{ courseDialog: false, subjectDialog: false, importDialog: false }"
 >
   <div class="flex">
@@ -60,22 +60,22 @@
           <label for="bx-time">Horário</label>
           <div id="bx-time">
             <div>
-              <input type="radio" name="time" id="rd-morning" value="M">
+              <input type="radio" name="time" id="rd-morning" value="M" />
               <label for="rd-morning">Manhã</label>
             </div>
             <div>
-              <input type="radio" name="time" id="rd-evening" value="E">
+              <input type="radio" name="time" id="rd-evening" value="E" />
               <label for="rd-evening">Tarde</label>
             </div>
             <div>
-              <input type="radio" name="time" id="rd-night" value="N">
+              <input type="radio" name="time" id="rd-night" value="N" />
               <label for="rd-night">Noite</label>
             </div>
           </div>
         </div>
         <div class="field">
           <label for="txt-coordinator">Coordenador</label>
-          <input type="text" name="coordinator" id="txt-coordinator">
+          <input type="text" name="coordinator" id="txt-coordinator" />
         </div>
         <div class="mt-3 flex gap-2">
           <button @click.prevent="courseDialog = false" class="btn">
@@ -167,14 +167,16 @@
       </form>
     </dialog>
   </div>
-  <footer class="flex gap-2 p-3">
+  <footer class="flex gap-2">
     <button class="btn" @click="subjectDialog = true">
       Adicionar matérias
     </button>
     <ul class="flex gap-2 text-slate-600">
       {% for subj in subjects %}
       <li class="rounded-lg bg-slate-300 p-2">
-        <abbr title="{{ subj.name }}" class="decoration-transparent">{{ subj.slug }}</abbr>
+        <abbr title="{{ subj.name }}" class="decoration-transparent"
+          >{{ subj.slug }}</abbr
+        >
       </li>
       {% endfor %}
       <li class="rounded-lg bg-slate-300 p-2">...</li>
