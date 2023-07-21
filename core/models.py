@@ -179,7 +179,7 @@ class Course(Model):
     slug = SlugField(max_length=7, default="-")
     subjects = ManyToManyField(Subject)
     time = CharField(max_length=1, choices=Timing.choices, default=Timing.MORNING)
-    coordinator = ForeignKey(Member, SET_NULL, null=True, related_name="courses")
+    coordinator = ForeignKey(User, SET_NULL, null=True, related_name="courses")
 
     class Meta:
         verbose_name = _("curso")

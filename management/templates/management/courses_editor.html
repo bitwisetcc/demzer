@@ -8,18 +8,34 @@
 {% endblock %} {% block content %}
 <main
   class="framed m-8 min-h-fit p-3"
-  x-data="{ courseDialog: false, subjectDialog: false, importDialog: false }"
+  x-data="{ courseDialog: false, subjectDialog: false, importDialog: false, name: '', slug: '', time: '', coordinator: '' }"
 >
-  <div class="flex mb-3">
-    <aside class="w-1/6 border-r-gray-600">
-      <table class="table-auto border-collapse border border-gray-600">
+  <div class="mb-3 flex">
+    <aside class="mr-4 w-1/6 border-r-gray-600">
+      <table class="w-full table-auto border-collapse border border-gray-600">
         <tbody>
           {% for course in courses %}
-          <tr><td>{{ course.slug }}</td></tr>
+          <tr
+            class="cursor-pointer"
+            @click="() => { 
+              name = '{{ course.name }}';
+              slug = '{{ course.slug }}';
+              time = '{{ course.get_time_display }}';
+              coordinator = '{{ course.coordinator }}'
+            }"
+            {% if forloop.first %}
+            x-init="$nextTick(() => $el.click())"
+            {% endif %}
+          >
+            <td>{{ course.slug }}</td>
+          </tr>
           {% endfor %}
           <tr>
             <td class="border border-gray-400">
-              <button class="flex items-center gap-1" @click="courseDialog = true">
+              <button
+                class="flex items-center gap-1"
+                @click="courseDialog = true"
+              >
                 <span>Adicionar</span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -42,7 +58,16 @@
       </table>
     </aside>
     <article>
-      {% if courses %} {% else %}
+      {% if courses %}
+      <div>
+        <h2 class="text-2xl font-semibold">
+          <span x-text="name"></span> -
+          <span class="text-lg font-medium text-gray-600" x-text="slug"></span>
+        </h2>
+        <p><strong>Horário:</strong> <span x-text="time"></span></p>
+        <p><strong>Coordenador:</strong> <span x-text="coordinator"></span></p>
+      </div>
+      {% else %}
       <span class="font-mono text-2xl font-medium text-slate-500">
         Nenhum curso encontrado :(
       </span>
