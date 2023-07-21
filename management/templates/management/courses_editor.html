@@ -10,32 +10,36 @@
   class="framed m-8 min-h-fit p-3"
   x-data="{ courseDialog: false, subjectDialog: false, importDialog: false }"
 >
-  <div class="flex">
+  <div class="flex mb-3">
     <aside class="w-1/6 border-r-gray-600">
-      <ul>
-        {% for course in courses %}
-        <li>{{ course.slug }}</li>
-        {% endfor %}
-        <li>
-          <button class="flex items-center gap-1" @click="courseDialog = true">
-            <span>Adicionar</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="h-5 w-5"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M12 4.5v15m7.5-7.5h-15"
-              />
-            </svg>
-          </button>
-        </li>
-      </ul>
+      <table class="table-auto border-collapse border border-gray-600">
+        <tbody>
+          {% for course in courses %}
+          <tr><td>{{ course.slug }}</td></tr>
+          {% endfor %}
+          <tr>
+            <td class="border border-gray-400">
+              <button class="flex items-center gap-1" @click="courseDialog = true">
+                <span>Adicionar</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="h-5 w-5"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M12 4.5v15m7.5-7.5h-15"
+                  />
+                </svg>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </aside>
     <article>
       {% if courses %} {% else %}
