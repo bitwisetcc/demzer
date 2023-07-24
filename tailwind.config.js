@@ -11,8 +11,9 @@ module.exports = {
         "color-bg-perfil": "#F5F5F5",
         "color-boletim": "#D7D4D4",
         "color-name-boletim": "#4A73AC",
-        "color-dark-orange": "#D0A661",
+        "color-dark-orange": "#CD9028",
         "color-grey": "#EDECEC",
+        "color-hover": "#E8C17E",
       }
     },
     fontFamily: {

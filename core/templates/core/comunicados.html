@@ -2,9 +2,10 @@
 
 {% endblock %} {% block content %} 
 <div class="flex justify-center min-h-full pt-24">
-  <div class="text-[30px] text-color-txt-perfil font-semibold w-[50%]">
+  <div class="text-[40px] text-color-txt-perfil font-semibold w-[50%]">
     <div class="grid grid-cols-2">
     Comunicados
+    
     
       <div class="flex justify-self-end col-start-2 w-max text-color-txt-perfil ">
         <button id="openModalButton">
@@ -14,7 +15,7 @@
             viewBox="0 0 24 24" 
             stroke-width="1.5" 
             stroke="currentColor" 
-            class="w-6 h-6"
+            class="w-8 h-8"
             >
             <path 
             stroke-linecap="round" 
@@ -25,10 +26,85 @@
         </button>
       </div>
     </div>
-    <div id="modal" class="hidden">
-      asdasdad
-      <button id="closeModalButton" class="">Fechar</button>
-    </div>
+    <form>
+      <div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-25 justify-center items-center">
+        <div class="w-[600px] h-[600px] bg-color-grey rounded-3xl">
+          <div class="text-3xl font-bold mt-8 mx-10 flex flex-row justify-between">
+            <div>Filtrar Comunicado</div>
+            <div>
+              <button id="closeModalButton" class="text-3xl font-bold text-color-txt-perfil">
+                <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke-width="1.5" 
+                stroke="currentColor" 
+                class="w-6 h-6">
+                  <path 
+                  stroke-linecap="round" 
+                  stroke-linejoin="round" 
+                  d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="flex flex-row pb-10 pt-8 justify-center">
+            <div class="relative">
+              <button type="button" class="absolute inset-y-0 left-0 flex items-center pt-5 pl-3">
+                <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke-width="1.5" 
+                stroke="currentColor" 
+                class="w-6 h-6">
+                  <path 
+                  stroke-linecap="round" 
+                  stroke-linejoin="round" 
+                  d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                </svg>
+              </button>
+              <input type="text" class="bg-gray-50 border border-color-txt-perfil text-gray-900 text-sm rounded-lg w-96 pl-10">
+            </div>
+            <div class="relative">
+              <button type="reset" class="absolute inset-y-0 right-0 flex items-center pt-5 pr-3">
+                <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke-width="1.5" 
+                stroke="currentColor" 
+                class="w-6 h-6">
+                  <path 
+                  stroke-linecap="round" 
+                  stroke-linejoin="round" 
+                  d="M6 18L18 6M6 6l12 12" />
+                </svg>              
+              </button>
+            </div>
+          </div>
+          <div class="flex flex-row justify-between px-16 text-lg font-normal">
+            <label>De: <input type="date" class="rounded-3xl border-color-txt-perfil"></label>
+            <label>Até: <input type="date" class="rounded-3xl border-color-txt-perfil"></label>
+          </div>
+          <div class="flex flex-col space-y-5 text-lg font-normal w-full pl-16 pt-10">
+            <label><input type="checkbox" class="h-5 w-5 border-color-txt-perfil transition"> Palestras </label>
+            <label><input type="checkbox" class="h-5 w-5 border-color-txt-perfil transition"> Eventos </label>
+            <label><input type="checkbox" class="h-5 w-5 border-color-txt-perfil transition"> Reuniões </label>
+            <label><input type="checkbox" class="h-5 w-5 border-color-txt-perfil transition"> Outros </label>
+          </div>
+          <div class="flex flex-row justify-center space-x-5 text-lg pt-10">
+            <button class="font-bold text-color-dark-orange hover:bg-color-hover border-color-dark-orange border-solid border-2 rounded-full py-1 px-12 transition">
+              Limpar
+            </button>
+            <button class="font-bold text-color-dark-orange hover:bg-color-hover border-color-dark-orange border-solid border-2 rounded-full py-1 px-12 transition">
+              Aplicar
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
 
     <div class="grid grid-cols-2 gap-16 pt-14 ml-4" :class="open ? 'gap-x-48' : ''">
       <div class="h-[300px] w-[350px] rounded-2xl shadow-xl bg-color-bg-perfil">
