@@ -142,6 +142,7 @@
               name="cpf"
               id="txt-cpf"
               class="w-full"
+              :class="cpfOk || 'border-red-500'"
               required
               x-model="cpf"
               x-mask="999.999.999-99"
@@ -154,6 +155,7 @@
               name="rg"
               id="txt-rg"
               class="w-full"
+              :class="rgOk || 'border-red-500'"
               required
               x-model="rg"
               x-mask="99.999.999-9"
@@ -276,7 +278,7 @@
         </div>
         <button
           class="btn mt-2 rounded-lg font-semibold"
-          @click="tab = 'contato'"
+          @click="switchTab()"
         >
           Próximo
         </button>
@@ -354,6 +356,7 @@
               class="w-full"
               x-model="city"
               required
+              :disabled="$refs.cep.value == ''"
             />
           </div>
           <div class="field grow">
@@ -365,6 +368,7 @@
               class="w-full"
               x-model="neighborhood"
               required
+              :disabled="$refs.cep.value == ''"
             />
           </div>
         </div>
@@ -377,6 +381,7 @@
               id="txt-street"
               class="w-full"
               x-model="street"
+              :disabled="$refs.cep.value == ''"
             />
           </div>
           <div class="field">
