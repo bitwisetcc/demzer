@@ -1,0 +1,131 @@
+{% extends 'core/base.html' %} {% load static %} {% block head %}
+{% endblock %} {% block content %}
+<div class="flex justify-center min-h-full pt-24 ">
+    <div class="text-[30px] text-color-txt-perfil font-semibold w-[50%]">Solicitações de Nota</div>
+</div>
+<div class="flex justify-center text-gray-500 pt-8 sm:hidden">Clique na solicitação para respondê-la</div>
+
+<div class="max-w-sm mx-auto text-[12px] pb-6 pt-14 sm:max-w-4xl sm:text-[17px]">
+<div class="bg-white rounded-[50px]" x-data="{selected:0}">
+
+        <button type="button" class="w-full py-6 text-left sm:px-8" @click="selected !== 1 ? selected = 1 : selected = null">
+        <div  class="border-spacing-[10px] pl-4 sm:pl-0">    
+          <table>
+                <tr>
+                  <th class="text-[15px] text-color-txt-perfil font-bold pl-3 max-w-none sm:text-[20px]">Afonso da Fonseca - 3ºGT</th>
+                </tr>
+                <tr>
+                  <td rowspan="3" class="text-gray-500 border-none text-justify pr-8 max-w-xl">No dia tal tal tal o professor deu uma prova de código e a nota que eu obtive foi mb e também ele deu uma outra atividade prática que fiquei com mb, porém minha nota final foi b. Gostaria de pedir uma reconsiderção de nota, contando que minha nota final seria mb.</td>
+                  <td class="text-color-secondary border-none">Matéria:</td>
+                  <td class="text-color-secondary border-none ">Desenvolvimento de Sistemas</td>
+                  <td rowspan="3" class="border-none invisible sm:visible">
+                    <svg 
+                      xmlns="http://www.w3.org/2000/svg" 
+                      fill="none" 
+                      viewBox="0 0 24 24" 
+                      stroke-width="1.5" 
+                      stroke="currentColor" 
+                      class="w-6 h-6 text-color-txt-perfil transition" 
+                      :class="selected && 'rotate-180'">
+                        <path 
+                        stroke-linecap="round" 
+                        stroke-linejoin="round" 
+                        d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                    </svg>
+                  </td>
+                </tr>
+                <tr>
+                    <td class="text-color-secondary border-none">Instrumento:</td>
+                    <td class="text-color-secondary border-none">Prova Escrita</td>
+                </tr>
+                <tr>
+                    <td class="text-color-secondary border-none">Menção:</td>
+                    <td class="text-color-secondary border-none">B</td>
+                </tr>
+            </table>
+          </div>
+        </button>
+
+        <div class=" overflow-hidden transition-all max-h-0 duration-500" x-ref="container1" x-bind:style="selected == 1 ? 'max-height: ' + $refs.container1.scrollHeight + 'px' : ''">
+            <div class="p-6 flex justify-center">
+      <table>
+              <tr>
+                <td class="text-color-txt-perfil border-none font-semibold" colspan="2">Resposta:</td>
+              </tr>
+              <tr>
+                <td rowspan="2" class="border-none"><textarea cols="75" rows="4" placeholder="Digite sua resposta" maxlength="300" required class="sm:resize-none w-52 text-[12px] sm:w-full sm:text-[17px]"></textarea></td>
+                <td class="text-color-txt-perfil border-none font-semibold"><input type="radio" name="nota1" value="alter" class="checked:bg-color-txt-perfil checked:hover:bg-color-txt-perfil" required> Nota Alterada</td>
+              </tr>
+              <tr>
+                <td class="text-color-txt-perfil border-none font-semibold"><input type="radio" name="nota1" value="naoalter" class="checked:bg-color-txt-perfil checked:hover:bg-color-txt-perfil">Nota Não Alterada</td>
+              </tr>
+              <tr>
+                <td colspan="2" class="border-none text-center"><input type="submit" value="Enviar" class="bg-white border border-color-secondary text-color-secondary font-bold sm:text-[20px] pl-4 pr-4 p-2 sm:pl-8 sm:pr-8 sm:p-2 rounded-[50px] hover:bg-color-secondary/50"></td>
+              </tr>
+      </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-sm mx-auto text-[12px] pb-6 pt-14 sm:max-w-4xl sm:text-[17px]">
+      <div class="bg-white rounded-[50px]" x-data="{selected:0}">
+      
+              <button type="button" class="w-full py-6 text-left sm:px-8" @click="selected !== 1 ? selected = 1 : selected = null">
+              <div  class="border-spacing-[10px] pl-4 sm:pl-0">    
+                <table>
+                      <tr>
+                        <th class="text-[15px] text-color-txt-perfil font-bold pl-3 max-w-none sm:text-[20px]">Bezerra Pombal da Pomba Pombina - 2ºHT</th>
+                      </tr>
+                      <tr>
+                        <td rowspan="3" class="text-gray-500 border-none text-justify pr-8 max-w-xl">No dia tal tal tal o professor deu uma prova de código e a nota que eu obtive foi b e também ele deu uma outra atividade prática que fiquei com mb, porém minha nota final foi r. Gostaria de pedir uma reconsiderção de nota, contando que minha nota final seria mb ou b.</td>
+                        <td class="text-color-secondary border-none">Matéria:</td>
+                        <td class="text-color-secondary border-none ">PW2</td>
+                        <td rowspan="3" class="border-none invisible sm:visible">
+                          <svg 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            fill="none" 
+                            viewBox="0 0 24 24" 
+                            stroke-width="1.5" 
+                            stroke="currentColor" 
+                            class="w-6 h-6 text-color-txt-perfil transition" 
+                            :class="selected && 'rotate-180'">
+                        <path 
+                            stroke-linecap="round" 
+                            stroke-linejoin="round" 
+                            d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                    </svg>
+                        </td>
+                      </tr>
+                      <tr>
+                          <td class="text-color-secondary border-none">Instrumento:</td>
+                          <td class="text-color-secondary border-none">Atividade Prática</td>
+                      </tr>
+                      <tr>
+                          <td class="text-color-secondary border-none">Menção:</td>
+                          <td class="text-color-secondary border-none">R</td>
+                      </tr>
+                  </table>
+                </div>
+              </button>
+      
+              <div class=" overflow-hidden transition-all max-h-0 duration-500" x-ref="container1" x-bind:style="selected == 1 ? 'max-height: ' + $refs.container1.scrollHeight + 'px' : ''">
+                  <div class="p-6 flex justify-center">
+            <table>
+                    <tr>
+                      <td class="text-color-txt-perfil border-none font-semibold" colspan="2">Resposta:</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="2" class="border-none"><textarea cols="75" rows="4" placeholder="Digite sua resposta" maxlength="300" required class="sm:resize-none w-52 text-[12px] sm:w-full sm:text-[17px]"></textarea></td>
+                      <td class="text-color-txt-perfil border-none font-semibold"><input type="radio" name="nota2" value="alter" class="checked:bg-color-txt-perfil checked:hover:bg-color-txt-perfil" required> Nota Alterada</td>
+                    </tr>
+                    <tr>
+                      <td class="text-color-txt-perfil border-none font-semibold"><input type="radio" name="nota2" value="naoalter" class="checked:bg-color-txt-perfil checked:hover:bg-color-txt-perfil">Nota Não Alterada</td>
+                    </tr>
+                    <tr>
+                      <td colspan="2" class="border-none text-center"><input type="submit" value="Enviar" class="bg-white border border-color-secondary text-color-secondary font-bold sm:text-[20px] pl-4 pr-4 p-2 sm:pl-8 sm:pr-8 sm:p-2 rounded-[50px] hover:bg-color-secondary/50"></td>
+                    </tr>
+            </table>
+                  </div>
+              </div>
+          </div>
+{% endblock %}

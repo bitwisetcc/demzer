@@ -226,3 +226,6 @@ def provas(request: HttpRequest):
 
 def reporte(request: HttpRequest):
     return render(request, "core/reporte.html")
+
+def solicitacoes(request: HttpRequest):
+    return render(request, "core/solicitacoes.html")

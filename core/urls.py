@@ -19,6 +19,7 @@ urlpatterns = [
     path("horario/", horario, name="horario"),
     path("provas/", provas, name="provas"),
     path("reporte/", reporte, name="reporte"),
+    path("solicitacoes/", solicitacoes, name="solicitacoes"),
 ]
 
 
