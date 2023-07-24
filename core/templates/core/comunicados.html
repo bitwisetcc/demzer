@@ -3,10 +3,34 @@
 {% endblock %} {% block content %} 
 <div class="flex justify-center min-h-full pt-24">
   <div class="text-[30px] text-color-txt-perfil font-semibold w-[50%]">
+    <div class="grid grid-cols-2">
     Comunicados
-  
+    
+      <div class="flex justify-self-end col-start-2 w-max text-color-txt-perfil ">
+        <button id="openModalButton">
+          <svg 
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke-width="1.5" 
+            stroke="currentColor" 
+            class="w-6 h-6"
+            >
+            <path 
+            stroke-linecap="round" 
+            stroke-linejoin="round" 
+            d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" 
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div id="modal" class="hidden">
+      asdasdad
+      <button id="closeModalButton" class="">Fechar</button>
+    </div>
 
-    <div class="grid grid-cols-2 gap-16 pt-14 ml-4">
+    <div class="grid grid-cols-2 gap-16 pt-14 ml-4" :class="open ? 'gap-x-48' : ''">
       <div class="h-[300px] w-[350px] rounded-2xl shadow-xl bg-color-bg-perfil">
           <img class="h-[178px] w-full rounded-2xl" src="{% static '/core/images/img1.jpeg' %}">
         <div class="ml-2">
