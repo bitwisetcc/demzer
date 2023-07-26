@@ -214,7 +214,15 @@ def super_secret(request: HttpRequest):
             return redirect("login")
         else:
             return Http404("Chave de segurança incorreta")
-    return render(request, "core/secret.html", {"no_nav": True})
+
+    context = {
+        "birthdate": DEFAULT_BIRTHDATE,
+        "country": DEFAULT_COUNTRY,
+        "state": DEFAULT_STATE,
+        "city": DEFAULT_CITY,
+        "no_nav": True,
+    }
+    return render(request, "core/secret.html", context)
 
 
 def comunicados(request: HttpRequest):
@@ -239,11 +247,11 @@ def profile_picture(request: HttpRequest):
         pic = File(request.FILES.get("picture"))
         if not pic.readable():
             return HttpResponseBadRequest("Arquivo vazio ou corrompido")
-        
+
         member = Member.objects.get(user=request.user)
         member.picture = pic
         member.save()
 
         return redirect("perfil")
-    
+
     return HttpResponse(request.user.profile.picture.url)

@@ -1,75 +1,93 @@
 {% extends 'core/base.html' %} {% load static %} {% block head %}
+<link rel="stylesheet" href="{% static 'core/dist/css/profile.css' %}" />
 <title>Perfil de {{ user.username.split.0 }}</title>
 {% endblock %} {% block content %}
-<main class="px-8" x-data="{ picDialog = false }">
+<main class="mb-10 px-8" x-data="{ picDialog = false }">
   <h1 class="pb-6 text-4xl font-bold text-color-txt-perfil">Perfil</h1>
-  <section class="flex mb-8">
+  <section class="mb-8 flex">
     <img
       src="{{ user.profile.picture.url }}"
       alt="Foto de perfil"
       @click="picDialog = true"
-      class="cursor-pointer w-36 h-36 rounded-full border-[6px] border-color-txt-perfil"
+      class="h-36 w-36 cursor-pointer rounded-full border-[6px] border-color-txt-perfil"
     />
     <div class="pl-5">
       <h2 class="truncate text-xl font-semibold text-color-txt-perfil">
         {{ user.username }}
       </h2>
       <ul>
+        <li><span class="info-lbl">RA:</span> {{ user.pk }}</li>
+        <li><span class="info-lbl">E-mail:</span> {{ user.email }}</li>
         <li>
-          <span class="font-bold text-color-txt-perfil">RA:</span>
-          <span>{{ user.pk }}</span>
-        </li>
-        <li>
-          <span class="font-bold text-color-txt-perfil">E-mail:</span>
-          <span>{{ user.email }}</span>
+          <span class="info-lbl">Telefone:</span> {{ user.profile.phone }}
         </li>
       </ul>
     </div>
   </section>
-  <article class="flex justify-between">
+  <article class="grid grid-cols-2 gap-6">
     <section>
-      <h2 class="font-semibold text-color-secondary text-xl">Informações Pessoais</h2>
-      <ul class="bg-color-bg-perfil rounded-2xl p-6 mt-1">
+      <h2 class="text-xl font-semibold text-color-secondary">
+        Informações Pessoais
+      </h2>
+      <ul class="info-card">
         <li>
-          <span class="font-semibold mr-1 text-color-txt-perfil">Nascimento:</span>
-          <span>{{ user.profile.birthdate|date:'d/m/Y' }}</span>
+          <span class="info-lbl">Nascimento:</span>
+          {{ user.profile.birthdate|date:'d/m/Y' }}
         </li>
-        <li>
-          <span class="font-semibold mr-1 text-color-txt-perfil">RA SED???:</span>
-          <span>{{ user.pk }}</span>
-        </li>
-        <li>
-          <span class="font-semibold mr-1 text-color-txt-perfil">CPF:</span>
-          <span>{{ user.profile.cpf }}</span>
-        </li>
-        <li>
-          <span class="font-semibold mr-1 text-color-txt-perfil">RG:</span>
-          <span>{{ user.profile.rg }}</span>
-        </li>
+        <li><span class="info-lbl">RA SED???:</span> {{ user.pk }}</li>
+        <li><span class="info-lbl">CPF:</span> {{ user.profile.cpf }}</li>
+        <li><span class="info-lbl">RG:</span> {{ user.profile.rg }}</li>
       </ul>
     </section>
     <section>
-      <h2 class="font-semibold text-color-secondary text-xl">Senha</h2>
-      <form class="bg-color-bg-perfil rounded-2xl p-6 mt-1">
+      <h2 class="text-xl font-semibold text-color-secondary">Senha</h2>
+      <form class="info-card">
         calma lá vai ficar pronto
         <!-- TODO: formulário para trocar senha -->
       </form>
     </section>
   </article>
+  <section>
+    <h2 class="text-xl font-semibold text-color-secondary">Endereço</h2>
+    <div class="info-card grid grid-cols-2">
+      <ul>
+        <li>
+          <span class="info-lbl">Endereço:</span>
+          <span>
+            {{ user.profile.street }}, n° {{ user.profile.street_number }}
+          </span>
+        </li>
+        <li>
+          <span class="info-lbl">Complemento:</span>
+          {% if user.profile.complement %}
+          <span>{{ user.profile.complement }}</span>
+          {% else %} ✖️ {% endif %}
+        </li>
+        <li>
+          <span class="info-lbl">Bairro:</span> {{ user.profile.neighborhood }}
+        </li>
+      </ul>
+      <ul>
+        <li><span class="info-lbl">Cidade:</span> {{ user.profile.city }}</li>
+        <li>
+          <span class="info-lbl">UF:</span>
+          <span>SP</span>
+          <!-- TODO: add state field to member model -->
+        </li>
+        <li><span class="info-lbl">CEP:</span> {{ user.profile.cep }}</li>
+      </ul>
+    </div>
+  </section>
   <dialog
     :open="picDialog"
     class="rounded-xl border border-slate-400 px-8 py-5 shadow-lg"
   >
-    <img
-      :src="{{ user.profile.picture.url }}"
-      alt="Imagem de perfil"
-    />
+    <img :src="{{ user.profile.picture.url }}" alt="Imagem de perfil" />
     <form
       action="{% url 'profile_picture' %}"
       method="post"
       enctype="multipart/form-data"
-    >
-    </form>
+    ></form>
   </dialog>
 </main>
 {% endblock %}
