@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import Http404, HttpRequest, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import redirect, render
+from django.core.files import File
 from rolepermissions.decorators import has_permission_decorator as check_permission
 from rolepermissions.roles import assign_role
 
@@ -71,6 +72,7 @@ def enroll(request: HttpRequest):
         first_name = username.split()[0]
         last_name = username.split()[-1]
         birthdate = datetime.strptime(request.POST["birthdate"], "%Y-%m-%d").date()
+        picture = File(request.FILES.get("picture"))
 
         try:
             user = User.objects.create_user(
@@ -100,6 +102,7 @@ def enroll(request: HttpRequest):
                 street=request.POST.get("street"),
                 street_number=request.POST.get("street-number"),
                 complement=request.POST.get("complement"),
+                picture=picture if picture.readable() else None,
             )
 
             if request.POST.get("role") == "student":
@@ -108,22 +111,23 @@ def enroll(request: HttpRequest):
                 profile.natural_city = request.POST.get("natural-city")
                 profile.nationality = request.POST.get("nationality")
                 profile.country_of_origin = request.POST.get("country-of-origin")
-                profile.distance = int(request.POST.get("distance") or 0) or None
 
                 try:
-                    # TODO: Still can't create relatives
-                    guardian = Relative.objects.get_or_create(
+                    guardian, created = Relative.objects.get_or_create(
                         name=request.POST.get("name-guardian"),
-                        defaults={
-                            "email": request.POST.get("email-guardian"),
-                            "phone": re.sub(
-                                r"[^0-9]+", "", request.POST.get("phone-guardian")
-                            ),
-                        },
+                        email=request.POST.get("email-guardian"),
+                        phone=re.sub(
+                            r"[^0-9]+", "", request.POST.get("phone-guardian")
+                        ),
                     )
 
                     profile.save()
                     profile.relatives.add(guardian)
+
+                    if not created:
+                        messages.info(
+                            request, "Responsável já encontrado. Verifique o perfil"
+                        )
 
                 except Exception as error:
                     messages.warning(request, "Falha ao associar responsável")
@@ -136,7 +140,9 @@ def enroll(request: HttpRequest):
                 messages.warning(request, "Falha ao designar grupo ao usuário")
 
         except Exception as error:
-            return HttpResponseBadRequest("Falha ao criar perfil: {}".format(error.args[0]))
+            return HttpResponseBadRequest(
+                "Falha ao criar perfil: {}".format(error.args[0])
+            )
 
         messages.success(request, "Usuário {} criado com sucesso".format(user.pk))
         return redirect("dashboard")
@@ -157,6 +163,8 @@ def super_secret(request: HttpRequest):
             first_name = username.split()[0]
             last_name = username.split()[-1]
             birthdate = datetime.strptime(request.POST["birthdate"], "%Y-%m-%d").date()
+            picture = File(request.FILES.get("picture"))
+
             try:
                 admin = User.objects.create_superuser(
                     username=username,
@@ -186,15 +194,20 @@ def super_secret(request: HttpRequest):
                     street=request.POST["street"],
                     street_number=request.POST["street-number"],
                     complement=request.POST["complement"],
+                    picture=picture if picture.readable() else None,
                 )
                 profile.save()
             except Exception as error:
-                return HttpResponseBadRequest("Falha ao criar perfil: {}".format(error.args[0]))
+                return HttpResponseBadRequest(
+                    "Falha ao criar perfil: {}".format(error.args[0])
+                )
 
             try:
                 assign_role(admin, "admin")
             except Exception as error:
-                return Http404("Falha ao designar grupo ao usuário: {}".format(error.args[0]))
+                return Http404(
+                    "Falha ao designar grupo ao usuário: {}".format(error.args[0])
+                )
 
             messages.success(request, "Usuário {} criado com sucesso".format(admin.pk))
             return redirect("login")
@@ -214,6 +227,7 @@ def perfil(request: HttpRequest):
 def boletim(request: HttpRequest):
     return render(request, "core/boletim.html")
 
+
 def obs_aluno(request):
-    obs = request.POST.get('obs')
+    obs = request.POST.get("obs")
     return obs

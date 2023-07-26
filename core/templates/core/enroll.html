@@ -7,6 +7,7 @@
   <form
     action="{% url 'enroll' %}"
     method="POST"
+    enctype="multipart/form-data"
     class="flex flex-col gap-3"
     @submit="submit"
     x-data="fields"
@@ -50,7 +51,7 @@
         </li>
         <li>
           <button
-            @click.prevent="tab = 'contato'"
+            @click.prevent="switchTab()"
             :class="tab == 'contato' && 'text-cyan-600'"
             class="transition-all"
           >
@@ -276,10 +277,7 @@
             <option value="N">Nenhuma</option>
           </select>
         </div>
-        <button
-          class="btn mt-2 rounded-lg font-semibold"
-          @click="switchTab()"
-        >
+        <button class="btn mt-2 rounded-lg font-semibold" @click="switchTab()">
           Próximo
         </button>
       </article>
@@ -332,19 +330,6 @@
           <button class="btn block" @click.prevent="fillCEP($refs.cep.value)">
             Completar
           </button>
-
-          <div class="field">
-            <label for="txt-distance">Distância</label>
-            <input
-              type="number"
-              name="distance"
-              id="txt-distance"
-              size="4"
-              min="0"
-              max="100"
-              step="0.1"
-            />
-          </div>
         </div>
         <div class="flex gap-3">
           <div class="field grow">
@@ -449,11 +434,37 @@
               <li x-text="err"></li>
             </template>
           </ul>
-          <input
-            type="submit"
-            class="mt-9 rounded-lg bg-cyan-700 px-8 py-3 font-semibold text-slate-100 shadow transition-all duration-300 hover:bg-cyan-800 hover:shadow-md"
-            value="Enviar"
-          />
+          <div class="flex gap-2">
+            <label
+              for="file-picture"
+              class="btn flex w-max cursor-pointer items-center gap-1"
+            >
+              <span>Foto de perfil</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="2.2"
+                stroke="currentColor"
+                class="h-5 w-5"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15"
+                />
+              </svg>
+            </label>
+            <input
+              type="file"
+              name="picture"
+              id="file-picture"
+              accept="image/*"
+              required
+              hidden
+            />
+            <button type="submit" class="btn">Enviar</button>
+          </div>
         </article>
       </template>
       <!-- Show instead a group option, class, subject etc. -->

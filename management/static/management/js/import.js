@@ -131,11 +131,6 @@ const validations = [
     test: (s) => s.length <= 20,
     tip: "Deve ter até 20 caracteres.",
   },
-  {
-    id: "distance",
-    test: (s) => Boolean(Number(s)),
-    tip: "Deve ser um número.",
-  },
 ];
 
 document.addEventListener("alpine:init", () => {
@@ -165,7 +160,6 @@ document.addEventListener("alpine:init", () => {
       "street_number",
       "complement",
       "public_schooling",
-      "distance",
     ],
     rows: [],
     headers: [],

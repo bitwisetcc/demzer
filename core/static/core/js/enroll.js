@@ -25,8 +25,13 @@ function validateCPF(cpf) {
 const validateName = (e) =>
   !/[A-Za-záàâãéèêíóôõúçñ\s]+$/.test(e.key) && e.preventDefault();
 
+/**
+ * 
+ * @param {KeyboardEvent} e 
+ */
 const validateNumber = (e) => {
-  e.key != "Backspace" &&
+  e.ctrlKey ||
+    e.key != "Backspace" &&
     e.key != "Delete" &&
     !/[0-9]+$/.test(e.key) &&
     e.preventDefault();
@@ -44,8 +49,7 @@ document.addEventListener("alpine:init", () => {
     switchTab() {
       this.cpfOk = validateCPF(this.cpf.replace(/[\./-]/g, ""));
       this.rgOk = this.rg.length == 12;
-      console.log(this.cpfOk && this.rgOk);
-      if (this.cpfOk && this.rgOk) this.tab = "contato" 
+      if (this.cpfOk && this.rgOk) this.tab = "contato";
     },
     submit(e) {
       this.errors = [];

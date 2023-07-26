@@ -5,6 +5,7 @@ from django.db.models import (
     ForeignKey,
     ManyToManyField,
     OneToOneField,
+    ImageField,
     SET_NULL,
     CASCADE,
 )
@@ -15,7 +16,6 @@ from django.db.models.fields import (
     EmailField,
     SlugField,
     BooleanField,
-    FloatField,
     IntegerField,
 )
 from django.contrib.auth.models import User
@@ -119,11 +119,12 @@ class Member(Model):
     street = CharField(max_length=40)
     street_number = IntegerField(default=1)
     complement = CharField(max_length=20)
-    distance = FloatField(default=0, null=True)
 
     relatives = ManyToManyField(Relative)
 
     course = ForeignKey("Course", SET_NULL, related_name="students", null=True)
+
+    picture = ImageField(upload_to="users/pictures", null=True)
 
     def json(self):
         return {
@@ -162,7 +163,6 @@ class Subject(Model):
     # ...
 
 
-# TODO: o curso deve ter um horário (M, T, N)
 class Course(Model):
     """
     The group of students that spend their time together. They go from room to room together etc.

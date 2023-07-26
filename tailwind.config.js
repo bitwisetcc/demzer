@@ -20,9 +20,6 @@ module.exports = {
       'glacial': ['Glacial'],
       'mono': ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", "monospace"],
     },
-    screens: {
-      'md': {'max': '768px'},
-    },
   },
   plugins: [require("@tailwindcss/forms")],
 }
