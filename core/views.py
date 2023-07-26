@@ -8,6 +8,7 @@ from django.db import IntegrityError
 from django.http import Http404, HttpRequest, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import redirect, render
 from django.core.files import File
+from django.views.decorators.http import require_POST
 from rolepermissions.decorators import has_permission_decorator as check_permission
 from rolepermissions.roles import assign_role
 
@@ -231,3 +232,18 @@ def boletim(request: HttpRequest):
 def obs_aluno(request):
     obs = request.POST.get("obs")
     return obs
+
+
+def profile_picture(request: HttpRequest):
+    if request.method == "POST":
+        pic = File(request.FILES.get("picture"))
+        if not pic.readable():
+            return HttpResponseBadRequest("Arquivo vazio ou corrompido")
+        
+        member = Member.objects.get(user=request.user)
+        member.picture = pic
+        member.save()
+
+        return redirect("perfil")
+    
+    return HttpResponse(request.user.profile.picture.url)
