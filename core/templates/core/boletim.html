@@ -1,267 +1,246 @@
 {% extends 'core/base.html' %} {% load static %} {% block head %}
-
+<title>Boletim</title>
+<link rel="stylesheet" href="{% static 'core/dist/css/boletim.css' %}" />
 {% endblock %} {% block content %}
-<div class="flex justify-center pb-40">
-  <div class="grid grid-cols-10 md:grid-rows-6 gap-10 pt-24">
-    <div class="col-start-2 text-[30px] text-color-txt-perfil font-semibold w-[50%]">
-      BOLETIM
-    </div>
-    
-    <div class="col-span-6 col-start-2 h-auto w-max rounded-3xl shadow-lg bg-color-boletim">
-      <table class="border-separate border-spacing-3 pl-2">
-        <thead>
-            <tr>
-              <th class="bg-color-boletim rounded-l-3xl"></th> <!-- empty -->
-              <th class="bg-color-dark-orange p-3 rounded-xl"> 1 ºBim </th>
-              <th class="bg-color-dark-orange p-3 rounded-xl"> 2 ºBim </th>
-              <th class="bg-color-dark-orange p-3 rounded-xl"> 3 ºBim </th>
-              <th class="bg-color-dark-orange p-3 rounded-xl"> 4 ºBim </th>
-              <th class="bg-color-dark-orange p-3 rounded-xl"> Final </th>
-              <th class="bg-color-dark-orange p-3 rounded-xl w-10"> Análise Conselho </th>
-              <th class="bg-color-dark-orange p-3 rounded-xl"> Recon </th>
-              <th class="bg-color-dark-orange p-3 rounded-xl"> Recla. </th>
-            </tr>
-        </thead>
-        <tbody >
-          <tr>
-            <td class="bg-color-name-boletim rounded-xl text-white text-center">Lingua Portuguêsa</td>
-            <td class="bg-color-grey rounded-t-lg border-none "></td>
-            <td class="bg-color-grey rounded-t-lg border-none"></td>
-            <td class="bg-color-grey rounded-t-lg border-none"></td>
-            <td class="bg-color-grey rounded-t-lg border-none"></td>
-            <td class="bg-color-grey rounded-t-lg border-none"></td>
-            <td class="bg-color-grey rounded-t-lg border-none"></td>
-            <td class="bg-color-grey rounded-t-lg border-none"></td>
-            <td class="bg-color-grey rounded-t-lg border-none"></td>
-          </tr>
-          <tr>
-            <td class="bg-color-name-boletim rounded-xl text-white text-center">Lingua Inglesa</td>
-            <td class="bg-color-grey border-none text-center">asdas</td>
-            <td class="bg-color-grey border-none text-center">asdas</td>
-            <td class="bg-color-grey border-none text-center">asd</td>
-            <td class="bg-color-grey border-none text-center">asd</td>
-            <td class="bg-color-grey border-none text-center">asd</td>
-            <td class="bg-color-grey border-none text-center">asd</td>
-            <td class="bg-color-grey border-none text-center">asd</td>
-            <td class="bg-color-grey border-none text-center">asd</td>
-          </tr>
-          <tr>
-            <td class="bg-color-name-boletim rounded-xl text-white text-center">Matemática</td>
-            <td class="bg-color-grey border-none text-center"></td>
-            <td class="bg-color-grey border-none text-center"></td>
-            <td class="bg-color-grey border-none text-center"></td>
-            <td class="bg-color-grey border-none text-center"></td>
-            <td class="bg-color-grey border-none text-center"></td>
-            <td class="bg-color-grey border-none text-center"></td>
-            <td class="bg-color-grey border-none text-center"></td>
-            <td class="bg-color-grey border-none text-center"></td>
-          <tr>
-            <td class="bg-color-name-boletim rounded-xl text-white text-center">TCC</td>
-            <td class="bg-color-grey border-none text-center"></td>
-            <td class="bg-color-grey border-none text-center"></td>
-            <td class="bg-color-grey border-none text-center"></td>
-            <td class="bg-color-grey border-none text-center"></td>
-            <td class="bg-color-grey border-none text-center"></td>
-            <td class="bg-color-grey border-none text-center"></td>
-            <td class="bg-color-grey border-none text-center"></td>
-            <td class="bg-color-grey border-none text-center"></td>
-          </tr>
-          <tr>
-            <td class="bg-color-name-boletim rounded-xl text-white text-center">Programação WEB</td>
-            <td class="bg-color-grey border-none text-center"></td>
-            <td class="bg-color-grey border-none text-center"></td>
-            <td class="bg-color-grey border-none text-center"></td>
-            <td class="bg-color-grey border-none text-center"></td>
-            <td class="bg-color-grey border-none text-center"></td>
-            <td class="bg-color-grey border-none text-center"></td>
-            <td class="bg-color-grey border-none text-center"></td>
-            <td class="bg-color-grey border-none text-center"></td>
-          </tr>
-          <tr>
-            <td class="bg-color-name-boletim rounded-xl text-white text-center ">Banco de Dados</td>
-            <td class="bg-color-grey border-none text-center"></td>
-            <td class="bg-color-grey border-none text-center"></td>
-            <td class="bg-color-grey border-none text-center"></td>
-            <td class="bg-color-grey border-none text-center"></td>
-            <td class="bg-color-grey border-none text-center"></td>
-            <td class="bg-color-grey border-none text-center"></td>
-            <td class="bg-color-grey border-none text-center"></td>
-            <td class="bg-color-grey border-none text-center"></td>
-          </tr>
-          <tr>
-            <td class="bg-color-name-boletim rounded-xl text-white text-center">Programação Mobile</td>
-            <td class="bg-color-grey rounded-b-lg border-none text-center"></td>
-            <td class="bg-color-grey rounded-b-lg border-none text-center"></td>
-            <td class="bg-color-grey rounded-b-lg border-none text-center"></td>
-            <td class="bg-color-grey rounded-b-lg border-none text-center"></td>
-            <td class="bg-color-grey rounded-b-lg border-none text-center"></td>
-            <td class="bg-color-grey rounded-b-lg border-none text-center"></td>
-            <td class="bg-color-grey rounded-b-lg border-none text-center"></td>
-            <td class="bg-color-grey rounded-b-lg border-none text-center"></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+<main class="px-8 pb-10">
+  <h1 class="text-3xl font-semibold text-color-txt-perfil">Boletim</h1>
+  <section class="box overflow-x-scroll lg:w-max">
+    <table class="main-table border-separate border-spacing-3 px-2">
+      <thead>
+        <tr>
+          <th><!-- empty --></th>
+          <th>1 ºBim</th>
+          <th>2 ºBim</th>
+          <th>3 ºBim</th>
+          <th>4 ºBim</th>
+          <th>Final</th>
+          <th>Conselho</th>
+          <th>Recon</th>
+          <th>Recla.</th>
+          <th><!-- empty --></th>
+          <th>Aulas</th>
+          <th>Faltas</th>
+          <th>Situação</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-tippy-content="Lingua Portuguesa">LPLC</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td><!-- empty --></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td data-tippy-content="Inglês">ING</td>
+          <td>asdas</td>
+          <td>asdas</td>
+          <td>asd</td>
+          <td>asd</td>
+          <td>asd</td>
+          <td>asd</td>
+          <td>asd</td>
+          <td>asd</td>
+          <td><!-- empty --></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td data-tippy-content="Matemática">MAT</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td><!-- empty --></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td data-tippy-content="Planejamento e Desenvolvimento de TCC">TCC</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td><!-- empty --></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td data-tippy-content="Programação Web I">PW2</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td><!-- empty --></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td data-tippy-content="Banco de Dados II">BD2</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td><!-- empty --></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td data-tippy-content="Programação Mobile II">PM2</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td><!-- empty --></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
 
-    <div class="flex col-span-2 md:row-start-2 h-auto w-max rounded-3xl bg-color-boletim shadow-lg" :class="open ? 'ml-52' : 'ml-6'">
-      <table class="border-separate border-spacing-3">
-        <thead>
-          <tr>
-            <th class="bg-color-dark-orange p-5 rounded-xl"> Aulas </th>
-            <th class="bg-color-dark-orange p-5 rounded-xl"> Faltas </th>
-            <th class="bg-color-dark-orange p-5 rounded-xl"> Situação </th>
-          </tr>
-        </thead>
-        <tbody >
-          <tr>
-            <td class="h-[50px] bg-color-grey rounded-t-lg border-none text-center">asd</td>
-            <td class=" bg-color-grey rounded-t-lg border-none text-center">asd</td>
-            <td class=" bg-color-grey rounded-t-lg border-none text-center">asd</td>
-          </tr>
-          <tr>
-            <td class="h-[50px] bg-color-grey border-none text-center"></td>
-            <td class=" bg-color-grey border-none text-center"></td>
-            <td class=" bg-color-grey border-none text-center"></td>
-          </tr>
-          <tr>
-            <td class="h-[50px] bg-color-grey border-none text-center"></td>
-            <td class=" bg-color-grey border-none text-center"></td>
-            <td class=" bg-color-grey border-none text-center"></td>
-          </tr>
-          <tr>
-            <td class="h-[50px] bg-color-grey border-none text-center"></td>
-            <td class=" bg-color-grey border-none text-center"></td>
-            <td class=" bg-color-grey border-none text-center"></td>
-          </tr>
-          <tr>
-            <td class="h-[50px] bg-color-grey border-none text-center"></td>
-            <td class=" bg-color-grey border-none text-center"></td>
-            <td class=" bg-color-grey border-none text-center"></td>
-          </tr>
-          <tr>
-            <td class="h-[50px] bg-color-grey border-none text-center"></td>
-            <td class=" bg-color-grey border-none text-center"></td>
-            <td class=" bg-color-grey border-none text-center"></td>
-          </tr>
-          <tr>
-            <td class="h-[50px] bg-color-grey rounded-b-lg border-none text-center"></td>
-            <td class=" bg-color-grey rounded-b-lg border-none text-center"></td>
-            <td class=" bg-color-grey rounded-b-lg border-none text-center"></td>
-          </tr>
-      </table>
+  <h2 class="text-3xl font-semibold text-color-txt-perfil">Total</h2>
+  <section
+    class="box grid grid-cols-1 gap-6 p-4 px-5 py-3 text-center sm:grid-cols-2 lg:w-max lg:grid-cols-4"
+  >
+    <div class="flex flex-col gap-3">
+      <span class="info bg-color-name-boletim">Aulas Dadas</span>
+      <span class="info bg-color-grey">222</span>
     </div>
+    <div class="flex flex-col gap-3">
+      <span class="info bg-color-name-boletim">Faltas</span>
+      <span class="info bg-color-grey">222</span>
+    </div>
+    <div class="flex flex-col gap-3">
+      <span class="info bg-color-name-boletim">Frequência</span>
+      <span class="info bg-color-grey">222</span>
+    </div>
+    <div class="flex flex-col gap-3">
+      <span class="info bg-color-name-boletim">Faltas Permitidas</span>
+      <span class="info bg-color-grey">222</span>
+    </div>
+  </section>
 
-    
+  <h2 class="truncate text-3xl font-semibold text-color-txt-perfil">
+    Ficha de Desempenho - Sala de Aula
+  </h2>
+  <section class="box p-4">
+    <table>
+      <thead>
+        <tr>
+          <th class="info bg-color-name-boletim">Instrumento</th>
+          <th class="info bg-color-name-boletim">Data</th>
+          <th class="info bg-color-name-boletim">Menção</th>
+          <th class="info bg-color-name-boletim">Observação</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="info bg-color-grey">oii</td>
+          <td class="info bg-color-grey">asdasd</td>
+          <td class="info bg-color-grey">asdasd</td>
+          <td>
+            <form method="POST">
+              {% if request.user.is_superuser %} {% csrf_token %}
+              <input
+                type="text"
+                name="obs"
+                class="info bg-color-grey"
+                maxlength="200"
+                placeholder="Escreva Aqui!"
+              />
+              <button type="submit" class="btn rounded-lg bg-color-dark-orange">
+                Enviar
+              </button>
+              {% else %}
+              <div class="cursor-not-allowed rounded-full bg-color-grey">
+                <p
+                  name="obs_student"
+                  value="{{ request.POST.obs }}"
+                  readonly
+                ></p>
+              </div>
+              {% endif %}
+            </form>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
 
-    <div class="col-span-6 col-start-3 md:row-start-3 h-[150px] w-full rounded-[50px] bg-color-boletim shadow-lg">
-      <div class="flex">
-        <p class="px-10 py-[58px] text-2xl">Total:</p
+  <section
+    class="relative col-start-3 col-end-9 flex h-full w-full flex-col justify-center rounded-[50px] bg-white"
+  >
+    <div class="flex items-center">
+      <label
+        class="ml-10 w-[700px] text-3xl font-semibold text-color-dark-orange"
+        :class="open ? 'text-xl' : 'text-3xl'"
+        >Reconsideração de Notas (Aberto até 00/00/0000)</label
+      >
+      <button id="openModalButton">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="absolute right-10 top-9 h-10 w-10 -translate-y-1/2 translate-x-1/2 transform"
         >
-        <div class="grid grid-cols-4 gap-10 w-full text-center pr-5 py-3"> <!-- ficaram faltando o alinhamento ao centro, pois acabei não conseguindo (bruno)-->
-          <div class="col-span-1">
-            <div class="flex justify-center h-14 mb-4 rounded-3xl items-center bg-color-dark-orange"><span class="font-semibold">Aulas Dadas </span></div>
-            <div class="flex justify-center h-14 rounded-3xl items-center bg-color-grey"><span class="text-3xl"> 222 </span></div>
-          </div>
-          <div class="col-span-1">
-            <div class="flex justify-center h-14 mb-4 rounded-3xl items-center bg-color-dark-orange"><span class="font-semibold">Faltas </span></div>
-            <div class="flex justify-center h-14 rounded-3xl items-center bg-color-grey"><span class="text-3xl"> 222 </span></div>
-          </div>
-          <div class="col-span-1">
-            <div class="flex justify-center h-14 mb-4 rounded-3xl items-center bg-color-dark-orange"><span class="font-semibold">Frequência </span></div>
-            <div class="flex justify-center h-14 rounded-3xl items-center bg-color-grey"><span class="text-3xl"> 222 </span></div>
-          </div>
-          <div class="col-span-1">
-            <div class="flex justify-center h-14 mb-4 rounded-3xl items-center bg-color-dark-orange"><span class="font-semibold">Faltas Permitidas </span></div>
-            <div class="flex justify-center h-14 rounded-3xl items-center bg-color-grey"><span class="text-3xl"> 222 </span></div>
-          </div>
-        </div>
-      </div>
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
+          />
+        </svg>
+      </button>
     </div>
-
-    
-
-    <div class="col-start-2 col-end-10 pb-6 h-auto w-full rounded-[50px] bg-color-boletim shadow-lg"> <!-- FICHA DE DESEMPENHO -->
-      <div class="flex justify-center">
-        <div class="w-11/12 h-10 mt-4 rounded-full font-semibold text-center p-2 bg-color-dark-orange"> Ficha de Desempanho - Sala de Aula </div>
-      </div>
-      <div class="grid grid-cols-11 gap-5 text-center pt-5" :class="open ? 'pl-28' : 'pl-0'">
-        <div class="col-span-3 col-start-2 h-10 pt-2 bg-color-name-boletim rounded-full" :class="open ? 'col-start-1' : 'col-start-2'">Instrumento</div>
-
-        <div class="col-span-2 pt-2 bg-color-name-boletim rounded-full">Data</div>
-
-        <div class="col-span-2 pt-2 bg-color-name-boletim rounded-full">Menção</div>
-
-        <div class="col-span-2 pt-2 bg-color-name-boletim rounded-full">Observação</div>
-      </div>
-
-      <div class="grid grid-cols-11 gap-5 text-center pt-5" :class="open ? 'pl-28' : 'pl-0'">
-        <div class="col-span-3 col-start-2 h-10 pt-2 bg-color-grey rounded-full" :class="open ? 'col-start-1' : 'col-start-2'">asdasd</div>
-
-        <div class="col-span-2 pt-2 bg-color-grey rounded-full">asdasd</div>
-
-        <div class="col-span-2 pt-2 bg-color-grey rounded-full">asdasd</div>
-
-        <div class="col-span-2 pt-2 bg-color-grey rounded-full">asdasd</div>
-      </div>
-
-      <div class="grid grid-cols-11 gap-5 text-center pt-2" :class="open ? 'pl-28' : 'pl-0'">
-        <div class="col-span-3 col-start-2 h-10 pt-2 bg-color-grey rounded-full" :class="open ? 'col-start-1' : 'col-start-2'">oii</div>
-
-        <div class="col-span-2 h-10 pt-2 bg-color-grey rounded-full">asdasd</div>
-
-        <div class="col-span-2 h-10 pt-2 bg-color-grey rounded-full">asdasd</div>
-        
-        
-        <form action="?" method="POST" class="flex col-span-2 space-x-3">{% csrf_token %}
-          {% if request.user.is_superuser %}
-          <input type="text" 
-          name="obs"
-          class="pt-2 bg-color-grey rounded-full border-none"
-          maxlength="200" 
-          placeholder="Escreva Aqui!">
-
-          <button type="submit" class="flex-shrink-0 bg-color-dark-orange hover:bg-color-secondary text-sm text-white py-1 px-2 rounded transition">
-            Enviar
-          </button>
-
-          {% else %}
-          <div class="flex h-10 w-full pt-2 bg-color-grey rounded-full border-none cursor-not-allowed">
-            <p name="obs_student" value="{{ request.POST.obs }}" readonly>
-          </div>
-          {% endif %}
-        </form>
-      </div>
+    <div id="modal" class="hidden">
+      asdasdad
+      <button id="closeModalButton">Fechar</button>
     </div>
-
-    <div class="col-span-2 w-0">
-    </div>
-
-      <div class="flex flex-col col-start-3 col-end-9 h-[80px] w-full rounded-[50px] bg-white justify-center relative">
-        <div class="flex items-center">
-          <label class="ml-10 text-3xl font-semibold w-[700px] text-color-dark-orange" :class="open ? 'text-xl' : 'text-3xl'" >Reconsideração de Notas (Aberto até 00/00/0000)</label>
-            <button id="openModalButton">
-              <svg 
-                    xmlns="http://www.w3.org/2000/svg" 
-                    fill="none" 
-                    viewBox="0 0 24 24" 
-                    stroke-width="1.5" 
-                    stroke="currentColor" 
-                    class="w-10 h-10 absolute top-9 right-10 transform -translate-y-1/2 translate-x-1/2"
-                    >
-                      <path 
-                      stroke-linecap="round" 
-                      stroke-linejoin="round" 
-                      d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" 
-                      />
-              </svg>
-            </button>
-        </div>
-        <div id="modal" class="hidden">
-          asdasdad
-          <button id="closeModalButton" class="">Fechar</button>
-        </div>
-        <label class="ml-10 text-base text-gray-400">Clique no botão para conseguir sua reconsideração de nota</label>
-      </div>
-    </div>
-  </div>
+    <label class="ml-10 text-base text-gray-400">
+      Clique no botão para conseguir sua reconsideração de nota
+    </label>
+  </section>
+</main>
 {% endblock %}

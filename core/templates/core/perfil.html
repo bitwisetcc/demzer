@@ -2,13 +2,12 @@
 <link rel="stylesheet" href="{% static 'core/dist/css/profile.css' %}" />
 <title>Perfil de {{ user.username.split.0 }}</title>
 {% endblock %} {% block content %}
-<main class="mb-10 px-8" x-data="{ picDialog = false }">
+<main class="mb-10 px-8">
   <h1 class="pb-6 text-4xl font-bold text-color-txt-perfil">Perfil</h1>
   <section class="mb-8 flex">
     <img
       src="{{ user.profile.picture.url }}"
       alt="Foto de perfil"
-      @click="picDialog = true"
       class="h-36 w-36 cursor-pointer rounded-full border-[6px] border-color-txt-perfil"
     />
     <div class="pl-5">
@@ -78,16 +77,5 @@
       </ul>
     </div>
   </section>
-  <dialog
-    :open="picDialog"
-    class="rounded-xl border border-slate-400 px-8 py-5 shadow-lg"
-  >
-    <img :src="{{ user.profile.picture.url }}" alt="Imagem de perfil" />
-    <form
-      action="{% url 'profile_picture' %}"
-      method="post"
-      enctype="multipart/form-data"
-    ></form>
-  </dialog>
 </main>
 {% endblock %}
