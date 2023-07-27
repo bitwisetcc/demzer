@@ -261,6 +261,9 @@ def homeprofessores(request: HttpRequest):
 def turmaprofessores(request: HttpRequest):
     return render(request, "core/turmaprofessores.html")
 
+def chamadaprofessores(request: HttpRequest):
+    return render(request, "core/chamadaprofessores.html")
+
 def reporte(request: HttpRequest):
     return render(request, "core/reporte.html")
 

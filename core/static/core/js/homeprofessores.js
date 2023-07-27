@@ -19,6 +19,9 @@ var carousel2Swiper = new Swiper(".carousel2", {
         prevEl: ".carousel2 .swiper-button-prev",
       },
       breakpoints:{
+        360: {
+            slidesPerView: 1,
+        },
         768: {
             slidesPerView: 2,
         },
@@ -28,5 +31,8 @@ var carousel2Swiper = new Swiper(".carousel2", {
         1280: {
             slidesPerView: 4,
         },
+        1536: {
+            slidesPerView: 5,
+      },
     },
 });
