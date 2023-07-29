@@ -1,13 +1,13 @@
 {% extends 'core/base.html' %} {% load static %} {% block head %}
 
 {% endblock %} {% block content %} 
-<div class="flex justify-center min-h-full pt-24">
-  <div class="text-[40px] text-color-txt-perfil font-semibold w-[50%]">
-    <div class="grid grid-cols-2">
+<div class="flex justify-center md2:justify-normal md2:pl-5 min-h-full pt-20 md2:pt-16">
+  <div class="text-[40px] text-color-txt-perfil font-semibold">
+    <div class="grid grid-cols-2 md2:grid-rows-2">
     Comunicados
     
     
-      <div class="flex justify-self-end col-start-2 w-max text-color-txt-perfil ">
+      <div class="flex justify-self-end md2:justify-self-start col-start-2 md2:col-start-1 md2:row-start-2 w-max text-color-txt-perfil">
         <button id="openModalButton">
           <svg 
             xmlns="http://www.w3.org/2000/svg"
@@ -89,16 +89,16 @@
             <label>Até: <input type="date" class="rounded-3xl border-color-txt-perfil"></label>
           </div>
           <div class="flex flex-col space-y-5 text-lg font-normal w-full pl-16 pt-10">
-            <label><input type="checkbox" class="h-5 w-5 border-color-txt-perfil transition"> Palestras </label>
-            <label><input type="checkbox" class="h-5 w-5 border-color-txt-perfil transition"> Eventos </label>
-            <label><input type="checkbox" class="h-5 w-5 border-color-txt-perfil transition"> Reuniões </label>
-            <label><input type="checkbox" class="h-5 w-5 border-color-txt-perfil transition"> Outros </label>
+            <label><input type="checkbox" class="h-5 w-5 border-color-txt-perfil rounded-full transition"> Palestras </label>
+            <label><input type="checkbox" class="h-5 w-5 border-color-txt-perfil rounded-full transition"> Eventos </label>
+            <label><input type="checkbox" class="h-5 w-5 border-color-txt-perfil rounded-full transition"> Reuniões </label>
+            <label><input type="checkbox" class="h-5 w-5 border-color-txt-perfil rounded-full transition"> Outros </label>
           </div>
           <div class="flex flex-row justify-center space-x-5 text-lg pt-10">
-            <button class="font-bold text-color-dark-orange hover:bg-color-hover border-color-dark-orange border-solid border-2 rounded-full py-1 px-12 transition">
+            <button type="reset" class="font-bold text-color-dark-orange hover:bg-color-hover border-color-dark-orange border-solid border-2 rounded-full py-1 px-12 transition">
               Limpar
             </button>
-            <button class="font-bold text-color-dark-orange hover:bg-color-hover border-color-dark-orange border-solid border-2 rounded-full py-1 px-12 transition">
+            <button type="submit" class="font-bold text-color-dark-orange hover:bg-color-hover border-color-dark-orange border-solid border-2 rounded-full py-1 px-12 transition">
               Aplicar
             </button>
           </div>
@@ -106,7 +106,7 @@
       </div>
     </form>
 
-    <div class="grid grid-cols-2 gap-16 pt-14 ml-4" :class="open ? 'gap-x-48' : ''">
+    <div class="grid grid-cols-2 md2:grid-cols-1 ultrawide:grid-cols-8 ultrawide:mx-4 gap-16 pt-14 sm:ml-4 sm2:ml-0" :class="open ? 'gap-x-40' : ''">
       <div class="h-[300px] w-[350px] rounded-2xl shadow-xl bg-color-bg-perfil">
           <img class="h-[178px] w-full rounded-2xl" src="{% static '/core/images/img1.jpeg' %}">
         <div class="ml-2">
