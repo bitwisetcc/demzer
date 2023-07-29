@@ -13,7 +13,7 @@ urlpatterns = [
     path("logout/", logout_user, name="logout"),
     path("enroll/", enroll, name="enroll"),
     path("comunicados/", comunicados, name="comunicados"),
-    path("perfil/", perfil, name="perfil"),
+    path("perfil/", perfil, name="profile"),
     path("boletim/", boletim, name="boletim"),
     path("user/picture", profile_picture, name="profile_picture")
 ]
