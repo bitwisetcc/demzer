@@ -212,7 +212,9 @@ def super_secret(request: HttpRequest):
                 )
 
             messages.success(request, "Usuário {} criado com sucesso".format(admin.pk))
-            return redirect("login")
+            
+            login(request, admin)
+            return redirect("profile")
         else:
             return Http404("Chave de segurança incorreta")
 

@@ -439,7 +439,7 @@
               for="file-picture"
               class="btn flex w-max cursor-pointer items-center gap-1"
             >
-              <span>Foto de perfil</span>
+              <span x-text="imageName ?? 'Foto de perfil'"></span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -462,6 +462,7 @@
               accept="image/*"
               required
               hidden
+              @input="imageName = $el.files[0].name"
             />
             <button type="submit" class="btn">Enviar</button>
           </div>
