@@ -34,6 +34,54 @@ class Relative(Model):
     phone = CharField(max_length=11)
 
 
+class Subject(Model):
+    """
+    The subject of a class; what the teacher is talking about.
+    """
+
+    name = CharField(max_length=63)
+    slug = CharField(max_length=5)
+    description = CharField(max_length=127, null=True)
+
+    def __str__(self) -> str:
+        return self.slug
+
+    class Meta:
+        verbose_name = _("matéria")
+        verbose_name_plural = _("matérias")
+
+    # ...
+
+
+class Course(Model):
+    """
+    The group of students that spend their time together. They go from room to room together etc.
+    The naming doesn't imply it, but there can be many 'generations' of a course.
+    Ex: 1st, 2nd and 3rd Philosophy and Sociology.
+    """
+
+    class Timing(TextChoices):
+        MORNING = "M", _("Manhã")
+        EVENING = "E", _("Tarde")
+        NIGHT = "N", _("Noite")
+
+    name = CharField(max_length=63)
+    slug = SlugField(max_length=7, default="-")
+    subjects = ManyToManyField(Subject)
+    time = CharField(max_length=1, choices=Timing.choices, default=Timing.MORNING)
+    coordinator = ForeignKey(User, SET_NULL, null=True, related_name="courses")
+
+    class Meta:
+        verbose_name = _("curso")
+        verbose_name_plural = _("cursos")
+
+
+class Classroom(Model):
+    name = CharField(max_length=63)
+    slug = SlugField(max_length=7, default="-")
+    #course = ForeignKey(Course, SET_NULL, related_name="classroom")
+
+
 class Member(Model):
     """
     The main character of the system. Can be a student, a teacher or an employee.
@@ -121,10 +169,11 @@ class Member(Model):
     complement = CharField(max_length=20)
 
     relatives = ManyToManyField(Relative)
-
-    course = ForeignKey("Course", SET_NULL, related_name="students", null=True)
-
+    #classrooms = ManyToManyField(
+     #   Classroom, SET_NULL, related_name="students", null=True
+    #)
     picture = ImageField(upload_to="users/pictures", null=True)
+    status = CharField(null=True, max_length=10)
 
     def json(self):
         return {
@@ -142,48 +191,6 @@ class Member(Model):
     class Meta:
         verbose_name = _("usuário")
         verbose_name_plural = _("usuários")
-
-
-class Subject(Model):
-    """
-    The subject of a class; what the teacher is talking about.
-    """
-
-    name = CharField(max_length=63)
-    slug = CharField(max_length=5)
-    description = CharField(max_length=127, null=True)
-
-    def __str__(self) -> str:
-        return self.slug
-
-    class Meta:
-        verbose_name = _("matéria")
-        verbose_name_plural = _("matérias")
-
-    # ...
-
-
-class Course(Model):
-    """
-    The group of students that spend their time together. They go from room to room together etc.
-    The naming doesn't imply it, but there can be many 'generations' of a course.
-    Ex: 1st, 2nd and 3rd Philosophy and Sociology.
-    """
-
-    class Timing(TextChoices):
-        MORNING = "M", _("Manhã")
-        EVENING = "E", _("Tarde")
-        NIGHT = "N", _("Noite")
-
-    name = CharField(max_length=63)
-    slug = SlugField(max_length=7, default="-")
-    subjects = ManyToManyField(Subject)
-    time = CharField(max_length=1, choices=Timing.choices, default=Timing.MORNING)
-    coordinator = ForeignKey(User, SET_NULL, null=True, related_name="courses")
-
-    class Meta:
-        verbose_name = _("curso")
-        verbose_name_plural = _("cursos")
 
 
 class Class(Model):
