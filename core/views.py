@@ -112,6 +112,7 @@ def enroll(request: HttpRequest):
                 profile.natural_city = request.POST.get("natural-city")
                 profile.nationality = request.POST.get("nationality")
                 profile.country_of_origin = request.POST.get("country-of-origin")
+                #profile.course = request.POST.get("course")
 
                 try:
                     guardian, created = Relative.objects.get_or_create(
