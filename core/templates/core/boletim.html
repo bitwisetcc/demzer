@@ -3,7 +3,22 @@
 <link rel="stylesheet" href="{% static 'core/dist/css/boletim.css' %}" />
 {% endblock %} {% block content %}
 <main class="px-8 pb-10">
-  <h1 class="text-3xl font-semibold text-color-txt-perfil">Boletim</h1>
+  <h1 class="text-3xl ml-12 my-8 font-semibold text-color-txt-perfil">Boletim</h1>
+  <label class="ml-12 text-color-txt-perfil">
+    Curso: <select class="text-zinc-500">
+              <option>Desenvolvimento de Sistemas</option>
+              <option>ooi</option>
+              <option>Bruno LM</option>
+            </select>
+  </label>
+  <label class="ml-12 text-color-txt-perfil">
+    Ano/Módulo: 
+            <select class="text-zinc-500">
+              <option>1º Ano</option>
+              <option>2º Ano</option>
+              <option>3º Ano</option>
+            </select>
+  </label>
   <section class="box overflow-x-scroll lg:w-max">
     <table class="main-table border-separate border-spacing-3 px-2">
       <thead>
@@ -234,10 +249,76 @@
         </svg>
       </button>
     </div>
-    <div id="modal" class="hidden">
-      asdasdad
-      <button id="closeModalButton">Fechar</button>
-    </div>
+    <form>
+      <div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-25 justify-center items-center">
+        <div class="w-[600px] h-[600px] bg-color-grey rounded-3xl text-color-txt-perfil">
+          <div class="text-3xl font-bold mt-8 mx-10 flex flex-row justify-between">
+            <div> Reconsideração de Nota </div>
+            <div>
+              <button id="closeModalButton" class="text-3xl font-bold text-color-txt-perfil">
+                <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke-width="1.5" 
+                stroke="currentColor" 
+                class="w-6 h-6">
+                  <path 
+                  stroke-linecap="round" 
+                  stroke-linejoin="round" 
+                  d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="mx-10">
+            <div class="flex flex-row pt-10 pb-3">
+              <label>
+                Matéria:
+                      <select class="text-zinc-500">
+                        <option>Lingua Portuguesa</option>
+                        <option>Variável Matéria</option>
+                        <option>Variável Matéria</option>
+                      </select>
+              </label>
+            </div>
+
+            <div class="flex flex-row py-3">
+              <label>
+                Instrumento:
+                      <select class="text-zinc-500">
+                        <option>Prova</option>
+                        <option>Atividade</option>
+                        <option>Outros</option>
+                      </select>
+              </label>
+            </div>
+
+            <div class="flex flex-row py-3">
+              <label>
+                Menção:
+                      <select class="text-zinc-500">
+                        <option>B</option>
+                        <option>Variável de notas</option>
+                        <option>Variável de notas</option>
+                      </select>
+              </label>
+            </div>
+            <div class="pt-3">
+              <label> 
+                Reclamação:
+                  <input type="text" class="h-[180px] w-[350px]">
+              </label>
+            </div>
+          </div>
+          <div class="flex flex-row justify-center space-x-5 text-lg pt-8">
+            <button type="submit" class="font-bold text-color-dark-orange hover:bg-color-hover border-color-dark-orange border-solid border-2 rounded-full py-1 px-12 transition">
+              Aplicar
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
     <label class="ml-10 text-base text-gray-400">
       Clique no botão para conseguir sua reconsideração de nota
     </label>
