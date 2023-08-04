@@ -11,10 +11,10 @@
     Reporte de Problemas
   </h1>
   <div class="flex flex-col justify-center">
-    <span class="mb-5 text-center text-[30px] text-color-primary">Assunto</span>
+    <span class="mb-8 text-center text-[30px] font-semibold text-color-primary">Assunto</span>
     <div class="flex justify-center">
       <div
-        class="flex h-[800px] w-[880] flex-col items-center justify-center rounded-2xl bg-white md:h-[180px] md:flex-row md:justify-center"
+        class="flex h-[800px] w-[880] flex-col items-center justify-center rounded-2xl bg-white md:h-[160px] md:flex-row md:justify-center"
       >
         <input type="radio" name="imagem" id="i1" class="hidden" />
         <label for="i1" class="flex flex-col items-center rounded-2xl">
@@ -22,12 +22,12 @@
             src="{% static '/core/images/professor.png' %}"
             class="h-16 w-16"
           />
-          <span class="mx-2 px-4 py-4">Professor(a)</span>
+          <span class="mx-2 px-3 py-4">Professor(a)</span>
         </label>
         <input type="radio" name="imagem" id="i2" class="hidden" />
         <label for="i2" class="flex flex-col items-center rounded-2xl">
           <img src="{% static '/core/images/aluno.png' %}" class="h-16 w-16" />
-          <span class="mx-2 px-7 py-4">Aluno(a)</span>
+          <span class="mx-2 px-6 py-4">Aluno(a)</span>
         </label>
         <input type="radio" name="imagem" id="i3" class="hidden" />
         <label for="i3" class="flex flex-col items-center rounded-2xl">
@@ -35,7 +35,7 @@
             src="{% static '/core/images/funcionario.png' %}"
             class="h-16 w-16"
           />
-          <span class="mx-2 px-2 py-4">Funcionário(a)</span>
+          <span class="mx-2 px-1 py-4">Funcionário(a)</span>
         </label>
         <input type="radio" name="imagem" id="i4" class="hidden" />
         <label for="i4" class="flex flex-col items-center rounded-2xl">
@@ -43,7 +43,7 @@
             src="{% static '/core/images/concerto.png' %}"
             class="h-16 w-16"
           />
-          <span class="mx-2 px-7 py-4">Concerto</span>
+          <span class="mx-2 px-6 py-4">Concerto</span>
         </label>
         <input type="radio" name="imagem" id="i5" class="hidden" />
         <label for="i5" class="flex flex-col items-center rounded-2xl">
@@ -51,27 +51,56 @@
             src="{% static '/core/images/limpeza.png' %}"
             class="h-16 w-16"
           />
-          <span class="mx-2 px-7 py-4">Limpeza</span>
+          <span class="mx-2 px-6 py-4">Limpeza</span>
         </label>
         <input type="radio" name="imagem" id="i6" class="hidden" />
         <label for="i6" class="flex flex-col items-center rounded-2xl">
           <img src="{% static '/core/images/outros.png' %}" class="h-16 w-16" />
-          <span class="mx-2 px-8 py-4">Outros</span>
+          <span class="mx-2 px-7 py-4">Outros</span>
         </label>
       </div>
     </div>
-    <span class="mb-5 mt-10 text-center text-[30px] text-color-primary"
+    <span class="mb-8 mt-8 text-center text-[30px] font-semibold text-color-primary"
       >Sobre</span
     >
     <div class="flex justify-center">
-      <div class="block h-[400px] w-[880px] rounded-2xl bg-white px-6 py-8">
+      <div class="block h-[385px] w-[880px] rounded-2xl bg-white px-6 py-8">
         <div class="field flex-grow">
           <textarea
             id="reclamacao"
             name="reclamacao"
-            class="h-80 w-full rounded border border-gray-300 px-4 py-2"
+            class="h-80 w-full rounded border border-gray-300 px-4 py-2 resize-none"
             placeholder="Digite sua reclamação aqui"
           ></textarea>
+        </div>
+      </div>
+    </div>
+    <span class="mb-8 mt-8 text-center text-[30px] font-semibold text-color-primary"
+      >Upload a File</span
+    >
+    <div class="flex items-center justify-center">
+      <div class="p-6 w-[880px] bg-white rounded-lg shadow-md">
+        <div class="bg-gray-300 rounded-md p-4">
+          <div class="flex justify-center space-x-4">
+            <i class="fas fa-file-image text-4xl transform -rotate-45"></i>
+            <i class="fas fa-file-alt text-2xl transform -translate-y-4"></i>
+            <i class="fas fa-file-pdf text-4xl transform rotate-45"></i>
+          </div>
+          <label class="cursor-pointer">
+            <div class="rounded-md p-4 mt-6 text-center">
+              <div x-data="{ isUploading: false }" x-on:dragover="isUploading = true" x-on:dragleave="isUploading = false" x-on:drop="isUploading = false">
+                <div x-show="isUploading" class="text-indigo-800 font-semibold text-sm">
+                  Drop to upload
+                </div>
+                <div x-show="!isUploading">
+                  <input type="file" class="hidden" x-on:change="isUploading = true" x-ref="fileInput" x-bind:disabled="isUploading">
+                  <p class="text-indigo-800 font-semibold text-sm mt-2">
+                    Drag and drop files here, or <a href="#" class="text-blue-600 border-b border-dotted border-blue-600" x-on:click.prevent="$refs.fileInput.click()">browse</a> your computer.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </label>
         </div>
       </div>
     </div>

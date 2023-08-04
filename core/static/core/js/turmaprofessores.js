@@ -1,24 +1,6 @@
-var carousel3Swiper = new Swiper(".carousel3", {
-      spaceBetween: 10,
-      keyboard: {
-        enabled: true,
-      },
-      navigation: {
-        nextEl: ".carousel2 .swiper-button-next",
-        prevEl: ".carousel2 .swiper-button-prev",
-      },
-      breakpoints:{
-        768: {
-            slidesPerView: 2,
-        },
-        1024: {
-            slidesPerView: 3,
-        },
-        1280: {
-            slidesPerView: 4,
-        },
-    },
-});
+const inputDate = document.getElementById('dataAtual');
+const dataAtual = new Date().toISOString().split('T')[0];
+inputDate.value = dataAtual;
 
 function selectButton(index) {
   const contents = document.querySelectorAll('[id^="content-"]');
@@ -35,7 +17,7 @@ function selectButton(index) {
 
   const selectedContent = document.getElementById(`content-${index}`);
   selectedContent.classList.remove('hidden');
-  
+
   const selectedItem = document.querySelector(`[onclick="selectButton(${index})"]`);
   selectedItem.classList.add('selected');
 
