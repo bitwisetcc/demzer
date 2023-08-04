@@ -1,14 +1,19 @@
 {% extends 'core/base.html' %} {% load static %} {% block head %}
 
+<script defer src="{% static 'core/js/comunicados.js' %}"></script>
+
 {% endblock %} {% block content %} 
 <div class="flex justify-center md2:justify-normal md2:pl-5 min-h-full pt-20 md2:pt-16">
   <div class="text-[40px] text-color-txt-perfil font-semibold">
     <div class="grid grid-cols-2 md2:grid-rows-2">
     Comunicados
     
-    
       <div class="flex justify-self-end md2:justify-self-start col-start-2 md2:col-start-1 md2:row-start-2 w-max text-color-txt-perfil">
-        <button id="openModalButton">
+        <button id="openComunicate"><!-- FOR OPEN CREATE COMUNICATE -->
+          <label class="text-base"> Criar Comunicados </label>
+        </button>
+
+        <button id="openModalButton"> <!-- FOR OPEN FILTER -->
           <svg 
             xmlns="http://www.w3.org/2000/svg"
             fill="none" 
@@ -26,10 +31,54 @@
         </button>
       </div>
     </div>
-    <form>
+    <form><!-- FORM FOR CREATE COMUNICATE-->
+      <div id="modalComunicate" class="hidden fixed inset-0 bg-black bg-opacity-25 justify-center items-center">
+        <div class="w-[600px] h-[600px] bg-color-grey rounded-3xl">
+          <div class="flex flex-row text-3xl font-bold mt-8 mx-10 justify-between">
+            <div>Criar Comunicado</div>
+            <div>
+              <button id="closeModalButton" class="text-3xl font-bold text-color-txt-perfil">
+                <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke-width="1.5" 
+                stroke="currentColor" 
+                class="w-6 h-6">
+                  <path 
+                  stroke-linecap="round" 
+                  stroke-linejoin="round" 
+                  d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div >
+            <div class="flex flex-col text-lg font-normal px-12 pt-8">
+              <label>Titulo do comunicado:</label>
+              <input type="text" class="h-10" placeholder="Digite aqui!">
+            </div>
+            <div class="flex flex-row text-lg font-normal px-12 pt-8">
+              <label>Data de Lançamento: <input type="date"></label>
+            </div>
+            <div class="flex flex-col h-full text-lg font-normal px-12 pt-8">
+              <label class="pb-2">Escreva o Comunicado:</label>
+              <textarea class="h-[180px] w-full resize-none" placeholder="Digite o Comunicado aqui!"></textarea>
+            </div>
+            <div class="flex justify-center pt-6">
+              <button type="submit" class="text-2xl font-bold text-color-dark-orange hover:bg-color-hover border-color-dark-orange border-solid border-2 rounded-full h-12 w-32 transition">
+                Aplicar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <form> <!-- FORM FOR FILTER -->
       <div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-25 justify-center items-center">
         <div class="w-[600px] h-[600px] bg-color-grey rounded-3xl">
-          <div class="text-3xl font-bold mt-8 mx-10 flex flex-row justify-between">
+          <div class="flex flex-row text-3xl font-bold mt-8 mx-10 justify-between">
             <div>Filtrar Comunicado</div>
             <div>
               <button id="closeModalButton" class="text-3xl font-bold text-color-txt-perfil">
