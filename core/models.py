@@ -79,7 +79,7 @@ class Course(Model):
 class Classroom(Model):
     name = CharField(max_length=63)
     slug = SlugField(max_length=7, default="-")
-    #course = ForeignKey(Course, SET_NULL, related_name="classroom")
+    course = ForeignKey(Course, SET_NULL, related_name="classroom", null=True)
 
 
 class Member(Model):
@@ -150,6 +150,7 @@ class Member(Model):
     birthdate = DateField(default=DEFAULT_BIRTHDATE)
     afro = BooleanField(default=False)
     indigenous = BooleanField(default=False)
+    deficiencies = CharField(null=True, max_length=50)
 
     natural_state = CharField(
         choices=States.choices, default=DEFAULT_STATE, max_length=2, null=True
@@ -169,9 +170,9 @@ class Member(Model):
     complement = CharField(max_length=20)
 
     relatives = ManyToManyField(Relative)
-    #classrooms = ManyToManyField(
-     #   Classroom, SET_NULL, related_name="students", null=True
-    #)
+    classrooms = ManyToManyField(
+        Classroom, related_name="students"
+    )
     picture = ImageField(upload_to="users/pictures", null=True)
     status = CharField(null=True, max_length=10)
 
