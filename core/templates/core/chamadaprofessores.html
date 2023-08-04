@@ -57,11 +57,11 @@
         <span class="my-2 flex justify-center text-xl text-color-primary"
           >Quantidade</span
         >
-        <input
-        type="number"
-        class="w-full rounded-full text-center"
-        id="QuantAulas"/>
-        
+        <select id="quantidade" class="w-full rounded-full text-center">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+        </select>
       </div>
     </div>
   </div>
@@ -71,7 +71,7 @@
     Chamada
   </h1>
   <div class="flex w-full justify-center">
-    <div class="mt-2 grid w-full grid-cols-1 gap-4 md:grid-cols-3">
+    <div class="mt-2 grid w-full grid-cols-1 gap-4">
       <label
         class="flex w-full cursor-pointer items-center justify-between space-x-2 rounded-full border bg-white px-4 py-2 transition-colors duration-300"
       >
@@ -237,6 +237,22 @@
       value="Enviar"
       class="text-bold rounded-full border border-color-secondary bg-color-secondary-dimm px-12 py-4 text-[21px] font-bold text-color-secondary md:mx-auto md:mt-3 md:block"
     />
+  </div>
+  
+  <div class="overflow-x-auto">
+    <table class="min-w-full bg-white">
+      <thead>
+        <tr class="bg-gray-200">
+          <th class="py-2 px-4 text-left">Nome</th>
+          <th id="checkbox-header" class="py-2 px-4 text-left">Checkbox 1</th>
+        </tr>
+      </thead>
+      <tbody id="table-body">
+        <tr class="border-b border-gray-300">
+          <td class="py-2 px-4">Item 1</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </main>
 {% endblock %}
