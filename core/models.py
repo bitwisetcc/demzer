@@ -64,6 +64,7 @@ class Course(Model):
         MORNING = "M", _("Manhã")
         EVENING = "E", _("Tarde")
         NIGHT = "N", _("Noite")
+        FULL = "F", _("Integral")
 
     name = CharField(max_length=63)
     slug = SlugField(max_length=7, default="-")
@@ -77,8 +78,8 @@ class Course(Model):
 
 
 class Classroom(Model):
-    name = CharField(max_length=63)
     slug = SlugField(max_length=7, default="-")
+    year = IntegerField()
     course = ForeignKey(Course, SET_NULL, related_name="classroom", null=True)
 
 
@@ -175,6 +176,7 @@ class Member(Model):
     )
     picture = ImageField(upload_to="users/pictures", null=True)
     status = CharField(null=True, max_length=10)
+    division = CharField(max_length=1, null=True)
 
     def json(self):
         return {
@@ -206,7 +208,7 @@ class Class(Model):
         THURSDAY = "THU", _("Quinta-feira")
         SUNDAY = "SUN", _("Sexta-feira")
 
-    course = ForeignKey("Course", CASCADE, related_name="+")
+    classroom = ForeignKey("Classroom", CASCADE, related_name="+")
     teacher = ForeignKey(settings.AUTH_USER_MODEL, SET_NULL, null=True)
     student_group = PositiveSmallIntegerField(null=True)
     subject = ForeignKey("Subject", SET_NULL, related_name="+", null=True)
@@ -226,6 +228,9 @@ class Assessment(Model):
     pass
 
 
+class Event(Model):
+    pass
+    # if course and classroom are both null, it's meant only for staff (teachers, adms, staff, coordinators etc.)
 """
 - is_staff ?
 - is_active ? -> celery
