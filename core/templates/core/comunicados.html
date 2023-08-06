@@ -1,5 +1,5 @@
 {% extends 'core/base.html' %} {% load static %} {% block head %}
-
+<script defer src="{% static 'core/js/filter.js' %}"></script>
 {% endblock %} {% block content %} 
 <div class="flex justify-center md2:justify-normal md2:pl-5 min-h-full pt-20 md2:pt-16">
   <div class="text-[40px] text-color-txt-perfil font-semibold">
@@ -107,13 +107,13 @@
     </form>
 
     <div class="grid grid-cols-2 md2:grid-cols-1 ultrawide:grid-cols-8 ultrawide:mx-4 gap-16 pt-14 sm:ml-4 sm2:ml-0" :class="open ? 'gap-x-40' : ''">
-      <div class="h-[300px] w-[350px] rounded-2xl shadow-xl bg-color-bg-perfil">
-          <img class="h-[178px] w-full rounded-2xl" src="{% static '/core/images/img1.jpeg' %}">
-        <div class="ml-2">
-          <label class="text-gray-500 font-normal text-xs text-right"> 08/11/2005 </label><!--Here we need to put a date when the communicate was registered-->
-          <p class="text-black font-bold text-base">asdasdas</p>
+        <div class="h-[300px] w-[350px] rounded-2xl shadow-xl bg-color-bg-perfil">
+            <img class="h-[178px] w-full rounded-2xl" src="{% static '/core/images/img1.jpeg' %}">
+          <div class="ml-2">
+            <label class="text-gray-500 font-normal text-xs text-right"> 08/11/2005 </label><!--Here we need to put a date when the communicate was registered-->
+            <p class="text-black font-bold text-base">asdasdas</p>
+          </div>
         </div>
-      </div>
       <div class="h-[300px] w-[350px] rounded-2xl shadow-xl bg-color-bg-perfil">
           <img class="h-[178px] w-full rounded-2xl" src="{% static '/core/images/img1.jpeg' %}">
         <div class="ml-2">
