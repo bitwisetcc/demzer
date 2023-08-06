@@ -23,7 +23,9 @@ function validateCPF(cpf) {
 }
 
 const validateName = (e) =>
-  !/[A-Za-záàâãéèêíóôõúçñ\s]+$/.test(e.key) && e.preventDefault();
+  !/[A-Za-záàâãéèêíóôõúçñ\s\.]+$/.test(e.key) && e.preventDefault();
+
+const validateEmail = (e) => !/[a-z0-9@\.]/.test(e.key) && e.preventDefault();
 
 /**
  *
