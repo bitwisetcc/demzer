@@ -8,9 +8,11 @@ from django.db import IntegrityError
 from django.http import Http404, HttpRequest, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import redirect, render
 from django.core.files import File
-from django.views.decorators.http import require_POST
 from rolepermissions.decorators import has_permission_decorator as check_permission
+from rolepermissions.decorators import has_role_decorator as check_role
+from rolepermissions.checkers import has_role
 from rolepermissions.roles import assign_role
+from django.db.models import Q
 
 from backend.settings import (
     DEFAULT_BIRTHDATE,
@@ -214,7 +216,7 @@ def super_secret(request: HttpRequest):
                 )
 
             messages.success(request, "Usuário {} criado com sucesso".format(admin.pk))
-            
+
             login(request, admin)
             return redirect("profile")
         else:
@@ -230,8 +232,40 @@ def super_secret(request: HttpRequest):
     return render(request, "core/secret.html", context)
 
 
+@login_required
 def comunicados(request: HttpRequest):
-    return render(request, "core/comunicados.html")
+    if request.method == "POST" and has_role(request.user, "admin"):
+        picture = File(request.FILES.get("image"))
+        private = "staff_only" not in request.POST
+        course = request.POST.get("course")
+        classroom = request.POST.get("classroom")
+
+        pk = Announcement.objects.create(
+            title=request.POST.get("title"),
+            info=request.POST.get("info"),
+            image=picture if picture.readable() else None,
+            private=private,
+            course=Course.objects.get(slug=course) if not private and course else None,
+            classroom=Classroom.objects.get(slug=classroom)
+            if not private and classroom
+            else None,
+        ).pk
+
+        messages.success(request, "Comunicado {} criado com sucesso".format(pk))
+
+    if has_role(request.user, "student"):
+        announcements = Announcement.objects.filter(
+            Q(private=False)
+            & (
+                Q(course=None, classroom=None)
+                | Q(classroom=request.user.profile.classroom)
+                # | Q(course=request.user.profile.classroom.courses)
+            )
+        )
+    else:
+        announcements = Announcement.objects.all()
+
+    return render(request, "core/comunicados.html", {"announcements": Announcement.objects.all()})
 
 
 def perfil(request: HttpRequest):

@@ -283,7 +283,7 @@
         </a>
       </li>
       <li class="hidden sm:block">
-        <div class="flex items-center rounded-3xl bg-color-primary-dimm px-1">
+        <div class="flex items-center justify-between rounded-3xl bg-color-primary-dimm px-1 py-2">
           <a href="{% url 'profile' %}">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -291,7 +291,7 @@
               viewBox="0 0 24 24"
               stroke-width="1.5"
               stroke="currentColor"
-              class="h-14 w-14"
+              class="h-12 w-12"
             >
               <path
                 stroke-linecap="round"
@@ -300,11 +300,11 @@
               />
             </svg>
           </a>
-          <div class="flex-col px-1 text-sm">
+          <div class="flex flex-col px-1 text-sm w-3/5">
             <span>
               {{ user.username.split.0.title }} {{ user.username.split.1.title }}
             </span>
-            <span>{{ user.email }}</span>
+            <span class="truncate block">{{ user.email }}</span>
           </div>
           <a href="{% url 'logout' %}" class="group">
             <svg
