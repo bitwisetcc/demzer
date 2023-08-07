@@ -20,6 +20,7 @@ from core.models import Class, Course, Member, Subject
 def students(request: HttpRequest, role: str, row=1):
     # TODO: check for authorization. If it's an admin, allow everything
     # If it's a teacher, check the classes they're connected to and then get the students
+    # TODO: use Users instead of Members
     return JsonResponse(
         {
             "users": [

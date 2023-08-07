@@ -13,14 +13,6 @@
         Criar Comunicado
       </button>
       {% endif %}
-
-<script defer src="{% static 'core/js/comunicados.js' %}"></script>
-
-{% endblock %} {% block content %} 
-<div class="flex justify-center md2:justify-normal md2:pl-5 min-h-full pt-20 md2:pt-16">
-  <div class="text-[40px] text-color-txt-perfil font-semibold">
-    <div class="grid grid-cols-2 md2:grid-rows-2">
-    Comunicados
     
       <div class="flex justify-self-end md2:justify-self-start col-start-2 md2:col-start-1 md2:row-start-2 w-max text-color-txt-perfil">
         <button id="openComunicate"><!-- FOR OPEN CREATE COMUNICATE -->
@@ -205,31 +197,6 @@
           </div>
         </section>
       </div>
-    </form>
-
-    <div class="grid grid-cols-2 md2:grid-cols-1 ultrawide:grid-cols-8 ultrawide:mx-4 gap-16 pt-14 sm:ml-4 sm2:ml-0" :class="open ? 'gap-x-40' : ''">
-        <div class="h-[300px] w-[350px] rounded-2xl shadow-xl bg-color-bg-perfil">
-            <img class="h-[178px] w-full rounded-2xl" src="{% static '/core/images/img1.jpeg' %}">
-          <div class="ml-2">
-            <label class="text-gray-500 font-normal text-xs text-right"> 08/11/2005 </label><!--Here we need to put a date when the communicate was registered-->
-            <p class="text-black font-bold text-base">asdasdas</p>
-          </div>
-        </div>
-      <div class="h-[300px] w-[350px] rounded-2xl shadow-xl bg-color-bg-perfil">
-          <img class="h-[178px] w-full rounded-2xl" src="{% static '/core/images/img1.jpeg' %}">
-        <div class="ml-2">
-          <label class="text-gray-500 font-normal text-xs text-right"> 08/11/2005 </label> <!--Here we need to put a date when the communicate was registered-->
-          <p class="text-black font-bold text-base">asdasdas</p>
-        </div>
-      </div>
-      <div class="h-[300px] w-[350px] rounded-2xl shadow-xl bg-color-bg-perfil">
-          <img class="h-[178px] w-full rounded-2xl" src="{% static '/core/images/img1.jpeg' %}">
-        <div class="ml-2">
-          <label class="text-gray-500 font-normal text-xs text-right"> 08/11/2005 </label> <!--Here we need to put a date when the communicate was registered-->
-          <p class="text-black font-bold text-base">asdasdas</p>
-        </div>
-      </div>
-
     </div>
   </form>
   <form>

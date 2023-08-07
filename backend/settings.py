@@ -36,6 +36,7 @@ SECURITY_KEY = "1234"
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+MEDIA_ROOT = BASE_DIR / "user_media"
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-j*9=2)w4ojo9evy9yje0kc)3aysl^e!p1m9w)j6)sr2akot4j="
@@ -101,7 +102,6 @@ TEMPLATES = [
 WSGI_APPLICATION = "backend.wsgi.application"
 
 DB_ENGINE = environ.get("DB_ENGINE", "sqlite3")
-
 
 if DB_ENGINE == "sqlite3":
     DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": BASE_DIR / "db.sqlite3"}}
