@@ -11,5 +11,4 @@ node_modules
 .parcel-cache
 tcc_front
 /static
-/users/
-/communicate/
+/user_media/
