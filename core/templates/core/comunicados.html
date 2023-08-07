@@ -1,8 +1,21 @@
-{% extends 'core/base.html' %} {% load static %} {% block head %}
+{% extends 'core/base.html' %} {% load static %} {% load permission_tags %} {% block head %}
+<title>Comunicados</title>
+{% endblock %} {% block content %}
+<main
+  class="m-20 min-h-full md2:justify-normal md2:pl-5 md2:pt-16"
+  x-data="{ createDialog: false, filterDialog: false }"
+>
+  <header class="flex w-full justify-between text-color-txt-perfil">
+    <h1 class="text-4xl font-semibold">Comunicados</h1>
+    <div class="flex gap-2">
+      {% if user|has_role:'admin' %}
+      <button @click="createDialog = true" class="text-base">
+        Criar Comunicado
+      </button>
+      {% endif %}
 
 <script defer src="{% static 'core/js/comunicados.js' %}"></script>
 
->>>>>>> a2622972dfc9378a3e7df1551aedf7013cebde17
 {% endblock %} {% block content %} 
 <div class="flex justify-center md2:justify-normal md2:pl-5 min-h-full pt-20 md2:pt-16">
   <div class="text-[40px] text-color-txt-perfil font-semibold">
@@ -30,130 +43,171 @@
             />
           </svg>
         </button>
+=======
+      <button @click="filterDialog = true">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="h-8 w-8"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"
+          />
+        </svg>
+      </button>
+    </div>
+  </header>
+  <article
+    class="grid w-full grid-cols-2 content-center gap-16 pt-14 sm:ml-4 md2:grid-cols-1 sm2:ml-0 ultrawide:mx-4 ultrawide:grid-cols-8"
+    :class="open ? 'gap-x-40' : ''"
+  >
+    {% for announcement in announcements %}
+    <div class="h-[300px] w-[350px] rounded-2xl bg-color-bg-perfil shadow-xl">
+      <img
+        class="h-[178px] w-full rounded-2xl"
+        src="{{ announcement.image.url }}"
+      />
+      <div class="ml-2">
+        <label class="text-right text-xs font-normal text-gray-500">
+          {{ announcement.date|date:'d/m/Y' }}
+        </label>
+        <!--Here we need to put a date when the communicate was registered-->
+        <h3 class="text-base font-bold text-black">{{ announcement.title }}</h3>
+>>>>>>> comunicados
       </div>
     </div>
-    <form><!-- FORM FOR CREATE COMUNICATE-->
-      <div id="modalComunicate" class="hidden fixed inset-0 bg-black bg-opacity-25 justify-center items-center">
-        <div class="w-[600px] h-[600px] bg-color-grey rounded-3xl">
-          <div class="flex flex-row text-3xl font-bold mt-8 mx-10 justify-between">
-            <div>Criar Comunicado</div>
-            <div>
-              <button id="closeModalButton" class="text-3xl font-bold text-color-txt-perfil">
-                <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                fill="none" 
-                viewBox="0 0 24 24" 
-                stroke-width="1.5" 
-                stroke="currentColor" 
-                class="w-6 h-6">
-                  <path 
-                  stroke-linecap="round" 
-                  stroke-linejoin="round" 
-                  d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-          </div>
-          <div >
-            <div class="flex flex-col text-lg font-normal px-12 pt-8">
-              <label>Titulo do comunicado:</label>
-              <input type="text" class="h-10" placeholder="Digite aqui!">
-            </div>
-            <div class="flex flex-row text-lg font-normal px-12 pt-8">
-              <label>Data de Lançamento: <input type="date"></label>
-            </div>
-            <div class="flex flex-col h-full text-lg font-normal px-12 pt-8">
-              <label class="pb-2">Escreva o Comunicado:</label>
-              <textarea class="h-[180px] w-full resize-none" placeholder="Digite o Comunicado aqui!"></textarea>
-            </div>
-            <div class="flex justify-center pt-6">
-              <button type="submit" class="text-2xl font-bold text-color-dark-orange hover:bg-color-hover border-color-dark-orange border-solid border-2 rounded-full h-12 w-32 transition">
-                Aplicar
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </form>
-
-    <form> <!-- FORM FOR FILTER -->
-      <div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-25 justify-center items-center">
-        <div class="w-[600px] h-[600px] bg-color-grey rounded-3xl">
-          <div class="flex flex-row text-3xl font-bold mt-8 mx-10 justify-between">
-            <div>Filtrar Comunicado</div>
-            <div>
-              <button id="closeModalButton" class="text-3xl font-bold text-color-txt-perfil">
-                <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                fill="none" 
-                viewBox="0 0 24 24" 
-                stroke-width="1.5" 
-                stroke="currentColor" 
-                class="w-6 h-6">
-                  <path 
-                  stroke-linecap="round" 
-                  stroke-linejoin="round" 
-                  d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <div class="flex flex-row pb-10 pt-8 justify-center">
-            <div class="relative">
-              <button type="button" class="absolute inset-y-0 left-0 flex items-center pt-5 pl-3">
-                <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                fill="none" 
-                viewBox="0 0 24 24" 
-                stroke-width="1.5" 
-                stroke="currentColor" 
-                class="w-6 h-6">
-                  <path 
-                  stroke-linecap="round" 
-                  stroke-linejoin="round" 
-                  d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-                </svg>
-              </button>
-              <input type="text" class="bg-gray-50 border border-color-txt-perfil text-gray-900 text-sm rounded-lg w-96 pl-10">
-            </div>
-            <div class="relative">
-              <button type="reset" class="absolute inset-y-0 right-0 flex items-center pt-5 pr-3">
-                <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                fill="none" 
-                viewBox="0 0 24 24" 
-                stroke-width="1.5" 
-                stroke="currentColor" 
-                class="w-6 h-6">
-                  <path 
-                  stroke-linecap="round" 
-                  stroke-linejoin="round" 
-                  d="M6 18L18 6M6 6l12 12" />
-                </svg>              
-              </button>
-            </div>
-          </div>
-          <div class="flex flex-row justify-between px-16 text-lg font-normal">
-            <label>De: <input type="date" class="rounded-3xl border-color-txt-perfil"></label>
-            <label>Até: <input type="date" class="rounded-3xl border-color-txt-perfil"></label>
-          </div>
-          <div class="flex flex-col space-y-5 text-lg font-normal w-full pl-16 pt-10">
-            <label><input type="checkbox" class="h-5 w-5 border-color-txt-perfil rounded-full transition"> Palestras </label>
-            <label><input type="checkbox" class="h-5 w-5 border-color-txt-perfil rounded-full transition"> Eventos </label>
-            <label><input type="checkbox" class="h-5 w-5 border-color-txt-perfil rounded-full transition"> Reuniões </label>
-            <label><input type="checkbox" class="h-5 w-5 border-color-txt-perfil rounded-full transition"> Outros </label>
-          </div>
-          <div class="flex flex-row justify-center space-x-5 text-lg pt-10">
-            <button type="reset" class="font-bold text-color-dark-orange hover:bg-color-hover border-color-dark-orange border-solid border-2 rounded-full py-1 px-12 transition">
-              Limpar
+    {% endfor %}
+  </article>
+  <form method="post" action="{% url 'comunicados' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    <!-- FORM FOR CREATE COMUNICATE-->
+    <div
+      :class="createDialog ? 'flex' : 'hidden'"
+      class="fixed inset-0 items-center justify-center bg-black bg-opacity-25"
+    >
+      <div
+        class="h-[600px] w-[600px] overflow-y-scroll rounded-3xl bg-color-grey pb-10"
+      >
+        <header class="mx-10 mb-3 mt-8 flex justify-between text-3xl font-bold">
+          <h2>Criar Comunicado</h2>
+          <div>
+            <button
+              @click.prevent="createDialog = false"
+              class="text-3xl font-bold text-color-txt-perfil"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="h-6 w-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
             </button>
-            <button type="submit" class="font-bold text-color-dark-orange hover:bg-color-hover border-color-dark-orange border-solid border-2 rounded-full py-1 px-12 transition">
+          </div>
+        </header>
+        <section class="flex flex-col gap-3">
+          <div class="flex flex-col px-12 text-lg font-normal">
+            <label>Titulo:</label>
+            <input type="text" class="h-10" name="title" required />
+          </div>
+          <div
+            class="flex items-center gap-1 px-12 text-lg font-normal"
+            x-data="{ imageName: 'Foto' }"
+          >
+            <label>Data de Lançamento:</label>
+            <input
+              type="date"
+              :min="new Date().toISOString().split('T')[0]"
+              :value="new Date().toISOString().split('T')[0]"
+              name="date"
+            />
+            <label
+              for="file-picture"
+              class="btn ml-3 flex w-max cursor-pointer items-center gap-1"
+            >
+              <span
+                class="truncate"
+                x-text="imageName ?? 'Foto de perfil'"
+              ></span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="2.2"
+                stroke="currentColor"
+                class="h-5 w-5"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15"
+                />
+              </svg>
+            </label>
+            <input
+              type="file"
+              name="image"
+              id="file-picture"
+              accept="image/*"
+              required
+              hidden
+              @input="imageName = $el.files[0].name"
+            />
+          </div>
+          <div class="flex h-full flex-col px-12 text-lg font-normal">
+            <label class="pb-2">Conteúdo:</label>
+            <textarea
+              class="h-[180px] w-full resize-none"
+              placeholder="Digite o Comunicado aqui"
+              name="info"
+              required
+            ></textarea>
+          </div>
+          <div class="flex items-center gap-1 px-12 text-lg font-normal">
+            <label>Apenas para professores:</label>
+            <input type="checkbox" name="staff_only" />
+          </div>
+          <div class="flex flex-col px-12 text-lg font-normal">
+            <label>Para o curso:</label>
+            <input
+              type="text"
+              class="h-10"
+              name="course"
+              placeholder="Deixe em branco para um comunicado geral"
+            />
+          </div>
+          <div class="flex flex-col px-12 text-lg font-normal">
+            <label>Para a turma:</label>
+            <input
+              type="text"
+              class="h-10"
+              name="course"
+              placeholder="Deixe em branco para um comunicado geral"
+            />
+          </div>
+          <div class="flex justify-center pt-6">
+            <button
+              type="submit"
+              class="h-12 w-32 rounded-full border-2 border-solid border-color-dark-orange text-2xl font-bold text-color-dark-orange transition hover:bg-color-hover"
+            >
               Aplicar
             </button>
           </div>
-        </div>
+        </section>
       </div>
+<<<<<<< HEAD
     </form>
 
     <div class="grid grid-cols-2 md2:grid-cols-1 ultrawide:grid-cols-8 ultrawide:mx-4 gap-16 pt-14 sm:ml-4 sm2:ml-0" :class="open ? 'gap-x-40' : ''">
@@ -179,10 +233,104 @@
         </div>
       </div>
 
+=======
+>>>>>>> comunicados
     </div>
-  </div>
-</div>
+  </form>
+  <form>
+    <div
+      :class="filterDialog ? 'flex' : 'hidden'"
+      class="fixed inset-0 items-center justify-center bg-black bg-opacity-25"
+    >
+      <div class="h-4/5 w-2/5 rounded-3xl bg-color-grey">
+        <header
+          class="mx-10 mt-8 flex flex-row justify-between text-3xl font-bold"
+        >
+          <h2>Filtrar Comunicado</h2>
+          <div>
+            <button
+              @click.prevent="filterDialog = false"
+              class="text-3xl font-bold text-color-txt-perfil"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="h-6 w-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+        </header>
+        <section class="flex flex-col gap-4 p-10">
+          <input
+            type="search"
+            class="mx-auto w-full rounded-lg border border-color-txt-perfil bg-gray-50 text-sm text-gray-900"
+          />
+          <div class="flex flex-row justify-between text-lg font-normal">
+            <label>
+              De:
+              <input type="date" class="rounded-3xl border-color-txt-perfil"
+            /></label>
+            <label>
+              Até:
+              <input type="date" class="rounded-3xl border-color-txt-perfil"
+            /></label>
+          </div>
 
-
+          <label>
+            <input
+              type="checkbox"
+              class="h-5 w-5 rounded-full border-color-txt-perfil transition"
+            />
+            Palestras
+          </label>
+          <label
+            ><input
+              type="checkbox"
+              class="h-5 w-5 rounded-full border-color-txt-perfil transition"
+            />
+            Eventos
+          </label>
+          <label
+            ><input
+              type="checkbox"
+              class="h-5 w-5 rounded-full border-color-txt-perfil transition"
+            />
+            Reuniões
+          </label>
+          <label
+            ><input
+              type="checkbox"
+              class="h-5 w-5 rounded-full border-color-txt-perfil transition"
+            />
+            Outros
+          </label>
+          <div class="flex flex-row justify-center space-x-5 pt-10 text-lg">
+            <button
+              type="reset"
+              class="rounded-full border-2 border-solid border-color-dark-orange px-12 py-1 font-bold text-color-dark-orange transition hover:bg-color-hover"
+            >
+              Limpar
+            </button>
+            <button
+              type="submit"
+              class="rounded-full border-2 border-solid border-color-dark-orange px-12 py-1 font-bold text-color-dark-orange transition hover:bg-color-hover"
+            >
+              Aplicar
+            </button>
+          </div>
+        </section>
+      </div>
+    </div>
+  </form>
+</main>
 
 {% endblock %}

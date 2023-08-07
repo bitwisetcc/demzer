@@ -6,6 +6,7 @@ from django.db.models import (
     ManyToManyField,
     OneToOneField,
     ImageField,
+    TextField,
     SET_NULL,
     CASCADE,
 )
@@ -79,7 +80,7 @@ class Course(Model):
 
 class Classroom(Model):
     slug = SlugField(max_length=7, default="-")
-    year = IntegerField()
+    year = IntegerField(default=1)
     course = ForeignKey(Course, SET_NULL, related_name="classroom", null=True)
 
 
@@ -171,9 +172,7 @@ class Member(Model):
     complement = CharField(max_length=20)
 
     relatives = ManyToManyField(Relative)
-    classrooms = ManyToManyField(
-        Classroom, related_name="students"
-    )
+    classroom = ForeignKey(Classroom, SET_NULL, related_name="students", null=True)
     picture = ImageField(upload_to="users/pictures", null=True)
     status = CharField(null=True, max_length=10)
     division = CharField(max_length=1, null=True)
@@ -208,8 +207,8 @@ class Class(Model):
         THURSDAY = "THU", _("Quinta-feira")
         SUNDAY = "SUN", _("Sexta-feira")
 
-    classroom = ForeignKey("Classroom", CASCADE, related_name="+")
-    teacher = ForeignKey(settings.AUTH_USER_MODEL, SET_NULL, null=True)
+    classroom = ForeignKey(Classroom, CASCADE, related_name="+", null=True)
+    teacher = ForeignKey(User, SET_NULL, null=True)
     student_group = PositiveSmallIntegerField(null=True)
     subject = ForeignKey("Subject", SET_NULL, related_name="+", null=True)
     day = CharField(max_length=15, choices=Days.choices, default=Days.MONDAY)
@@ -218,6 +217,17 @@ class Class(Model):
     class Meta:
         verbose_name = _("classe")
         verbose_name_plural = _("classes")
+
+
+class Announcement(Model):
+    # if both date and course are None and private is False, it's a general announcement, meant for all users
+    title = CharField(max_length=80, default="")
+    date = DateField(auto_now=True)
+    course = ForeignKey(Course, SET_NULL, null=True)
+    classroom = ForeignKey(Classroom, SET_NULL, null=True)
+    image = ImageField(upload_to="communicate/covers", null=True)
+    private = BooleanField(default=False)
+    info = TextField()
 
 
 class Presence(Model):
@@ -231,6 +241,8 @@ class Assessment(Model):
 class Event(Model):
     pass
     # if course and classroom are both null, it's meant only for staff (teachers, adms, staff, coordinators etc.)
+
+
 """
 - is_staff ?
 - is_active ? -> celery
