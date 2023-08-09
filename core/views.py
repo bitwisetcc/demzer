@@ -249,9 +249,10 @@ def comunicados(request: HttpRequest):
             classroom=Classroom.objects.get(slug=classroom)
             if not private and classroom
             else None,
-        ).pk
+        )
 
         messages.success(request, "Comunicado {} criado com sucesso".format(pk))
+
 
     if has_role(request.user, "student"):
         announcements = Announcement.objects.filter(

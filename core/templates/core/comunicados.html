@@ -3,7 +3,7 @@
 {% endblock %} {% block content %}
 <main
   class="m-20 min-h-full md2:justify-normal md2:pl-5 md2:pt-16"
-  x-data="{ createDialog: false, filterDialog: false }"
+  x-data="{ createDialog: false, filterDialog: false}"
 >
   <header class="flex w-full justify-between text-color-txt-perfil">
     <h1 class="text-4xl font-semibold">Comunicados</h1>
@@ -32,26 +32,74 @@
       </button>
     </div>
   </header>
-  <article
-    class="grid w-full grid-cols-2 content-center gap-16 pt-14 sm:ml-4 md2:grid-cols-1 sm2:ml-0 ultrawide:mx-4 ultrawide:grid-cols-8"
-    :class="open ? 'gap-x-40' : ''"
-  >
-    {% for announcement in announcements %}
-    <div class="h-[300px] w-[350px] rounded-2xl bg-color-bg-perfil shadow-xl">
-      <img
-        class="h-[178px] w-full rounded-2xl"
-        src="{{ announcement.image.url }}"
-      />
-      <div class="ml-2">
-        <label class="text-right text-xs font-normal text-gray-500">
-          {{ announcement.date|date:'d/m/Y' }}
-        </label>
-        <!--Here we need to put a date when the communicate was registered-->
-        <h3 class="text-base font-bold text-black">{{ announcement.title }}</h3>
+  <div x-data="{seeDialog: false}">
+    <article
+      class="grid w-full grid-cols-2 content-center gap-16 pt-14 sm:ml-4 md2:grid-cols-1 sm2:ml-0 ultrawide:mx-4 ultrawide:grid-cols-8"
+      :class="open ? 'gap-x-40' : ''"
+    >
+      {% for announcement in announcements %}
+        <div class="flex justify-center">
+          <button @click="seeDialog = true"> <!-- OPEN COMUNICATE -->
+            <div class="h-[300px] w-[350px] text-left rounded-2xl bg-color-bg-perfil shadow-xl">
+              <img
+                class="h-[178px] w-full rounded-2xl"
+                src="{{ announcement.image.url }}"
+              />
+              <div class="ml-2">
+                <label class="text-right text-xs font-normal text-gray-500">
+                  {{ announcement.date|date:'d/m/Y' }}
+                </label>
+                <!--Here we need to put a date when the communicate was registered-->
+                <h3 class="text-base font-bold text-black">{{ announcement.title }}</h3>
+              </div>
+            </div>
+          </button>
+        </div>
+      {% endfor %}
+    </article>
+
+    <div
+      :class="seeDialog ? 'flex' : 'hidden'" 
+      class="fixed inset-0 items-center justify-center bg-black bg-opacity-25"
+    > <!-- COMUNICATE WINDOW -->
+      <div
+          class="h-[600px] w-[600px] overflow-y-scroll rounded-3xl bg-color-grey pb-10"
+        >
+          <header class="mx-10 mb-3 mt-8 flex justify-between text-3xl font-bold">
+            <div>
+              <button
+                @click.prevent="seeDialog = false"
+                class="text-3xl font-bold text-color-txt-perfil"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="h-6 w-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+          </header>
+          <img
+                class="h-[178px] w-full rounded-2xl"
+                src="{{ announcement.image.url }}"
+              />
+            <label class="text-right text-xs font-normal text-gray-500">
+              {{ announcement.date|date:'d/m/Y' }}
+            </label>
+            <h3 class="text-base font-bold text-black">{{ announcement.title }}</h3>
+            <label>{{ announcement.info}}</label>
+        </div> 
       </div>
-    </div>
-    {% endfor %}
-  </article>
+
   <form method="post" action="{% url 'comunicados' %}" enctype="multipart/form-data">
     {% csrf_token %}
     <!-- FORM FOR CREATE COMUNICATE-->

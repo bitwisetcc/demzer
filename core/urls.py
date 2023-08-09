@@ -1,10 +1,12 @@
 from django.conf import settings
 from django.shortcuts import redirect
-from django.urls import path
+from django.urls import include, path
+from django.contrib import admin
 
 from core.views import *
 
 urlpatterns = [
+    path('admin/', admin.site.urls),
     path("", lambda _: redirect("dashboard"), name="empty"),
     path("dashboard/", dashboard, name="dashboard"),
     path("secret/", super_secret, name="secret"),
