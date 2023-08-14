@@ -2,40 +2,45 @@ const inputDate = document.getElementById('dataAtual');
 const dataAtual = new Date().toISOString().split('T')[0];
 inputDate.value = dataAtual;
 
-//Table select
+//Tabela
 
-const quantidadeSelect = document.getElementById('quantidade');
-const checkboxHeader = document.getElementById('checkbox-header');
-const tableBody = document.getElementById('table-body');
+function atualizarTabela() {
+  const quantidadeAulas = parseInt(document.getElementById("quantidadeAulas").value);
+  const tabela = document.querySelector("table");
+  const cabecalho = tabela.querySelector("thead tr");
+  const corpo = tabela.querySelector("tbody");
 
-// Define o valor padrão ao carregar a página
-quantidadeSelect.value = '1';
+  // Limpa a tabela existente
+  cabecalho.innerHTML = "<th class='border px-4 py-2'>Nome do Aluno</th>";
+  corpo.innerHTML = "";
 
-quantidadeSelect.addEventListener('change', () => {
-  const quantidade = parseInt(quantidadeSelect.value, 10);
+  // Adiciona colunas de aulas ao cabeçalho
+  for (let i = 1; i <= quantidadeAulas; i++) {
+    cabecalho.innerHTML += `<th class='border px-4 py-2'>${i}</th>`;
+  }
 
-  // Atualiza o cabeçalho das colunas
-  checkboxHeader.colSpan = quantidade + 1;
+  // Adiciona linhas de alunos com checkboxes de faltas
+  const alunos = ["João Santana Silva Moderato", "Maria", "Giovanni de Pita Cicero", "João Santana Silva Merato", "Maria", "Giovanni de Pita Cicero", "João Santana Silva Moderato", "Maria", "Giovanni de Pita Cicero"]; // Substitua pelos nomes dos alunos reais
+  for (const aluno of alunos) {
+    let newRow = document.createElement("tr");
+    let newCell = document.createElement("td");
+    newCell.classList.add("border", "px-4", "py-2", "text-center");
+    newCell.textContent = aluno;
+    newRow.appendChild(newCell);
 
-  // Atualiza ou remove as colunas de checkbox nas linhas existentes
-  const rows = tableBody.querySelectorAll('tr');
-  rows.forEach(row => {
-    const currentCheckboxes = row.querySelectorAll('td.checkbox-cell');
-    const currentQuantidade = currentCheckboxes.length;
-
-    if (currentQuantidade < quantidade) {
-      for (let i = currentQuantidade; i < quantidade; i++) {
-        const newCheckboxCell = document.createElement('td');
-        newCheckboxCell.className = 'py-2 px-4 checkbox-cell';
-        newCheckboxCell.innerHTML = '<input type="checkbox">';
-        row.appendChild(newCheckboxCell);
-      }
-    } else if (currentQuantidade > quantidade) {
-      for (let i = currentQuantidade; i > quantidade; i--) {
-        row.removeChild(currentCheckboxes[i - 1]);
-      }
+    for (let i = 0; i < quantidadeAulas; i++) {
+      newCell = document.createElement("td");
+      newCell.classList.add("border", "px-4", "py-2", "text-center");
+      newCell.innerHTML = `<input type="checkbox" class="form-checkbox h-6 w-6 rounded-full text-red-500 focus:ring focus:ring-red-300">`;
+      newRow.appendChild(newCell);
     }
-  });
-});
+
+    corpo.appendChild(newRow);
+  }
+}
+
+// Chama a função inicialmente e sempre que a quantidade de aulas for alterada
+document.getElementById("quantidadeAulas").addEventListener("change", atualizarTabela);
+atualizarTabela();
 
 
