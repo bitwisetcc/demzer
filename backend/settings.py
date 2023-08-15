@@ -24,6 +24,7 @@ https://docs.djangoproject.com/en/4.1/topics/i18n
 from os import environ
 from pathlib import Path
 from datetime import date
+import os
 
 DEFAULT_COUNTRY = "Brasil"
 DEFAULT_STATE = "SP"
@@ -148,13 +149,11 @@ AUTH_USER_MODEL = "auth.User"
 
 LOGIN_URL = "/login/"
 
-ROLEPERMISSIONS_MODULE = "core.roles"
-
-#SMTP Config
-
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = '587'
 EMAIL_USE_TLS = True
-EMAIL_PORT = 587
 EMAIL_HOST_USER = 'socialdemzer@gmail.com'
-EMAIL_HOST_PASSWORD = 'Demzer@BGJRS'
+EMAIL_HOST_PASSWORD = 'dqiwyxkzxuqrveyq'
+
+ROLEPERMISSIONS_MODULE = "core.roles"
