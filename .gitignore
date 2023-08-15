@@ -9,6 +9,6 @@ ENV/
 
 node_modules
 .parcel-cache
-tcc_front
 /static
 /user_media/
+.env

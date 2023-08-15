@@ -39,8 +39,8 @@ const validateNumber = (e) => {
       e.preventDefault());
 };
 
-document.addEventListener("alpine:init", (secret = false) => {
-  Alpine.data("fields", () => ({
+document.addEventListener("alpine:init", () => {
+  Alpine.data("fields", (secret = false) => ({
     init() {
       if (secret && !confirm("Você deseja criar um conta administrativa?"))
         location.replace("{% url 'dashboard' %}");
@@ -106,6 +106,7 @@ document.addEventListener("alpine:init", (secret = false) => {
   }));
 
   Alpine.data("address", () => ({
+    state: "",
     city: "",
     neighborhood: "",
     street: "",
@@ -113,6 +114,7 @@ document.addEventListener("alpine:init", (secret = false) => {
       fetch(`https://viacep.com.br/ws/${cep}/json/`)
         .then((res) => res.json())
         .then((data) => {
+          console.log(data);
           this.city = data.localidade;
           this.neighborhood = data.bairro;
           this.street = data.logradouro;

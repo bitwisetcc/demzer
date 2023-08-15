@@ -150,10 +150,6 @@ document.addEventListener("alpine:init", () => {
     ],
     optional: [
       "password",
-      "natural_state",
-      "natural_city",
-      "nationality",
-      "country_of_origin",
       "city",
       "neighborhood",
       "street",

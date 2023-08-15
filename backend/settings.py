@@ -21,10 +21,12 @@ Internationalization
 https://docs.djangoproject.com/en/4.1/topics/i18n
 """
 
-from os import environ
+from os import environ, getenv
 from pathlib import Path
 from datetime import date
-import os
+import dotenv
+
+dotenv.load_dotenv()
 
 DEFAULT_COUNTRY = "Brasil"
 DEFAULT_STATE = "SP"
@@ -33,14 +35,12 @@ DEFAULT_BIRTHDATE = date(date.today().year - 15, 1, 1)
 
 SCHOOL_NAME = "ETEC Jorge Street"
 EMAIL_PATTERN = "{}.{}@etec.sp.gov.br"
-SECURITY_KEY = "1234"
-
+SECURITY_KEY = getenv("MASTER_KEY")
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 MEDIA_ROOT = BASE_DIR / "user_media"
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-j*9=2)w4ojo9evy9yje0kc)3aysl^e!p1m9w)j6)sr2akot4j="
+SECRET_KEY = getenv("CSRF_KEY", "DEMZER-INSECURE-KEY")
 
 DEBUG = True
 
@@ -50,7 +50,7 @@ ALLOWED_HOSTS = []
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
-    #"/var/www/static/",
+    # "/var/www/static/",
 ]
 
 INSTALLED_APPS = [
@@ -105,7 +105,12 @@ WSGI_APPLICATION = "backend.wsgi.application"
 DB_ENGINE = environ.get("DB_ENGINE", "sqlite3")
 
 if DB_ENGINE == "sqlite3":
-    DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": BASE_DIR / "db.sqlite3"}}
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 else:
     DATABASES = {
         "default": {
@@ -149,11 +154,11 @@ AUTH_USER_MODEL = "auth.User"
 
 LOGIN_URL = "/login/"
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = '587'
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = "587"
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'socialdemzer@gmail.com'
-EMAIL_HOST_PASSWORD = 'dqiwyxkzxuqrveyq'
+EMAIL_HOST_USER = getenv("EMAIL_ADDRESS")
+EMAIL_HOST_PASSWORD = getenv("EMAIL_PASSWORD")
 
 ROLEPERMISSIONS_MODULE = "core.roles"
