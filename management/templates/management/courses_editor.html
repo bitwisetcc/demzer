@@ -1,29 +1,26 @@
 {% extends 'core/base.html' %} {% block head %}
 <title>Editor de cursos</title>
-<script defer>
-  document.addEventListener("alpine:init", () => {
-    Alpine.data("course", () => ({
-      courseDialog: false,
-      subjectDialog: false,
-      importDialog: false,
-      name: "",
-      slug: "",
-      time: "",
-      coordinator: "",
-    }));
-  });
-</script>
 {% endblock %} {% block content %}
-<main class="px-24 py-10" x-data="course">
+<main
+  class="flex flex-col px-24 py-10"
+  x-data="{ courseDialog: false, subjectDialog: false, importDialog: false }"
+>
   <dialog :open="courseDialog" class="w-1/2 rounded-2xl p-6 shadow-lg">
     <form action="{% url 'courses_editor' %}" method="post">
       {% csrf_token %}
       <h2 class="mb-3 text-xl font-semibold">Criar curso</h2>
-      <div class="flex items-center gap-2 mb-3">
+      <div class="mb-3 flex items-center gap-2">
         <label for="txt-name">Nome:</label>
-        <input type="text" name="name" id="txt-name" required class="flex-1" maxlength="60" />
+        <input
+          type="text"
+          name="name"
+          id="txt-name"
+          required
+          class="flex-1"
+          maxlength="60"
+        />
       </div>
-      <div class="flex items-center justify-around gap-2 mb-3">
+      <div class="mb-3 flex items-center justify-around gap-2">
         <label for="txt-slug">Código:</label>
         <input type="text" name="slug" id="txt-slug" maxlength="2" required />
         <label for="sl-time">Horário:</label>
@@ -34,13 +31,24 @@
           <option value="F">Integral</option>
         </select>
         <label for="txt-duration">Duração:</label>
-        <input type="number" name="duration" id="txt-duration" size="1" class="[appearance:textfield]">
+        <input
+          type="number"
+          name="duration"
+          id="txt-duration"
+          size="1"
+          class="[appearance:textfield]"
+        />
       </div>
-      <div class="flex items-center gap-2 mb-1">
+      <div class="mb-1 flex items-center gap-2">
         <label for="txt-coordinator">Coordenador:</label>
-        <input type="text" name="coordinator" id="txt-coordinator" class="flex-1" />
+        <input
+          type="text"
+          name="coordinator"
+          id="txt-coordinator"
+          class="flex-1"
+        />
       </div>
-      <div class="flex flex-col gap-2 mb-3">
+      <div class="mb-3 flex flex-col gap-2">
         <label for="txt-info">Informações:</label>
         <textarea name="info" id="txt-info" cols="30" rows="4"></textarea>
       </div>
@@ -133,7 +141,7 @@
       </div>
     </form>
   </dialog>
-  <header class="flex justify-between">
+  <header class="mb-4 flex justify-between">
     <h1 class="mb-4 text-4xl font-semibold">Cursos</h1>
     <div class="flex gap-2">
       <button @click="courseDialog = true">
@@ -152,91 +160,69 @@
           />
         </svg>
       </button>
+      <button class="btn" @click="subjectDialog = true">
+        Adicionar matérias
+      </button>
     </div>
   </header>
-  <div class="mb-3 flex">
-    <aside class="mr-4 w-1/6 border-r-gray-600">
-      <table class="w-full table-auto border-collapse border border-gray-600">
-        <tbody>
-          {% for course in courses %}
-          <tr
-            class="cursor-pointer"
-            @click="() => { 
-              name = '{{ course.name }}';
-              slug = '{{ course.slug }}';
-              time = '{{ course.get_time_display }}';
-              coordinator = '{{ course.coordinator }}'
-            }"
-            {%
-            if
-            forloop.first
-            %}
-            x-init="$nextTick(() => $el.click())"
-            {%
-            endif
-            %}
-          >
-            <td>{{ course.slug }}</td>
-          </tr>
-          {% endfor %}
-          <tr>
-            <td class="border border-gray-400">
-              <button
-                class="flex items-center gap-1"
-                @click="courseDialog = true"
-              >
-                <span>Adicionar</span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="h-5 w-5"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M12 4.5v15m7.5-7.5h-15"
-                  />
-                </svg>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </aside>
-    <article>
-      {% if courses %}
-      <div>
-        <h2 class="text-2xl font-semibold">
-          <span x-text="name"></span> -
-          <span class="text-lg font-medium text-gray-600" x-text="slug"></span>
-        </h2>
-        <p><strong>Horário:</strong> <span x-text="time"></span></p>
-        <p><strong>Coordenador:</strong> <span x-text="coordinator"></span></p>
-      </div>
-      {% else %}
-      <span class="font-mono text-2xl font-medium text-slate-500">
-        Nenhum curso encontrado :(
-      </span>
-      {% endif %}
-    </article>
-  </div>
-  <footer class="flex gap-2">
-    <button class="btn" @click="subjectDialog = true">
-      Adicionar matérias
-    </button>
-    <ul class="flex gap-2 text-slate-600">
-      {% for subj in subjects %}
-      <li class="rounded-lg bg-slate-300 p-2">
-        <abbr title="{{ subj.name }}" class="decoration-transparent"
-          >{{ subj.slug }}</abbr
-        >
-      </li>
-      {% endfor %}
-      <li class="rounded-lg bg-slate-300 p-2">...</li>
-    </ul>
-  </footer>
+  <section>
+    {% if courses %} {% for course in courses %}
+    <div class="rounded-2xl bg-gray-100 shadow">
+      <header
+        class="flex justify-between px-6 py-4"
+        x-data="{ optOpen: false }"
+      >
+        <div>
+          <h2>{{ course.name }}</h2>
+          <span>Turno: {{ course.get_time_display }}</span>
+          <span x-text="optOpen"></span>
+        </div>
+        <div>
+          <button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="h-6 w-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M4.5 15.75l7.5-7.5 7.5 7.5"
+              />
+            </svg>
+          </button>
+          <button @click="optOpen = !optOpen" class="relative">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="h-6 w-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z"
+              />
+            </svg>
+            <div x-if="optOpen" class="absolute flex flex-col">
+              <button>Editar</button>
+              <button>Excluir</button>
+            </div>
+          </button>
+        </div>
+      </header>
+      <div>uuughhhghg qq tá acontecendo??</div>
+    </div>
+    {% endfor %} {% else %}
+    <h2 class="font-mono text-2xl font-medium text-slate-500">
+      Nenhum curso encontrado :(
+    </h2>
+    {% endif %}
+  </section>
 </main>
 {% endblock %}
