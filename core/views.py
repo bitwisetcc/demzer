@@ -9,7 +9,6 @@ from django.http import Http404, HttpRequest, HttpResponse, HttpResponseBadReque
 from django.shortcuts import redirect, render
 from django.core.files import File
 from rolepermissions.decorators import has_permission_decorator as check_permission
-from rolepermissions.decorators import has_role_decorator as check_role
 from rolepermissions.checkers import has_role
 from rolepermissions.roles import assign_role
 from django.db.models import Q
@@ -20,14 +19,10 @@ from backend.settings import (
     DEFAULT_COUNTRY,
     DEFAULT_STATE,
     EMAIL_PATTERN,
+    SECURITY_KEY,
 )
 from core.models import *
 from core.utils import email_address
-
-
-def doc_to_num(doc: str):
-    return int(re.sub(r"[\./-]", "", doc))
-
 
 @login_required
 def dashboard(request: HttpRequest):
@@ -95,14 +90,14 @@ def enroll(request: HttpRequest):
                 phone=re.sub(r"[^0-9]+", "", request.POST.get("phone")),
                 birthdate=birthdate,
                 gender=request.POST.get("gender"),
-                rg=doc_to_num(request.POST.get("rg")),
-                cpf=doc_to_num(request.POST.get("cpf")),
+                rg=re.sub(r"[\./-]", "", request.POST.get("rg")),
+                cpf=re.sub(r"[\./-]", "", request.POST.get("cpf")),
                 afro="afro" in request.POST,
                 indigenous="indigenous" in request.POST,
                 deficiencies=request.POST.get("deficiencies") or None,
                 civil_state=request.POST.get("civil-state"),
                 cep=request.POST.get("cep"),
-                city=request.POST.get("residence-city"),
+                city=request.POST.get("city"),
                 neighborhood=request.POST.get("neighborhood"),
                 street=request.POST.get("street"),
                 street_number=request.POST.get("street-number"),
@@ -112,10 +107,6 @@ def enroll(request: HttpRequest):
 
             if request.POST.get("role") == "student":
                 profile.public_schooling = request.POST.get("public-schooling")
-                profile.natural_state = request.POST.get("natural-state")
-                profile.natural_city = request.POST.get("natural-city")
-                profile.nationality = request.POST.get("nationality")
-                profile.country_of_origin = request.POST.get("country-of-origin")
                 profile.classroom = request.POST.get("classroom")
 
                 try:
@@ -164,7 +155,7 @@ def enroll(request: HttpRequest):
 
 def super_secret(request: HttpRequest):
     if request.method == "POST":
-        if request.POST["key"] == settings.SECURITY_KEY:
+        if request.POST["key"] == SECURITY_KEY:
             username = request.POST["username"].strip()
             first_name = username.split()[0]
             last_name = username.split()[-1]
@@ -191,11 +182,12 @@ def super_secret(request: HttpRequest):
                     phone=re.sub(r"[^0-9]+", "", request.POST["phone"]),
                     birthdate=birthdate,
                     gender=request.POST["gender"],
-                    rg=doc_to_num(request.POST["rg"]),
-                    cpf=doc_to_num(request.POST["cpf"]),
+                    rg=re.sub(r"[\./-]", "", request.POST.get("rg")),
+                    cpf=re.sub(r"[\./-]", "", request.POST.get("cpf")),
                     afro="afro" in request.POST,
+                    indigenous="indigenous" in request.POST,
                     cep=request.POST["cep"],
-                    city=request.POST["residence-city"],
+                    city=request.POST["city"],
                     neighborhood=request.POST["neighborhood"],
                     street=request.POST["street"],
                     street_number=request.POST["street-number"],
@@ -253,7 +245,6 @@ def comunicados(request: HttpRequest):
 
         messages.success(request, "Comunicado {} criado com sucesso".format(pk))
 
-
     if has_role(request.user, "student"):
         announcements = Announcement.objects.filter(
             Q(private=False)
@@ -266,7 +257,9 @@ def comunicados(request: HttpRequest):
     else:
         announcements = Announcement.objects.all()
 
-    return render(request, "core/comunicados.html", {"announcements": Announcement.objects.all()})
+    return render(
+        request, "core/comunicados.html", {"announcements": Announcement.objects.all()}
+    )
 
 
 def perfil(request: HttpRequest):

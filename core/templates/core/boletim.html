@@ -4,23 +4,26 @@
 <script defer src="{% static 'core/js/filter.js' %}"></script>
 {% endblock %} {% block content %}
 <main class="px-8 pb-10">
-  <h1 class="text-3xl ml-12 my-8 font-semibold text-color-txt-perfil">Boletim</h1>
+  <h1 class="my-8 ml-12 text-3xl font-semibold text-color-txt-perfil">
+    Boletim
+  </h1>
   <label class="ml-12 text-color-txt-perfil">
-    Curso: <select class="text-zinc-500">
-              <option>Desenvolvimento de Sistemas</option>
-              <option>ooi</option>
-              <option>Bruno LM</option>
-            </select>
+    Curso:
+    <select class="text-zinc-500">
+      <option>Desenvolvimento de Sistemas</option>
+      <option>ooi</option>
+      <option>Bruno LM</option>
+    </select>
   </label>
   <label class="ml-12 text-color-txt-perfil">
-    Ano/Módulo: 
-            <select class="text-zinc-500">
-              <option>1º Ano</option>
-              <option>2º Ano</option>
-              <option>3º Ano</option>
-            </select>
+    Ano/Módulo:
+    <select class="text-zinc-500">
+      <option>1º Ano</option>
+      <option>2º Ano</option>
+      <option>3º Ano</option>
+    </select>
   </label>
-  <section class="box overflow-x-scroll lg:w-max">
+  <section class="box lg:w-max overflow-x-scroll">
     <table class="main-table border-separate border-spacing-3 px-2">
       <thead>
         <tr>
@@ -86,7 +89,9 @@
           <td></td>
         </tr>
         <tr>
-          <td data-tippy-content="Planejamento e Desenvolvimento de TCC">TCC</td>
+          <td data-tippy-content="Planejamento e Desenvolvimento de TCC">
+            TCC
+          </td>
           <td></td>
           <td></td>
           <td></td>
@@ -151,7 +156,7 @@
 
   <h2 class="text-3xl font-semibold text-color-txt-perfil">Total</h2>
   <section
-    class="box grid grid-cols-1 gap-6 p-4 px-5 py-3 text-center sm:grid-cols-2 lg:w-max lg:grid-cols-4"
+    class="box lg:w-max lg:grid-cols-4 grid grid-cols-1 gap-6 p-4 px-5 py-3 text-center sm:grid-cols-2"
   >
     <div class="flex flex-col gap-3">
       <span class="info bg-color-name-boletim">Aulas Dadas</span>
@@ -233,7 +238,8 @@
         :class="open ? 'text-xl' : 'text-3xl'"
         >Reconsideração de Notas (Aberto até 00/00/0000)</label
       >
-      <button id="openModalButton"> <!-- OPEN RECONSIDERAÇÃO -->
+      <button id="openModalButton">
+        <!-- OPEN RECONSIDERAÇÃO -->
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -251,67 +257,87 @@
       </button>
     </div>
     <form>
-      <div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-25 justify-center items-center"> <!-- SCREEN RECONSIDERAÇÃO -->
-        <div class="w-[600px] h-[600px] bg-color-grey rounded-3xl text-color-txt-perfil">
-          <div class="text-3xl font-bold mt-8 mx-10 flex flex-row justify-between">
-            <div> Reconsideração de Nota </div>
+      <div
+        id="modal"
+        class="fixed inset-0 hidden items-center justify-center bg-black bg-opacity-25"
+      >
+        <!-- SCREEN RECONSIDERAÇÃO -->
+        <div
+          class="h-[600px] w-[600px] rounded-3xl bg-color-grey text-color-txt-perfil"
+        >
+          <div
+            class="mx-10 mt-8 flex flex-row justify-between text-3xl font-bold"
+          >
+            <div>Reconsideração de Nota</div>
             <div>
-              <button id="closeModalButton" class="text-3xl font-bold text-color-txt-perfil"> <!-- CLOSE RECONSIDERAÇÃO -->
-                <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                fill="none" 
-                viewBox="0 0 24 24" 
-                stroke-width="1.5" 
-                stroke="currentColor" 
-                class="w-6 h-6">
-                  <path 
-                  stroke-linecap="round" 
-                  stroke-linejoin="round" 
-                  d="M6 18L18 6M6 6l12 12" />
+              <button
+                id="closeModalButton"
+                class="text-3xl font-bold text-color-txt-perfil"
+              >
+                <!-- CLOSE RECONSIDERAÇÃO -->
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="h-6 w-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </button>
             </div>
           </div>
           <div class="mx-10">
-            <div class="flex flex-row pt-10 pb-3">
+            <div class="flex flex-row pb-3 pt-10">
               <label>
                 Matéria:
-                      <select class="text-zinc-500">
-                        <option>Lingua Portuguesa</option>
-                        <option>Variável Matéria</option>
-                        <option>Variável Matéria</option>
-                      </select>
+                <select class="text-zinc-500">
+                  <option>Lingua Portuguesa</option>
+                  <option>Variável Matéria</option>
+                  <option>Variável Matéria</option>
+                </select>
               </label>
             </div>
 
             <div class="flex flex-row py-3">
               <label>
                 Instrumento:
-                      <select class="text-zinc-500">
-                        <option>Prova</option>
-                        <option>Atividade</option>
-                        <option>Outros</option>
-                      </select>
+                <select class="text-zinc-500">
+                  <option>Prova</option>
+                  <option>Atividade</option>
+                  <option>Outros</option>
+                </select>
               </label>
             </div>
 
             <div class="flex flex-row py-3">
               <label>
                 Menção:
-                      <select class="text-zinc-500">
-                        <option>B</option>
-                        <option>Variável de notas</option>
-                        <option>Variável de notas</option>
-                      </select>
+                <select class="text-zinc-500">
+                  <option>B</option>
+                  <option>Variável de notas</option>
+                  <option>Variável de notas</option>
+                </select>
               </label>
             </div>
             <div class="pt-3">
               <label class="block pb-3"> Reclamação: </label>
-              <textarea class="h-[180px] w-full resize-none" placeholder="Digite sua reclamação aqui!"></textarea>
+              <textarea
+                class="h-[180px] w-full resize-none"
+                placeholder="Digite sua reclamação aqui!"
+              ></textarea>
             </div>
           </div>
-          <div class="flex justify-center items-center space-x-5 text-lg pt-3">
-            <button type="submit" class="font-bold text-color-dark-orange hover:bg-color-hover border-color-dark-orange border-solid border-2 rounded-full py-1 px-12 transition">
+          <div class="flex items-center justify-center space-x-5 pt-3 text-lg">
+            <button
+              type="submit"
+              class="rounded-full border-2 border-solid border-color-dark-orange px-12 py-1 font-bold text-color-dark-orange transition hover:bg-color-hover"
+            >
               Aplicar
             </button>
           </div>

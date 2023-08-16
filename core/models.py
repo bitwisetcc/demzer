@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.db.models import (
     Model,
     TextChoices,
@@ -22,8 +21,6 @@ from django.db.models.fields import (
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 from backend.settings import (
-    DEFAULT_COUNTRY,
-    DEFAULT_STATE,
     DEFAULT_CITY,
     DEFAULT_BIRTHDATE,
 )
@@ -32,7 +29,7 @@ from backend.settings import (
 class Relative(Model):
     name = CharField(max_length=60, unique=True)
     email = EmailField()
-    phone = CharField(max_length=11)
+    phone = IntegerField(default=0)
 
 
 class Subject(Model):
@@ -40,7 +37,7 @@ class Subject(Model):
     The subject of a class; what the teacher is talking about.
     """
 
-    name = CharField(max_length=63)
+    name = CharField(max_length=60)
     slug = CharField(max_length=5)
     description = CharField(max_length=127, null=True)
 
@@ -67,11 +64,13 @@ class Course(Model):
         NIGHT = "N", _("Noite")
         FULL = "F", _("Integral")
 
-    name = CharField(max_length=63)
-    slug = SlugField(max_length=7, default="-")
+    name = CharField(max_length=60)
+    slug = SlugField(max_length=2, default="-")
     subjects = ManyToManyField(Subject)
     time = CharField(max_length=1, choices=Timing.choices, default=Timing.MORNING)
     coordinator = ForeignKey(User, SET_NULL, null=True, related_name="courses")
+    info = TextField(null=True)
+    duration = PositiveSmallIntegerField(default=3)
 
     class Meta:
         verbose_name = _("curso")
@@ -139,8 +138,8 @@ class Member(Model):
     user = OneToOneField(User, CASCADE, related_name="profile")
     contact_email = EmailField(default="john.doe@email.com")
 
-    rg = IntegerField(default=0)
-    cpf = IntegerField(default=0)
+    rg = CharField(default="", max_length=9)
+    cpf = CharField(default="", max_length=11)
     phone = IntegerField(default=0)
     gender = CharField(choices=Genders.choices, default=Genders.MASCULINE, max_length=2)
     public_schooling = CharField(
@@ -153,18 +152,11 @@ class Member(Model):
     afro = BooleanField(default=False)
     indigenous = BooleanField(default=False)
     deficiencies = CharField(null=True, max_length=50)
-
-    natural_state = CharField(
-        choices=States.choices, default=DEFAULT_STATE, max_length=2, null=True
-    )
-    natural_city = CharField(default=DEFAULT_CITY, max_length=50, null=True)
-    nationality = CharField(default=DEFAULT_COUNTRY, max_length=40, null=True)
-    country_of_origin = CharField(default=DEFAULT_COUNTRY, max_length=40, null=True)
     civil_state = CharField(
         choices=CivilStates.choices, default=CivilStates.SINGLE, max_length=1
     )
 
-    cep = IntegerField(default=0)
+    cep = CharField(default="", max_length=8)
     city = CharField(max_length=60, default=DEFAULT_CITY)
     neighborhood = CharField(max_length=40)
     street = CharField(max_length=40)
@@ -228,6 +220,9 @@ class Announcement(Model):
     image = ImageField(upload_to="communicate/covers", null=True)
     private = BooleanField(default=False)
     info = TextField()
+
+    class Meta:
+        ordering = ["-date"]
 
 
 class Presence(Model):
