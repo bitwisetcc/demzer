@@ -123,39 +123,44 @@ def import_users(request: HttpRequest):
 def courses_editor(request: HttpRequest):
     if request.method == "POST":
         pk = request.POST.get("coordinator")
-        if pk:
+        if pk is None or pk == "" or pk.isspace():
+            messages.error(request, "Coordenador inválido".format(pk))
+            return redirect("courses_editor")
+        elif pk.isdigit():
             try:
                 coordinator = User.objects.get(pk=int(pk))
             except User.DoesNotExist:
-                messages.warning(
-                    request, "Usuário com o ID {} não encontrado".format(pk)
-                )
-            except ValueError:
-                try:
-                    coordinator = User.objects.get(username__startswith=pk)
-                except User.DoesNotExist:
-                    coordinator = None
-                    messages.warning(
-                        request, "Usuário com o nome {} não encontrado".format(pk)
-                    )
-            except TypeError:
-                coordinator = None
-
-        course = Course(**dfilter(request.POST, ["name", "slug", "time"]))
-
-        if coordinator is not None and has_role(
-            coordinator, ["coordinator", "admin", "teacher"]
-        ):
-            course.coordinator = coordinator
+                messages.error(request, "Usuário com o ID {} não encontrado".format(pk))
+                return redirect("courses_editor")
         else:
-            messages.warning(
-                request, "Usuário {} não tem privilégios para ser um coordenador"
-            )
+            try:
+                coordinator = User.objects.get(username__startswith=pk)
+            except User.DoesNotExist:
+                coordinator = None
+                messages.error(
+                    request, "Usuário com o nome {} não encontrado".format(pk)
+                )
+                return redirect("courses_editor")
 
-        course.save()
-        messages.success(
-            request, "Curso {} criado com sucesso".format(request.POST.get("slug"))
+        if not has_role(coordinator, ["coordinator", "admin", "teacher"]):
+            messages.warning(
+                request,
+                "Usuário {} não tem privilégios para ser um coordenador".format(
+                    coordinator.first_name
+                ),
+            )
+            return redirect("courses_editor")
+
+        course = Course.objects.create(
+            name=request.POST.get("name"),
+            slug=request.POST.get("slug"),
+            time=request.POST.get("time"),
+            duration=request.POST.get("duration"),
+            info=request.POST.get("info"),
+            coordinator=coordinator,
         )
+
+        messages.success(request, "Curso {} criado com sucesso".format(course.slug))
         return redirect("courses_editor")
 
     return render(

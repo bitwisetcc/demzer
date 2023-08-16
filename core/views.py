@@ -9,7 +9,6 @@ from django.http import Http404, HttpRequest, HttpResponse, HttpResponseBadReque
 from django.shortcuts import redirect, render
 from django.core.files import File
 from rolepermissions.decorators import has_permission_decorator as check_permission
-from rolepermissions.decorators import has_role_decorator as check_role
 from rolepermissions.checkers import has_role
 from rolepermissions.roles import assign_role
 from django.db.models import Q

@@ -2,14 +2,158 @@
 <title>Editor de cursos</title>
 <script defer>
   document.addEventListener("alpine:init", () => {
-    Alpine.data("course", () => ({}));
+    Alpine.data("course", () => ({
+      courseDialog: false,
+      subjectDialog: false,
+      importDialog: false,
+      name: "",
+      slug: "",
+      time: "",
+      coordinator: "",
+    }));
   });
 </script>
 {% endblock %} {% block content %}
-<main
-  class="framed m-8 min-h-fit p-3"
-  x-data="{ courseDialog: false, subjectDialog: false, importDialog: false, name: '', slug: '', time: '', coordinator: '' }"
->
+<main class="px-24 py-10" x-data="course">
+  <dialog :open="courseDialog" class="w-1/2 rounded-2xl p-6 shadow-lg">
+    <form action="{% url 'courses_editor' %}" method="post">
+      {% csrf_token %}
+      <h2 class="mb-3 text-xl font-semibold">Criar curso</h2>
+      <div class="flex items-center gap-2 mb-3">
+        <label for="txt-name">Nome:</label>
+        <input type="text" name="name" id="txt-name" required class="flex-1" maxlength="60" />
+      </div>
+      <div class="flex items-center justify-around gap-2 mb-3">
+        <label for="txt-slug">Código:</label>
+        <input type="text" name="slug" id="txt-slug" maxlength="2" required />
+        <label for="sl-time">Horário:</label>
+        <select name="time" id="sl-time">
+          <option value="M" selected>Manhã</option>
+          <option value="E">Tarde</option>
+          <option value="N">Noite</option>
+          <option value="F">Integral</option>
+        </select>
+        <label for="txt-duration">Duração:</label>
+        <input type="number" name="duration" id="txt-duration" size="1" class="[appearance:textfield]">
+      </div>
+      <div class="flex items-center gap-2 mb-1">
+        <label for="txt-coordinator">Coordenador:</label>
+        <input type="text" name="coordinator" id="txt-coordinator" class="flex-1" />
+      </div>
+      <div class="flex flex-col gap-2 mb-3">
+        <label for="txt-info">Informações:</label>
+        <textarea name="info" id="txt-info" cols="30" rows="4"></textarea>
+      </div>
+      <div class="mt-3 flex gap-2">
+        <button @click.prevent="courseDialog = false" class="btn">
+          Voltar
+        </button>
+        <button type="submit" class="btn">Criar</button>
+      </div>
+    </form>
+  </dialog>
+  <dialog :open="subjectDialog" class="rounded-lg shadow-lg">
+    <form action="{% url 'create_subject' %}" method="post">
+      {% csrf_token %}
+      <h2 class="text-xl font-bold">Nova matéria</h2>
+      <div class="field">
+        <label for="txt-name">Nome</label>
+        <input type="text" name="name" id="txt-name" required />
+      </div>
+      <div class="field">
+        <label for="txt-slug">Código</label>
+        <input type="text" name="slug" id="txt-slug" required />
+      </div>
+      <div class="field">
+        <label for="txt-desc">Descrição</label>
+        <textarea
+          name="description"
+          id="txt-desc"
+          cols="30"
+          rows="4"
+          maxlength="127"
+        ></textarea>
+      </div>
+      <div class="mt-3 flex gap-2">
+        <button @click.prevent="subjectDialog = false" class="btn">
+          Voltar
+        </button>
+        <button
+          @click.prevent="() => { subjectDialog = false; importDialog = true }"
+          class="btn"
+        >
+          Importar
+        </button>
+        <button type="submit" class="btn">Criar</button>
+      </div>
+    </form>
+  </dialog>
+  <dialog :open="importDialog" class="rounded-lg shadow-lg">
+    <form
+      action="{% url 'create_subject' %}"
+      method="post"
+      enctype="multipart/form-data"
+    >
+      {% csrf_token %}
+      <h2 class="text-xl font-bold">Importar matérias</h2>
+      <input type="hidden" name="import" />
+      <label
+        for="file-subj"
+        class="btn flex w-max cursor-pointer items-center gap-1"
+      >
+        <span>Selecionar arquivo</span>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="2.2"
+          stroke="currentColor"
+          class="h-5 w-5"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15"
+          />
+        </svg>
+      </label>
+      <input
+        type="file"
+        name="import_file"
+        id="file-subj"
+        accept=".xls,.xlsx,.csv"
+        @input="readFile"
+        hidden
+      />
+      <div class="mt-3 flex gap-2">
+        <button @click.prevent="importDialog = false" class="btn">
+          Voltar
+        </button>
+        <button type="submit" class="btn">Criar</button>
+      </div>
+    </form>
+  </dialog>
+  <header class="flex justify-between">
+    <h1 class="mb-4 text-4xl font-semibold">Cursos</h1>
+    <div class="flex gap-2">
+      <button @click="courseDialog = true">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="h-8 w-8"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+      </button>
+    </div>
+  </header>
   <div class="mb-3 flex">
     <aside class="mr-4 w-1/6 border-r-gray-600">
       <table class="w-full table-auto border-collapse border border-gray-600">
@@ -23,9 +167,14 @@
               time = '{{ course.get_time_display }}';
               coordinator = '{{ course.coordinator }}'
             }"
-            {% if forloop.first %}
+            {%
+            if
+            forloop.first
+            %}
             x-init="$nextTick(() => $el.click())"
-            {% endif %}
+            {%
+            endif
+            %}
           >
             <td>{{ course.slug }}</td>
           </tr>
@@ -73,128 +222,6 @@
       </span>
       {% endif %}
     </article>
-    <dialog :open="courseDialog" class="rounded-lg shadow-lg">
-      <form action="{% url 'courses_editor' %}" method="post">
-        {% csrf_token %}
-        <h2 class="text-xl font-bold">Novo curso</h2>
-        <div class="field">
-          <label for="txt-name">Nome</label>
-          <input type="text" name="name" id="txt-name" required />
-        </div>
-        <div class="field">
-          <label for="txt-slug">Código</label>
-          <input type="text" name="slug" id="txt-slug" required />
-        </div>
-        <div class="field">
-          <label for="bx-time">Horário</label>
-          <div id="bx-time">
-            <div>
-              <input type="radio" name="time" id="rd-morning" value="M" />
-              <label for="rd-morning">Manhã</label>
-            </div>
-            <div>
-              <input type="radio" name="time" id="rd-evening" value="E" />
-              <label for="rd-evening">Tarde</label>
-            </div>
-            <div>
-              <input type="radio" name="time" id="rd-night" value="N" />
-              <label for="rd-night">Noite</label>
-            </div>
-          </div>
-        </div>
-        <div class="field">
-          <label for="txt-coordinator">Coordenador</label>
-          <input type="text" name="coordinator" id="txt-coordinator" />
-        </div>
-        <div class="mt-3 flex gap-2">
-          <button @click.prevent="courseDialog = false" class="btn">
-            Voltar
-          </button>
-          <button type="submit" class="btn">Criar</button>
-        </div>
-      </form>
-    </dialog>
-    <dialog :open="subjectDialog" class="rounded-lg shadow-lg">
-      <form action="{% url 'create_subject' %}" method="post">
-        {% csrf_token %}
-        <h2 class="text-xl font-bold">Nova matéria</h2>
-        <div class="field">
-          <label for="txt-name">Nome</label>
-          <input type="text" name="name" id="txt-name" required />
-        </div>
-        <div class="field">
-          <label for="txt-slug">Código</label>
-          <input type="text" name="slug" id="txt-slug" required />
-        </div>
-        <div class="field">
-          <label for="txt-desc">Descrição</label>
-          <textarea
-            name="description"
-            id="txt-desc"
-            cols="30"
-            rows="4"
-            maxlength="127"
-          ></textarea>
-        </div>
-        <div class="mt-3 flex gap-2">
-          <button @click.prevent="subjectDialog = false" class="btn">
-            Voltar
-          </button>
-          <button
-            @click.prevent="() => { subjectDialog = false; importDialog = true }"
-            class="btn"
-          >
-            Importar
-          </button>
-          <button type="submit" class="btn">Criar</button>
-        </div>
-      </form>
-    </dialog>
-    <dialog :open="importDialog" class="rounded-lg shadow-lg">
-      <form
-        action="{% url 'create_subject' %}"
-        method="post"
-        enctype="multipart/form-data"
-      >
-        {% csrf_token %}
-        <h2 class="text-xl font-bold">Importar matérias</h2>
-        <input type="hidden" name="import" />
-        <label
-          for="file-subj"
-          class="btn flex w-max cursor-pointer items-center gap-1"
-        >
-          <span>Selecionar arquivo</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="2.2"
-            stroke="currentColor"
-            class="h-5 w-5"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15"
-            />
-          </svg>
-        </label>
-        <input
-          type="file"
-          name="import_file"
-          id="file-subj"
-          accept=".xls,.xlsx,.csv"
-          @input="readFile"
-          hidden
-        />
-        <div class="mt-3 flex gap-2">
-          <button @click.prevent="importDialog = false" class="btn">
-            Voltar
-          </button>
-          <button type="submit" class="btn">Criar</button>
-        </div>
-      </form>
-    </dialog>
   </div>
   <footer class="flex gap-2">
     <button class="btn" @click="subjectDialog = true">

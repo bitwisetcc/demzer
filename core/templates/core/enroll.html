@@ -163,38 +163,6 @@
             />
           </div>
         </div>
-        <label
-          for="file-picture"
-          class="btn flex w-max cursor-pointer items-center gap-1 mt-4"
-        >
-          <span x-text="imageName ?? 'Foto de perfil'"></span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="2.2"
-            stroke="currentColor"
-            class="h-5 w-5"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15"
-            />
-          </svg>
-        </label>
-        <input
-          type="file"
-          name="picture"
-          id="file-picture"
-          accept="image/*"
-          required
-          hidden
-          @input="imageName = $el.files[0].name"
-        />
-      </article>
-
-      <article>
         <div class="field mt-4">
           <label for="gender-box">Gênero:</label>
           <span id="gender-box" class="flex items-center">
@@ -233,6 +201,38 @@
             <label for="rd-widow">Viúvo</label>
           </span>
         </div>
+        <label
+          for="file-picture"
+          class="btn flex w-max cursor-pointer items-center gap-1 mt-4"
+        >
+          <span x-text="imageName ?? 'Foto de perfil'"></span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="2.2"
+            stroke="currentColor"
+            class="h-5 w-5"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15"
+            />
+          </svg>
+        </label>
+        <input
+          type="file"
+          name="picture"
+          id="file-picture"
+          accept="image/*"
+          required
+          hidden
+          @input="imageName = $el.files[0].name"
+        />
+      </article>
+
+      <article>
         <div class="mt-4 flex items-center gap-1" x-data="{ check: false }">
           <label for="cb-afro">Afrodescendente:</label>
           <input
@@ -262,6 +262,10 @@
             class="ml-1"
             x-text="check ? '(Sim)' : '(Não)'"
           ></span>
+        </div>
+        <div class="field">
+          <label for="txt-deficiencies">Deficiências</label>
+          <input type="text" name="deficiencies" id="txt-deficiencies" maxlength="50">
         </div>
         <div class="my-3 flex items-center gap-3">
           <label for="sl-school">Escolaridade pública:</label>

@@ -69,6 +69,8 @@ class Course(Model):
     subjects = ManyToManyField(Subject)
     time = CharField(max_length=1, choices=Timing.choices, default=Timing.MORNING)
     coordinator = ForeignKey(User, SET_NULL, null=True, related_name="courses")
+    info = TextField(null=True)
+    duration = PositiveSmallIntegerField(default=3)
 
     class Meta:
         verbose_name = _("curso")
