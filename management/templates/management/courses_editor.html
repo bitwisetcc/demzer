@@ -175,7 +175,6 @@
         <div>
           <h2>{{ course.name }}</h2>
           <span>Turno: {{ course.get_time_display }}</span>
-          <span x-text="optOpen"></span>
         </div>
         <div>
           <button>
@@ -209,14 +208,14 @@
                 d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z"
               />
             </svg>
-            <div x-if="optOpen" class="absolute flex flex-col">
-              <button>Editar</button>
-              <button>Excluir</button>
-            </div>
           </button>
+          <div x-show="optOpen" class="absolute flex flex-col">
+            <button>Editar</button>
+            <button>Excluir</button>
+          </div>
         </div>
       </header>
-      <div>uuughhhghg qq tá acontecendo??</div>
+      <div>whats happening??</div>
     </div>
     {% endfor %} {% else %}
     <h2 class="font-mono text-2xl font-medium text-slate-500">
