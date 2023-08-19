@@ -1,12 +1,37 @@
 {% extends 'core/base.html' %} {% block head %}
 <title>Editor de cursos</title>
+<script defer>
+  document.addEventListener("alpine:init", () => {
+    Alpine.data("dialogs", () => ({
+      courseDialog: false,
+      subjectDialog: false,
+      importDialog: false,
+      deleteDialog: false,
+      name: "",
+      slug: "",
+      time: "M",
+      duration: "",
+      coordinator: "",
+      info: "",
+      method: "post",
+
+      clear() {
+        this.courseDialog = true;
+        this.name = "";
+        this.slug = "";
+        this.time = "M";
+        this.duration = "";
+        this.coordinator = "";
+        this.info = "";
+        this.method = "post";
+      },
+    }));
+  });
+</script>
 {% endblock %} {% block content %}
-<main
-  class="flex flex-col px-24 py-10"
-  x-data="{ courseDialog: false, subjectDialog: false, importDialog: false }"
->
+<main class="flex flex-col px-24 py-10" x-data="dialogs">
   <dialog :open="courseDialog" class="w-1/2 rounded-2xl p-6 shadow-lg">
-    <form action="{% url 'courses_editor' %}" method="post">
+    <form action="{% url 'courses_editor' %}" :method="method">
       {% csrf_token %}
       <h2 class="mb-3 text-xl font-semibold">Criar curso</h2>
       <div class="mb-3 flex items-center gap-2">
@@ -18,13 +43,21 @@
           required
           class="flex-1"
           maxlength="60"
+          x-model="name"
         />
       </div>
       <div class="mb-3 flex items-center justify-around gap-2">
         <label for="txt-slug">Código:</label>
-        <input type="text" name="slug" id="txt-slug" maxlength="2" required />
+        <input
+          type="text"
+          name="slug"
+          id="txt-slug"
+          maxlength="2"
+          required
+          x-model="slug"
+        />
         <label for="sl-time">Horário:</label>
-        <select name="time" id="sl-time">
+        <select name="time" id="sl-time" x-model="time">
           <option value="M" selected>Manhã</option>
           <option value="E">Tarde</option>
           <option value="N">Noite</option>
@@ -36,6 +69,7 @@
           name="duration"
           id="txt-duration"
           size="1"
+          x-model="duration"
           class="[appearance:textfield]"
         />
       </div>
@@ -45,18 +79,29 @@
           type="text"
           name="coordinator"
           id="txt-coordinator"
+          x-model="coordinator"
           class="flex-1"
         />
       </div>
       <div class="mb-3 flex flex-col gap-2">
         <label for="txt-info">Informações:</label>
-        <textarea name="info" id="txt-info" cols="30" rows="4"></textarea>
+        <textarea
+          name="info"
+          id="txt-info"
+          cols="30"
+          rows="4"
+          x-model="info"
+        ></textarea>
       </div>
       <div class="mt-3 flex gap-2">
         <button @click.prevent="courseDialog = false" class="btn">
           Voltar
         </button>
-        <button type="submit" class="btn">Criar</button>
+        <button
+          type="submit"
+          class="btn"
+          x-text="method == 'post' ? 'Criar' : 'Salvar'"
+        ></button>
       </div>
     </form>
   </dialog>
@@ -141,10 +186,11 @@
       </div>
     </form>
   </dialog>
+  <dialog></dialog>
   <header class="mb-4 flex justify-between">
     <h1 class="mb-4 text-4xl font-semibold">Cursos</h1>
     <div class="flex gap-2">
-      <button @click="courseDialog = true">
+      <button @click="clear()">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -165,26 +211,27 @@
       </button>
     </div>
   </header>
-  <section>
+  <section class="flex flex-col gap-6">
     {% if courses %} {% for course in courses %}
-    <div class="rounded-2xl bg-gray-100 shadow">
-      <header
-        class="flex justify-between px-6 py-4"
-        x-data="{ optOpen: false }"
-      >
+    <div
+      class="rounded-2xl bg-gray-100 shadow"
+      x-data="{ options: false, details: false }"
+    >
+      <header class="flex justify-between px-6 py-4">
         <div>
           <h2>{{ course.name }}</h2>
           <span>Turno: {{ course.get_time_display }}</span>
         </div>
         <div>
-          <button>
+          <button @click="details = !details">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               stroke-width="1.5"
               stroke="currentColor"
-              class="h-6 w-6"
+              class="h-6 w-6 transition-transform"
+              :class="details && 'rotate-180'"
             >
               <path
                 stroke-linecap="round"
@@ -193,7 +240,7 @@
               />
             </svg>
           </button>
-          <button @click="optOpen = !optOpen" class="relative">
+          <button @click="options = !options" class="relative">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -209,13 +256,45 @@
               />
             </svg>
           </button>
-          <div x-show="optOpen" class="absolute flex flex-col">
-            <button>Editar</button>
-            <button>Excluir</button>
+          <div
+            x-show="options"
+            class="absolute flex flex-col gap-2 rounded-lg border border-slate-400 bg-gray-100 p-3"
+          >
+            <button
+              class="hover:text-color-dark-orange"
+              @click="() => {
+                courseDialog = true;
+                name = '{{ course.name }}';
+                slug = '{{ course.slug }}';
+                time = '{{ course.time }}';
+                duration = '{{ course.duration }}';
+                coordinator = '{{ course.coordinator }}';
+                info = '{{ course.info }}';
+                method = 'put';
+                if (info == 'None') info = '';
+              }"
+            >
+              Editar
+            </button>
+            <button
+              class="hover:text-color-dark-orange"
+              @click="deleteDialog = true"
+            >
+              Excluir
+            </button>
           </div>
         </div>
       </header>
-      <div>whats happening??</div>
+      <div
+        class="origin-top rounded-b-2xl bg-gray-200 p-5 transition-all"
+        :class="details || 'scale-y-0 h-0 py-0'"
+      >
+        <p>
+          Duração: {{ course.duration }} ano{% if course.duration != 1 %}s{% endif %}
+        </p>
+        <p>Coordenador: {{ course.coordinator }}</p>
+        <p>Informações: {{ course.info }}</p>
+      </div>
     </div>
     {% endfor %} {% else %}
     <h2 class="font-mono text-2xl font-medium text-slate-500">
