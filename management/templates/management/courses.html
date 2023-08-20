@@ -34,7 +34,7 @@
   <dialog :open="courseDialog" class="w-1/2 rounded-2xl p-6 shadow-lg">
     <form action="{% url 'courses' %}" method="POST">
       {% csrf_token %}
-      <input type="hidden" name="pk" x-model="pk">
+      <input type="hidden" name="pk" x-model="pk" />
       <h2 class="mb-3 text-xl font-semibold">Criar curso</h2>
       <div class="mb-3 flex items-center gap-2">
         <label for="txt-name">Nome:</label>
@@ -184,7 +184,46 @@
       </div>
     </form>
   </dialog>
-  <dialog></dialog>
+  <dialog :open="deleteDialog" class="rounded-2xl p-6 shadow-lg">
+    <form
+      action="{% url 'delete_course' %}"
+      method="post"
+      class="flex flex-col items-center gap-3"
+    >
+      {% csrf_token %}
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="h-16 w-16 text-red-500"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+        />
+      </svg>
+      <p>
+        Cuidado! Isso pode <br />
+        desalocar turmas e horários.
+      </p>
+      <input type="hidden" name="pk" x-model="pk" />
+      <button
+        @click.prevent="deleteDialog = false"
+        class="rounded-lg border border-slate-500 p-3"
+      >
+        Voltar
+      </button>
+      <button
+        type="submit"
+        class="rounded-lg border-0 bg-red-500 p-3 text-white"
+      >
+        Confirmar
+      </button>
+    </form>
+  </dialog>
   <header class="mb-4 flex justify-between">
     <h1 class="mb-4 text-4xl font-semibold">Cursos</h1>
     <div class="flex gap-2">
@@ -277,7 +316,7 @@
             </button>
             <button
               class="hover:text-color-dark-orange"
-              @click="deleteDialog = true"
+              @click="() => { deleteDialog = true; pk = '{{ course.pk }}'}"
             >
               Excluir
             </button>

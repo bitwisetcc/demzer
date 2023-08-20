@@ -6,5 +6,6 @@ urlpatterns = [
     path("purge/<str:role>/", purge, name="purge"),
     path("import/users/", import_users, name="import/users"),
     path("courses/", courses, name="courses"),
+    path("courses/delete", delete_course, name="delete_course"),
     path("subjects/new/", create_subject, name="create_subject"),
 ]

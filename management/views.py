@@ -150,7 +150,9 @@ def courses(request: HttpRequest):
                 return redirect("courses")
 
             course.save()
-            messages.success(request, "Curso {} editado com sucesso".format(course.slug))
+            messages.success(
+                request, "Curso {} editado com sucesso".format(course.slug)
+            )
             return redirect("courses")
 
         try:
@@ -182,6 +184,14 @@ def courses(request: HttpRequest):
             "subjects": list(Subject.objects.all())[-12:],
         },
     )
+
+
+@require_POST
+def delete_course(request: HttpRequest):
+    course = Course.objects.get(pk=request.POST.get("pk"))
+    course.delete()
+    messages.success(request, "Curso {} deletado com sucesso".format(course.slug))
+    return redirect("courses")
 
 
 @require_POST
