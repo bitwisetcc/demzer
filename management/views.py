@@ -11,6 +11,7 @@ from django.views.decorators.http import require_POST
 from rolepermissions.decorators import has_permission_decorator as check_permission
 from rolepermissions.roles import assign_role
 from rolepermissions.checkers import has_role
+from core.roles import Admin
 
 
 from core.models import Class, Course, Member, Subject
@@ -120,36 +121,46 @@ def import_users(request: HttpRequest):
         return render(request, "management/import.html")
 
 
-def courses_editor(request: HttpRequest):
+def get_coordinator(pk: int) -> User:
+    coordinator = User.objects.get(pk=int(pk))
+
+    if not has_role(coordinator, ["coordinator", "admin", "teacher"]):
+        raise Exception("Usuário {} não tem privilégios necessários".format(pk))
+
+
+def courses(request: HttpRequest):
     if request.method == "POST":
         pk = request.POST.get("coordinator")
-        if pk is None or pk == "" or pk.isspace():
-            messages.error(request, "Coordenador inválido".format(pk))
-            return redirect("courses_editor")
-        elif pk.isdigit():
+
+        if request.POST.get("pk") != "0":
+            course = Course.objects.get(pk=request.POST.get("pk"))
+            course.name = request.POST.get("name")
+            course.slug = request.POST.get("slug")
+            course.time = request.POST.get("time")
+            course.duration = request.POST.get("duration")
+            course.info = request.POST.get("info")
+
             try:
-                coordinator = User.objects.get(pk=int(pk))
+                course.coordinator = get_coordinator(pk)
             except User.DoesNotExist:
                 messages.error(request, "Usuário com o ID {} não encontrado".format(pk))
-                return redirect("courses_editor")
-        else:
-            try:
-                coordinator = User.objects.get(username__startswith=pk)
-            except User.DoesNotExist:
-                coordinator = None
-                messages.error(
-                    request, "Usuário com o nome {} não encontrado".format(pk)
-                )
-                return redirect("courses_editor")
+                return redirect("courses")
+            except Exception as exc:
+                messages.warning(request, exc)
+                return redirect("courses")
 
-        if not has_role(coordinator, ["coordinator", "admin", "teacher"]):
-            messages.warning(
-                request,
-                "Usuário {} não tem privilégios para ser um coordenador".format(
-                    coordinator.first_name
-                ),
-            )
-            return redirect("courses_editor")
+            course.save()
+            messages.success(request, "Curso {} editado com sucesso".format(course.slug))
+            return redirect("courses")
+
+        try:
+            coordinator = get_coordinator(pk)
+        except User.DoesNotExist:
+            messages.error(request, "Usuário com o ID {} não encontrado".format(pk))
+            return redirect("courses")
+        except Exception as exc:
+            messages.warning(request, exc)
+            return redirect("courses")
 
         course = Course.objects.create(
             name=request.POST.get("name"),
@@ -161,11 +172,11 @@ def courses_editor(request: HttpRequest):
         )
 
         messages.success(request, "Curso {} criado com sucesso".format(course.slug))
-        return redirect("courses_editor")
+        return redirect("courses")
 
     return render(
         request,
-        "management/courses_editor.html",
+        "management/courses.html",
         {
             "courses": Course.objects.all(),
             "subjects": list(Subject.objects.all())[-12:],
@@ -201,4 +212,4 @@ def create_subject(request: HttpRequest):
                 request, "Matéria '{}' criada com sucesso.".format(subj.slug)
             )
 
-    return redirect("courses_editor")
+    return redirect("courses")

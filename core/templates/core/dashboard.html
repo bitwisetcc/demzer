@@ -22,11 +22,8 @@
       >
         Professores
       </li>
-      <li class="control bg-gray-200" data-section="courses" @click="reload">
-        Cursos
-      </li>
       <li class="control bg-gray-200">
-        <a href="{% url 'courses_editor' %}">Cursos</a>
+        <a href="{% url 'courses' %}">Cursos</a>
       </li>
       {% if user|can:'create_user' %}
       <li class="btn control bg-cyan-600">

@@ -65,7 +65,7 @@ class Course(Model):
         FULL = "F", _("Integral")
 
     name = CharField(max_length=60)
-    slug = SlugField(max_length=2, default="-")
+    slug = SlugField(max_length=2, default="-", unique=True)
     subjects = ManyToManyField(Subject)
     time = CharField(max_length=1, choices=Timing.choices, default=Timing.MORNING)
     coordinator = ForeignKey(User, SET_NULL, null=True, related_name="courses")

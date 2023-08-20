@@ -7,15 +7,17 @@
       subjectDialog: false,
       importDialog: false,
       deleteDialog: false,
+
+      pk: 0,
       name: "",
       slug: "",
       time: "M",
       duration: "",
       coordinator: "",
       info: "",
-      method: "post",
 
       clear() {
+        this.pk = 0;
         this.courseDialog = true;
         this.name = "";
         this.slug = "";
@@ -23,7 +25,6 @@
         this.duration = "";
         this.coordinator = "";
         this.info = "";
-        this.method = "post";
       },
     }));
   });
@@ -31,8 +32,9 @@
 {% endblock %} {% block content %}
 <main class="flex flex-col px-24 py-10" x-data="dialogs">
   <dialog :open="courseDialog" class="w-1/2 rounded-2xl p-6 shadow-lg">
-    <form action="{% url 'courses_editor' %}" :method="method">
+    <form action="{% url 'courses' %}" method="POST">
       {% csrf_token %}
+      <input type="hidden" name="pk" x-model="pk">
       <h2 class="mb-3 text-xl font-semibold">Criar curso</h2>
       <div class="mb-3 flex items-center gap-2">
         <label for="txt-name">Nome:</label>
@@ -76,7 +78,7 @@
       <div class="mb-1 flex items-center gap-2">
         <label for="txt-coordinator">Coordenador:</label>
         <input
-          type="text"
+          type="number"
           name="coordinator"
           id="txt-coordinator"
           x-model="coordinator"
@@ -97,11 +99,7 @@
         <button @click.prevent="courseDialog = false" class="btn">
           Voltar
         </button>
-        <button
-          type="submit"
-          class="btn"
-          x-text="method == 'post' ? 'Criar' : 'Salvar'"
-        ></button>
+        <button type="submit" class="btn">Salvar</button>
       </div>
     </form>
   </dialog>
@@ -219,7 +217,7 @@
     >
       <header class="flex justify-between px-6 py-4">
         <div>
-          <h2>{{ course.name }}</h2>
+          <h2>{{ course.name }} - {{ course.slug }}</h2>
           <span>Turno: {{ course.get_time_display }}</span>
         </div>
         <div>
@@ -236,7 +234,7 @@
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                d="M4.5 15.75l7.5-7.5 7.5 7.5"
+                d="M19.5 8.25l-7.5 7.5-7.5-7.5"
               />
             </svg>
           </button>
@@ -259,6 +257,7 @@
           <div
             x-show="options"
             class="absolute flex flex-col gap-2 rounded-lg border border-slate-400 bg-gray-100 p-3"
+            @click.away="() => options = false"
           >
             <button
               class="hover:text-color-dark-orange"
@@ -268,9 +267,9 @@
                 slug = '{{ course.slug }}';
                 time = '{{ course.time }}';
                 duration = '{{ course.duration }}';
-                coordinator = '{{ course.coordinator }}';
+                coordinator = '{{ course.coordinator.pk }}';
                 info = '{{ course.info }}';
-                method = 'put';
+                pk = '{{ course.pk }}';
                 if (info == 'None') info = '';
               }"
             >
