@@ -8,4 +8,5 @@ urlpatterns = [
     path("courses/", courses, name="courses"),
     path("courses/delete", delete_course, name="delete_course"),
     path("subjects/new/", create_subject, name="create_subject"),
+    path("subjects/import/", import_subject, name="import_subject"),
 ]

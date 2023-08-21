@@ -17,7 +17,7 @@
     :class="`border-${colors['{{ msg.level_tag }}']}-500 ` + (closed && 'hidden')"
   >
   <!-- TODO: fix message colors -->
-    <span>{{ msg }}</span>
+    <span>{{ msg }} {{ msg.level_tag }}</span>
     <button @click="hide()" class="absolute right-2 top-2">
       <svg
         xmlns="http://www.w3.org/2000/svg"

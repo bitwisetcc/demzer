@@ -1,3 +1,4 @@
+import json
 import os
 import re
 from datetime import datetime
@@ -126,6 +127,8 @@ def get_coordinator(pk: int) -> User:
 
     if not has_role(coordinator, ["coordinator", "admin", "teacher"]):
         raise Exception("Usuário {} não tem privilégios necessários".format(pk))
+    
+    return coordinator
 
 
 def courses(request: HttpRequest):
@@ -196,30 +199,32 @@ def delete_course(request: HttpRequest):
 
 @require_POST
 @check_permission("create_subject")
+def import_subject(request: HttpRequest):
+    body = json.loads(request.body.decode())
+    try:
+        Subject.objects.bulk_create(
+            Subject(name=name, slug=slug)
+            for name, slug in zip(body["names"], body["slugs"])
+            if name != "" and slug != ""
+        )
+        messages.success(request, "Matérias criadas com sucesso.")
+        return HttpResponse("Sucesso")
+    except Exception as error:
+        return HttpResponse("Falha ao criar matérias: {}".format(error))
+
+
+@require_POST
+@check_permission("create_subject")
 def create_subject(request: HttpRequest):
-    if "import" in request.POST:
-        lines, headers = read_csv(request, "import_file")
-        data = [dict(zip(headers, l)) for l in lines]
-
-        try:
-            Subject.objects.bulk_create(
-                Subject(name=subj["name"], slug=subj["slug"]) for subj in data
-            )
-        except IndexError as error:
-            return HttpResponseBadRequest("Arquivo vazio. Tente novamente")
-        except Exception as error:
-            return HttpResponse("Falha ao ler arquivo: {}".format(error))
-
-    else:
-        try:
-            subj = Subject.objects.create(
-                **dfilter(request.POST, ["name", "slug", "description"])
-            )
-        except Exception as error:
-            messages.error(request, "Falha ao criar matéria: {}".format(error))
-        finally:
-            messages.success(
-                request, "Matéria '{}' criada com sucesso.".format(subj.slug)
-            )
+    try:
+        subj = Subject.objects.create(
+            **dfilter(request.POST, ["name", "slug", "description"])
+        )
+    except Exception as error:
+        messages.error(request, "Falha ao criar matéria: {}".format(error))
+    finally:
+        messages.success(
+            request, "Matéria '{}' criada com sucesso.".format(subj.slug)
+        )
 
     return redirect("courses")
