@@ -15,7 +15,7 @@ from rolepermissions.checkers import has_role
 from core.roles import Admin
 
 
-from core.models import Class, Course, Member, Subject
+from core.models import Class, Classroom, Course, Member, Subject
 
 
 # General queries with auth included
@@ -127,7 +127,7 @@ def get_coordinator(pk: int) -> User:
 
     if not has_role(coordinator, ["coordinator", "admin", "teacher"]):
         raise Exception("Usuário {} não tem privilégios necessários".format(pk))
-    
+
     return coordinator
 
 
@@ -197,6 +197,74 @@ def delete_course(request: HttpRequest):
     return redirect("courses")
 
 
+def classrooms(request: HttpRequest):
+    if request.method == "POST":
+        slug = request.POST.get("course")
+
+        if request.POST.get("pk") != "0":
+            classroom = Classroom.objects.get(pk=request.POST.get("pk"))
+            classroom.year = request.POST.get("year")
+
+            try:
+                classroom.course = Course.objects.get(slug=slug)
+            except Course.DoesNotExist:
+                messages.error(
+                    request, "Curso com o código {} não encontrado".format(slug)
+                )
+                return redirect("classrooms")
+            except Exception as exc:
+                messages.warning(request, exc)
+                return redirect("classrooms")
+
+            classroom.save()
+            messages.success(
+                request,
+                "Turma {} editada com sucesso".format(
+                    classroom.course.slug + str(classroom.year)
+                ),
+            )
+            return redirect("classrooms")
+
+        try:
+            classroom = Classroom.objects.create(
+                course=Course.objects.get(slug=slug),
+                year=request.POST.get("year"),
+            )
+        except Course.DoesNotExist:
+            messages.error(request, "Curso com o código {} não encontrado".format(slug))
+            return redirect("classrooms")
+        except Exception as exc:
+            messages.warning(request, exc)
+            return redirect("classrooms")
+
+        messages.success(
+            request,
+            "Turma {} criada com sucesso".format(
+                classroom.course.slug + str(classroom.year)
+            ),
+        )
+        return redirect("classrooms")
+
+    return render(
+        request,
+        "management/classrooms.html",
+        {"classrooms": Classroom.objects.all()},
+    )
+
+
+@require_POST
+def delete_classroom(request: HttpRequest):
+    classroom = Classroom.objects.get(pk=request.POST.get("pk"))
+    classroom.delete()
+    messages.success(
+        request,
+        "Turma {} deletada com sucesso".format(
+            classroom.course.slug + str(classroom.year)
+        ),
+    )
+    return redirect("clasrooms")
+
+
 @require_POST
 @check_permission("create_subject")
 def import_subject(request: HttpRequest):
@@ -223,8 +291,6 @@ def create_subject(request: HttpRequest):
     except Exception as error:
         messages.error(request, "Falha ao criar matéria: {}".format(error))
     finally:
-        messages.success(
-            request, "Matéria '{}' criada com sucesso.".format(subj.slug)
-        )
+        messages.success(request, "Matéria '{}' criada com sucesso.".format(subj.slug))
 
     return redirect("courses")
