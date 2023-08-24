@@ -25,6 +25,9 @@
       <li class="control bg-gray-200">
         <a href="{% url 'courses' %}">Cursos</a>
       </li>
+      <li class="control bg-gray-200">
+        <a href="{% url 'classrooms' %}">Turmas</a>
+      </li>
       {% if user|can:'create_user' %}
       <li class="btn control bg-cyan-600">
         <a href="{% url 'enroll' %}" class="flex items-center font-semibold">

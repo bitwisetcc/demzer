@@ -1,3 +1,4 @@
+from datetime import date
 from django.db.models import (
     Model,
     TextChoices,
@@ -78,9 +79,8 @@ class Course(Model):
 
 
 class Classroom(Model):
-    slug = SlugField(max_length=7, default="-")
-    year = IntegerField(default=1)
     course = ForeignKey(Course, SET_NULL, related_name="classroom", null=True)
+    year = IntegerField(default=2023)
 
 
 class Member(Model):
