@@ -1,4 +1,6 @@
-{% extends 'core/base.html' %} {% block head %}
+{% extends 'core/base.html' %}
+{% load permission_tags %} {% load demzer_tags %}
+{% block head %}
 <title>Editor de cursos</title>
 <script defer>
   document.addEventListener("alpine:init", () => {
@@ -7,6 +9,7 @@
       subjectDialog: false,
       importDialog: false,
       deleteDialog: false,
+      filterDialog: false,
 
       pk: 0,
       name: "",
@@ -97,6 +100,7 @@
           id="txt-duration"
           size="1"
           x-model="duration"
+          step="0.5"
           class="[appearance:textfield]"
         />
       </div>
@@ -125,6 +129,48 @@
           Voltar
         </button>
         <button type="submit" class="btn">Salvar</button>
+      </div>
+    </form>
+  </dialog>
+  <dialog :open="filterDialog" class="rounded-lg p-6 shadow-lg">
+    <form action="{% url 'courses' %}" method="get" class="flex flex-col gap-2">
+      <h2 class="mb-3 text-xl font-semibold">Filtrar</h2>
+      <div class="mb-1 flex items-center gap-2">
+        <label for="txt-name">Nome:</label>
+        <input
+          type="text"
+          maxlength="60"
+          name="name"
+          id="txt-name"
+          class="flex-1"
+        />
+        <label for="txt-slug">Código:</label>
+        <input type="text" maxlength="5" size="4" name="slug" id="txt-slug" />
+      </div>
+      <div class="mb-1 flex items-center gap-2">
+        <label for="txt-duration">Duração:</label>
+        <input
+          type="number"
+          size="4"
+          max="10"
+          name="duration"
+          id="txt-duration"
+        />
+        <label for="sl-time">Horário:</label>
+        <select name="time" id="sl-time" x-model="time">
+          <option value="" selected>-</option>
+          <option value="M">Manhã</option>
+          <option value="E">Tarde</option>
+          <option value="N">Noite</option>
+          <option value="F">Integral</option>
+        </select>
+      </div>
+      <div class="flex gap-3">
+        <button type="reset">Limpar</button>
+        <button type="submit">Aplicar</button>
+        <button type="button" @click.prevent="filterDialog = false" class="btn">
+          Voltar
+        </button>
       </div>
     </form>
   </dialog>
@@ -245,10 +291,12 @@
       </button>
     </form>
   </dialog>
+
   <section class="flex flex-col gap-6">
     <header class="flex justify-between">
       <h1 class="mb-4 text-4xl font-semibold">Cursos</h1>
       <div class="flex gap-2">
+        {% if user|can:'create_course' %}
         <button @click="clear()">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -265,6 +313,7 @@
             />
           </svg>
         </button>
+        {% endif %}
         <button @click="filterDialog = true">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -311,6 +360,7 @@
               />
             </svg>
           </button>
+          {% if user|can:'create_course' %}
           <button @click="options = !options" class="relative">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -327,6 +377,7 @@
               />
             </svg>
           </button>
+
           <div
             x-show="options"
             class="absolute z-10 flex flex-col gap-2 rounded-lg border border-slate-400 bg-gray-100 p-3"
@@ -355,14 +406,21 @@
               Excluir
             </button>
           </div>
+          {% endif %}
         </div>
       </header>
       <div
         class="origin-top rounded-b-2xl bg-gray-200 p-5 transition-all"
         :class="details || 'scale-y-0 h-0 py-0'"
       >
+        {% if course.duration|isint %}
         <p>Duração: {{ course.duration }} anos</p>
-        <p>Coordenador: {{ course.coordinator }} ({{ course.coordinator.pk }})</p>
+        {% else %}
+        <p>Duração: {% widthratio course.duration 1 2 %} semestres</p>
+        {% endif %}
+        <p>
+          Coordenador: {{ course.coordinator }} ({{ course.coordinator.pk }})
+        </p>
         <p>Informações: {{ course.info }}</p>
       </div>
     </div>

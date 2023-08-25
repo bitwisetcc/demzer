@@ -107,7 +107,7 @@ def enroll(request: HttpRequest):
 
             if request.POST.get("role") == "student":
                 profile.public_schooling = request.POST.get("public-schooling")
-                profile.classroom = request.POST.get("classroom")
+                profile.classroom = Classroom.objects.get(pk=request.POST.get("classroom"))
 
                 try:
                     guardian, created = Relative.objects.get_or_create(
@@ -137,9 +137,8 @@ def enroll(request: HttpRequest):
                 messages.warning(request, "Falha ao designar grupo ao usuário")
 
         except Exception as error:
-            return HttpResponseBadRequest(
-                "Falha ao criar perfil: {}".format(error.args[0])
-            )
+            messages.error(request, "Falha ao criar perfil: {}".format(error.args[0]))
+            return redirect("enroll")
 
         messages.success(request, "Usuário {} criado com sucesso".format(user.pk))
         return redirect("dashboard")
@@ -149,6 +148,7 @@ def enroll(request: HttpRequest):
             "country": DEFAULT_COUNTRY,
             "state": DEFAULT_STATE,
             "city": DEFAULT_CITY,
+            "classrooms": [c for c in Classroom.objects.all() if date.today().year <= c.year + c.course.duration]
         }
         return render(request, "core/enroll.html", context)
 

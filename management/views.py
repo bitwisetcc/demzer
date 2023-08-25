@@ -179,11 +179,16 @@ def courses(request: HttpRequest):
         messages.success(request, "Curso {} criado com sucesso".format(course.slug))
         return redirect("courses")
 
+    if len(request.GET) == 0:
+        listing = Course.objects.all()
+    else:
+        listing = Course.objects.filter(**({k: v for k, v in request.GET.dict().items() if v}))
+
     return render(
         request,
         "management/courses.html",
         {
-            "courses": Course.objects.all(),
+            "courses": listing,
             "subjects": list(Subject.objects.all())[-12:],
         },
     )
@@ -245,6 +250,12 @@ def classrooms(request: HttpRequest):
         )
         return redirect("classrooms")
 
+    if len(request.GET) == 0:
+        context = Classroom.objects.all()
+    else:
+        context = Classroom.objects.filter()
+
+    
     return render(
         request,
         "management/classrooms.html",

@@ -203,7 +203,7 @@
         </div>
         <label
           for="file-picture"
-          class="btn flex w-max cursor-pointer items-center gap-1 mt-4"
+          class="btn mt-4 flex w-max cursor-pointer items-center gap-1"
         >
           <span x-text="imageName ?? 'Foto de perfil'"></span>
           <svg
@@ -265,7 +265,12 @@
         </div>
         <div class="field">
           <label for="txt-deficiencies">Deficiências</label>
-          <input type="text" name="deficiencies" id="txt-deficiencies" maxlength="50">
+          <input
+            type="text"
+            name="deficiencies"
+            id="txt-deficiencies"
+            maxlength="50"
+          />
         </div>
         <div class="my-3 flex items-center gap-3">
           <label for="sl-school">Escolaridade pública:</label>
@@ -275,6 +280,14 @@
             <option value="F" selected>Ensino Fundamental</option>
             <option value="M">Ensino Médio</option>
             <option value="N">Nenhuma</option>
+          </select>
+        </div>
+        <div class="my-3 flex items-center gap-3">
+          <label for="sl-classroom">Turma:</label>
+          <select name="classroom" id="sl-classroom">
+            {% for classroom in classrooms %}
+              <option value="{{ classroom.pk }}">{{ classroom }}</option>
+            {% endfor %}
           </select>
         </div>
         <button class="btn mt-2 rounded-lg font-semibold" @click="switchTab()">
@@ -342,7 +355,7 @@
               class="w-full"
               x-model="city"
               required
-              :disabled="$refs.cep.value == ''"
+              :readonly="$refs.cep.value != ''"
             />
           </div>
           <div class="field grow">
@@ -354,7 +367,7 @@
               class="w-full"
               x-model="neighborhood"
               required
-              :disabled="$refs.cep.value == ''"
+              :readonly="$refs.cep.value != ''"
             />
           </div>
         </div>
@@ -367,7 +380,7 @@
               id="txt-street"
               class="w-full"
               x-model="street"
-              :disabled="$refs.cep.value == ''"
+              :readonly="$refs.cep.value != ''"
             />
           </div>
           <div class="field">
