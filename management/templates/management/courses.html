@@ -1,5 +1,4 @@
-{% extends 'core/base.html' %}
-{% load permission_tags %} {% load demzer_tags %}
+{% extends 'core/base.html' %} {% load permission_tags %} {% load demzer_tags %}
 {% block head %}
 <title>Editor de cursos</title>
 <script defer>
@@ -63,7 +62,25 @@
     <form action="{% url 'courses' %}" method="POST">
       {% csrf_token %}
       <input type="hidden" name="pk" x-model="pk" />
-      <h2 class="mb-3 text-xl font-semibold">Criar curso</h2>
+      <h2 class="mb-3 flex justify-between text-xl font-semibold">
+        <span class="text-color-txt-perfil">Criar curso</span>
+        <button @click.prevent="courseDialog = false">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-6 w-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </h2>
       <div class="mb-3 flex items-center gap-2">
         <label for="txt-name">Nome:</label>
         <input
@@ -124,17 +141,37 @@
           x-model="info"
         ></textarea>
       </div>
-      <div class="mt-3 flex gap-2">
-        <button @click.prevent="courseDialog = false" class="btn">
-          Voltar
+      <div class="mt-3 flex justify-center">
+        <button
+          type="submit"
+          class="rounded-2xl border-2 border-color-dark-orange bg-color-secondary px-5 py-2"
+        >
+          Salvar
         </button>
-        <button type="submit" class="btn">Salvar</button>
       </div>
     </form>
   </dialog>
-  <dialog :open="filterDialog" class="rounded-lg p-6 shadow-lg">
+  <dialog :open="filterDialog" class="rounded-2xl p-6 shadow-lg">
     <form action="{% url 'courses' %}" method="get" class="flex flex-col gap-2">
-      <h2 class="mb-3 text-xl font-semibold">Filtrar</h2>
+      <h2 class="mb-3 flex justify-between text-xl font-semibold">
+        <span class="text-color-txt-perfil">Filtrar</span>
+        <button @click.prevent="filterDialog = false">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-6 w-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </h2>
       <div class="mb-1 flex items-center gap-2">
         <label for="txt-name">Nome:</label>
         <input
@@ -165,19 +202,44 @@
           <option value="F">Integral</option>
         </select>
       </div>
-      <div class="flex gap-3">
-        <button type="reset">Limpar</button>
-        <button type="submit">Aplicar</button>
-        <button type="button" @click.prevent="filterDialog = false" class="btn">
-          Voltar
+      <div class="mt-3 flex justify-center gap-3">
+        <button
+          type="reset"
+          class="rounded-2xl border-2 border-color-dark-orange bg-amber-50 px-5 py-2"
+        >
+          Limpar
+        </button>
+        <button
+          type="submit"
+          class="rounded-2xl border-2 border-color-dark-orange bg-color-secondary px-5 py-2"
+        >
+          Aplicar
         </button>
       </div>
     </form>
   </dialog>
-  <dialog :open="subjectDialog" class="rounded-lg shadow-lg">
+  <dialog :open="subjectDialog" class="rounded-2xl shadow-lg p-5">
     <form action="{% url 'create_subject' %}" method="post">
       {% csrf_token %}
-      <h2 class="text-xl font-bold">Nova matéria</h2>
+      <h2 class="text-xl font-bold flex justify-between mb-3">
+        <span class="text-color-txt-perfil">Nova matéria</span>
+        <button @click.prevent="subjectDialog = false">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-6 w-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </h2>
       <div class="field">
         <label for="txt-name">Nome</label>
         <input type="text" name="name" id="txt-name" required maxlength="60" />
@@ -197,9 +259,6 @@
         ></textarea>
       </div>
       <div class="mt-3 flex gap-2">
-        <button @click.prevent="subjectDialog = false" class="btn">
-          Voltar
-        </button>
         <button
           @click.prevent="() => { subjectDialog = false; importDialog = true }"
           class="btn"
