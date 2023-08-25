@@ -203,7 +203,7 @@ def super_secret(request: HttpRequest):
             try:
                 assign_role(admin, "admin")
             except Exception as error:
-                return Http404(
+                raise Http404(
                     "Falha ao designar grupo ao usuário: {}".format(error.args[0])
                 )
 
@@ -212,7 +212,7 @@ def super_secret(request: HttpRequest):
             login(request, admin)
             return redirect("profile")
         else:
-            return Http404("Chave de segurança incorreta")
+            raise Http404("Chave de segurança incorreta")
 
     context = {
         "birthdate": DEFAULT_BIRTHDATE,
