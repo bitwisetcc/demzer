@@ -1,3 +1,4 @@
+from collections import defaultdict
 import json
 import os
 import re
@@ -12,7 +13,7 @@ from django.views.decorators.http import require_POST
 from rolepermissions.decorators import has_permission_decorator as check_permission
 from rolepermissions.roles import assign_role
 from rolepermissions.checkers import has_role
-from core.roles import Admin
+from core.roles import Admin, Student
 
 
 from core.models import Class, Classroom, Course, Member, Subject
@@ -62,6 +63,10 @@ def import_users(request: HttpRequest):
             lines: list[str] = list(map(csv_data, request.FILES["users"].readlines()))
             headers: list[str] = lines.pop(0)
 
+            classrooms = defaultdict(
+                None, {c.course.slug + str(c.year): c for c in Classroom.objects.all()}
+            )
+
             data = [
                 {
                     **(row := dict(zip(headers, line))),
@@ -69,6 +74,7 @@ def import_users(request: HttpRequest):
                     "afro": row["afro"] == "true" or row["afro"] == "1",
                     "cpf": re.sub(r"[\./-]", "", row["cpf"]),
                     "rg": re.sub(r"[\./-]", "", row["rg"]),
+                    "classroom": classrooms.get(row["classroom"]),
                     # TODO: Send reset email
                     "password": make_password(
                         row["username"].split()[0]
@@ -89,11 +95,10 @@ def import_users(request: HttpRequest):
             return HttpResponse("Falha ao ler arquivo: {}".format(error))
 
         try:
-            users = [
+            users = User.objects.bulk_create(
                 User(**dfilter(user, ["username", "email", "password"]))
                 for user in data
-            ]
-            User.objects.bulk_create(users)
+            )
         except Exception as error:
             return HttpResponse("Falha ao criar usuários: {}".format(error))
 
@@ -182,7 +187,9 @@ def courses(request: HttpRequest):
     if len(request.GET) == 0:
         listing = Course.objects.all()
     else:
-        listing = Course.objects.filter(**({k: v for k, v in request.GET.dict().items() if v}))
+        listing = Course.objects.filter(
+            **({k: v for k, v in request.GET.dict().items() if v})
+        )
 
     return render(
         request,
@@ -255,7 +262,6 @@ def classrooms(request: HttpRequest):
     else:
         context = Classroom.objects.filter()
 
-    
     return render(
         request,
         "management/classrooms.html",
