@@ -401,7 +401,7 @@
           <h2>{{ course.name }} - {{ course.slug }}</h2>
           <span>Turno: {{ course.get_time_display }}</span>
         </div>
-        <div>
+        <div class="relative">
           <button @click="details = !details">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -473,7 +473,7 @@
         :class="details || 'scale-y-0 h-0 py-0'"
       >
         {% if course.duration|isint %}
-        <p>Duração: {{ course.duration }} anos</p>
+        <p>Duração: {{ course.duration|castint }} anos</p>
         {% else %}
         <p>Duração: {% widthratio course.duration 1 2 %} semestres</p>
         {% endif %}
