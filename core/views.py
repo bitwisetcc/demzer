@@ -7,8 +7,11 @@ from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import Http404, HttpRequest, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import redirect, render
+from django.core.files import File
 from rolepermissions.decorators import has_permission_decorator as check_permission
+from rolepermissions.checkers import has_role
 from rolepermissions.roles import assign_role
+from django.db.models import Q
 
 from backend.settings import (
     DEFAULT_BIRTHDATE,
@@ -16,14 +19,10 @@ from backend.settings import (
     DEFAULT_COUNTRY,
     DEFAULT_STATE,
     EMAIL_PATTERN,
+    SECURITY_KEY,
 )
 from core.models import *
 from core.utils import email_address
-
-
-def doc_to_num(doc: str):
-    return int(re.sub(r"[\./-]", "", doc))
-
 
 @login_required
 def dashboard(request: HttpRequest):
@@ -71,6 +70,7 @@ def enroll(request: HttpRequest):
         first_name = username.split()[0]
         last_name = username.split()[-1]
         birthdate = datetime.strptime(request.POST["birthdate"], "%Y-%m-%d").date()
+        picture = File(request.FILES.get("picture"))
 
         try:
             user = User.objects.create_user(
@@ -90,40 +90,41 @@ def enroll(request: HttpRequest):
                 phone=re.sub(r"[^0-9]+", "", request.POST.get("phone")),
                 birthdate=birthdate,
                 gender=request.POST.get("gender"),
-                rg=doc_to_num(request.POST.get("rg")),
-                cpf=doc_to_num(request.POST.get("cpf")),
+                rg=re.sub(r"[\./-]", "", request.POST.get("rg")),
+                cpf=re.sub(r"[\./-]", "", request.POST.get("cpf")),
                 afro="afro" in request.POST,
+                indigenous="indigenous" in request.POST,
+                deficiencies=request.POST.get("deficiencies") or None,
                 civil_state=request.POST.get("civil-state"),
                 cep=request.POST.get("cep"),
-                city=request.POST.get("residence-city"),
+                city=request.POST.get("city"),
                 neighborhood=request.POST.get("neighborhood"),
                 street=request.POST.get("street"),
                 street_number=request.POST.get("street-number"),
                 complement=request.POST.get("complement"),
+                picture=picture if picture.readable() else None,
             )
 
             if request.POST.get("role") == "student":
                 profile.public_schooling = request.POST.get("public-schooling")
-                profile.natural_state = request.POST.get("natural-state")
-                profile.natural_city = request.POST.get("natural-city")
-                profile.nationality = request.POST.get("nationality")
-                profile.country_of_origin = request.POST.get("country-of-origin")
-                profile.distance = int(request.POST.get("distance") or 0) or None
+                profile.classroom = Classroom.objects.get(pk=request.POST.get("classroom"))
 
                 try:
-                    # TODO: Still can't create relatives
-                    guardian = Relative.objects.get_or_create(
+                    guardian, created = Relative.objects.get_or_create(
                         name=request.POST.get("name-guardian"),
-                        defaults={
-                            "email": request.POST.get("email-guardian"),
-                            "phone": re.sub(
-                                r"[^0-9]+", "", request.POST.get("phone-guardian")
-                            ),
-                        },
+                        email=request.POST.get("email-guardian"),
+                        phone=re.sub(
+                            r"[^0-9]+", "", request.POST.get("phone-guardian")
+                        ),
                     )
 
                     profile.save()
                     profile.relatives.add(guardian)
+
+                    if not created:
+                        messages.info(
+                            request, "Responsável já encontrado. Verifique o perfil"
+                        )
 
                 except Exception as error:
                     messages.warning(request, "Falha ao associar responsável")
@@ -136,7 +137,8 @@ def enroll(request: HttpRequest):
                 messages.warning(request, "Falha ao designar grupo ao usuário")
 
         except Exception as error:
-            return HttpResponseBadRequest("Falha ao criar perfil: {}".format(error.args[0]))
+            messages.error(request, "Falha ao criar perfil: {}".format(error.args[0]))
+            return redirect("enroll")
 
         messages.success(request, "Usuário {} criado com sucesso".format(user.pk))
         return redirect("dashboard")
@@ -146,17 +148,20 @@ def enroll(request: HttpRequest):
             "country": DEFAULT_COUNTRY,
             "state": DEFAULT_STATE,
             "city": DEFAULT_CITY,
+            "classrooms": [c for c in Classroom.objects.all() if date.today().year <= c.year + c.course.duration]
         }
         return render(request, "core/enroll.html", context)
 
 
 def super_secret(request: HttpRequest):
     if request.method == "POST":
-        if request.POST["key"] == settings.SECURITY_KEY:
+        if request.POST["key"] == SECURITY_KEY:
             username = request.POST["username"].strip()
             first_name = username.split()[0]
             last_name = username.split()[-1]
             birthdate = datetime.strptime(request.POST["birthdate"], "%Y-%m-%d").date()
+            picture = File(request.FILES.get("picture"))
+
             try:
                 admin = User.objects.create_superuser(
                     username=username,
@@ -177,34 +182,84 @@ def super_secret(request: HttpRequest):
                     phone=re.sub(r"[^0-9]+", "", request.POST["phone"]),
                     birthdate=birthdate,
                     gender=request.POST["gender"],
-                    rg=doc_to_num(request.POST["rg"]),
-                    cpf=doc_to_num(request.POST["cpf"]),
+                    rg=re.sub(r"[\./-]", "", request.POST.get("rg")),
+                    cpf=re.sub(r"[\./-]", "", request.POST.get("cpf")),
                     afro="afro" in request.POST,
+                    indigenous="indigenous" in request.POST,
                     cep=request.POST["cep"],
-                    city=request.POST["residence-city"],
+                    city=request.POST["city"],
                     neighborhood=request.POST["neighborhood"],
                     street=request.POST["street"],
                     street_number=request.POST["street-number"],
                     complement=request.POST["complement"],
+                    picture=picture if picture.readable() else None,
                 )
                 profile.save()
             except Exception as error:
-                return HttpResponseBadRequest("Falha ao criar perfil: {}".format(error.args[0]))
+                return HttpResponseBadRequest(
+                    "Falha ao criar perfil: {}".format(error.args[0])
+                )
 
             try:
                 assign_role(admin, "admin")
             except Exception as error:
-                return Http404("Falha ao designar grupo ao usuário: {}".format(error.args[0]))
+                raise Http404(
+                    "Falha ao designar grupo ao usuário: {}".format(error.args[0])
+                )
 
             messages.success(request, "Usuário {} criado com sucesso".format(admin.pk))
-            return redirect("login")
+
+            login(request, admin)
+            return redirect("profile")
         else:
-            return Http404("Chave de segurança incorreta")
-    return render(request, "core/secret.html", {"no_nav": True})
+            raise Http404("Chave de segurança incorreta")
+
+    context = {
+        "birthdate": DEFAULT_BIRTHDATE,
+        "country": DEFAULT_COUNTRY,
+        "state": DEFAULT_STATE,
+        "city": DEFAULT_CITY,
+        "no_nav": True,
+    }
+    return render(request, "core/secret.html", context)
 
 
+@login_required
 def comunicados(request: HttpRequest):
-    return render(request, "core/comunicados.html")
+    if request.method == "POST" and has_role(request.user, "admin"):
+        picture = File(request.FILES.get("image"))
+        private = "staff_only" not in request.POST
+        course = request.POST.get("course")
+        classroom = request.POST.get("classroom")
+
+        pk = Announcement.objects.create(
+            title=request.POST.get("title"),
+            info=request.POST.get("info"),
+            image=picture if picture.readable() else None,
+            private=private,
+            course=Course.objects.get(slug=course) if not private and course else None,
+            classroom=Classroom.objects.get(slug=classroom)
+            if not private and classroom
+            else None,
+        )
+
+        messages.success(request, "Comunicado {} criado com sucesso".format(pk))
+
+    if has_role(request.user, "student"):
+        announcements = Announcement.objects.filter(
+            Q(private=False)
+            & (
+                Q(course=None, classroom=None)
+                | Q(classroom=request.user.profile.classroom)
+                # | Q(course=request.user.profile.classroom.courses)
+            )
+        )
+    else:
+        announcements = Announcement.objects.all()
+
+    return render(
+        request, "core/comunicados.html", {"announcements": Announcement.objects.all()}
+    )
 
 
 def perfil(request: HttpRequest):
@@ -215,14 +270,21 @@ def boletim(request: HttpRequest):
     return render(request, "core/boletim.html")
 
 
-def eventos(request: HttpRequest):
-    return render(request, "core/eventos.html")
+def obs_aluno(request):
+    obs = request.POST.get("obs")
+    return obs
 
-def horario(request: HttpRequest):
-    return render(request, "core/horario.html")
 
-def provas(request: HttpRequest):
-    return render(request, "core/provas.html")
+def profile_picture(request: HttpRequest):
+    if request.method == "POST":
+        pic = File(request.FILES.get("picture"))
+        if not pic.readable():
+            return HttpResponseBadRequest("Arquivo vazio ou corrompido")
 
-def reporte(request: HttpRequest):
-    return render(request, "core/reporte.html")
+        member = Member.objects.get(user=request.user)
+        member.picture = pic
+        member.save()
+
+        return redirect("perfil")
+
+    return HttpResponse(request.user.profile.picture.url)

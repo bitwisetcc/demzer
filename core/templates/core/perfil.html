@@ -1,46 +1,81 @@
 {% extends 'core/base.html' %} {% load static %} {% block head %}
-
+<link rel="stylesheet" href="{% static 'core/dist/css/profile.css' %}" />
+<title>Perfil de {{ user.username.split.0 }}</title>
 {% endblock %} {% block content %}
-
-
-
-<div class="pt-32 grid place-items-center">
-  <p class="pb-8 text-5xl text-color-txt-perfil font-semibold">
-    Perfil 
-  </p>
-  <div class="flex flex-col h-[420] w-[320] rounded-3xl bg-color-bg-perfil">
-    <div class=" pl-16 ">
-      <svg 
-      xmlns="http://www.w3.org/2000/svg" 
-      fill="none" 
-      viewBox="0 0 24 24" 
-      stroke-width="1.5" 
-      stroke="currentColor" 
-      class="w-[200px] h-[200px]"
-      >
-        <path stroke-linecap="round"
-        stroke-linejoin="round" 
-        d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" 
-        />
-      </svg>
-    </div>
-
-    <div class="pl-5 items-center">
+<main class="mb-10 px-8">
+  <h1 class="pb-6 text-4xl font-bold text-color-txt-perfil">Perfil</h1>
+  <section class="mb-8 flex">
+    <img
+      src="{{ user.profile.picture.url }}"
+      alt="Foto de perfil"
+      class="h-36 w-36 cursor-pointer rounded-full border-[6px] border-color-txt-perfil"
+    />
+    <div class="pl-5">
+      <h2 class="truncate text-xl font-semibold text-color-txt-perfil">
+        {{ user.username }}
+      </h2>
       <ul>
-        <li class="pb-3">
-          <label class="text-color-txt-perfil font-bold">RM:</label> {{ user.pk }}
+        <li><span class="info-lbl">RA:</span> {{ user.pk }}</li>
+        <li><span class="info-lbl">E-mail:</span> {{ user.email }}</li>
+        <li>
+          <span class="info-lbl">Telefone:</span> {{ user.profile.phone }}
+        </li>
+      </ul>
+    </div>
+  </section>
+  <article class="grid grid-cols-2 gap-6">
+    <section>
+      <h2 class="text-xl font-semibold text-color-secondary">
+        Informações Pessoais
+      </h2>
+      <ul class="info-card">
+        <li>
+          <span class="info-lbl">Nascimento:</span>
+          {{ user.profile.birthdate|date:'d/m/Y' }}
+        </li>
+        <li><span class="info-lbl">RA SED???:</span> {{ user.pk }}</li>
+        <li><span class="info-lbl">CPF:</span> {{ user.profile.cpf }}</li>
+        <li><span class="info-lbl">RG:</span> {{ user.profile.rg }}</li>
+      </ul>
+    </section>
+    <section>
+      <h2 class="text-xl font-semibold text-color-secondary">Senha</h2>
+      <form class="info-card">
+        calma lá vai ficar pronto
+        <!-- TODO: formulário para trocar senha -->
+      </form>
+    </section>
+  </article>
+  <section>
+    <h2 class="text-xl font-semibold text-color-secondary">Endereço</h2>
+    <div class="info-card grid grid-cols-2">
+      <ul>
+        <li>
+          <span class="info-lbl">Endereço:</span>
+          <span>
+            {{ user.profile.street }}, n° {{ user.profile.street_number }}
+          </span>
         </li>
         <li>
-          <label class="text-color-txt-perfil font-bold">Nome:</label> {{ user.username.split.0.title }} {{ user.username.split.1.title }}
+          <span class="info-lbl">Complemento:</span>
+          {% if user.profile.complement %}
+          <span>{{ user.profile.complement }}</span>
+          {% else %} ✖️ {% endif %}
         </li>
-      </ul> 
+        <li>
+          <span class="info-lbl">Bairro:</span> {{ user.profile.neighborhood }}
+        </li>
+      </ul>
+      <ul>
+        <li><span class="info-lbl">Cidade:</span> {{ user.profile.city }}</li>
+        <li>
+          <span class="info-lbl">UF:</span>
+          <span>SP</span>
+          <!-- TODO: add state field to member model -->
+        </li>
+        <li><span class="info-lbl">CEP:</span> {{ user.profile.cep }}</li>
+      </ul>
     </div>
-  </div>
-</div>
-
-<span>
-  {{user.profile.rg}}
-</span>
-
-
+  </section>
+</main>
 {% endblock %}

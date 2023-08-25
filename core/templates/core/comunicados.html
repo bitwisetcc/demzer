@@ -1,38 +1,349 @@
-{% extends 'core/base.html' %} {% load static %} {% block head %}
+{% extends 'core/base.html' %} {% load static %} {% load permission_tags %} {%
+block head %}
+<title>Comunicados</title>
+{% endblock %} {% block content %}
+<main
+  class="m-20 min-h-full md2:justify-normal md2:pl-5 md2:pt-16"
+  x-data="{ createDialog: false, filterDialog: false}"
+>
+  <header class="flex w-full justify-between text-color-txt-perfil">
+    <h1 class="text-4xl font-semibold">Comunicados</h1>
+    <div class="flex gap-2">
+      {% if user|has_role:'admin' %}
+      <button @click="createDialog = true" class="text-base">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="h-8 w-8"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+      </button>
+      {% endif %}
 
-{% endblock %} {% block content %} 
-<div class="flex justify-center min-h-full pt-24">
-  <div class="text-[30px] text-color-txt-perfil font-semibold w-[50%]">
-    Comunicados
-  
+      <button @click="filterDialog = true">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="h-8 w-8"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"
+          />
+        </svg>
+      </button>
+    </div>
+  </header>
+  <div x-data="{seeDialog: false}">
+    <article
+      class="grid w-full grid-cols-2 content-center gap-16 pt-14 sm:ml-4 md2:grid-cols-1 sm2:ml-0 ultrawide:mx-4 ultrawide:grid-cols-8"
+      :class="open ? 'gap-x-40' : ''"
+    >
+      {% for announcement in announcements %}
+      <div class="flex justify-center">
+        <button @click="seeDialog = true">
+          <!-- OPEN COMUNICATE -->
+          <div
+            class="h-[300px] w-[350px] rounded-2xl bg-color-bg-perfil text-left shadow-xl"
+          >
+            <img
+              class="h-[178px] w-full rounded-2xl"
+              src="{{ announcement.image.url }}"
+            />
+            <div class="ml-2">
+              <label class="text-right text-xs font-normal text-gray-500">
+                {{ announcement.date|date:'d/m/Y' }}
+              </label>
+              <!--Here we need to put a date when the communicate was registered-->
+              <h3 class="text-base font-bold text-black">
+                {{ announcement.title }}
+              </h3>
+            </div>
+          </div>
+        </button>
+      </div>
+      {% endfor %}
+    </article>
 
-    <div class="grid grid-cols-2 gap-16 pt-14 ml-4">
-      <div class="h-[300px] w-[350px] rounded-2xl shadow-xl bg-color-bg-perfil">
-          <img class="h-[178px] w-full rounded-2xl" src="{% static '/core/images/img1.jpeg' %}">
-        <div class="ml-2">
-          <label class="text-gray-500 font-normal text-xs text-right"> 08/11/2005 </label><!--Here we need to put a date when the communicate was registered-->
-          <p class="text-black font-bold text-base">asdasdas</p>
-        </div>
+    <div
+      :class="seeDialog ? 'flex' : 'hidden'"
+      class="fixed inset-0 items-center justify-center bg-black bg-opacity-25"
+    >
+      <!-- COMUNICATE WINDOW -->
+      <div
+        class="h-[600px] w-[600px] overflow-y-scroll rounded-3xl bg-color-grey pb-10"
+      >
+        <header class="mx-10 mb-3 mt-8 flex justify-between text-3xl font-bold">
+          <div>
+            <button
+              @click.prevent="seeDialog = false"
+              class="text-3xl font-bold text-color-txt-perfil"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="h-6 w-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+        </header>
+        <img
+          class="h-[178px] w-full rounded-2xl"
+          src="{{ announcement.image.url }}"
+        />
+        <label class="text-right text-xs font-normal text-gray-500">
+          {{ announcement.date|date:'d/m/Y' }}
+        </label>
+        <h3 class="text-base font-bold text-black">{{ announcement.title }}</h3>
+        <label>{{ announcement.info}}</label>
       </div>
-      <div class="h-[300px] w-[350px] rounded-2xl shadow-xl bg-color-bg-perfil">
-          <img class="h-[178px] w-full rounded-2xl" src="{% static '/core/images/img1.jpeg' %}">
-        <div class="ml-2">
-          <label class="text-gray-500 font-normal text-xs text-right"> 08/11/2005 </label> <!--Here we need to put a date when the communicate was registered-->
-          <p class="text-black font-bold text-base">asdasdas</p>
-        </div>
-      </div>
-      <div class="h-[300px] w-[350px] rounded-2xl shadow-xl bg-color-bg-perfil">
-          <img class="h-[178px] w-full rounded-2xl" src="{% static '/core/images/img1.jpeg' %}">
-        <div class="ml-2">
-          <label class="text-gray-500 font-normal text-xs text-right"> 08/11/2005 </label> <!--Here we need to put a date when the communicate was registered-->
-          <p class="text-black font-bold text-base">asdasdas</p>
-        </div>
-      </div>
-
     </div>
   </div>
-</div>
+  <form
+    method="post"
+    action="{% url 'comunicados' %}"
+    enctype="multipart/form-data"
+  >
+    {% csrf_token %}
+    <!-- FORM FOR CREATE COMUNICATE-->
+    <div
+      :class="createDialog ? 'flex' : 'hidden'"
+      class="fixed inset-0 items-center justify-center bg-black bg-opacity-25"
+    >
+      <div
+        class="h-[600px] w-[600px] overflow-y-scroll rounded-3xl bg-color-grey pb-10"
+      >
+        <header class="mx-10 mb-3 mt-8 flex justify-between text-3xl font-bold">
+          <h2>Criar Comunicado</h2>
+          <div>
+            <button
+              @click.prevent="createDialog = false"
+              class="text-3xl font-bold text-color-txt-perfil"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="h-6 w-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+        </header>
+        <section class="flex flex-col gap-3">
+          <div class="flex flex-col px-12 text-lg font-normal">
+            <label>Titulo:</label>
+            <input type="text" class="h-10" name="title" required />
+          </div>
+          <div
+            class="flex items-center gap-1 px-12 text-lg font-normal"
+            x-data="{ imageName: 'Foto' }"
+          >
+            <label>Data de Lançamento:</label>
+            <input
+              type="date"
+              :min="new Date().toISOString().split('T')[0]"
+              :value="new Date().toISOString().split('T')[0]"
+              name="date"
+            />
+            <label
+              for="file-picture"
+              class="btn ml-3 flex w-max cursor-pointer items-center gap-1"
+            >
+              <span
+                class="truncate"
+                x-text="imageName ?? 'Foto de perfil'"
+              ></span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="2.2"
+                stroke="currentColor"
+                class="h-5 w-5"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15"
+                />
+              </svg>
+            </label>
+            <input
+              type="file"
+              name="image"
+              id="file-picture"
+              accept="image/*"
+              required
+              hidden
+              @input="imageName = $el.files[0].name"
+            />
+          </div>
+          <div class="flex h-full flex-col px-12 text-lg font-normal">
+            <label class="pb-2">Conteúdo:</label>
+            <textarea
+              class="h-[180px] w-full resize-none"
+              placeholder="Digite o Comunicado aqui"
+              name="info"
+              required
+            ></textarea>
+          </div>
+          <div class="flex items-center gap-1 px-12 text-lg font-normal">
+            <label>Apenas para professores:</label>
+            <input type="checkbox" name="staff_only" />
+          </div>
+          <div class="flex flex-col px-12 text-lg font-normal">
+            <label>Para o curso:</label>
+            <input
+              type="text"
+              class="h-10"
+              name="course"
+              placeholder="Deixe em branco para um comunicado geral"
+            />
+          </div>
+          <div class="flex flex-col px-12 text-lg font-normal">
+            <label>Para a turma:</label>
+            <input
+              type="text"
+              class="h-10"
+              name="course"
+              placeholder="Deixe em branco para um comunicado geral"
+            />
+          </div>
+          <div class="flex justify-center pt-6">
+            <button
+              type="submit"
+              class="h-12 w-32 rounded-full border-2 border-solid border-color-dark-orange text-2xl font-bold text-color-dark-orange transition hover:bg-color-hover"
+            >
+              Aplicar
+            </button>
+          </div>
+        </section>
+      </div>
+    </div>
+  </form>
+  <form>
+    <div
+      :class="filterDialog ? 'flex' : 'hidden'"
+      class="fixed inset-0 items-center justify-center bg-black bg-opacity-25"
+    >
+      <div class="h-4/5 w-2/5 rounded-3xl bg-color-grey">
+        <header
+          class="mx-10 mt-8 flex flex-row justify-between text-3xl font-bold"
+        >
+          <h2>Filtrar Comunicado</h2>
+          <div>
+            <button
+              @click.prevent="filterDialog = false"
+              class="text-3xl font-bold text-color-txt-perfil"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="h-6 w-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+        </header>
+        <section class="flex flex-col gap-4 p-10">
+          <input
+            type="search"
+            class="mx-auto w-full rounded-lg border border-color-txt-perfil bg-gray-50 text-sm text-gray-900"
+          />
+          <div class="flex flex-row justify-between text-lg font-normal">
+            <label>
+              De:
+              <input type="date" class="rounded-3xl border-color-txt-perfil"
+            /></label>
+            <label>
+              Até:
+              <input type="date" class="rounded-3xl border-color-txt-perfil"
+            /></label>
+          </div>
 
-
+          <label>
+            <input
+              type="checkbox"
+              class="h-5 w-5 rounded-full border-color-txt-perfil transition"
+            />
+            Palestras
+          </label>
+          <label
+            ><input
+              type="checkbox"
+              class="h-5 w-5 rounded-full border-color-txt-perfil transition"
+            />
+            Eventos
+          </label>
+          <label
+            ><input
+              type="checkbox"
+              class="h-5 w-5 rounded-full border-color-txt-perfil transition"
+            />
+            Reuniões
+          </label>
+          <label
+            ><input
+              type="checkbox"
+              class="h-5 w-5 rounded-full border-color-txt-perfil transition"
+            />
+            Outros
+          </label>
+          <div class="flex flex-row justify-center space-x-5 pt-10 text-lg">
+            <button
+              type="reset"
+              class="rounded-full border-2 border-solid border-color-dark-orange px-12 py-1 font-bold text-color-dark-orange transition hover:bg-color-hover"
+            >
+              Limpar
+            </button>
+            <button
+              type="submit"
+              class="rounded-full border-2 border-solid border-color-dark-orange px-12 py-1 font-bold text-color-dark-orange transition hover:bg-color-hover"
+            >
+              Aplicar
+            </button>
+          </div>
+        </section>
+      </div>
+    </div>
+  </form>
+</main>
 
 {% endblock %}

@@ -10,7 +10,9 @@
         "core/static/core/js/page.js",
         "core/static/core/css/main.css",
         "core/static/core/css/enroll.css",
-        "core/static/core/css/dashboard.css"
+        "core/static/core/css/dashboard.css",
+        "core/static/core/css/boletim.css",
+        "core/static/core/css/profile.css"
       ],
       "distDir": "./static/core/dist"
     }

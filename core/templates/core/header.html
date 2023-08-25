@@ -23,7 +23,7 @@
       </svg>
       </button>
       <p class="text-color-primary px-5">
-        Bem Vindo, {{ user.username.split.0.title }}!
+        Bem {% if user.member.gender == 'F' %}vinda{% else %}vindo{% endif %}, {{ user.username.split.0.title }}!
       </p>
     </div>
     <span class="text-sm md:ml-1 md:mr-3 md:text-base md:text-gray-400">

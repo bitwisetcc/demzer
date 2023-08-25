@@ -1,6 +1,9 @@
 from django.conf import settings
 from django.shortcuts import redirect
-from django.urls import path
+from django.urls import include, path
+from django.contrib import admin
+from django.contrib.auth import views as auth_views
+from . import views
 
 from core.views import *
 
@@ -13,12 +16,16 @@ urlpatterns = [
     path("logout/", logout_user, name="logout"),
     path("enroll/", enroll, name="enroll"),
     path("comunicados/", comunicados, name="comunicados"),
-    path("perfil/", perfil, name="perfil"),
+    path("perfil/", perfil, name="profile"),
     path("boletim/", boletim, name="boletim"),
-    path("eventos/", eventos, name="eventos"),
-    path("horario/", horario, name="horario"),
-    path("provas/", provas, name="provas"),
-    path("reporte/", reporte, name="reporte"),
+    path("user/picture", profile_picture, name="profile_picture"),
+
+    #RESET PASSOWRD
+    path('reset_password/', auth_views.PasswordResetView.as_view(template_name="core/password/password_reset_form.html"), name="password_reset"),
+    path('reset_password/done/', auth_views.PasswordResetDoneView.as_view(template_name="core/password/password_reset_done.html"), name="password_reset_done"),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name="core/password/password_reset_confirm.html"), name="password_reset_confirm"),
+    path('reset_password_complete/', auth_views.PasswordResetConfirmView.as_view(), name="password_reset_complete")
+
 ]
 
 

@@ -1,0 +1,546 @@
+{% extends 'core/base.html' %} {% load permission_tags %} {% load demzer_tags %}
+{% block head %}
+<title>Editor de cursos</title>
+<script defer>
+  document.addEventListener("alpine:init", () => {
+    Alpine.data("dialogs", () => ({
+      courseDialog: false,
+      subjectDialog: false,
+      importDialog: false,
+      deleteDialog: false,
+      filterDialog: false,
+
+      pk: 0,
+      name: "",
+      slug: "",
+      time: "M",
+      duration: "",
+      coordinator: "",
+      info: "",
+
+      clear() {
+        this.pk = 0;
+        this.courseDialog = true;
+        this.name = "";
+        this.slug = "";
+        this.time = "M";
+        this.duration = "";
+        this.coordinator = "";
+        this.info = "";
+      },
+
+      imports: [{ name: "", slug: "" }],
+      sendSubject() {
+        const values = (nl) =>
+          Array.from(nl)
+            .map((i) => i.value)
+            .filter((s) => s != "");
+
+        const csrfToken = document.cookie.slice(
+          document.cookie.indexOf("=") + 1
+        );
+
+        const form = document.getElementById("importSubjects");
+        const names = values(form.querySelectorAll(".input :nth-child(1)"));
+        const slugs = values(form.querySelectorAll(".input :nth-child(2)"));
+
+        fetch("{% url 'import_subject' %}", {
+          method: "POST",
+          headers: { "X-CSRFToken": csrfToken },
+          body: JSON.stringify({ names, slugs }),
+        })
+          .then((res) => res.text())
+          .then(() => location.reload())
+          .catch(console.error);
+      },
+    }));
+  });
+</script>
+{% endblock %} {% block content %}
+<main class="flex flex-col gap-5 px-24 py-10" x-data="dialogs">
+  <dialog :open="courseDialog" class="w-1/2 rounded-2xl p-6 shadow-lg">
+    <form action="{% url 'courses' %}" method="POST">
+      {% csrf_token %}
+      <input type="hidden" name="pk" x-model="pk" />
+      <h2 class="mb-3 flex justify-between text-xl font-semibold">
+        <span class="text-color-txt-perfil">Criar curso</span>
+        <button @click.prevent="courseDialog = false">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-6 w-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </h2>
+      <div class="mb-3 flex items-center gap-2">
+        <label for="txt-name">Nome:</label>
+        <input
+          type="text"
+          name="name"
+          id="txt-name"
+          required
+          class="flex-1"
+          maxlength="60"
+          x-model="name"
+        />
+      </div>
+      <div class="mb-3 flex items-center justify-around gap-2">
+        <label for="txt-slug">Código:</label>
+        <input
+          type="text"
+          name="slug"
+          id="txt-slug"
+          maxlength="2"
+          required
+          x-model="slug"
+        />
+        <label for="sl-time">Horário:</label>
+        <select name="time" id="sl-time" x-model="time">
+          <option value="M" selected>Manhã</option>
+          <option value="E">Tarde</option>
+          <option value="N">Noite</option>
+          <option value="F">Integral</option>
+        </select>
+        <label for="txt-duration">Duração:</label>
+        <input
+          type="number"
+          name="duration"
+          id="txt-duration"
+          size="1"
+          x-model="duration"
+          step="0.5"
+          class="[appearance:textfield]"
+        />
+      </div>
+      <div class="mb-1 flex items-center gap-2">
+        <label for="txt-coordinator">Coordenador:</label>
+        <input
+          type="number"
+          name="coordinator"
+          id="txt-coordinator"
+          x-model="coordinator"
+          class="flex-1"
+        />
+      </div>
+      <div class="mb-3 flex flex-col gap-2">
+        <label for="txt-info">Informações:</label>
+        <textarea
+          name="info"
+          id="txt-info"
+          cols="30"
+          rows="4"
+          x-model="info"
+        ></textarea>
+      </div>
+      <div class="mt-3 flex justify-center">
+        <button
+          type="submit"
+          class="rounded-2xl border-2 border-color-dark-orange bg-color-secondary px-5 py-2"
+        >
+          Salvar
+        </button>
+      </div>
+    </form>
+  </dialog>
+  <dialog :open="filterDialog" class="rounded-2xl p-6 shadow-lg">
+    <form action="{% url 'courses' %}" method="get" class="flex flex-col gap-2">
+      <h2 class="mb-3 flex justify-between text-xl font-semibold">
+        <span class="text-color-txt-perfil">Filtrar</span>
+        <button @click.prevent="filterDialog = false">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-6 w-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </h2>
+      <div class="mb-1 flex items-center gap-2">
+        <label for="txt-name">Nome:</label>
+        <input
+          type="text"
+          maxlength="60"
+          name="name"
+          id="txt-name"
+          class="flex-1"
+        />
+        <label for="txt-slug">Código:</label>
+        <input type="text" maxlength="5" size="4" name="slug" id="txt-slug" />
+      </div>
+      <div class="mb-1 flex items-center gap-2">
+        <label for="txt-duration">Duração:</label>
+        <input
+          type="number"
+          size="4"
+          max="10"
+          name="duration"
+          id="txt-duration"
+        />
+        <label for="sl-time">Horário:</label>
+        <select name="time" id="sl-time" x-model="time">
+          <option value="" selected>-</option>
+          <option value="M">Manhã</option>
+          <option value="E">Tarde</option>
+          <option value="N">Noite</option>
+          <option value="F">Integral</option>
+        </select>
+      </div>
+      <div class="mt-3 flex justify-center gap-3">
+        <button
+          type="reset"
+          class="rounded-2xl border-2 border-color-dark-orange bg-amber-50 px-5 py-2"
+        >
+          Limpar
+        </button>
+        <button
+          type="submit"
+          class="rounded-2xl border-2 border-color-dark-orange bg-color-secondary px-5 py-2"
+        >
+          Aplicar
+        </button>
+      </div>
+    </form>
+  </dialog>
+  <dialog :open="subjectDialog" class="rounded-2xl shadow-lg p-5">
+    <form action="{% url 'create_subject' %}" method="post">
+      {% csrf_token %}
+      <h2 class="text-xl font-bold flex justify-between mb-3">
+        <span class="text-color-txt-perfil">Nova matéria</span>
+        <button @click.prevent="subjectDialog = false">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-6 w-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </h2>
+      <div class="field">
+        <label for="txt-name">Nome</label>
+        <input type="text" name="name" id="txt-name" required maxlength="60" />
+      </div>
+      <div class="field">
+        <label for="txt-slug">Código</label>
+        <input type="text" name="slug" id="txt-slug" required maxlength="5" />
+      </div>
+      <div class="field">
+        <label for="txt-desc">Descrição</label>
+        <textarea
+          name="description"
+          id="txt-desc"
+          cols="30"
+          rows="4"
+          maxlength="127"
+        ></textarea>
+      </div>
+      <div class="mt-3 flex gap-2">
+        <button
+          @click.prevent="() => { subjectDialog = false; importDialog = true }"
+          class="btn"
+        >
+          Importar
+        </button>
+        <button type="submit" class="btn">Criar</button>
+      </div>
+    </form>
+  </dialog>
+  <dialog :open="importDialog" class="rounded-lg shadow-lg">
+    <form id="importSubjects" action="{% url 'create_subject' %}" method="post">
+      {% csrf_token %}
+      <h2 class="text-xl font-bold">Importar matérias</h2>
+      <template x-for="i in imports">
+        <div class="input mt-2 flex gap-2">
+          <input
+            type="text"
+            name=""
+            id=""
+            size="25"
+            maxlength="60"
+            placeholder="Nome"
+          />
+          <input
+            type="text"
+            name=""
+            id=""
+            size="5"
+            maxlength="5"
+            placeholder="Código"
+          />
+        </div>
+      </template>
+      <input type="hidden" name="import" />
+      <div class="mt-3 flex gap-2">
+        <button
+          @click.prevent="imports.push({ name: '', slug: '' })"
+          class="btn"
+        >
+          +
+        </button>
+        <button @click.prevent="importDialog = false" class="btn">
+          Voltar
+        </button>
+        <button type="submit" class="btn" @click.prevent="sendSubject()">
+          Criar
+        </button>
+      </div>
+    </form>
+  </dialog>
+  <dialog :open="deleteDialog" class="rounded-2xl p-6 shadow-lg">
+    <form
+      action="{% url 'delete_course' %}"
+      method="post"
+      class="flex flex-col items-center gap-3"
+    >
+      {% csrf_token %}
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="h-16 w-16 text-red-500"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+        />
+      </svg>
+      <p>
+        Cuidado! Isso pode <br />
+        desalocar turmas e horários.
+      </p>
+      <input type="hidden" name="pk" x-model="pk" />
+      <button
+        @click.prevent="deleteDialog = false"
+        class="rounded-lg border border-slate-500 p-3"
+      >
+        Voltar
+      </button>
+      <button
+        type="submit"
+        class="rounded-lg border-0 bg-red-500 p-3 text-white"
+      >
+        Confirmar
+      </button>
+    </form>
+  </dialog>
+
+  <section class="flex flex-col gap-6">
+    <header class="flex justify-between">
+      <h1 class="mb-4 text-4xl font-semibold">Cursos</h1>
+      <div class="flex gap-2">
+        {% if user|can:'create_course' %}
+        <button @click="clear()">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-7 w-7"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+        </button>
+        {% endif %}
+        <button @click="filterDialog = true">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-7 w-7"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"
+            />
+          </svg>
+        </button>
+      </div>
+    </header>
+    {% if courses %} {% for course in courses %}
+    <div
+      class="rounded-2xl bg-gray-100 shadow"
+      x-data="{ options: false, details: false }"
+    >
+      <header class="flex justify-between px-6 py-4">
+        <div>
+          <h2>{{ course.name }} - {{ course.slug }}</h2>
+          <span>Turno: {{ course.get_time_display }}</span>
+        </div>
+        <div class="relative">
+          <button @click="details = !details">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="h-6 w-6 transition-transform"
+              :class="details && 'rotate-180'"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+              />
+            </svg>
+          </button>
+          {% if user|can:'create_course' %}
+          <button @click="options = !options" class="relative">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="h-6 w-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z"
+              />
+            </svg>
+          </button>
+
+          <div
+            x-show="options"
+            class="absolute z-10 flex flex-col gap-2 rounded-lg border border-slate-400 bg-gray-100 p-3"
+            @click.away="() => options = false"
+          >
+            <button
+              class="hover:text-color-dark-orange"
+              @click="() => {
+                courseDialog = true;
+                name = '{{ course.name }}';
+                slug = '{{ course.slug }}';
+                time = '{{ course.time }}';
+                duration = '{{ course.duration }}';
+                coordinator = '{{ course.coordinator.pk }}';
+                info = '{{ course.info }}';
+                pk = '{{ course.pk }}';
+                if (info == 'None') info = '';
+              }"
+            >
+              Editar
+            </button>
+            <button
+              class="hover:text-color-dark-orange"
+              @click="() => { deleteDialog = true; pk = '{{ course.pk }}'}"
+            >
+              Excluir
+            </button>
+          </div>
+          {% endif %}
+        </div>
+      </header>
+      <div
+        class="origin-top rounded-b-2xl bg-gray-200 p-5 transition-all"
+        :class="details || 'scale-y-0 h-0 py-0'"
+      >
+        {% if course.duration|isint %}
+        <p>Duração: {{ course.duration|castint }} anos</p>
+        {% else %}
+        <p>Duração: {% widthratio course.duration 1 2 %} semestres</p>
+        {% endif %}
+        <p>
+          Coordenador: {{ course.coordinator }} ({{ course.coordinator.pk }})
+        </p>
+        <p>Informações: {{ course.info }}</p>
+      </div>
+    </div>
+    {% endfor %} {% else %}
+    <span class="font-mono text-2xl font-medium text-slate-500">
+      Nenhum curso encontrado :(
+    </span>
+    {% endif %}
+  </section>
+  <section>
+    <header class="mb-2 flex justify-between">
+      <h2 class="mb-4 text-4xl font-semibold">Matérias</h2>
+      <div class="flex gap-2">
+        <button @click="subjectDialog = true">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-7 w-7"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+        </button>
+        <button @click="importDialog = true">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-7 w-7"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
+            />
+          </svg>
+        </button>
+      </div>
+    </header>
+    <div class="flex gap-2">
+      {% if subjects %} {% for subject in subjects %}
+      <span
+        class="rounded border border-slate-400 bg-gray-100 px-3 py-2 font-mono"
+        title="{{ subject.name }}"
+      >
+        {{ subject.slug }}
+      </span>
+      {% endfor %} {% else %}
+      <span class="font-mono text-2xl font-medium text-slate-500">
+        Nenhuma matéria encontrada :(
+      </span>
+      {% endif %}
+    </div>
+  </section>
+</main>
+{% endblock %}

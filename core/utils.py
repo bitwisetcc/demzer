@@ -7,7 +7,7 @@ def email_address(username: str) -> str:
     last_name = username.split()[-1].lower()
 
     email = EMAIL_PATTERN.format(first_name, last_name)
-    count = User.objects.filter(email__startswith=email.split("@")[0])
+    count = User.objects.filter(email__startswith=email.split("@")[0]).count()
 
     if count != 0:
         return EMAIL_PATTERN.format(first_name, last_name + str(count))
