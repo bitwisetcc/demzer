@@ -2,7 +2,8 @@
 <ul class="absolute left-9 top-9 z-10 sm:left-14 sm:top-14">
   {% for msg in messages %} {% if msg.level_tag == 'success' %}
   <li
-    x-data="{ closed: false }" x-show="!closed"
+    x-data="{ closed: false }"
+    x-show="!closed"
     class="relative mb-1 rounded-lg border-2 border-lime-500 bg-slate-200 p-4 pr-6 shadow-md"
   >
     <span>{{ msg }}</span>
@@ -25,7 +26,8 @@
   </li>
   {% elif msg.level_tag == 'error' %}
   <li
-    x-data="{ closed: false }" x-show="!closed"
+    x-data="{ closed: false }"
+    x-show="!closed"
     class="relative mb-1 rounded-lg border-2 border-red-500 bg-slate-200 p-4 pr-6 shadow-md"
   >
     <span>{{ msg }}</span>
@@ -48,7 +50,8 @@
   </li>
   {% elif msg.level_tag == 'warning' %}
   <li
-    x-data="{ closed: false }" x-show="!closed"
+    x-data="{ closed: false }"
+    x-show="!closed"
     class="relative mb-1 rounded-lg border-2 border-yellow-500 bg-slate-200 p-4 pr-6 shadow-md"
   >
     <span>{{ msg }}</span>
@@ -71,7 +74,8 @@
   </li>
   {% elif msg.level_tag == 'debug' %}
   <li
-    x-data="{ closed: false }" x-show="!closed"
+    x-data="{ closed: false }"
+    x-show="!closed"
     class="relative mb-1 rounded-lg border-2 border-indigo-400 bg-slate-200 p-4 pr-6 shadow-md"
   >
     <span>{{ msg }}</span>
@@ -94,7 +98,8 @@
   </li>
   {% else %}
   <li
-    x-data="{ closed: false }" x-show="!closed"
+    x-data="{ closed: false }"
+    x-show="!closed"
     class="relative mb-1 rounded-lg border-2 border-slate-500 bg-slate-200 p-4 pr-6 shadow-md"
   >
     <span>{{ msg }}</span>
