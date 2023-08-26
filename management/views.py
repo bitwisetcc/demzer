@@ -211,17 +211,17 @@ def delete_course(request: HttpRequest):
 
 def classrooms(request: HttpRequest):
     if request.method == "POST":
-        slug = request.POST.get("course")
+        course = request.POST.get("course")
 
         if request.POST.get("pk") != "0":
             classroom = Classroom.objects.get(pk=request.POST.get("pk"))
             classroom.year = request.POST.get("year")
 
             try:
-                classroom.course = Course.objects.get(slug=slug)
+                classroom.course = Course.objects.get(pk=course)
             except Course.DoesNotExist:
                 messages.error(
-                    request, "Curso com o código {} não encontrado".format(slug)
+                    request, "Curso com o ID {} não encontrado".format(course)
                 )
                 return redirect("classrooms")
             except Exception as exc:
@@ -239,11 +239,11 @@ def classrooms(request: HttpRequest):
 
         try:
             classroom = Classroom.objects.create(
-                course=Course.objects.get(slug=slug),
+                course=Course.objects.get(pk=course),
                 year=request.POST.get("year"),
             )
         except Course.DoesNotExist:
-            messages.error(request, "Curso com o código {} não encontrado".format(slug))
+            messages.error(request, "Curso com o ID {} não encontrado".format(course))
             return redirect("classrooms")
         except Exception as exc:
             messages.warning(request, exc)
@@ -257,15 +257,10 @@ def classrooms(request: HttpRequest):
         )
         return redirect("classrooms")
 
-    if len(request.GET) == 0:
-        context = Classroom.objects.all()
-    else:
-        context = Classroom.objects.filter()
-
     return render(
         request,
         "management/classrooms.html",
-        {"classrooms": Classroom.objects.all()},
+        {"classrooms": Classroom.objects.all(), "courses": Course.objects.all()},
     )
 
 

@@ -94,7 +94,7 @@ def enroll(request: HttpRequest):
                 cpf=re.sub(r"[\./-]", "", request.POST.get("cpf")),
                 afro="afro" in request.POST,
                 indigenous="indigenous" in request.POST,
-                deficiencies=request.POST.get("deficiencies") or None,
+                deficiencies=request.POST.get("deficiencies", None),
                 civil_state=request.POST.get("civil-state"),
                 cep=request.POST.get("cep"),
                 city=request.POST.get("city"),

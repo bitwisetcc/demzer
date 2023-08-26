@@ -78,6 +78,9 @@ class Course(Model):
         verbose_name = _("curso")
         verbose_name_plural = _("cursos")
 
+    def __str__(self) -> str:
+        return self.slug
+
 
 class Classroom(Model):
     course = ForeignKey(Course, SET_NULL, related_name="classroom", null=True)
@@ -189,6 +192,13 @@ class Member(Model):
     class Meta:
         verbose_name = _("usuário")
         verbose_name_plural = _("usuários")
+
+    def __str__(self):
+        return "{} {} ({})".format(
+            self.user.first_name,
+            self.user.last_name,
+            self.user.pk,
+        )
 
 
 class Class(Model):

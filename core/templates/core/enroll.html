@@ -201,35 +201,6 @@
             <label for="rd-widow">Viúvo</label>
           </span>
         </div>
-        <label
-          for="file-picture"
-          class="btn mt-4 flex w-max cursor-pointer items-center gap-1"
-        >
-          <span x-text="imageName ?? 'Foto de perfil'"></span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="2.2"
-            stroke="currentColor"
-            class="h-5 w-5"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15"
-            />
-          </svg>
-        </label>
-        <input
-          type="file"
-          name="picture"
-          id="file-picture"
-          accept="image/*"
-          required
-          hidden
-          @input="imageName = $el.files[0].name"
-        />
       </article>
 
       <article>
@@ -263,33 +234,66 @@
             x-text="check ? '(Sim)' : '(Não)'"
           ></span>
         </div>
-        <div class="field">
-          <label for="txt-deficiencies">Deficiências</label>
-          <input
-            type="text"
-            name="deficiencies"
-            id="txt-deficiencies"
-            maxlength="50"
-          />
-        </div>
-        <div class="my-3 flex items-center gap-3">
-          <label for="sl-school">Escolaridade pública:</label>
-          <select name="public-schooling" id="sl-school">
-            <option value="C">Completo</option>
-            <option value="B">Ensino Básico</option>
-            <option value="F" selected>Ensino Fundamental</option>
-            <option value="M">Ensino Médio</option>
-            <option value="N">Nenhuma</option>
-          </select>
-        </div>
-        <div class="my-3 flex items-center gap-3">
-          <label for="sl-classroom">Turma:</label>
-          <select name="classroom" id="sl-classroom">
-            {% for classroom in classrooms %}
-              <option value="{{ classroom.pk }}">{{ classroom }}</option>
-            {% endfor %}
-          </select>
-        </div>
+        <template x-if="role == 'student'">
+          <div>
+            <div class="field">
+              <label for="txt-deficiencies">Deficiências</label>
+              <input
+                type="text"
+                name="deficiencies"
+                id="txt-deficiencies"
+                maxlength="50"
+              />
+            </div>
+            <div class="my-3 flex items-center gap-3">
+              <label for="sl-school">Escolaridade pública:</label>
+              <select name="public-schooling" id="sl-school">
+                <option value="C">Completo</option>
+                <option value="B">Ensino Básico</option>
+                <option value="F" selected>Ensino Fundamental</option>
+                <option value="M">Ensino Médio</option>
+                <option value="N">Nenhuma</option>
+              </select>
+            </div>
+            <div class="my-3 flex items-center gap-3">
+              <label for="sl-classroom">Turma:</label>
+              <select name="classroom" id="sl-classroom">
+                {% for classroom in classrooms %}
+                <option value="{{ classroom.pk }}">{{ classroom }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+        </template>
+        <label
+          for="file-picture"
+          class="btn mt-4 flex w-max cursor-pointer items-center gap-1"
+        >
+          <span x-text="imageName ?? 'Foto de perfil'"></span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="2.2"
+            stroke="currentColor"
+            class="h-5 w-5"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15"
+            />
+          </svg>
+        </label>
+        <input
+          type="file"
+          name="picture"
+          id="file-picture"
+          accept="image/*"
+          required
+          hidden
+          @input="imageName = $el.files[0].name"
+        />
         <button class="btn mt-2 rounded-lg font-semibold" @click="switchTab()">
           Próximo
         </button>
