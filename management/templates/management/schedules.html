@@ -1,21 +1,21 @@
-{% extends 'core/base.html' %}
-{% load static %}
-{% block head %}
+{% extends 'core/base.html' %} {% load static %} {% block head %}
 <title>Horários</title>
-<link rel="stylesheet" href="{% static 'core/dist/css/schedule.css' %}">
+<link rel="stylesheet" href="{% static 'core/dist/css/schedule.css' %}" />
 <script defer>
   document.addEventListener("alpine:init", () => {
     Alpine.data("timeTable", () => ({
-      time: "{{ classroom.course.time }}"
+      time: "{{ classroom.course.time }}",
     }));
-  })
+  });
 </script>
-{% endblock %}
-{% block content %}
+{% endblock %} {% block content %}
 <main class="p-10">
   <h1 class="mb-4 text-4xl font-semibold">Horários - {{ classroom }}</h1>
   <article>
-    <table class="table-fixed p-10 bg-slate-300" x-data="timeTable">
+    <table
+      class="table-fixed border-separate border-spacing-2 rounded-2xl bg-slate-300 p-4"
+      x-data="timeTable"
+    >
       <thead class="bg-transparent">
         <tr>
           <th></th>
@@ -29,7 +29,7 @@
       <tbody>
         {% for t in time_table %}
         <tr>
-          <td>{{ t }}</td>
+          <td class="mr-10 rounded-xl bg-color-primary">{{ t }}</td>
           <td></td>
           <td></td>
           <td></td>

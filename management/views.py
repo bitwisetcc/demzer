@@ -330,6 +330,17 @@ def schedules(request: HttpRequest, classroom_id: int):
     else:
         pass
 
+    """
+    [
+    ["13:00", "EF", "HIS", "LP", "LP", "GEO"],
+    ["13:50", "EF", "HIS", "SRD", "LP", "GEO"],
+    ["14:40", "EF", "HIS", "SRD", "LP", "GEO"],
+    ["15:50", "EF", "HIS", "WEB", "LP", "GEO"],
+    ["16:40", "EF", "HIS", "WEB", "LP", "GEO"],
+    ["17:30", "EF", "HIS", "GEO", "LP", "EF"],
+    ]
+    """
+
     return render(
         request,
         "management/schedules.html",
