@@ -202,6 +202,7 @@ def courses(request: HttpRequest):
 
 
 @require_POST
+@check_permission("create_course")
 def delete_course(request: HttpRequest):
     course = Course.objects.get(pk=request.POST.get("pk"))
     course.delete()
@@ -265,6 +266,7 @@ def classrooms(request: HttpRequest):
 
 
 @require_POST
+@check_permission("create_classroom")
 def delete_classroom(request: HttpRequest):
     classroom = Classroom.objects.get(pk=request.POST.get("pk"))
     classroom.delete()
@@ -306,3 +308,13 @@ def create_subject(request: HttpRequest):
         messages.success(request, "Matéria '{}' criada com sucesso.".format(subj.slug))
 
     return redirect("courses")
+
+
+def schedules(request: HttpRequest, classroom: int):
+    # TODO: implement lunch break
+    # TODO: determine class duration (minutes)
+    return render(
+        request,
+        "management/schedules.html",
+        {"classroom": Classroom.objects.get(pk=classroom)},
+    )

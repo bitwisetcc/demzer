@@ -12,7 +12,8 @@
         "core/static/core/css/enroll.css",
         "core/static/core/css/dashboard.css",
         "core/static/core/css/boletim.css",
-        "core/static/core/css/profile.css"
+        "core/static/core/css/profile.css",
+        "core/static/core/css/schedule.css"
       ],
       "distDir": "./static/core/dist"
     }

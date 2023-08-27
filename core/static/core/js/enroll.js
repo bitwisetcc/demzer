@@ -90,12 +90,12 @@ document.addEventListener("alpine:init", () => {
 
       if (!validateCPF(this.cpf.replace(/[\./-]/g, ""))) {
         e.preventDefault();
-        this.errors.push("CPF inválido");
+        this.cpfOk = false;
       }
 
       if (this.rg.length != 12) {
         e.preventDefault();
-        this.errors.push("RG inválido");
+        this.rgOk = false;
       }
 
       if (this.secret) {
@@ -114,7 +114,6 @@ document.addEventListener("alpine:init", () => {
       fetch(`https://viacep.com.br/ws/${cep}/json/`)
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
           this.city = data.localidade;
           this.neighborhood = data.bairro;
           this.street = data.logradouro;

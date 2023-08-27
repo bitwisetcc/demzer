@@ -265,38 +265,41 @@
             </div>
           </div>
         </template>
-        <label
-          for="file-picture"
-          class="btn mt-4 flex w-max cursor-pointer items-center gap-1"
-        >
-          <span x-text="imageName ?? 'Foto de perfil'"></span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="2.2"
-            stroke="currentColor"
-            class="h-5 w-5"
+
+        <div class="mt-4 flex gap-2">
+          <label
+            for="file-picture"
+            class="btn flex w-max cursor-pointer items-center gap-1"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15"
-            />
-          </svg>
-        </label>
-        <input
-          type="file"
-          name="picture"
-          id="file-picture"
-          accept="image/*"
-          required
-          hidden
-          @input="imageName = $el.files[0].name"
-        />
-        <button class="btn mt-2 rounded-lg font-semibold" @click="switchTab()">
-          Próximo
-        </button>
+            <span x-text="imageName ?? 'Foto de perfil'"></span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="2.2"
+              stroke="currentColor"
+              class="h-5 w-5"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15"
+              />
+            </svg>
+          </label>
+          <input
+            type="file"
+            name="picture"
+            id="file-picture"
+            accept="image/*"
+            required
+            hidden
+            @input="imageName = $el.files[0].name"
+          />
+          <button class="btn rounded-lg font-semibold" @click="switchTab()">
+            Próximo
+          </button>
+        </div>
       </article>
     </section>
 
@@ -404,8 +407,8 @@
         </div>
       </article>
 
-      <template x-if="role == 'student'">
-        <article>
+      <article>
+        <template x-if="role == 'student'">
           <h2 class="font-sans mb-2 text-2xl font-bold">Responsáveis</h2>
 
           <div class="field">
@@ -444,17 +447,9 @@
               />
             </div>
           </div>
-          <ul
-            class="mt-4 rounded-md border border-red-500 p-2"
-            x-show="errors.length > 0"
-          >
-            <template x-for="err in errors">
-              <li x-text="err"></li>
-            </template>
-          </ul>
-          <button type="submit" class="btn">Enviar</button>
-        </article>
-      </template>
+        </template>
+        <button type="submit" class="btn">Enviar</button>
+      </article>
       <!-- Show instead a group option, class, subject etc. -->
     </section>
   </form>

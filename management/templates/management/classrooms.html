@@ -158,7 +158,7 @@
       </span>
       <div
         x-show="options"
-        class="absolute right-3 top-10 z-10 flex flex-col gap-2 rounded-lg border border-slate-400 bg-gray-100 p-3"
+        class="absolute right-3 top-10 z-10 flex flex-col items-start gap-2 rounded-lg border border-slate-400 bg-gray-100 p-3"
         @click.away="() => options = false"
       >
         <button
@@ -178,6 +178,12 @@
         >
           Excluir
         </button>
+        <a
+          href="{% url 'schedules' classroom.pk %}"
+          class="hover:text-color-dark-orange"
+        >
+          Horários
+        </a>
       </div>
     </div>
     {% endfor %} {% else %}
