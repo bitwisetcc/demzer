@@ -313,8 +313,9 @@ def schedules(request: HttpRequest, classroom_id: int):
 
     # TODO: add all these as course attributes
     lessons_qtd = 6
-    break_position = 3
-    break_duration = 20
+    break_position = 3 # maybe use a list for F turn
+    break_duration = 20 # nah fuck it all breaks are the same / or use a dict???
+    # will there be any F turns tho?
 
     if classroom.course.time != "F":
         lesson = td(minutes=settings.LESSON_DURATION)
@@ -324,7 +325,7 @@ def schedules(request: HttpRequest, classroom_id: int):
             time_table.append(
                 time_table[i]
                 + lesson
-                + td(minutes=break_duration * int(i + 1 == break_position))
+                + td(minutes=break_duration * i + 1 == break_position)
             )
     else:
         pass
