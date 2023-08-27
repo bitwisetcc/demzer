@@ -37,6 +37,9 @@ SCHOOL_NAME = "ETEC Jorge Street"
 EMAIL_PATTERN = "{}.{}@etec.sp.gov.br"
 SECURITY_KEY = getenv("MASTER_KEY")
 
+LESSON_DURATION = 50
+TURNS = {"M": "7:00", "E": "13:00", "N": "19:00", "F": "7:50"}
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 MEDIA_ROOT = BASE_DIR / "user_media"
 

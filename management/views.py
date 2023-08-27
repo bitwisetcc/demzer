@@ -1,20 +1,20 @@
-from collections import defaultdict
 import json
 import os
 import re
-from datetime import datetime
+from collections import defaultdict
+from datetime import datetime as dt
+from datetime import timedelta as td
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_POST
+from rolepermissions.checkers import has_role
 from rolepermissions.decorators import has_permission_decorator as check_permission
 from rolepermissions.roles import assign_role
-from rolepermissions.checkers import has_role
-from core.roles import Admin, Student
-
 
 from core.models import Class, Classroom, Course, Member, Subject
 
@@ -79,9 +79,7 @@ def import_users(request: HttpRequest):
                     "password": make_password(
                         row["username"].split()[0]
                         + row["username"].split()[-1]
-                        + str(
-                            datetime.strptime(row["birthdate"], "%Y-%m-%d").date().year
-                        )
+                        + str(dt.strptime(row["birthdate"], "%Y-%m-%d").date().year)
                     )
                     if "reset_password" in request.POST or "password" not in row
                     else row["password"],
@@ -310,11 +308,32 @@ def create_subject(request: HttpRequest):
     return redirect("courses")
 
 
-def schedules(request: HttpRequest, classroom: int):
-    # TODO: implement lunch break
-    # TODO: determine class duration (minutes)
+def schedules(request: HttpRequest, classroom_id: int):
+    classroom = Classroom.objects.get(pk=classroom_id)
+
+    # TODO: add all these as course attributes
+    lessons_qtd = 6
+    break_position = 3
+    break_duration = 20
+
+    if classroom.course.time != "F":
+        lesson = td(minutes=settings.LESSON_DURATION)
+        time_table = [dt.strptime(settings.TURNS[classroom.course.time], "%H:%M")]
+
+        for i in range(lessons_qtd - 1):
+            time_table.append(
+                time_table[i]
+                + lesson
+                + td(minutes=break_duration * int(i + 1 == break_position))
+            )
+    else:
+        pass
+
     return render(
         request,
         "management/schedules.html",
-        {"classroom": Classroom.objects.get(pk=classroom)},
+        {
+            "classroom": classroom,
+            "time_table": [t.strftime("%H:%M") for t in time_table],
+        },
     )
