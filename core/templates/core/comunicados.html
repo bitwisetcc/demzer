@@ -1,4 +1,5 @@
-{% extends 'core/base.html' %} {% load static %} {% load permission_tags %} {% block head %}
+{% extends 'core/base.html' %} {% load static %} {% load permission_tags %} {%
+block head %}
 <title>Comunicados</title>
 {% endblock %} {% block content %}
 <main
@@ -10,7 +11,20 @@
     <div class="flex gap-2">
       {% if user|has_role:'admin' %}
       <button @click="createDialog = true" class="text-base">
-        Criar Comunicado
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="h-8 w-8"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
       </button>
       {% endif %}
 
@@ -38,69 +52,79 @@
       :class="open ? 'gap-x-40' : ''"
     >
       {% for announcement in announcements %}
-        <div class="flex justify-center">
-          <button @click="seeDialog = true"> <!-- OPEN COMUNICATE -->
-            <div class="h-[300px] w-[350px] text-left rounded-2xl bg-color-bg-perfil shadow-xl">
-              <img
-                class="h-[178px] w-full rounded-2xl"
-                src="{{ announcement.image.url }}"
-              />
-              <div class="ml-2">
-                <label class="text-right text-xs font-normal text-gray-500">
-                  {{ announcement.date|date:'d/m/Y' }}
-                </label>
-                <!--Here we need to put a date when the communicate was registered-->
-                <h3 class="text-base font-bold text-black">{{ announcement.title }}</h3>
-              </div>
+      <div class="flex justify-center">
+        <button @click="seeDialog = true">
+          <!-- OPEN COMUNICATE -->
+          <div
+            class="h-[300px] w-[350px] rounded-2xl bg-color-bg-perfil text-left shadow-xl"
+          >
+            <img
+              class="h-[178px] w-full rounded-2xl"
+              src="{{ announcement.image.url }}"
+            />
+            <div class="ml-2">
+              <label class="text-right text-xs font-normal text-gray-500">
+                {{ announcement.date|date:'d/m/Y' }}
+              </label>
+              <!--Here we need to put a date when the communicate was registered-->
+              <h3 class="text-base font-bold text-black">
+                {{ announcement.title }}
+              </h3>
             </div>
-          </button>
-        </div>
+          </div>
+        </button>
+      </div>
       {% endfor %}
     </article>
 
     <div
-      :class="seeDialog ? 'flex' : 'hidden'" 
+      :class="seeDialog ? 'flex' : 'hidden'"
       class="fixed inset-0 items-center justify-center bg-black bg-opacity-25"
-    > <!-- COMUNICATE WINDOW -->
+    >
+      <!-- COMUNICATE WINDOW -->
       <div
-          class="h-[600px] w-[600px] overflow-y-scroll rounded-3xl bg-color-grey pb-10"
-        >
-          <header class="mx-10 mb-3 mt-8 flex justify-between text-3xl font-bold">
-            <div>
-              <button
-                @click.prevent="seeDialog = false"
-                class="text-3xl font-bold text-color-txt-perfil"
+        class="h-[600px] w-[600px] overflow-y-scroll rounded-3xl bg-color-grey pb-10"
+      >
+        <header class="mx-10 mb-3 mt-8 flex justify-between text-3xl font-bold">
+          <div>
+            <button
+              @click.prevent="seeDialog = false"
+              class="text-3xl font-bold text-color-txt-perfil"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="h-6 w-6"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="h-6 w-6"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            </div>
-          </header>
-          <img
-                class="h-[178px] w-full rounded-2xl"
-                src="{{ announcement.image.url }}"
-              />
-            <label class="text-right text-xs font-normal text-gray-500">
-              {{ announcement.date|date:'d/m/Y' }}
-            </label>
-            <h3 class="text-base font-bold text-black">{{ announcement.title }}</h3>
-            <label>{{ announcement.info}}</label>
-        </div> 
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+        </header>
+        <img
+          class="h-[178px] w-full rounded-2xl"
+          src="{{ announcement.image.url }}"
+        />
+        <label class="text-right text-xs font-normal text-gray-500">
+          {{ announcement.date|date:'d/m/Y' }}
+        </label>
+        <h3 class="text-base font-bold text-black">{{ announcement.title }}</h3>
+        <label>{{ announcement.info}}</label>
       </div>
-
-  <form method="post" action="{% url 'comunicados' %}" enctype="multipart/form-data">
+    </div>
+  </div>
+  <form
+    method="post"
+    action="{% url 'comunicados' %}"
+    enctype="multipart/form-data"
+  >
     {% csrf_token %}
     <!-- FORM FOR CREATE COMUNICATE-->
     <div

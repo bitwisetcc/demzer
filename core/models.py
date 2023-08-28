@@ -12,6 +12,7 @@ from django.db.models import (
 )
 from django.db.models.fields import (
     PositiveSmallIntegerField,
+    FloatField,
     CharField,
     DateField,
     EmailField,
@@ -71,7 +72,7 @@ class Course(Model):
     time = CharField(max_length=1, choices=Timing.choices, default=Timing.MORNING)
     coordinator = ForeignKey(User, SET_NULL, null=True, related_name="courses")
     info = TextField(null=True)
-    duration = PositiveSmallIntegerField(default=3)
+    duration = FloatField(default=3)
 
     class Meta:
         verbose_name = _("curso")
@@ -81,6 +82,9 @@ class Course(Model):
 class Classroom(Model):
     course = ForeignKey(Course, SET_NULL, related_name="classroom", null=True)
     year = IntegerField(default=2023)
+
+    def __str__(self) -> str:
+        return self.course.slug + str(self.year)
 
 
 class Member(Model):

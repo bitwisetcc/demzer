@@ -1,4 +1,5 @@
-{% extends 'core/base.html' %} {% block head %}
+{% extends 'core/base.html' %} {% load permission_tags %} {% load demzer_tags %}
+{% block head %}
 <title>Editor de cursos</title>
 <script defer>
   document.addEventListener("alpine:init", () => {
@@ -7,6 +8,7 @@
       subjectDialog: false,
       importDialog: false,
       deleteDialog: false,
+      filterDialog: false,
 
       pk: 0,
       name: "",
@@ -60,7 +62,25 @@
     <form action="{% url 'courses' %}" method="POST">
       {% csrf_token %}
       <input type="hidden" name="pk" x-model="pk" />
-      <h2 class="mb-3 text-xl font-semibold">Criar curso</h2>
+      <h2 class="mb-3 flex justify-between text-xl font-semibold">
+        <span class="text-color-txt-perfil">Criar curso</span>
+        <button @click.prevent="courseDialog = false">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-6 w-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </h2>
       <div class="mb-3 flex items-center gap-2">
         <label for="txt-name">Nome:</label>
         <input
@@ -97,6 +117,7 @@
           id="txt-duration"
           size="1"
           x-model="duration"
+          step="0.5"
           class="[appearance:textfield]"
         />
       </div>
@@ -120,18 +141,105 @@
           x-model="info"
         ></textarea>
       </div>
-      <div class="mt-3 flex gap-2">
-        <button @click.prevent="courseDialog = false" class="btn">
-          Voltar
+      <div class="mt-3 flex justify-center">
+        <button
+          type="submit"
+          class="rounded-2xl border-2 border-color-dark-orange bg-color-secondary px-5 py-2"
+        >
+          Salvar
         </button>
-        <button type="submit" class="btn">Salvar</button>
       </div>
     </form>
   </dialog>
-  <dialog :open="subjectDialog" class="rounded-lg shadow-lg">
+  <dialog :open="filterDialog" class="rounded-2xl p-6 shadow-lg">
+    <form action="{% url 'courses' %}" method="get" class="flex flex-col gap-2">
+      <h2 class="mb-3 flex justify-between text-xl font-semibold">
+        <span class="text-color-txt-perfil">Filtrar</span>
+        <button @click.prevent="filterDialog = false">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-6 w-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </h2>
+      <div class="mb-1 flex items-center gap-2">
+        <label for="txt-name">Nome:</label>
+        <input
+          type="text"
+          maxlength="60"
+          name="name"
+          id="txt-name"
+          class="flex-1"
+        />
+        <label for="txt-slug">Código:</label>
+        <input type="text" maxlength="5" size="4" name="slug" id="txt-slug" />
+      </div>
+      <div class="mb-1 flex items-center gap-2">
+        <label for="txt-duration">Duração:</label>
+        <input
+          type="number"
+          size="4"
+          max="10"
+          name="duration"
+          id="txt-duration"
+        />
+        <label for="sl-time">Horário:</label>
+        <select name="time" id="sl-time" x-model="time">
+          <option value="" selected>-</option>
+          <option value="M">Manhã</option>
+          <option value="E">Tarde</option>
+          <option value="N">Noite</option>
+          <option value="F">Integral</option>
+        </select>
+      </div>
+      <div class="mt-3 flex justify-center gap-3">
+        <button
+          type="reset"
+          class="rounded-2xl border-2 border-color-dark-orange bg-amber-50 px-5 py-2"
+        >
+          Limpar
+        </button>
+        <button
+          type="submit"
+          class="rounded-2xl border-2 border-color-dark-orange bg-color-secondary px-5 py-2"
+        >
+          Aplicar
+        </button>
+      </div>
+    </form>
+  </dialog>
+  <dialog :open="subjectDialog" class="rounded-2xl shadow-lg p-5">
     <form action="{% url 'create_subject' %}" method="post">
       {% csrf_token %}
-      <h2 class="text-xl font-bold">Nova matéria</h2>
+      <h2 class="text-xl font-bold flex justify-between mb-3">
+        <span class="text-color-txt-perfil">Nova matéria</span>
+        <button @click.prevent="subjectDialog = false">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-6 w-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </h2>
       <div class="field">
         <label for="txt-name">Nome</label>
         <input type="text" name="name" id="txt-name" required maxlength="60" />
@@ -151,9 +259,6 @@
         ></textarea>
       </div>
       <div class="mt-3 flex gap-2">
-        <button @click.prevent="subjectDialog = false" class="btn">
-          Voltar
-        </button>
         <button
           @click.prevent="() => { subjectDialog = false; importDialog = true }"
           class="btn"
@@ -245,10 +350,12 @@
       </button>
     </form>
   </dialog>
+
   <section class="flex flex-col gap-6">
     <header class="flex justify-between">
       <h1 class="mb-4 text-4xl font-semibold">Cursos</h1>
       <div class="flex gap-2">
+        {% if user|can:'create_course' %}
         <button @click="clear()">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -265,6 +372,7 @@
             />
           </svg>
         </button>
+        {% endif %}
         <button @click="filterDialog = true">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -293,7 +401,7 @@
           <h2>{{ course.name }} - {{ course.slug }}</h2>
           <span>Turno: {{ course.get_time_display }}</span>
         </div>
-        <div>
+        <div class="relative">
           <button @click="details = !details">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -311,6 +419,7 @@
               />
             </svg>
           </button>
+          {% if user|can:'create_course' %}
           <button @click="options = !options" class="relative">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -327,6 +436,7 @@
               />
             </svg>
           </button>
+
           <div
             x-show="options"
             class="absolute z-10 flex flex-col gap-2 rounded-lg border border-slate-400 bg-gray-100 p-3"
@@ -355,14 +465,21 @@
               Excluir
             </button>
           </div>
+          {% endif %}
         </div>
       </header>
       <div
         class="origin-top rounded-b-2xl bg-gray-200 p-5 transition-all"
         :class="details || 'scale-y-0 h-0 py-0'"
       >
-        <p>Duração: {{ course.duration }} anos</p>
-        <p>Coordenador: {{ course.coordinator }} ({{ course.coordinator.pk }})</p>
+        {% if course.duration|isint %}
+        <p>Duração: {{ course.duration|castint }} anos</p>
+        {% else %}
+        <p>Duração: {% widthratio course.duration 1 2 %} semestres</p>
+        {% endif %}
+        <p>
+          Coordenador: {{ course.coordinator }} ({{ course.coordinator.pk }})
+        </p>
         <p>Informações: {{ course.info }}</p>
       </div>
     </div>
