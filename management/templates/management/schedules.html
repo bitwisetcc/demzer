@@ -4,20 +4,44 @@
 <script defer>
   document.addEventListener("alpine:init", () => {
     Alpine.data("timeTable", () => ({
+      init() {
+        const days = [
+          // {% for day in days %}
+          "{{ day.1 }}",
+          // {% endfor %}
+        ];
+
+        const times = [
+          // {% for t in time_table %}
+          "{{ t.0 }}",
+          // {% endfor %}
+        ];
+
+        document
+          .querySelectorAll("tr > td:not(:first-child)")
+          .forEach((el, i) =>
+            el.addEventListener("click", () => {
+              this.programmingTime = Math.floor(i / 5);
+              this.programmingTimeShow = times[this.programmingTime];
+              this.programmingDay = i % 5;
+              this.programmingDayShow = days[this.programmingDay];
+            })
+          );
+      },
       time: "{{ classroom.course.time }}",
+      programmingTime: 1,
+      programmingTimeShow: "",
+      programmingDay: 1,
+      programmingDayShow: "",
     }));
-    document
-      .querySelectorAll("tr > td:not(:first-child)")
-      .forEach((el, i) => console.log(el, Math.floor(i / 5), i % 5));
   });
 </script>
 {% endblock %} {% block content %}
-<main class="p-10">
+<main class="p-10" x-data="timeTable">
   <h1 class="mb-4 text-4xl font-semibold">Horários - {{ classroom }}</h1>
   <article class="grid grid-cols-2 gap-20">
     <table
       class="table-fixed border-separate border-spacing-2 rounded-2xl bg-slate-300 p-4"
-      x-data="timeTable"
     >
       <thead class="bg-transparent">
         <tr>
@@ -49,27 +73,29 @@
         <section class="flex gap-2 p-4">
           <input type="text" hidden id="txt-classroom" name="classroom" />
           <div>
-            <label class="text-slate-500" id="txt-time">Horário:</label>
-            <input
-              type="number"
-              readonly
-              class="bg-slate-200"
-              id="txt-time"
-              name="time"
-              size="6"
-            />
-          </div>
-          <div>
             <label class="text-slate-500" id="txt-day">Dia:</label>
             <input
               type="text"
               readonly
-              class="bg-slate-200"
+              class="bg-slate-200 text-slate-500"
               id="txt-day"
-              name="day"
               size="8"
               maxlength="3"
+              x-model="programmingDayShow"
             />
+            <input type="text" hidden name="day" x-model="programmingDay" />
+          </div>
+          <div>
+            <label class="text-slate-500" id="txt-time">Horário:</label>
+            <input
+              type="text"
+              readonly
+              class="bg-slate-200 text-slate-500"
+              id="txt-time"
+              size="6"
+              x-model="programmingTimeShow"
+            />
+            <input type="number" hidden name="time" x-model="programmingTime" />
           </div>
         </section>
         <section class="flex flex-col gap-3 rounded-xl bg-slate-200 p-4">
@@ -97,7 +123,7 @@
             </div>
           </div>
           <div>
-            <button type="submit" class="py-2 px-6">Salvar</button>
+            <button type="submit" class="px-6 py-2">Salvar</button>
           </div>
         </section>
       </form>

@@ -16,7 +16,7 @@ from rolepermissions.checkers import has_role
 from rolepermissions.decorators import has_permission_decorator as check_permission
 from rolepermissions.roles import assign_role
 
-from core.models import Class, Classroom, Course, Member, Subject
+from core.models import Classroom, Course, Member, Programming, Subject
 
 
 # General queries with auth included
@@ -317,29 +317,15 @@ def schedules(request: HttpRequest, classroom_id: int):
     break_duration = 20  # nah fuck it all breaks are the same / or use a dict???
     # will there be any F turns tho?
 
-    if classroom.course.time != "F":
-        lesson = td(minutes=settings.LESSON_DURATION)
-        time_table = [dt.strptime(settings.TURNS[classroom.course.time], "%H:%M")]
+    lesson = td(minutes=settings.LESSON_DURATION)
+    time_table = [dt.strptime(settings.TURNS[classroom.course.time], "%H:%M")]
 
-        for i in range(lessons_qtd - 1):
-            time_table.append(
-                time_table[i]
-                + lesson
-                + td(minutes=break_duration * (i + 1 == break_position))
-            )
-    else:
-        pass
-
-    """
-    [
-    ["13:00", "EF", "HIS", "LP", "LP", "GEO"],
-    ["13:50", "EF", "HIS", "SRD", "LP", "GEO"],
-    ["14:40", "EF", "HIS", "SRD", "LP", "GEO"],
-    ["15:50", "EF", "HIS", "WEB", "LP", "GEO"],
-    ["16:40", "EF", "HIS", "WEB", "LP", "GEO"],
-    ["17:30", "EF", "HIS", "GEO", "LP", "EF"],
-    ]
-    """
+    for i in range(lessons_qtd - 1):
+        time_table.append(
+            time_table[i]
+            + lesson
+            + td(minutes=break_duration * (i + 1 == break_position))
+        )
 
     return render(
         request,
@@ -348,6 +334,6 @@ def schedules(request: HttpRequest, classroom_id: int):
             "classroom": classroom,
             "time_table": [(t.strftime("%H:%M"), i) for i, t in enumerate(time_table)],
             "subjects": Subject.objects.all(),
-            "days": [c for c in Class.Days.choices],
+            "days": [c for c in Programming.Days.choices],
         },
     )

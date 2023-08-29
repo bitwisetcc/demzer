@@ -201,7 +201,7 @@ class Member(Model):
         )
 
 
-class Class(Model):
+class Programming(Model):
     """
     A class that appears on the calendar. Not to be confused with `Course`.
     """
