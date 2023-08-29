@@ -6,6 +6,9 @@
     Alpine.data("timeTable", () => ({
       time: "{{ classroom.course.time }}",
     }));
+    document
+      .querySelectorAll("tr > td:not(:first-child)")
+      .forEach((el, i) => console.log(el, Math.floor(i / 5), i % 5));
   });
 </script>
 {% endblock %} {% block content %}
@@ -27,17 +30,48 @@
       <tbody>
         {% for t in time_table %}
         <tr>
-          <td class="mr-10 rounded-xl bg-color-primary text-white">{{ t.0 }}</td>
-          {% for s in schedules %}
-          <td>{{ forloop.counter0 }} - {{ forloop.parentloop.counter0 }}</td>
-          {% endfor %}
+          <td class="mr-10 rounded-xl bg-color-primary text-white">
+            {{ t.0 }}
+          </td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
+
     <section class="rounded-xl bg-slate-300 p-5">
       <h2 class="mb-3 text-2xl font-semibold">Editar aula</h2>
-      <form action="">
+      <form action="" class="flex flex-col justify-end">
+        <section class="flex gap-2 p-4">
+          <input type="text" hidden id="txt-classroom" name="classroom" />
+          <div>
+            <label class="text-slate-500" id="txt-time">Horário:</label>
+            <input
+              type="number"
+              readonly
+              class="bg-slate-200"
+              id="txt-time"
+              name="time"
+              size="6"
+            />
+          </div>
+          <div>
+            <label class="text-slate-500" id="txt-day">Dia:</label>
+            <input
+              type="text"
+              readonly
+              class="bg-slate-200"
+              id="txt-day"
+              name="day"
+              size="8"
+              maxlength="3"
+            />
+          </div>
+        </section>
         <section class="flex flex-col gap-3 rounded-xl bg-slate-200 p-4">
           <div>
             <label for="sl-subject">Matéria:</label>
@@ -62,16 +96,8 @@
               <label for="rd-b">B</label>
             </div>
           </div>
-        </section>
-        <section class="flex gap-2 flex-col p-4">
-          <input type="text" hidden id="txt-classroom" name="classroom" />
           <div>
-            <label  class="text-slate-500" id="txt-time">Horário:</label>
-            <input type="text" readonly class="bg-slate-200" id="txt-time" name="time"  />
-          </div>
-          <div>
-            <label  class="text-slate-500" id="txt-day">Dia:</label>
-            <input type="text" readonly class="bg-slate-200" id="txt-day" name="day"  />
+            <button type="submit" class="py-2 px-6">Salvar</button>
           </div>
         </section>
       </form>

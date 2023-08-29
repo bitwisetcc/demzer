@@ -349,12 +349,5 @@ def schedules(request: HttpRequest, classroom_id: int):
             "time_table": [(t.strftime("%H:%M"), i) for i, t in enumerate(time_table)],
             "subjects": Subject.objects.all(),
             "days": [c for c in Class.Days.choices],
-            "schedules": [
-                ["", "", "", "", ""],
-                ["", "", "", "", ""],
-                ["", "", "", "", ""],
-                ["", "", "", "", ""],
-                ["", "", "", "", ""],
-            ],
         },
     )
