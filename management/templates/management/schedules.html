@@ -11,7 +11,7 @@
 {% endblock %} {% block content %}
 <main class="p-10">
   <h1 class="mb-4 text-4xl font-semibold">Horários - {{ classroom }}</h1>
-  <article>
+  <article class="grid grid-cols-2 gap-20">
     <table
       class="table-fixed border-separate border-spacing-2 rounded-2xl bg-slate-300 p-4"
       x-data="timeTable"
@@ -19,26 +19,63 @@
       <thead class="bg-transparent">
         <tr>
           <th></th>
-          <th>Segunda</th>
-          <th>Terça</th>
-          <th>Quarta</th>
-          <th>Quinta</th>
-          <th>Sexta</th>
+          {% for day in days %}
+          <th>{{ day.1 }}</th>
+          {% endfor %}
         </tr>
       </thead>
       <tbody>
         {% for t in time_table %}
         <tr>
-          <td class="mr-10 rounded-xl bg-color-primary">{{ t }}</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td class="mr-10 rounded-xl bg-color-primary text-white">{{ t.0 }}</td>
+          {% for s in schedules %}
+          <td>{{ forloop.counter0 }} - {{ forloop.parentloop.counter0 }}</td>
+          {% endfor %}
         </tr>
         {% endfor %}
       </tbody>
     </table>
+    <section class="rounded-xl bg-slate-300 p-5">
+      <h2 class="mb-3 text-2xl font-semibold">Editar aula</h2>
+      <form action="">
+        <section class="flex flex-col gap-3 rounded-xl bg-slate-200 p-4">
+          <div>
+            <label for="sl-subject">Matéria:</label>
+            <select name="subject" id="sl-subject">
+              {% for subject in subjects %}
+              <option value="{{ subject.pk }}">{{ subject.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div>
+            <label for="txt-teacher">Professor:</label>
+            <input type="number" name="teacher" id="txt-teacher" />
+          </div>
+          <div class="flex items-center gap-2">
+            <label for="">Grupo:</label>
+            <div class="flex items-center">
+              <input type="radio" name="group" id="rd-all" value="N" checked />
+              <label for="rd-all">Todos</label>
+              <input type="radio" name="group" id="rd-a" value="A" />
+              <label for="rd-a">A</label>
+              <input type="radio" name="group" id="rd-b" value="B" />
+              <label for="rd-b">B</label>
+            </div>
+          </div>
+        </section>
+        <section class="flex gap-2 flex-col p-4">
+          <input type="text" hidden id="txt-classroom" name="classroom" />
+          <div>
+            <label  class="text-slate-500" id="txt-time">Horário:</label>
+            <input type="text" readonly class="bg-slate-200" id="txt-time" name="time"  />
+          </div>
+          <div>
+            <label  class="text-slate-500" id="txt-day">Dia:</label>
+            <input type="text" readonly class="bg-slate-200" id="txt-day" name="day"  />
+          </div>
+        </section>
+      </form>
+    </section>
   </article>
 </main>
 {% endblock %}

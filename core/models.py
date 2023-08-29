@@ -207,11 +207,11 @@ class Class(Model):
     """
 
     class Days(TextChoices):
-        MONDAY = "MON", _("Segunda-feira")
-        TUESDAY = "TUE", _("Terça-feira")
-        WEDNESDAY = "WED", _("Quarta-feira")
-        THURSDAY = "THU", _("Quinta-feira")
-        SUNDAY = "SUN", _("Sexta-feira")
+        MONDAY = "MON", _("Segunda")
+        TUESDAY = "TUE", _("Terça")
+        WEDNESDAY = "WED", _("Quarta")
+        THURSDAY = "THU", _("Quinta")
+        SUNDAY = "SUN", _("Sexta")
 
     classroom = ForeignKey(Classroom, CASCADE, related_name="+", null=True)
     teacher = ForeignKey(User, SET_NULL, null=True)
