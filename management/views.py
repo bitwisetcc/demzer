@@ -315,11 +315,12 @@ def schedules(request: HttpRequest, classroom_id: int):
     classroom = Classroom.objects.get(pk=classroom_id)
 
     if request.method == "POST":
-        teacher = User.objects.get(username__startswith=request.POST.get("teacher"))
-        if not has_role(teacher, Teacher):
-            raise PermissionError()
-
         try:
+            teacher_name = request.POST.get("teacher")
+            teacher = User.objects.get(username__startswith=teacher_name)
+            if not has_role(teacher, Teacher):
+                raise PermissionError()
+
             Programming.objects.create(
                 classroom=classroom,
                 teacher=teacher,
@@ -330,6 +331,8 @@ def schedules(request: HttpRequest, classroom_id: int):
             )
         except User.DoesNotExist as exc:
             messages.error(request, "Professor não encontrado")
+        except User.MultipleObjectsReturned as exc:
+            messages.error(request, "Mais de um '{}' encontrado".format(teacher_name))
         except Subject.DoesNotExist as exc:
             messages.error(request, "Matéria não encontrada")
         except PermissionError as exc:
