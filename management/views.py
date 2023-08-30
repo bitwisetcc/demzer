@@ -74,7 +74,9 @@ def import_users(request: HttpRequest):
                     "afro": row["afro"] == "true" or row["afro"] == "1",
                     "cpf": re.sub(r"[\./-]", "", row["cpf"]),
                     "rg": re.sub(r"[\./-]", "", row["rg"]),
-                    "classroom": classrooms.get(row["classroom"]),
+                    "classroom": classrooms.get(row["classroom"])
+                    if "classroom" in request.POST
+                    else None,
                     # TODO: Send reset email
                     "password": make_password(
                         row["username"].split()[0]
@@ -311,21 +313,37 @@ def create_subject(request: HttpRequest):
 def schedules(request: HttpRequest, classroom_id: int):
     classroom = Classroom.objects.get(pk=classroom_id)
 
+    if request.method == "POST":
+        try:
+            Programming.objects.create(
+                classroom=classroom,
+                teacher=User.objects.get(
+                    username__startswith=request.POST.get("teacher")
+                ),
+                student_group=request.POST.get("group") or None,
+                subject=Subject.objects.get(pk=request.POST.get("subject")),
+                day=Programming.Days.choices[int(request.POST.get("day"))][0],
+                order=request.POST.get("time")
+            )
+        except User.DoesNotExist as exc:
+            messages.error(request, "Professor não encontrado")
+        except Subject.DoesNotExist as exc:
+            messages.error(request, "Matéria não encontrada")
+        except Exception as exc:
+            messages.error(request, exc)
+
     # TODO: add all these as course attributes
     lessons_qtd = 6
-    break_position = 3  # maybe use a list for F turn
+    break_position = 3
     break_duration = 20  # nah fuck it all breaks are the same / or use a dict???
-    # will there be any F turns tho?
 
     lesson = td(minutes=settings.LESSON_DURATION)
-    time_table = [dt.strptime(settings.TURNS[classroom.course.time], "%H:%M")]
+    start = dt.strptime(settings.TURNS[classroom.course.time], "%H:%M")
 
-    for i in range(lessons_qtd - 1):
-        time_table.append(
-            time_table[i]
-            + lesson
-            + td(minutes=break_duration * (i + 1 == break_position))
-        )
+    time_table = [start] + [
+        start + lesson * i + td(minutes=break_duration * (i > break_position))
+        for i in range(1, lessons_qtd)
+    ]
 
     return render(
         request,
