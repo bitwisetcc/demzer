@@ -2,6 +2,8 @@
 <title>Horários</title>
 <link rel="stylesheet" href="{% static 'core/dist/css/schedule.css' %}" />
 <script defer>
+  // When I wrote this, only God and I understood what I was doing
+  // Now, only God knows
   document.addEventListener("alpine:init", () => {
     Alpine.data("timeTable", () => ({
       init() {
@@ -31,8 +33,6 @@
             this.programmingTimeShow = times[this.programmingTime];
             this.programmingDay = i % 5;
             this.programmingDayShow = days[this.programmingDay];
-            console.log(`[${Math.floor(i / 5)},${i % 5}]`);
-            console.log(i);
           })
         );
 
