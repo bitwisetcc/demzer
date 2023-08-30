@@ -1,7 +1,8 @@
-from datetime import date
+import json
 from django.db.models import (
     Model,
     TextChoices,
+    IntegerChoices,
     ForeignKey,
     ManyToManyField,
     OneToOneField,
@@ -20,12 +21,9 @@ from django.db.models.fields import (
     BooleanField,
     IntegerField,
 )
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
-from backend.settings import (
-    DEFAULT_CITY,
-    DEFAULT_BIRTHDATE,
-)
 
 
 class Relative(Model):
@@ -155,7 +153,7 @@ class Member(Model):
         max_length=1,
         null=True,
     )
-    birthdate = DateField(default=DEFAULT_BIRTHDATE)
+    birthdate = DateField(default=settings.DEFAULT_BIRTHDATE)
     afro = BooleanField(default=False)
     indigenous = BooleanField(default=False)
     deficiencies = CharField(null=True, max_length=50)
@@ -164,7 +162,7 @@ class Member(Model):
     )
 
     cep = CharField(default="", max_length=8)
-    city = CharField(max_length=60, default=DEFAULT_CITY)
+    city = CharField(max_length=60, default=settings.DEFAULT_CITY)
     neighborhood = CharField(max_length=40)
     street = CharField(max_length=40)
     street_number = IntegerField(default=1)
@@ -206,19 +204,32 @@ class Programming(Model):
     A class that appears on the calendar. Not to be confused with `Course`.
     """
 
-    class Days(TextChoices):
-        MONDAY = "MON", _("Segunda")
-        TUESDAY = "TUE", _("Terça")
-        WEDNESDAY = "WED", _("Quarta")
-        THURSDAY = "THU", _("Quinta")
-        SUNDAY = "SUN", _("Sexta")
+    class Days(IntegerChoices):
+        MONDAY = 0, _("Segunda")
+        TUESDAY = 1, _("Terça")
+        WEDNESDAY = 2, _("Quarta")
+        THURSDAY = 3, _("Quinta")
+        SUNDAY = 4, _("Sexta")
 
     classroom = ForeignKey(Classroom, CASCADE, related_name="+", null=True)
     teacher = ForeignKey(User, SET_NULL, null=True)
     student_group = PositiveSmallIntegerField(null=True)
-    subject = ForeignKey("Subject", SET_NULL, related_name="+", null=True)
-    day = CharField(max_length=15, choices=Days.choices, default=Days.MONDAY)
+    subject = ForeignKey(Subject, SET_NULL, related_name="+", null=True)
+    day = PositiveSmallIntegerField(choices=Days.choices, default=Days.MONDAY)
     order = PositiveSmallIntegerField()
+
+    def json(self):
+        return json.dumps(
+            {
+                "classroom": self.classroom.__str__(),
+                "teacher": self.teacher.username,
+                "student_group": self.student_group,
+                "subject_slug": self.subject.slug,
+                "subject": self.subject.name,
+                "day": self.day,
+                "order": self.order,
+            },
+        )
 
     class Meta:
         verbose_name = _("classe")

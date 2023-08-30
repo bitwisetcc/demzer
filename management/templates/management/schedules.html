@@ -17,16 +17,26 @@
           // {% endfor %}
         ];
 
-        document
-          .querySelectorAll("tr > td:not(:first-child)")
-          .forEach((el, i) =>
-            el.addEventListener("click", () => {
-              this.programmingTime = Math.floor(i / 5);
-              this.programmingTimeShow = times[this.programmingTime];
-              this.programmingDay = i % 5;
-              this.programmingDayShow = days[this.programmingDay];
-            })
-          );
+        const programmings = [
+          //{% for p in programmings %}
+          JSON.parse("{{ p.json }}".replace(/&quot;/g, '"')),
+          // {% endfor %}
+        ];
+
+        const cells = document.querySelectorAll("tr > td:not(:first-child)");
+
+        cells.forEach((el, i) =>
+          el.addEventListener("click", () => {
+            this.programmingTime = Math.floor(i / 5);
+            this.programmingTimeShow = times[this.programmingTime];
+            this.programmingDay = i % 5;
+            this.programmingDayShow = days[this.programmingDay];
+            console.log(`[${Math.floor(i / 5)},${i % 5}]`);
+            console.log(i);
+          })
+        );
+
+        programmings.forEach(p => cells[p.order * 5 + p.day].innerHTML = p.subject_slug)
       },
       time: "{{ classroom.course.time }}",
       programmingTime: 1,
@@ -69,9 +79,13 @@
 
     <section class="rounded-xl bg-slate-300 p-5">
       <h2 class="mb-3 text-2xl font-semibold">Editar aula</h2>
-      <form action="{% url 'schedules' classroom.pk %}" method="post" class="flex flex-col justify-end">
+      <form
+        action="{% url 'schedules' classroom.pk %}"
+        method="post"
+        class="flex flex-col justify-end"
+      >
         {% csrf_token %}
-        <input type="hidden" name="classroom" value="{{ classroom.pk }}">
+        <input type="hidden" name="classroom" value="{{ classroom.pk }}" />
         <section class="flex gap-2 p-4">
           <input type="text" hidden id="txt-classroom" name="classroom" />
           <div>

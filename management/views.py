@@ -323,7 +323,7 @@ def schedules(request: HttpRequest, classroom_id: int):
                 student_group=request.POST.get("group") or None,
                 subject=Subject.objects.get(pk=request.POST.get("subject")),
                 day=Programming.Days.choices[int(request.POST.get("day"))][0],
-                order=request.POST.get("time")
+                order=request.POST.get("time"),
             )
         except User.DoesNotExist as exc:
             messages.error(request, "Professor não encontrado")
@@ -353,5 +353,6 @@ def schedules(request: HttpRequest, classroom_id: int):
             "time_table": [(t.strftime("%H:%M"), i) for i, t in enumerate(time_table)],
             "subjects": Subject.objects.all(),
             "days": [c for c in Programming.Days.choices],
+            "programmings": Programming.objects.filter(classroom=classroom),
         },
     )
