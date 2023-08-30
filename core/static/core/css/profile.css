@@ -3,5 +3,5 @@
 }
 
 .info-lbl {
-  @apply mr-1 font-semibold text-color-txt-perfil;
+  @apply mr-1 font-semibold text-color-primary;
 }

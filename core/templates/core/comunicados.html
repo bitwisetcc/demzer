@@ -6,7 +6,7 @@ block head %}
   class="m-20 min-h-full md2:justify-normal md2:pl-5 md2:pt-16"
   x-data="{ createDialog: false, filterDialog: false}"
 >
-  <header class="flex w-full justify-between text-color-txt-perfil">
+  <header class="flex w-full justify-between text-color-primary">
     <h1 class="text-4xl font-semibold">Comunicados</h1>
     <div class="flex gap-2">
       {% if user|has_role:'admin' %}
@@ -89,7 +89,7 @@ block head %}
           <div>
             <button
               @click.prevent="seeDialog = false"
-              class="text-3xl font-bold text-color-txt-perfil"
+              class="text-3xl font-bold text-color-primary"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -139,7 +139,7 @@ block head %}
           <div>
             <button
               @click.prevent="createDialog = false"
-              class="text-3xl font-bold text-color-txt-perfil"
+              class="text-3xl font-bold text-color-primary"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -241,7 +241,7 @@ block head %}
           <div class="flex justify-center pt-6">
             <button
               type="submit"
-              class="h-12 w-32 rounded-full border-2 border-solid border-color-dark-orange text-2xl font-bold text-color-dark-orange transition hover:bg-color-hover"
+              class="h-12 w-32 rounded-full border-2 border-solid border-color-secondary text-2xl font-bold text-color-secondary transition hover:bg-color-hover"
             >
               Aplicar
             </button>
@@ -263,7 +263,7 @@ block head %}
           <div>
             <button
               @click.prevent="filterDialog = false"
-              class="text-3xl font-bold text-color-txt-perfil"
+              class="text-3xl font-bold text-color-primary"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -285,57 +285,57 @@ block head %}
         <section class="flex flex-col gap-4 p-10">
           <input
             type="search"
-            class="mx-auto w-full rounded-lg border border-color-txt-perfil bg-gray-50 text-sm text-gray-900"
+            class="mx-auto w-full rounded-lg border border-color-primary bg-gray-50 text-sm text-gray-900"
           />
           <div class="flex flex-row justify-between text-lg font-normal">
             <label>
               De:
-              <input type="date" class="rounded-3xl border-color-txt-perfil"
+              <input type="date" class="rounded-3xl border-color-primary"
             /></label>
             <label>
               Até:
-              <input type="date" class="rounded-3xl border-color-txt-perfil"
+              <input type="date" class="rounded-3xl border-color-primary"
             /></label>
           </div>
 
           <label>
             <input
               type="checkbox"
-              class="h-5 w-5 rounded-full border-color-txt-perfil transition"
+              class="h-5 w-5 rounded-full border-color-primary transition"
             />
             Palestras
           </label>
           <label
             ><input
               type="checkbox"
-              class="h-5 w-5 rounded-full border-color-txt-perfil transition"
+              class="h-5 w-5 rounded-full border-color-primary transition"
             />
             Eventos
           </label>
           <label
             ><input
               type="checkbox"
-              class="h-5 w-5 rounded-full border-color-txt-perfil transition"
+              class="h-5 w-5 rounded-full border-color-primary transition"
             />
             Reuniões
           </label>
           <label
             ><input
               type="checkbox"
-              class="h-5 w-5 rounded-full border-color-txt-perfil transition"
+              class="h-5 w-5 rounded-full border-color-primary transition"
             />
             Outros
           </label>
           <div class="flex flex-row justify-center space-x-5 pt-10 text-lg">
             <button
               type="reset"
-              class="rounded-full border-2 border-solid border-color-dark-orange px-12 py-1 font-bold text-color-dark-orange transition hover:bg-color-hover"
+              class="rounded-full border-2 border-solid border-color-secondary px-12 py-1 font-bold text-color-secondary transition hover:bg-color-hover"
             >
               Limpar
             </button>
             <button
               type="submit"
-              class="rounded-full border-2 border-solid border-color-dark-orange px-12 py-1 font-bold text-color-dark-orange transition hover:bg-color-hover"
+              class="rounded-full border-2 border-solid border-color-secondary px-12 py-1 font-bold text-color-secondary transition hover:bg-color-hover"
             >
               Aplicar
             </button>

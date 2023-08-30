@@ -36,7 +36,9 @@
           })
         );
 
-        programmings.forEach(p => cells[p.order * 5 + p.day].innerHTML = p.subject_slug)
+        programmings.forEach(
+          (p) => (cells[p.order * 5 + p.day].innerHTML = p.subject_slug)
+        );
       },
       time: "{{ classroom.course.time }}",
       programmingTime: 1,
@@ -151,11 +153,30 @@
           <div class="flex items-center gap-2">
             <label for="">Grupo:</label>
             <div class="flex items-center">
-              <input type="radio" name="group" id="rd-all" value="" x-model="studentGroup" checked />
+              <input
+                type="radio"
+                name="group"
+                id="rd-all"
+                value=""
+                x-model="studentGroup"
+                checked
+              />
               <label for="rd-all">Todos</label>
-              <input type="radio" name="group" id="rd-a" value="A" x-model="studentGroup" />
+              <input
+                type="radio"
+                name="group"
+                id="rd-a"
+                value="A"
+                x-model="studentGroup"
+              />
               <label for="rd-a">A</label>
-              <input type="radio" name="group" id="rd-b" value="B" x-model="studentGroup" />
+              <input
+                type="radio"
+                name="group"
+                id="rd-b"
+                value="B"
+                x-model="studentGroup"
+              />
               <label for="rd-b">B</label>
             </div>
           </div>

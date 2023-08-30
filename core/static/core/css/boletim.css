@@ -10,8 +10,8 @@ td {
   @apply border-none text-center;
 }
 
-.main-table thead th:not(:first-child){
-  @apply rounded-xl bg-color-dark-orange p-3;
+.main-table thead th:not(:first-child) {
+  @apply rounded-xl bg-color-secondary p-3;
 }
 
 .main-table tbody tr:first-child td:not(:first-child) {
@@ -23,7 +23,7 @@ td {
 }
 
 .main-table tbody td:first-child {
-  @apply rounded-xl bg-color-name-boletim text-white;
+  @apply rounded-xl bg-color-primary-dimm text-white;
 }
 
 .main-table tbody td:not(:first-child) {

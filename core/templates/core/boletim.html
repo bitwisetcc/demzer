@@ -4,16 +4,14 @@
 <script defer src="{% static 'core/js/filter.js' %}"></script>
 {% endblock %} {% block content %}
 <main class="px-8 pb-10">
-  <h1 class="my-8 ml-12 text-3xl font-semibold text-color-txt-perfil">
-    Boletim
-  </h1>
-  <label class="ml-12 text-color-txt-perfil">
+  <h1 class="my-8 ml-12 text-3xl font-semibold text-color-primary">Boletim</h1>
+  <label class="ml-12 text-color-primary">
     Curso:
     <select class="text-zinc-500">
       <option>{{ user.profile.classroom.course.name }}</option>
     </select>
   </label>
-  <label class="ml-12 text-color-txt-perfil">
+  <label class="ml-12 text-color-primary">
     Ano/Módulo:
     <select class="text-zinc-500">
       <option>1º Ano</option>
@@ -152,39 +150,39 @@
     </table>
   </section>
 
-  <h2 class="text-3xl font-semibold text-color-txt-perfil">Total</h2>
+  <h2 class="text-3xl font-semibold text-color-primary">Total</h2>
   <section
     class="box lg:w-max lg:grid-cols-4 grid grid-cols-1 gap-6 p-4 px-5 py-3 text-center sm:grid-cols-2"
   >
     <div class="flex flex-col gap-3">
-      <span class="info bg-color-name-boletim">Aulas Dadas</span>
+      <span class="info bg-color-primary-dimm">Aulas Dadas</span>
       <span class="info bg-color-grey">222</span>
     </div>
     <div class="flex flex-col gap-3">
-      <span class="info bg-color-name-boletim">Faltas</span>
+      <span class="info bg-color-primary-dimm">Faltas</span>
       <span class="info bg-color-grey">222</span>
     </div>
     <div class="flex flex-col gap-3">
-      <span class="info bg-color-name-boletim">Frequência</span>
+      <span class="info bg-color-primary-dimm">Frequência</span>
       <span class="info bg-color-grey">222</span>
     </div>
     <div class="flex flex-col gap-3">
-      <span class="info bg-color-name-boletim">Faltas Permitidas</span>
+      <span class="info bg-color-primary-dimm">Faltas Permitidas</span>
       <span class="info bg-color-grey">222</span>
     </div>
   </section>
 
-  <h2 class="truncate text-3xl font-semibold text-color-txt-perfil">
+  <h2 class="truncate text-3xl font-semibold text-color-primary">
     Ficha de Desempenho - Sala de Aula
   </h2>
   <section class="box p-4">
     <table>
       <thead>
         <tr>
-          <th class="info bg-color-name-boletim">Instrumento</th>
-          <th class="info bg-color-name-boletim">Data</th>
-          <th class="info bg-color-name-boletim">Menção</th>
-          <th class="info bg-color-name-boletim">Observação</th>
+          <th class="info bg-color-primary-dimm">Instrumento</th>
+          <th class="info bg-color-primary-dimm">Data</th>
+          <th class="info bg-color-primary-dimm">Menção</th>
+          <th class="info bg-color-primary-dimm">Observação</th>
         </tr>
       </thead>
       <tbody>
@@ -202,7 +200,7 @@
                 maxlength="200"
                 placeholder="Escreva Aqui!"
               />
-              <button type="submit" class="btn rounded-lg bg-color-dark-orange">
+              <button type="submit" class="btn rounded-lg bg-color-secondary">
                 Enviar
               </button>
               {% else %}
@@ -232,7 +230,7 @@
   >
     <div class="flex items-center">
       <label
-        class="ml-10 w-[700px] text-3xl font-semibold text-color-dark-orange"
+        class="ml-10 w-[700px] text-3xl font-semibold text-color-secondary"
         :class="open ? 'text-xl' : 'text-3xl'"
         >Reconsideração de Notas (Aberto até 00/00/0000)</label
       >
@@ -261,7 +259,7 @@
       >
         <!-- SCREEN RECONSIDERAÇÃO -->
         <div
-          class="h-[600px] w-[600px] rounded-3xl bg-color-grey text-color-txt-perfil"
+          class="h-[600px] w-[600px] rounded-3xl bg-color-grey text-color-primary"
         >
           <div
             class="mx-10 mt-8 flex flex-row justify-between text-3xl font-bold"
@@ -270,7 +268,7 @@
             <div>
               <button
                 id="closeModalButton"
-                class="text-3xl font-bold text-color-txt-perfil"
+                class="text-3xl font-bold text-color-primary"
               >
                 <!-- CLOSE RECONSIDERAÇÃO -->
                 <svg
@@ -334,7 +332,7 @@
           <div class="flex items-center justify-center space-x-5 pt-3 text-lg">
             <button
               type="submit"
-              class="rounded-full border-2 border-solid border-color-dark-orange px-12 py-1 font-bold text-color-dark-orange transition hover:bg-color-hover"
+              class="rounded-full border-2 border-solid border-color-secondary px-12 py-1 font-bold text-color-secondary transition hover:bg-color-hover"
             >
               Aplicar
             </button>
