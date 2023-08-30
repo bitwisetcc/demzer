@@ -45,7 +45,7 @@
       programmingTimeShow: "",
       programmingDay: 1,
       programmingDayShow: "",
-      studentGroup: "",
+      studentGroup: false,
     }));
   });
 </script>
@@ -67,7 +67,7 @@
       <tbody>
         {% for t in time_table %}
         <tr>
-          <td class="mr-10 rounded-xl bg-color-primary text-white">
+          <td class="mr-10 rounded-xl bg-color-primary-dimm text-white">
             {{ t.0 }}
           </td>
           <td></td>
@@ -121,7 +121,7 @@
           <div class="flex">
             <div class="flex flex-col gap-3">
               <div>
-                <label for="sl-subject">Matéria:</label>
+                <label for="sl-subject" x-text="`Matéria${studentGroup ? ' A' : ''}:`"></label>
                 <select name="subject" id="sl-subject">
                   {% for subject in subjects %}
                   <option value="{{ subject.pk }}">{{ subject.name }}</option>
@@ -129,56 +129,30 @@
                 </select>
               </div>
               <div>
-                <label for="txt-teacher">Professor:</label>
+                <label for="txt-teacher" x-text="`Professor${studentGroup ? ' A' : ''}:`"></label>
                 <input type="text" name="teacher" id="txt-teacher" />
               </div>
             </div>
             <template x-if="studentGroup != ''">
               <div class="flex flex-col gap-3">
                 <div>
-                  <label for="sl-subject">Matéria:</label>
-                  <select name="subject" id="sl-subject">
+                  <label for="sl-subject">Matéria B:</label>
+                  <select name="subject_b" id="sl-subject">
                     {% for subject in subjects %}
                     <option value="{{ subject.pk }}">{{ subject.name }}</option>
                     {% endfor %}
                   </select>
                 </div>
                 <div>
-                  <label for="txt-teacher">Professor:</label>
-                  <input type="text" name="teacher" id="txt-teacher" />
+                  <label for="txt-teacher">Professor B:</label>
+                  <input type="text" name="teacher_b" id="txt-teacher" />
                 </div>
               </div>
             </template>
           </div>
           <div class="flex items-center gap-2">
-            <label for="">Grupo:</label>
-            <div class="flex items-center">
-              <input
-                type="radio"
-                name="group"
-                id="rd-all"
-                value=""
-                x-model="studentGroup"
-                checked
-              />
-              <label for="rd-all">Todos</label>
-              <input
-                type="radio"
-                name="group"
-                id="rd-a"
-                value="A"
-                x-model="studentGroup"
-              />
-              <label for="rd-a">A</label>
-              <input
-                type="radio"
-                name="group"
-                id="rd-b"
-                value="B"
-                x-model="studentGroup"
-              />
-              <label for="rd-b">B</label>
-            </div>
+            <label for="ch-group">Divisão de turmas:</label>
+            <input type="checkbox" name="group" id="ch-group" x-model="studentGroup">
           </div>
           <div>
             <button type="submit" class="px-6 py-2">Salvar</button>
