@@ -17,6 +17,7 @@ from rolepermissions.decorators import has_permission_decorator as check_permiss
 from rolepermissions.roles import assign_role
 
 from core.models import Classroom, Course, Member, Programming, Subject
+from core.roles import Teacher
 
 
 # General queries with auth included
@@ -314,12 +315,14 @@ def schedules(request: HttpRequest, classroom_id: int):
     classroom = Classroom.objects.get(pk=classroom_id)
 
     if request.method == "POST":
+        teacher = User.objects.get(username__startswith=request.POST.get("teacher"))
+        if not has_role(teacher, Teacher):
+            raise PermissionError()
+
         try:
             Programming.objects.create(
                 classroom=classroom,
-                teacher=User.objects.get(
-                    username__startswith=request.POST.get("teacher")
-                ),
+                teacher=teacher,
                 student_group=request.POST.get("group") or None,
                 subject=Subject.objects.get(pk=request.POST.get("subject")),
                 day=Programming.Days.choices[int(request.POST.get("day"))][0],
@@ -329,6 +332,8 @@ def schedules(request: HttpRequest, classroom_id: int):
             messages.error(request, "Professor não encontrado")
         except Subject.DoesNotExist as exc:
             messages.error(request, "Matéria não encontrada")
+        except PermissionError as exc:
+            messages.error("Usuário {} não é um professor".format(teacher.pk))
         except Exception as exc:
             messages.error(request, exc)
 
