@@ -121,7 +121,10 @@
           <div class="flex">
             <div class="flex flex-col gap-3">
               <div>
-                <label for="sl-subject" x-text="`Matéria${studentGroup ? ' A' : ''}:`"></label>
+                <label
+                  for="sl-subject"
+                  x-text="`Matéria${studentGroup ? ' A' : ''}:`"
+                ></label>
                 <select name="subject" id="sl-subject">
                   {% for subject in subjects %}
                   <option value="{{ subject.pk }}">{{ subject.name }}</option>
@@ -129,7 +132,10 @@
                 </select>
               </div>
               <div>
-                <label for="txt-teacher" x-text="`Professor${studentGroup ? ' A' : ''}:`"></label>
+                <label
+                  for="txt-teacher"
+                  x-text="`Professor${studentGroup ? ' A' : ''}:`"
+                ></label>
                 <input type="text" name="teacher" id="txt-teacher" />
               </div>
             </div>
@@ -152,7 +158,12 @@
           </div>
           <div class="flex items-center gap-2">
             <label for="ch-group">Divisão de turmas:</label>
-            <input type="checkbox" name="group" id="ch-group" x-model="studentGroup">
+            <input
+              type="checkbox"
+              name="group"
+              id="ch-group"
+              x-model="studentGroup"
+            />
           </div>
           <div>
             <button type="submit" class="px-6 py-2">Salvar</button>

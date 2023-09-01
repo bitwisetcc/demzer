@@ -1,29 +1,36 @@
 import json
+
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth.models import User
 from django.db.models import (
-    Model,
-    TextChoices,
-    IntegerChoices,
-    ForeignKey,
-    ManyToManyField,
-    OneToOneField,
-    ImageField,
-    TextField,
-    SET_NULL,
     CASCADE,
+    SET_NULL,
+    ForeignKey,
+    ImageField,
+    IntegerChoices,
+    ManyToManyField,
+    Model,
+    OneToOneField,
+    TextChoices,
+    TextField,
 )
 from django.db.models.fields import (
-    PositiveSmallIntegerField,
-    FloatField,
+    BooleanField,
     CharField,
     DateField,
     EmailField,
-    SlugField,
-    BooleanField,
+    FloatField,
     IntegerField,
+    PositiveSmallIntegerField,
+    SlugField,
 )
-from django.conf import settings
-from django.contrib.auth.models import User
+from django.forms import ValidationError
+from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
+from rolepermissions.checkers import has_role
+
+from core.roles import Teacher
 
 
 class Relative(Model):
@@ -218,6 +225,43 @@ class Programming(Model):
     day = PositiveSmallIntegerField(choices=Days.choices, default=Days.MONDAY)
     order = PositiveSmallIntegerField()
 
+    def create(
+        request: HttpRequest,
+        classroom: Classroom,
+        teacher_name: str,
+        subject: int,
+        group: str = None,
+    ):
+        try:
+            day = Programming.Days.choices[int(request.POST.get("day"))][0]
+            time = request.POST.get("time")
+            teacher = User.objects.get(username__startswith=teacher_name)
+
+            if not has_role(teacher, Teacher):
+                raise PermissionError(teacher.username)
+            if Programming.objects.count(teacher=teacher, time=time, day=day) > 0:
+                raise ValidationError("Professor já tem aula nesse horário")
+
+            return Programming.objects.create(
+                classroom=classroom,
+                teacher=teacher,
+                student_group=group,
+                subject=Subject.objects.get(pk=subject),
+                day=day,
+                order=time,
+            )
+
+        except User.DoesNotExist as exc:
+            messages.error(request, "Professor não encontrado")
+        except User.MultipleObjectsReturned as exc:
+            messages.error(request, "Mais de um professor encontrado")
+        except PermissionError as exc:
+            messages.error(request, "Usuário '{}' não é um professor".format(exc))
+        except ValidationError as exc:
+            messages.error(request, exc)
+        except Subject.DoesNotExist as exc:
+            messages.error(request, "Matéria não encontrada")
+
     def json(self):
         return json.dumps(
             {
@@ -232,6 +276,7 @@ class Programming(Model):
         )
 
     class Meta:
+        ordering = ["student_group"]
         verbose_name = _("classe")
         verbose_name_plural = _("classes")
 

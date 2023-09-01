@@ -311,62 +311,30 @@ def create_subject(request: HttpRequest):
     return redirect("courses")
 
 
-def register_programming(
-    request: HttpRequest,
-    classroom: Classroom,
-    teacher_name: str,
-    subject: int,
-    group: str = None,
-):
-    teacher = User.objects.get(username__startswith=teacher_name)
-    if not has_role(teacher, Teacher):
-        raise PermissionError(teacher.username)
-
-    Programming.objects.create(
-        classroom=classroom,
-        teacher=teacher,
-        student_group=group,
-        subject=Subject.objects.get(pk=subject),
-        day=Programming.Days.choices[int(request.POST.get("day"))][0],
-        order=request.POST.get("time"),
-    )
-
-
 def schedules(request: HttpRequest, classroom_id: int):
     classroom = Classroom.objects.get(pk=classroom_id)
 
     if request.method == "POST":
-        try:
-            register_programming(
+        if "group" in request.POST:
+            Programming.create(
+                request, classroom, request.POST["teacher"], request.POST["subject"], 1
+            )
+            Programming.create(
                 request,
                 classroom,
-                request.POST.get("teacher"),
-                request.POST.get("subject"),
+                request.POST["teacher_b"],
+                request.POST["subject_b"],
+                2,
             )
 
-            if "group" in request.POST:
-                register_programming(
-                    request,
-                    classroom,
-                    request.POST.get("teacher_b"),
-                    request.POST.get("subject_b"),
-                )
-
-        except User.DoesNotExist as exc:
-            messages.error(request, "Professor não encontrado")
-        except User.MultipleObjectsReturned as exc:
-            messages.error(request, "Mais de um professor encontrado")
-        except PermissionError as exc:
-            messages.error("Usuário '{}' não é um professor".format(exc))
-        except Subject.DoesNotExist as exc:
-            messages.error(request, "Matéria não encontrada")
-        except Exception as exc:
-            messages.error(request, exc)
+        Programming.create(
+            request, classroom, request.POST["teacher"], request.POST["subject"]
+        )
 
     # TODO: add all these as course attributes
     lessons_qtd = 6
     break_position = 3
-    break_duration = 20  # nah fuck it all breaks are the same / or use a dict???
+    break_duration = 20
 
     lesson = td(minutes=settings.LESSON_DURATION)
     start = dt.strptime(settings.TURNS[classroom.course.time], "%H:%M")
