@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="{% static 'core/css/turmaprofessores.css' %}" />
 
 {% endblock %} {% block content %}
-<main class="framed m-8 mb-20 px-5">
+<main class="framed m-2 mb-20 px-5 md:m-8">
   <h1
     class="mt-6 text-center text-[40px] font-bold text-color-secondary md:text-left"
   >
@@ -94,7 +94,93 @@
   
 
     <div x-show.transition.in.opacity.duration.750ms="selected === 'option-1'" class="p-4">
-      Notas
+      <div class="flex flex-row justify-center items-center text-center mt-4 mb-6">
+        <span class="mr-2 text-center text-[25px] font-semibold text-color-primary">Bimestre:</span>
+        <select name="Bimestre" class="w-80 h-10 rounded-full text-center">
+          <option>1ºBimestre</option>
+          <option>2ºBimestre</option>
+          <option>3ºBimestre</option>
+          <option>4ºBimestre</option>
+        </select>
+      </div>
+      <div class="flex flex-col md:flex-row">
+      <div class="flex flex-grow p-5 w-full flex-col rounded-2xl bg-white md:flex-col md:justify-center md:mt-4 md:mr-2">
+        <span class="text-[30px] text-center font-semibold text-color-secondary mb-2 md:text[38px]">Atribuir Nota</span>
+        <div class="flex flex-col text-center gap-4 my-4">
+          <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
+          <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
+          <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
+          <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
+          <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
+          <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
+          <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
+          <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
+          <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
+          <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
+          <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
+          <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
+          <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
+          <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
+          <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
+          <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
+        </div>
+      </div>
+      <div class="mt-4 flex p-5 w-full flex-col flex-grow rounded-2xl bg-white md:justify-center md:ml-2">
+        <span class="text-center text-[28px] font-semibold text-color-primary">Apolo Fonseca da Bezerra</span>
+        <div class="my-2 w-full">
+          <span class="my-2 flex justify-center text-xl text-color-secondary"
+            >Tarefa</span
+          >
+          <select name="Tarefa" class="w-full rounded-full text-center">
+            <option>Prova</option>
+            <option>Atividade</option>
+          </select>
+        </div>
+        <div class="my-2 w-full">
+          <span class="my-2 flex justify-center text-xl text-color-secondary"
+            >Nota</span
+          >
+          <select name="Nota" class="w-full rounded-full text-center">
+            <option>I</option>
+            <option>R</option>
+            <option>B</option>
+            <option>MB</option>
+          </select>
+        </div>
+        <div class="my-2 w-full">
+          <span class="my-2 flex justify-center text-xl text-color-secondary"
+            >Menções</span
+          >
+          <select name="Mencao" class="w-full rounded-full text-center">
+            <option>M1</option>
+            <option>M2</option>
+            <option>M3</option>
+          </select>
+        </div>
+        <div class="field flex flex-row text-center justify-center">
+          <div class="w-full">
+          <span class="my-2 flex justify-center text-center text-xl text-color-secondary"
+            >Justificativa</span
+          ></div>
+          <textarea
+            id="reclamacao"
+            name="reclamacao"
+            class="h-80 w-full rounded border border-gray-300 px-4 py-2 resize-none"
+            placeholder="Digite sua reclamação aqui"
+          ></textarea>
+        </div>
+        <div class="flex w-full flex-col gap-3 md:block md:gap-2">
+          <input
+            type="submit"
+            value="Enviar"
+            class="text-bold rounded-full border border-color-secondary bg-color-secondary-dimm px-12 py-4 text-[21px] font-bold text-color-secondary md:mx-auto mt-6 md:block"
+          />
+        </div>
+      </div>
+      </div>
+      <div class="mt-4 flex h-[950px] p-5 w-[full] flex-col rounded-2xl bg-white md:h-[160px] md:flex-row md:justify-center">
+        <span class="text-[36px] font-semibold text-color-secondary">Visão Geral</span>
+      </div>
     </div>
 
     <div x-show.transition.in.opacity.duration.750ms="selected === 'option-2'" class="p-4">
