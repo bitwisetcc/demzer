@@ -28,6 +28,7 @@ from django.db.models.fields import (
 from django.forms import ValidationError
 from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
+from requests import delete
 from rolepermissions.checkers import has_role
 
 from core.roles import Teacher
@@ -239,8 +240,15 @@ class Programming(Model):
 
             if not has_role(teacher, Teacher):
                 raise PermissionError(teacher.username)
-            if Programming.objects.count(teacher=teacher, time=time, day=day) > 0:
-                raise ValidationError("Professor já tem aula nesse horário")
+
+            check = Programming.objects.filter(teacher=teacher, order=time, day=day)
+            if check.count() > 0:
+                if check.first().classroom != classroom:
+                    raise ValidationError("Professor já tem aula nesse horário")
+
+            check = Programming.objects.filter(classroom=classroom, order=time, day=day)
+            if (check.first() is not None and type(check.first().student_group) == type(group)):
+                check.delete()
 
             return Programming.objects.create(
                 classroom=classroom,
