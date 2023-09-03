@@ -2,8 +2,8 @@
 <title>Horários</title>
 <link rel="stylesheet" href="{% static 'core/dist/css/schedule.css' %}" />
 <script defer>
-  // When I wrote this, only God and I understood what I was doing
-  // Now, only God knows
+  // To whoever may optimize this in the future:
+  // Remember to go outside and get some fresh air.
   document.addEventListener("alpine:init", () => {
     Alpine.data("timeTable", () => ({
       init() {
@@ -33,18 +33,33 @@
             this.programmingTimeShow = times[this.programmingTime];
             this.programmingDay = i % 5;
             this.programmingDayShow = days[this.programmingDay];
+            const selected = programmings.filter(
+              (p) => p.order == Math.floor(i / 5) && p.day == i % 5
+            );
+
+            // TODO: optimize + make prettyyy
+            if (selected.length == 0) return;
+            if (selected.length == 1) {
+              this.teacher = selected[0].teacher;
+              this.studentGroup = false;
+            }
+            if (selected.length == 2) {
+              // TODO
+            }
           })
         );
 
-        programmings.forEach(
-          (p) => (cells[p.order * 5 + p.day].innerHTML = p.subject_slug)
-        );
+        programmings.forEach((p) => {
+          cells[p.order * 5 + p.day].innerHTML = p.subject_slug;
+        });
       },
       time: "{{ classroom.course.time }}",
       programmingTime: 1,
       programmingTimeShow: "",
       programmingDay: 1,
       programmingDayShow: "",
+      teacher: "",
+      teacherB: "",
       studentGroup: false,
     }));
   });
@@ -54,13 +69,13 @@
   <h1 class="mb-4 text-4xl font-semibold">Horários - {{ classroom }}</h1>
   <article class="grid grid-cols-2 gap-20">
     <table
-      class="table-fixed border-separate border-spacing-2 rounded-2xl bg-slate-300 p-4"
+      class="table-fixed border-separate border-spacing-2 rounded-2xl bg-zinc-300 p-4"
     >
       <thead class="bg-transparent">
         <tr>
           <th></th>
           {% for day in days %}
-          <th>{{ day.1 }}</th>
+          <th class="text-yellow-900">{{ day.1 }}</th>
           {% endfor %}
         </tr>
       </thead>
@@ -80,7 +95,7 @@
       </tbody>
     </table>
 
-    <section class="rounded-xl bg-slate-300 p-5">
+    <section class="rounded-xl bg-zinc-300 p-5">
       <h2 class="mb-3 text-2xl font-semibold">Editar aula</h2>
       <form
         action="{% url 'schedules' classroom.pk %}"
@@ -117,7 +132,7 @@
             <input type="number" hidden name="time" x-model="programmingTime" />
           </div>
         </section>
-        <section class="flex flex-col gap-3 rounded-xl bg-slate-200 p-4">
+        <section class="flex flex-col gap-3 rounded-xl bg-zinc-200 p-4">
           <div class="flex">
             <div class="flex flex-col gap-3">
               <div>
@@ -136,7 +151,12 @@
                   for="txt-teacher"
                   x-text="`Professor${studentGroup ? ' A' : ''}:`"
                 ></label>
-                <input type="text" name="teacher" id="txt-teacher" />
+                <input
+                  type="text"
+                  name="teacher"
+                  id="txt-teacher"
+                  x-model="teacher"
+                />
               </div>
             </div>
             <template x-if="studentGroup != ''">
@@ -151,7 +171,12 @@
                 </div>
                 <div>
                   <label for="txt-teacher">Professor B:</label>
-                  <input type="text" name="teacher_b" id="txt-teacher" />
+                  <input
+                    type="text"
+                    name="teacher_b"
+                    id="txt-teacher"
+                    x-model="teacherB"
+                  />
                 </div>
               </div>
             </template>

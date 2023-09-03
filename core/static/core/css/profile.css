@@ -1,5 +1,5 @@
 .info-card {
-  @apply mt-1 rounded-2xl bg-color-bg-perfil p-6;
+  @apply mt-1 rounded-2xl bg-zinc-100 p-6;
 }
 
 .info-lbl {

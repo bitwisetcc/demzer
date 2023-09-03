@@ -241,14 +241,20 @@ class Programming(Model):
             if not has_role(teacher, Teacher):
                 raise PermissionError(teacher.username)
 
+            # avoid teacher overbooking
             check = Programming.objects.filter(teacher=teacher, order=time, day=day)
-            if check.count() > 0:
-                if check.first().classroom != classroom:
-                    raise ValidationError("Professor já tem aula nesse horário")
+            if check.count() > 0 and check.first().classroom != classroom:
+                raise ValidationError("Professor já tem aula nesse horário")
 
-            check = Programming.objects.filter(classroom=classroom, order=time, day=day)
-            if (check.first() is not None and type(check.first().student_group) == type(group)):
-                check.delete()
+            # edit programmings
+            if group is None:
+                Programming.objects.filter(
+                    classroom=classroom, order=time, day=day
+                ).delete()
+            else:
+                Programming.objects.filter(
+                    classroom=classroom, order=time, day=day
+                ).exclude(student_group=group).delete()
 
             return Programming.objects.create(
                 classroom=classroom,
@@ -287,6 +293,9 @@ class Programming(Model):
         ordering = ["student_group"]
         verbose_name = _("classe")
         verbose_name_plural = _("classes")
+
+    def __str__(self) -> str:
+        return self.subject.__str__()
 
 
 class Announcement(Model):
