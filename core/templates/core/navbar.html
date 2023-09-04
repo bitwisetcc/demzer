@@ -1,29 +1,23 @@
 {% load static %}
 <nav
-  class="sticky left-0 top-0 flex flex-col justify-between rounded-br-xl bg-color-primary py-5 text-slate-100 transition-all"
+  id="navbar"
+  class="sticky left-0 top-0 flex flex-col justify-between overflow-y-auto rounded-br-xl bg-color-primary py-5 text-slate-100 transition-all"
   :class="open ? 'w-80 px-5' : 'w-0 px-0'"
 >
   <div>
-    <header class="flex flex-col items-center py-5">
-      <div class="flex items-center">
-        <div
-          class="mt-2 flex w-max items-center"
-          :class="open ? 'mr-32' : 'mr-0'"
-        >
-          <img
-            src="{% static '/core/images/logomenu.png' %}"
-            alt="Imagem de {{ user.username.split.0.title }}"
-            class="mb-5 shadow-md transition-all duration-200"
-            :class="open ? 'h-16 w-16 rounded-3xl' : 'hidden'"
-          />
-          <span
-            class="mb-4 ml-6 truncate text-xl font-bold"
-            :class="open || 'hidden'"
-          >
-            MENU
-          </span>
-        </div>
-      </div>
+    <header class="ml-3 flex items-center justify-start py-2">
+      <img
+        src="{% static '/core/images/logomenu.png' %}"
+        alt="Imagem de {{ user.username.split.0.title }}"
+        class="mb-5 ml-0 shadow-md transition-all duration-200"
+        :class="open ? 'h-16 w-16 rounded-3xl' : 'hidden'"
+      />
+      <span
+        class="mb-4 ml-6 truncate text-xl font-bold"
+        :class="open || 'hidden'"
+      >
+        MENU
+      </span>
     </header>
     <ul class="flex flex-col gap-4" :class="open || 'scale-0'">
       <li>
@@ -283,7 +277,9 @@
         </a>
       </li>
       <li class="hidden sm:block">
-        <div class="flex items-center justify-between rounded-3xl bg-color-primary-dimm px-1 py-2">
+        <div
+          class="flex items-center justify-between rounded-3xl bg-color-primary-dimm px-1 py-2"
+        >
           <a href="{% url 'profile' %}">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -300,11 +296,12 @@
               />
             </svg>
           </a>
-          <div class="flex flex-col px-1 text-sm w-3/5">
+          <div class="flex w-3/5 flex-col px-1 text-sm">
             <span>
-              {{ user.username.split.0.title }} {{ user.username.split.1.title }}
+              <span>{{ user.username.split.0.title }}</span>
+              <span>{{ user.username.split.1.title }}</span>
             </span>
-            <span class="truncate block">{{ user.email }}</span>
+            <span class="block truncate">{{ user.email }}</span>
           </div>
           <a href="{% url 'logout' %}" class="group">
             <svg
