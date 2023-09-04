@@ -8,4 +8,4 @@ def isint(value):
 
 @register.filter
 def castint(value):
-    return int(value)
+    return int(value) if value % 1 == 0 else value

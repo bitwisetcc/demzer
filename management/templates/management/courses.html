@@ -98,6 +98,7 @@
         <input
           type="text"
           name="slug"
+          class="md:w-20"
           id="txt-slug"
           maxlength="2"
           required
@@ -108,7 +109,6 @@
           <option value="M" selected>Manhã</option>
           <option value="E">Tarde</option>
           <option value="N">Noite</option>
-          <option value="F">Integral</option>
         </select>
         <label for="txt-duration">Duração:</label>
         <input
@@ -272,7 +272,25 @@
   <dialog :open="importDialog" class="rounded-lg shadow-lg">
     <form id="importSubjects" action="{% url 'create_subject' %}" method="post">
       {% csrf_token %}
-      <h2 class="text-xl font-bold">Importar matérias</h2>
+      <header class="flex justify-between">
+        <h2 class="text-xl font-bold text-color-primary">Importar matérias</h2>
+        <button @click.prevent="importDialog = false">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-6 w-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </header>
       <template x-for="i in imports">
         <div class="input mt-2 flex gap-2">
           <input
@@ -300,9 +318,6 @@
           class="btn"
         >
           +
-        </button>
-        <button @click.prevent="importDialog = false" class="btn">
-          Voltar
         </button>
         <button type="submit" class="btn" @click.prevent="sendSubject()">
           Criar
@@ -354,7 +369,7 @@
   </dialog>
 
   <section class="flex flex-col gap-6">
-    <header class="flex justify-between">
+    <header class="flex justify-between text-color-primary">
       <h1 class="mb-4 text-4xl font-semibold">Cursos</h1>
       <div class="flex gap-2">
         {% if user|can:'create_course' %}
@@ -451,7 +466,7 @@
                 name = '{{ course.name }}';
                 slug = '{{ course.slug }}';
                 time = '{{ course.time }}';
-                duration = '{{ course.duration }}';
+                duration = '{{ course.duration|castint }}';
                 coordinator = '{{ course.coordinator.pk }}';
                 info = '{{ course.info }}';
                 pk = '{{ course.pk }}';
@@ -492,7 +507,7 @@
     {% endif %}
   </section>
   <section>
-    <header class="mb-2 flex justify-between">
+    <header class="mb-2 flex justify-between text-color-primary">
       <h2 class="mb-4 text-4xl font-semibold">Matérias</h2>
       <div class="flex gap-2">
         <button @click="subjectDialog = true">

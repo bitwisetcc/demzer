@@ -34,7 +34,7 @@
 }
 
 main.framed {
-  @apply border border-slate-400 shadow-md;
+  @apply border border-zinc-400 shadow-md;
 }
 
 hr {

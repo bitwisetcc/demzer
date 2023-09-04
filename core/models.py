@@ -148,12 +148,12 @@ class Member(Model):
         GO = "GO"
         DF = "DF"
 
-    user = OneToOneField(User, CASCADE, related_name="profile")
-    contact_email = EmailField(default="john.doe@email.com")
+    user = OneToOneField(User, CASCADE, related_name="profile", unique=True)
+    contact_email = EmailField(default="john.doe@email.com", unique=True)
 
-    rg = CharField(default="", max_length=9)
-    cpf = CharField(default="", max_length=11)
-    phone = IntegerField(default=0)
+    rg = CharField(default="", max_length=9, unique=True)
+    cpf = CharField(default="", max_length=11, unique=True)
+    phone = IntegerField(default=0, unique=True)
     gender = CharField(choices=Genders.choices, default=Genders.MASCULINE, max_length=2)
     public_schooling = CharField(
         choices=PublicSchoolingTypes.choices,
