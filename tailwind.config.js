@@ -13,6 +13,9 @@ module.exports = {
         "color-bg-perfil": "#F5F5F5",
         "color-boletim": "#D7D4D4",
         "color-grey": "#EDECEC",
+        "color-bg": "#e4e4e7",
+        "color-bg-alt": "#d4d4d8",
+        "color-bg-lighter": "#f4f4f5",
       },
     },
     screens: {
