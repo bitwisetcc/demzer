@@ -221,7 +221,7 @@ class Programming(Model):
 
     classroom = ForeignKey(Classroom, CASCADE, related_name="+", null=True)
     teacher = ForeignKey(User, SET_NULL, null=True)
-    student_group = PositiveSmallIntegerField(null=True)
+    group = PositiveSmallIntegerField(null=True)
     subject = ForeignKey(Subject, SET_NULL, related_name="+", null=True)
     day = PositiveSmallIntegerField(choices=Days.choices, default=Days.MONDAY)
     order = PositiveSmallIntegerField()
@@ -230,7 +230,7 @@ class Programming(Model):
         request: HttpRequest,
         classroom: Classroom,
         teacher_name: str,
-        subject: int,
+        subject_pk: int,
         group: int = None,
     ):
         try:
@@ -255,13 +255,13 @@ class Programming(Model):
             if group is None:
                 previous.delete()
             else:
-                previous.exclude(student_group=None).delete()
+                previous.exclude(group=None).delete()
 
             return Programming.objects.create(
                 classroom=classroom,
                 teacher=teacher,
-                student_group=group,
-                subject=Subject.objects.get(pk=subject),
+                group=group,
+                subject=Subject.objects.get(pk=subject_pk),
                 day=day,
                 order=time,
             )
@@ -282,7 +282,7 @@ class Programming(Model):
             {
                 "classroom": self.classroom.__str__(),
                 "teacher": self.teacher.username,
-                "student_group": self.student_group,
+                "group": self.group,
                 "subject_slug": self.subject.slug,
                 "subject": self.subject.name,
                 "subject_pk": self.subject.pk,
@@ -292,7 +292,7 @@ class Programming(Model):
         )
 
     class Meta:
-        ordering = ["student_group"]
+        ordering = ["group"]
         verbose_name = _("classe")
         verbose_name_plural = _("classes")
 

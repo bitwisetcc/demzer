@@ -124,7 +124,7 @@
       <div class="mb-1 flex items-center gap-2">
         <label for="txt-coordinator">Coordenador:</label>
         <input
-          type="number"
+          type="text"
           name="coordinator"
           id="txt-coordinator"
           x-model="coordinator"
@@ -467,7 +467,7 @@
                 slug = '{{ course.slug }}';
                 time = '{{ course.time }}';
                 duration = '{{ course.duration|castint }}';
-                coordinator = '{{ course.coordinator.pk }}';
+                coordinator = '{{ course.coordinator.username }}';
                 info = '{{ course.info }}';
                 pk = '{{ course.pk }}';
                 if (info == 'None') info = '';

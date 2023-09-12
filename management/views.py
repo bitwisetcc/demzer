@@ -128,8 +128,8 @@ def import_users(request: HttpRequest):
         return render(request, "management/import.html")
 
 
-def get_coordinator(pk: int) -> User:
-    coordinator = User.objects.get(pk=int(pk))
+def get_coordinator(pk: str) -> User:
+    coordinator = User.objects.get(username__startswith=pk)
 
     if not has_role(coordinator, ["coordinator", "admin", "teacher"]):
         raise Exception("Usuário {} não tem privilégios necessários".format(pk))
@@ -355,6 +355,7 @@ def schedules(request: HttpRequest, classroom_id: int):
         {
             "classroom": classroom,
             "time_table": [t.strftime("%H:%M") for t in time_table],
+            # map(λ.strftime("%H:%M"), time_table)
             "subjects": Subject.objects.all(),
             "days": [c for c in Programming.Days.choices],
             "programmings": Programming.objects.filter(classroom=classroom),
