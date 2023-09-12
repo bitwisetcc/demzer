@@ -311,13 +311,18 @@ def create_subject(request: HttpRequest):
     return redirect("courses")
 
 
+# TODO: if the cell is empty and you try to create a split programming, only the last one is created
 def schedules(request: HttpRequest, classroom_id: int):
     classroom = Classroom.objects.get(pk=classroom_id)
 
     if request.method == "POST":
         if "group" in request.POST:
             Programming.create(
-                request, classroom, request.POST["teacher"], request.POST["subject"], 1
+                request,
+                classroom,
+                request.POST["teacher"],
+                request.POST["subject"],
+                1,
             )
             Programming.create(
                 request,
@@ -326,10 +331,10 @@ def schedules(request: HttpRequest, classroom_id: int):
                 request.POST["subject_b"],
                 2,
             )
-
-        Programming.create(
-            request, classroom, request.POST["teacher"], request.POST["subject"]
-        )
+        else:
+            Programming.create(
+                request, classroom, request.POST["teacher"], request.POST["subject"]
+            )
 
     # TODO: add all these as course attributes
     lessons_qtd = 6
@@ -349,7 +354,7 @@ def schedules(request: HttpRequest, classroom_id: int):
         "management/schedules.html",
         {
             "classroom": classroom,
-            "time_table": [(t.strftime("%H:%M"), i) for i, t in enumerate(time_table)],
+            "time_table": [t.strftime("%H:%M") for t in time_table],
             "subjects": Subject.objects.all(),
             "days": [c for c in Programming.Days.choices],
             "programmings": Programming.objects.filter(classroom=classroom),

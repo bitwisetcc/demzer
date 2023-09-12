@@ -7,51 +7,66 @@
   document.addEventListener("alpine:init", () => {
     Alpine.data("timeTable", () => ({
       init() {
+        // days monday - friday
         const days = [
           // {% for day in days %}
           "{{ day.1 }}",
           // {% endfor %}
         ];
 
+        // time stamp ex: 13:00
         const times = [
           // {% for t in time_table %}
-          "{{ t.0 }}",
+          "{{ t }}",
           // {% endfor %}
         ];
 
+        // existing programmings to be displayed
         const programmings = [
           //{% for p in programmings %}
           JSON.parse("{{ p.json }}".replace(/&quot;/g, '"')),
           // {% endfor %}
         ];
 
+        // find all cells of the calendar
         const cells = document.querySelectorAll("tr > td:not(:first-child)");
 
+        // populate cells
+        programmings.forEach((p) => {
+          const cell = cells[p.order * 5 + p.day];
+          if (cell.innerHTML == "") cell.innerHTML = p.subject_slug;
+          else if (cell.innerHTML != p.subject_slug)
+            cell.innerHTML += " | " + p.subject_slug;
+        });
+
+        // display data to form when click
         cells.forEach((el, i) =>
           el.addEventListener("click", () => {
             this.programmingTime = Math.floor(i / 5);
             this.programmingTimeShow = times[this.programmingTime];
             this.programmingDay = i % 5;
             this.programmingDayShow = days[this.programmingDay];
+
+            // all programmings matching the current cell
             const selected = programmings.filter(
               (p) => p.order == Math.floor(i / 5) && p.day == i % 5
             );
 
-            // TODO: optimize + make prettyyy
-            if (selected.length == 0) return;
-            if (selected.length == 1) {
-              this.teacher = selected[0].teacher;
-              this.studentGroup = false;
-            }
-            if (selected.length == 2) {
-              // TODO
+            const empty = selected.length == 0;
+            const split = selected.length == 2;
+
+            this.studentGroup = split;
+            this.teacher = !empty ? selected[0].teacher : null;
+            this.subject = !empty ? selected[0].subject_pk : null;
+            this.teacherB = split ? selected[1].teacher : null;
+            this.subjectB = split ? selected[1].subject_pk : null;
+
+            if (selected.length > 2) {
+              console.warn("More than 2 programmings detected:");
+              console.log(selected);
             }
           })
         );
-
-        programmings.forEach((p) => {
-          cells[p.order * 5 + p.day].innerHTML = p.subject_slug;
-        });
       },
       time: "{{ classroom.course.time }}",
       programmingTime: 1,
@@ -60,13 +75,17 @@
       programmingDayShow: "",
       teacher: "",
       teacherB: "",
+      subject: "",
+      subjectB: "",
       studentGroup: false,
     }));
   });
 </script>
 {% endblock %} {% block content %}
 <main class="p-10" x-data="timeTable">
-  <h1 class="mb-4 text-4xl font-semibold">Horários - {{ classroom }}</h1>
+  <h1 class="mb-4 text-4xl font-semibold text-color-primary">
+    Horários - {{ classroom }}
+  </h1>
   <article class="grid grid-cols-2 gap-20">
     <table
       class="table-fixed border-separate border-spacing-2 rounded-2xl bg-zinc-300 p-4"
@@ -83,7 +102,7 @@
         {% for t in time_table %}
         <tr>
           <td class="mr-10 rounded-xl bg-color-primary-dimm text-white">
-            {{ t.0 }}
+            {{ t }}
           </td>
           <td></td>
           <td></td>
@@ -96,7 +115,7 @@
     </table>
 
     <section class="rounded-xl bg-zinc-300 p-5">
-      <h2 class="mb-3 text-2xl font-semibold">Editar aula</h2>
+      <h2 class="mb-2 ml-2 mt-1 text-2xl font-semibold">Editar aula</h2>
       <form
         action="{% url 'schedules' classroom.pk %}"
         method="post"
@@ -140,7 +159,7 @@
                   for="sl-subject"
                   x-text="`Matéria${studentGroup ? ' A' : ''}:`"
                 ></label>
-                <select name="subject" id="sl-subject">
+                <select name="subject" id="sl-subject" x-model="subject">
                   {% for subject in subjects %}
                   <option value="{{ subject.pk }}">{{ subject.name }}</option>
                   {% endfor %}
@@ -163,7 +182,7 @@
               <div class="flex flex-col gap-3">
                 <div>
                   <label for="sl-subject">Matéria B:</label>
-                  <select name="subject_b" id="sl-subject">
+                  <select name="subject_b" id="sl-subject" x-model="subjectB">
                     {% for subject in subjects %}
                     <option value="{{ subject.pk }}">{{ subject.name }}</option>
                     {% endfor %}

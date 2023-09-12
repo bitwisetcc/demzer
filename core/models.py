@@ -231,7 +231,7 @@ class Programming(Model):
         classroom: Classroom,
         teacher_name: str,
         subject: int,
-        group: str = None,
+        group: int = None,
     ):
         try:
             day = Programming.Days.choices[int(request.POST.get("day"))][0]
@@ -244,17 +244,18 @@ class Programming(Model):
             # avoid teacher overbooking
             check = Programming.objects.filter(teacher=teacher, order=time, day=day)
             if check.count() > 0 and check.first().classroom != classroom:
-                raise ValidationError("Professor já tem aula nesse horário")
+                raise ValidationError(
+                    "Professor {} já tem aula nesse horário".format(teacher_name)
+                )
 
             # edit programmings
+            previous = Programming.objects.filter(
+                classroom=classroom, order=time, day=day
+            )
             if group is None:
-                Programming.objects.filter(
-                    classroom=classroom, order=time, day=day
-                ).delete()
+                previous.delete()
             else:
-                Programming.objects.filter(
-                    classroom=classroom, order=time, day=day
-                ).exclude(student_group=group).delete()
+                previous.exclude(student_group=None).delete()
 
             return Programming.objects.create(
                 classroom=classroom,
@@ -268,7 +269,7 @@ class Programming(Model):
         except User.DoesNotExist as exc:
             messages.error(request, "Professor não encontrado")
         except User.MultipleObjectsReturned as exc:
-            messages.error(request, "Mais de um professor encontrado")
+            messages.error(request, "Mais de um '{}' encontrado".format(teacher_name))
         except PermissionError as exc:
             messages.error(request, "Usuário '{}' não é um professor".format(exc))
         except ValidationError as exc:
@@ -284,6 +285,7 @@ class Programming(Model):
                 "student_group": self.student_group,
                 "subject_slug": self.subject.slug,
                 "subject": self.subject.name,
+                "subject_pk": self.subject.pk,
                 "day": self.day,
                 "order": self.order,
             },
