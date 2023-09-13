@@ -1,99 +1,29 @@
-import json
-
 from django.conf import settings
-from django.contrib import messages
 from django.contrib.auth.models import User
 from django.db.models import (
     CASCADE,
     SET_NULL,
-    ForeignKey,
-    ImageField,
-    IntegerChoices,
-    ManyToManyField,
-    Model,
-    OneToOneField,
-    TextChoices,
-    TextField,
-)
-from django.db.models.fields import (
     BooleanField,
     CharField,
     DateField,
     EmailField,
-    FloatField,
+    ForeignKey,
+    ImageField,
     IntegerField,
-    PositiveSmallIntegerField,
-    SlugField,
+    ManyToManyField,
+    Model,
+    OneToOneField,
+    TextChoices,
 )
-from django.forms import ValidationError
-from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
-from requests import delete
-from rolepermissions.checkers import has_role
 
-from core.roles import Teacher
+from management.models import Classroom
 
 
 class Relative(Model):
     name = CharField(max_length=60, unique=True)
     email = EmailField()
     phone = IntegerField(default=0)
-
-
-class Subject(Model):
-    """
-    The subject of a class; what the teacher is talking about.
-    """
-
-    name = CharField(max_length=60)
-    slug = CharField(max_length=5)
-    description = CharField(max_length=127, null=True)
-
-    def __str__(self) -> str:
-        return self.slug
-
-    class Meta:
-        verbose_name = _("matéria")
-        verbose_name_plural = _("matérias")
-
-    # ...
-
-
-class Course(Model):
-    """
-    The group of students that spend their time together. They go from room to room together etc.
-    The naming doesn't imply it, but there can be many 'generations' of a course.
-    Ex: 1st, 2nd and 3rd Philosophy and Sociology.
-    """
-
-    class Timing(TextChoices):
-        MORNING = "M", _("Manhã")
-        EVENING = "E", _("Tarde")
-        NIGHT = "N", _("Noite")
-        FULL = "F", _("Integral")
-
-    name = CharField(max_length=60)
-    slug = SlugField(max_length=2, default="-", unique=True)
-    subjects = ManyToManyField(Subject)
-    time = CharField(max_length=1, choices=Timing.choices, default=Timing.MORNING)
-    coordinator = ForeignKey(User, SET_NULL, null=True, related_name="courses")
-    info = TextField(null=True)
-    duration = FloatField(default=3)
-
-    class Meta:
-        verbose_name = _("curso")
-        verbose_name_plural = _("cursos")
-
-    def __str__(self) -> str:
-        return self.slug
-
-
-class Classroom(Model):
-    course = ForeignKey(Course, SET_NULL, related_name="classroom", null=True)
-    year = IntegerField(default=2023)
-
-    def __str__(self) -> str:
-        return self.course.slug + str(self.year)
 
 
 class Member(Model):
@@ -207,132 +137,11 @@ class Member(Model):
         )
 
 
-class Programming(Model):
-    """
-    A class that appears on the calendar. Not to be confused with `Course`.
-    """
-
-    class Days(IntegerChoices):
-        MONDAY = 0, _("Segunda")
-        TUESDAY = 1, _("Terça")
-        WEDNESDAY = 2, _("Quarta")
-        THURSDAY = 3, _("Quinta")
-        SUNDAY = 4, _("Sexta")
-
-    classroom = ForeignKey(Classroom, CASCADE, related_name="+", null=True)
-    teacher = ForeignKey(User, SET_NULL, null=True)
-    group = PositiveSmallIntegerField(null=True)
-    subject = ForeignKey(Subject, SET_NULL, related_name="+", null=True)
-    day = PositiveSmallIntegerField(choices=Days.choices, default=Days.MONDAY)
-    order = PositiveSmallIntegerField()
-
-    def create(
-        request: HttpRequest,
-        classroom: Classroom,
-        teacher_name: str,
-        subject_pk: int,
-        group: int = None,
-    ):
-        try:
-            day = Programming.Days.choices[int(request.POST.get("day"))][0]
-            time = request.POST.get("time")
-            teacher = User.objects.get(username__startswith=teacher_name)
-
-            if not has_role(teacher, Teacher):
-                raise PermissionError(teacher.username)
-
-            # avoid teacher overbooking
-            check = Programming.objects.filter(teacher=teacher, order=time, day=day)
-            if check.count() > 0 and check.first().classroom != classroom:
-                raise ValidationError(
-                    "Professor {} já tem aula nesse horário".format(teacher_name)
-                )
-
-            # edit programmings
-            previous = Programming.objects.filter(
-                classroom=classroom, order=time, day=day
-            )
-            if group is None:
-                previous.delete()
-            else:
-                previous.exclude(group=None).delete()
-
-            return Programming.objects.create(
-                classroom=classroom,
-                teacher=teacher,
-                group=group,
-                subject=Subject.objects.get(pk=subject_pk),
-                day=day,
-                order=time,
-            )
-
-        except User.DoesNotExist as exc:
-            messages.error(request, "Professor não encontrado")
-        except User.MultipleObjectsReturned as exc:
-            messages.error(request, "Mais de um '{}' encontrado".format(teacher_name))
-        except PermissionError as exc:
-            messages.error(request, "Usuário '{}' não é um professor".format(exc))
-        except ValidationError as exc:
-            messages.error(request, exc)
-        except Subject.DoesNotExist as exc:
-            messages.error(request, "Matéria não encontrada")
-
-    def json(self):
-        return json.dumps(
-            {
-                "classroom": self.classroom.__str__(),
-                "teacher": self.teacher.username,
-                "group": self.group,
-                "subject_slug": self.subject.slug,
-                "subject": self.subject.name,
-                "subject_pk": self.subject.pk,
-                "day": self.day,
-                "order": self.order,
-            },
-        )
-
-    class Meta:
-        ordering = ["group"]
-        verbose_name = _("classe")
-        verbose_name_plural = _("classes")
-
-    def __str__(self) -> str:
-        return self.subject.__str__()
-
-
-class Announcement(Model):
-    # if both date and course are None and private is False, it's a general announcement, meant for all users
-    title = CharField(max_length=80, default="")
-    date = DateField(auto_now=True)
-    course = ForeignKey(Course, SET_NULL, null=True)
-    classroom = ForeignKey(Classroom, SET_NULL, null=True)
-    image = ImageField(upload_to="communicate/covers", null=True)
-    private = BooleanField(default=False)
-    info = TextField()
-
-    class Meta:
-        ordering = ["-date"]
-
-
-class Presence(Model):
-    pass
-
-
-class Assessment(Model):
-    pass
-
-
-class Event(Model):
-    pass
-    # if course and classroom are both null, it's meant only for staff (teachers, adms, staff, coordinators etc.)
-
-
 """
 - is_staff ?
 - is_active ? -> celery
 
 New TO-DOs
-- Class editor
 - Deal with failed students
 ? Generating emails 😵‍💫
 - Events (signals) for holidays, awareness days, meetings etc.

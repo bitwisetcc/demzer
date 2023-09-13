@@ -67,7 +67,7 @@ INSTALLED_APPS = [
     "rolepermissions",
     "core",
     "management",
-    "alert",
+    "communication",
 ]
 
 REST_FRAMEWORK = {

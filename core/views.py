@@ -1,28 +1,25 @@
 import re
-from datetime import datetime, date
+from datetime import date, datetime
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.core.files import File
 from django.db import IntegrityError
+from django.db.models import Q
 from django.http import Http404, HttpRequest, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import redirect, render
-from django.core.files import File
-from rolepermissions.decorators import has_permission_decorator as check_permission
 from rolepermissions.checkers import has_role
+from rolepermissions.decorators import has_permission_decorator as check_permission
 from rolepermissions.roles import assign_role
-from django.db.models import Q
 
-from backend.settings import (
-    DEFAULT_BIRTHDATE,
-    DEFAULT_CITY,
-    DEFAULT_COUNTRY,
-    DEFAULT_STATE,
-    EMAIL_PATTERN,
-    SECURITY_KEY,
-)
-from core.models import *
+from communication.models import Announcement
+from core.models import Member, Relative
 from core.utils import email_address
+from management.models import Classroom, Course
+
 
 @login_required
 def dashboard(request: HttpRequest):
@@ -107,7 +104,9 @@ def enroll(request: HttpRequest):
 
             if request.POST.get("role") == "student":
                 profile.public_schooling = request.POST.get("public-schooling")
-                profile.classroom = Classroom.objects.get(pk=request.POST.get("classroom"))
+                profile.classroom = Classroom.objects.get(
+                    pk=request.POST.get("classroom")
+                )
 
                 try:
                     guardian, created = Relative.objects.get_or_create(
@@ -144,18 +143,22 @@ def enroll(request: HttpRequest):
         return redirect("dashboard")
     else:
         context = {
-            "birthdate": DEFAULT_BIRTHDATE,
-            "country": DEFAULT_COUNTRY,
-            "state": DEFAULT_STATE,
-            "city": DEFAULT_CITY,
-            "classrooms": [c for c in Classroom.objects.all() if date.today().year <= c.year + c.course.duration]
+            "birthdate": settings.DEFAULT_BIRTHDATE,
+            "country": settings.DEFAULT_COUNTRY,
+            "state": settings.DEFAULT_STATE,
+            "city": settings.DEFAULT_CITY,
+            "classrooms": [
+                c
+                for c in Classroom.objects.all()
+                if date.today().year <= c.year + c.course.duration
+            ],
         }
         return render(request, "core/enroll.html", context)
 
 
 def super_secret(request: HttpRequest):
     if request.method == "POST":
-        if request.POST["key"] == SECURITY_KEY:
+        if request.POST["key"] == settings.SECURITY_KEY:
             username = request.POST["username"].strip()
             first_name = username.split()[0]
             last_name = username.split()[-1]
@@ -165,7 +168,9 @@ def super_secret(request: HttpRequest):
             try:
                 admin = User.objects.create_superuser(
                     username=username,
-                    email=EMAIL_PATTERN.format(first_name.lower(), last_name.lower()),
+                    email=settings.EMAIL_PATTERN.format(
+                        first_name.lower(), last_name.lower()
+                    ),
                     password=request.POST["password"],
                 )
 
@@ -215,10 +220,10 @@ def super_secret(request: HttpRequest):
             raise Http404("Chave de segurança incorreta")
 
     context = {
-        "birthdate": DEFAULT_BIRTHDATE,
-        "country": DEFAULT_COUNTRY,
-        "state": DEFAULT_STATE,
-        "city": DEFAULT_CITY,
+        "birthdate": settings.DEFAULT_BIRTHDATE,
+        "country": settings.DEFAULT_COUNTRY,
+        "state": settings.DEFAULT_STATE,
+        "city": settings.DEFAULT_CITY,
         "no_nav": True,
     }
     return render(request, "core/secret.html", context)

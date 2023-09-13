@@ -1,8 +1,6 @@
 from django.shortcuts import render
-from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest
-from django.contrib.auth.models import User
-
-from alert.models import Alert
+from django.http import HttpRequest, HttpResponse
+from communication.models import Alert
 
 
 def new_alert(request: HttpRequest):

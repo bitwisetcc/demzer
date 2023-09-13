@@ -16,8 +16,8 @@ from rolepermissions.checkers import has_role
 from rolepermissions.decorators import has_permission_decorator as check_permission
 from rolepermissions.roles import assign_role
 
-from core.models import Classroom, Course, Member, Programming, Subject
-from core.roles import Teacher
+from core.models import Member
+from management.models import Course, Subject, Programming, Classroom
 
 
 # General queries with auth included
