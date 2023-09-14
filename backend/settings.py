@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     "rolepermissions",
     "core",
     "management",
+    "grades",
     "communication",
 ]
 

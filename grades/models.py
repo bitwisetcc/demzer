@@ -1,4 +1,3 @@
-from email.policy import default
 from django.contrib.auth.models import User
 from django.db.models import (
     CASCADE,
@@ -25,17 +24,15 @@ class Assessment(Model):
 
 
 class Grade(Model):
-    value = PositiveSmallIntegerField()
+    assessment = ForeignKey(Assessment, SET_NULL, null=True)
     student = ForeignKey(User, CASCADE)
-    assessment = ForeignKey(Assessment, SET_NULL)
+    value = PositiveSmallIntegerField()
 
 
 class Mention(Model):
     value = PositiveSmallIntegerField()
-    student = ForeignKey(User, CASCADE)
-    teacher = ForeignKey(User, SET_NULL)
+    student = ForeignKey(User, CASCADE, related_name="mentions")
+    teacher = ForeignKey(User, SET_NULL, null=True, related_name="mentions_sent")
     bimester = PositiveSmallIntegerField()
-    category = CharField(max_length=1, default="B") # TODO: use an enum: bimester, final, council ...
-    justification = CharField(max_length=127, default="")
-
-
+    category = CharField(max_length=1) # TODO: use an enum: bimester, final, council ...
+    justification = CharField(max_length=127)

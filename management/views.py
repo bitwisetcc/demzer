@@ -355,7 +355,6 @@ def schedules(request: HttpRequest, classroom_id: int):
         {
             "classroom": classroom,
             "time_table": [t.strftime("%H:%M") for t in time_table],
-            # map(λ.strftime("%H:%M"), time_table)
             "subjects": Subject.objects.all(),
             "days": [c for c in Programming.Days.choices],
             "programmings": Programming.objects.filter(classroom=classroom),

@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db.models import (
+    CASCADE,
     PROTECT,
     SET_NULL,
     BooleanField,
@@ -13,7 +14,7 @@ from django.db.models import (
     TextField,
 )
 from django.utils.translation import gettext_lazy as _
-from management.models import Classroom, Course
+from management.models import Classroom, Course, Subject
 
 
 class Alert(Model):
@@ -52,3 +53,10 @@ class Event(Model):
 
     class Meta:
         ordering = ["-date"]
+
+
+class Review(Model):
+    student = ForeignKey(User, CASCADE, related_name="reviews_sent")
+    teacher = ForeignKey(User, SET_NULL, null=True, related_name="reviews_recieved")
+    subject = ForeignKey(Subject, SET_NULL, null=True)
+    content = TextField()
