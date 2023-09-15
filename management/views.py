@@ -4,6 +4,7 @@ import re
 from collections import defaultdict
 from datetime import datetime as dt
 from datetime import timedelta as td
+from time import sleep
 
 from django.conf import settings
 from django.contrib import messages
@@ -317,24 +318,29 @@ def schedules(request: HttpRequest, classroom_id: int):
 
     if request.method == "POST":
         if "group" in request.POST:
-            Programming.create(
+            p1 = Programming.create(
                 request,
                 classroom,
                 request.POST["teacher"],
                 request.POST["subject"],
                 1,
             )
-            Programming.create(
+            sleep(1)
+            p2 = Programming.create(
                 request,
                 classroom,
                 request.POST["teacher_b"],
                 request.POST["subject_b"],
                 2,
             )
+
+            print(p1.group)
+            print(p2.group)
         else:
             Programming.create(
-                request, classroom, request.POST["teacher"], request.POST["subject"]
+                    request, classroom, request.POST["teacher"], request.POST["subject"]
             )
+            print("hi")
 
     # TODO: add all these as course attributes
     lessons_qtd = 6

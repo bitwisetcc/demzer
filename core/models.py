@@ -104,7 +104,7 @@ class Member(Model):
     neighborhood = CharField(max_length=40)
     street = CharField(max_length=40)
     street_number = IntegerField(default=1)
-    complement = CharField(max_length=20)
+    complement = CharField(max_length=20, null=True)
 
     relatives = ManyToManyField(Relative)
     classroom = ForeignKey(Classroom, SET_NULL, related_name="students", null=True)

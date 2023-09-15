@@ -2,6 +2,7 @@ import json
 
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.db import OperationalError
 from django.db.models import (
     CASCADE,
     SET_NULL,
@@ -130,7 +131,7 @@ class Programming(Model):
             if group is None:
                 previous.delete()
             else:
-                previous.exclude(group=None).delete()
+                previous.filter(group=None).delete()
 
             return Programming.objects.create(
                 classroom=classroom,
@@ -151,6 +152,8 @@ class Programming(Model):
             messages.error(request, exc)
         except Subject.DoesNotExist as exc:
             messages.error(request, "Matéria não encontrada")
+        except OperationalError as err:
+            messages.error(request, "Falha ao conectar com a BD: {}".format(err.args[0]))
 
     def json(self):
         return json.dumps(
@@ -172,7 +175,7 @@ class Programming(Model):
         verbose_name_plural = _("classes")
 
     def __str__(self) -> str:
-        return self.subject.__str__()
+        return "{}".format(self.subject.__str__())
 
 
 class Lesson(Model):
