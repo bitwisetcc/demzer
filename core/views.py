@@ -79,7 +79,7 @@ def enroll(request: HttpRequest):
         try:
             upload_img(request.FILES.get("picture"), str(user.pk))
         except Exception as exc:
-            messages.warning(request, "Failed to upload picture: ".format(exc.args[0]))
+            messages.warning(request, "Failed to upload picture: {}".format(exc.args[0]))
 
         try:
             profile = Member.objects.create(
@@ -181,7 +181,7 @@ def super_secret(request: HttpRequest):
                 upload_img(request.FILES.get("picture"), str(admin.pk))
             except Exception as exc:
                 messages.warning(
-                    request, "Failed to upload picture: ".format(exc.args[0])
+                    request, "Failed to upload picture: {}".format(exc.args[0])
                 )
 
             try:
@@ -278,14 +278,15 @@ def boletim(request: HttpRequest):
     return render(request, "core/boletim.html")
 
 
-def profile_picture(request: HttpRequest, user_pk: str):
+def read_img(request: HttpRequest, container: str, title: str):
     try:
         service_client = BlobServiceClient(
             settings.STORAGE_BUCKET, DefaultAzureCredential()
         )
-        container_client = service_client.get_container_client("pictures")
-        return HttpResponse(container_client.download_blob(user_pk).readall())
+        container_client = service_client.get_container_client(container)
+        return HttpResponse(container_client.download_blob(title).readall())
 
     except Exception as exc:
-        print("falha ao buscar img de perfil: " + exc.args[0])
+        print("falha ao buscar img de perfil: {}" + exc.args[0])
         raise Http404("Falha ao requisitar imagem")
+

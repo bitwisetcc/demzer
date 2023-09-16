@@ -4,6 +4,7 @@ from django.urls import path
 from django.contrib.auth import views as auth_views
 
 
+
 from core.views import *
 
 urlpatterns = [
@@ -17,7 +18,7 @@ urlpatterns = [
     path("enroll/", enroll, name="enroll"),
     path("perfil/", perfil, name="profile"),
     path("boletim/", boletim, name="boletim"),
-    path("user/picture/<str:user_pk>", profile_picture, name="pfp"),
+    path("fetch_image/<str:container>/<str:title>/", read_img, name="img"),
 
     #RESET PASSOWRD
     path('reset_password/', auth_views.PasswordResetView.as_view(template_name="core/password/password_reset_form.html"), name="password_reset"),

@@ -7,12 +7,13 @@ from django.shortcuts import render
 from rolepermissions.checkers import has_role
 
 from communication.models import Alert, Announcement
+from core.utils import upload_img
 from management.models import Classroom, Course
 
 
 def new_alert(request: HttpRequest):
     if request.method == "POST":
-        alert = Alert.objects.create(
+        Alert.objects.create(
             emiter=request.user,
             title=request.POST["title"],
             description=request.POST["content"],
@@ -31,17 +32,13 @@ def list_alerts(request: HttpRequest):
 @login_required
 def comunicados(request: HttpRequest):
     if request.method == "POST" and has_role(request.user, "admin"):
-        picture = File(request.FILES.get("image"))
         private = "staff_only" not in request.POST
         course = request.POST.get("course")
         classroom = request.POST.get("classroom")
 
-        
-
-        pk = Announcement.objects.create(
+        announcement = Announcement.objects.create(
             title=request.POST.get("title"),
             info=request.POST.get("info"),
-            image=picture if picture.readable() else None,
             private=private,
             course=Course.objects.get(slug=course) if not private and course else None,
             classroom=Classroom.objects.get(slug=classroom)
@@ -49,7 +46,16 @@ def comunicados(request: HttpRequest):
             else None,
         )
 
-        messages.success(request, "Comunicado {} criado com sucesso".format(pk))
+        try:
+            upload_img(
+                request.FILES.get("picture"), str(announcement.pk), "announcements"
+            )
+        except Exception as exc:
+            messages.warning(request, "Failed to upload picture: {}".format(exc.args[0]))
+
+        messages.success(
+            request, "Comunicado {} criado com sucesso".format(announcement)
+        )
 
     if has_role(request.user, "student"):
         announcements = Announcement.objects.filter(
