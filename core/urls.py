@@ -1,9 +1,8 @@
 from django.conf import settings
 from django.shortcuts import redirect
-from django.urls import include, path
-from django.contrib import admin
+from django.urls import path
 from django.contrib.auth import views as auth_views
-from . import views
+
 
 from core.views import *
 
@@ -16,7 +15,6 @@ urlpatterns = [
     path("login/", login_user, name="login"),
     path("logout/", logout_user, name="logout"),
     path("enroll/", enroll, name="enroll"),
-    path("comunicados/", comunicados, name="comunicados"),
     path("perfil/", perfil, name="profile"),
     path("boletim/", boletim, name="boletim"),
     path("user/picture/<str:user_pk>", profile_picture, name="pfp"),

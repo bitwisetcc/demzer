@@ -8,19 +8,15 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.core.files import File
 from django.db import IntegrityError
-from django.db.models import Q
-from django.http import Http404, HttpRequest, HttpResponse, HttpResponseBadRequest, FileResponse
+from django.http import Http404, HttpRequest, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import redirect, render
-from rolepermissions.checkers import has_role
 from rolepermissions.decorators import has_permission_decorator as check_permission
 from rolepermissions.roles import assign_role
 
-from communication.models import Announcement
 from core.models import Member, Relative
 from core.utils import email_address, upload_img
-from management.models import Classroom, Course
+from management.models import Classroom
 
 
 @login_required
@@ -180,13 +176,13 @@ def super_secret(request: HttpRequest):
                 return HttpResponse(
                     "Falha ao cadastrar administrador: {}".format(error.args[0])
                 )
-            
-            
+
             try:
                 upload_img(request.FILES.get("picture"), str(admin.pk))
             except Exception as exc:
-                messages.warning(request, "Failed to upload picture: ".format(exc.args[0]))
-
+                messages.warning(
+                    request, "Failed to upload picture: ".format(exc.args[0])
+                )
 
             try:
                 Member.objects.create(
@@ -274,55 +270,12 @@ def auto_adm(request: HttpRequest):
     return redirect("profile")
 
 
-@login_required
-def comunicados(request: HttpRequest):
-    if request.method == "POST" and has_role(request.user, "admin"):
-        picture = File(request.FILES.get("image"))
-        private = "staff_only" not in request.POST
-        course = request.POST.get("course")
-        classroom = request.POST.get("classroom")
-
-        pk = Announcement.objects.create(
-            title=request.POST.get("title"),
-            info=request.POST.get("info"),
-            image=picture if picture.readable() else None,
-            private=private,
-            course=Course.objects.get(slug=course) if not private and course else None,
-            classroom=Classroom.objects.get(slug=classroom)
-            if not private and classroom
-            else None,
-        )
-
-        messages.success(request, "Comunicado {} criado com sucesso".format(pk))
-
-    if has_role(request.user, "student"):
-        announcements = Announcement.objects.filter(
-            Q(private=False)
-            & (
-                Q(course=None, classroom=None)
-                | Q(classroom=request.user.profile.classroom)
-                # | Q(course=request.user.profile.classroom.courses)
-            )
-        )
-    else:
-        announcements = Announcement.objects.all()
-
-    return render(
-        request, "core/comunicados.html", {"announcements": Announcement.objects.all()}
-    )
-
-
 def perfil(request: HttpRequest):
     return render(request, "core/perfil.html")
 
 
 def boletim(request: HttpRequest):
     return render(request, "core/boletim.html")
-
-
-def obs_aluno(request):
-    obs = request.POST.get("obs")
-    return obs
 
 
 def profile_picture(request: HttpRequest, user_pk: str):
