@@ -108,7 +108,6 @@ class Member(Model):
 
     relatives = ManyToManyField(Relative)
     classroom = ForeignKey(Classroom, SET_NULL, related_name="students", null=True)
-    picture = ImageField(upload_to="users/pictures", null=True)
     status = CharField(null=True, max_length=10)
     division = CharField(max_length=1, null=True)
 

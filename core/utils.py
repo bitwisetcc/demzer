@@ -1,4 +1,10 @@
+from typing import Any
+
+from azure.identity import DefaultAzureCredential
+from azure.storage.blob import BlobServiceClient
+from django.conf import settings
 from django.contrib.auth.models import User
+
 from backend.settings import EMAIL_PATTERN
 
 
@@ -13,3 +19,13 @@ def email_address(username: str) -> str:
         return EMAIL_PATTERN.format(first_name, last_name + str(count))
 
     return email
+
+
+def upload_img(file: Any, title: str):
+    ext = file.name.split(".")[-1]
+
+    service_client = BlobServiceClient(
+        settings.STORAGE_BUCKET, DefaultAzureCredential()
+    )
+    blob_client = service_client.get_blob_client("pictures", title)
+    blob_client.upload_blob(file.read())

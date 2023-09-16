@@ -19,7 +19,7 @@ urlpatterns = [
     path("comunicados/", comunicados, name="comunicados"),
     path("perfil/", perfil, name="profile"),
     path("boletim/", boletim, name="boletim"),
-    path("user/picture", profile_picture, name="profile_picture"),
+    path("user/picture/<str:user_pk>", profile_picture, name="pfp"),
 
     #RESET PASSOWRD
     path('reset_password/', auth_views.PasswordResetView.as_view(template_name="core/password/password_reset_form.html"), name="password_reset"),

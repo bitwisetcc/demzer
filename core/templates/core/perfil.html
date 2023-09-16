@@ -6,7 +6,7 @@
   <h1 class="pb-6 text-4xl font-bold text-color-primary">Perfil</h1>
   <section class="mb-8 flex">
     <img
-      src="{{ user.profile.picture|default_if_none:"default.png" }}"
+      src="{% url 'pfp' user.pk %}"
       alt="Foto de perfil"
       class="h-36 w-36 cursor-pointer rounded-full border-[6px] border-color-primary"
     />

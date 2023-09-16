@@ -1,6 +1,8 @@
 import re
 from datetime import date, datetime
 
+from azure.identity import DefaultAzureCredential
+from azure.storage.blob import BlobServiceClient
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -9,8 +11,7 @@ from django.contrib.auth.models import User
 from django.core.files import File
 from django.db import IntegrityError
 from django.db.models import Q
-from django.http import Http404, HttpRequest, HttpResponse, HttpResponseBadRequest
-from django.views.decorators.http import require_POST
+from django.http import Http404, HttpRequest, HttpResponse, HttpResponseBadRequest, FileResponse
 from django.shortcuts import redirect, render
 from rolepermissions.checkers import has_role
 from rolepermissions.decorators import has_permission_decorator as check_permission
@@ -18,7 +19,7 @@ from rolepermissions.roles import assign_role
 
 from communication.models import Announcement
 from core.models import Member, Relative
-from core.utils import email_address
+from core.utils import email_address, upload_img
 from management.models import Classroom, Course
 
 
@@ -68,7 +69,6 @@ def enroll(request: HttpRequest):
         first_name = username.split()[0]
         last_name = username.split()[-1]
         birthdate = datetime.strptime(request.POST["birthdate"], "%Y-%m-%d").date()
-        picture = File(request.FILES.get("picture"))
 
         try:
             user = User.objects.create_user(
@@ -76,10 +76,14 @@ def enroll(request: HttpRequest):
                 email=email_address(username),
                 password=first_name + last_name + str(birthdate.year),
             )
-
         except IntegrityError:
             messages.error(request, "Nome de usuário já existe")
             return redirect("enroll")
+
+        try:
+            upload_img(request.FILES.get("picture"), str(user.pk))
+        except Exception as exc:
+            messages.warning(request, "Failed to upload picture: ".format(exc.args[0]))
 
         try:
             profile = Member.objects.create(
@@ -100,7 +104,6 @@ def enroll(request: HttpRequest):
                 street=request.POST.get("street"),
                 street_number=request.POST.get("street-number"),
                 complement=request.POST.get("complement"),
-                picture=picture if picture.readable() else None,
             )
 
             if request.POST.get("role") == "student":
@@ -164,7 +167,6 @@ def super_secret(request: HttpRequest):
             first_name = username.split()[0]
             last_name = username.split()[-1]
             birthdate = datetime.strptime(request.POST["birthdate"], "%Y-%m-%d").date()
-            picture = File(request.FILES.get("picture"))
 
             try:
                 admin = User.objects.create_superuser(
@@ -174,15 +176,20 @@ def super_secret(request: HttpRequest):
                     ),
                     password=request.POST["password"],
                 )
-
-                admin.save()
             except Exception as error:
                 return HttpResponse(
                     "Falha ao cadastrar administrador: {}".format(error.args[0])
                 )
+            
+            
+            try:
+                upload_img(request.FILES.get("picture"), str(admin.pk))
+            except Exception as exc:
+                messages.warning(request, "Failed to upload picture: ".format(exc.args[0]))
+
 
             try:
-                profile = Member.objects.create(
+                Member.objects.create(
                     user=admin,
                     contact_email=request.POST["contact-email"],
                     phone=re.sub(r"[^0-9]+", "", request.POST["phone"]),
@@ -198,9 +205,7 @@ def super_secret(request: HttpRequest):
                     street=request.POST["street"],
                     street_number=request.POST["street-number"],
                     complement=request.POST["complement"],
-                    picture=picture if picture.readable() else None,
                 )
-                profile.save()
             except Exception as error:
                 return HttpResponseBadRequest(
                     "Falha ao criar perfil: {}".format(error.args[0])
@@ -320,16 +325,14 @@ def obs_aluno(request):
     return obs
 
 
-def profile_picture(request: HttpRequest):
-    if request.method == "POST":
-        pic = File(request.FILES.get("picture"))
-        if not pic.readable():
-            return HttpResponseBadRequest("Arquivo vazio ou corrompido")
+def profile_picture(request: HttpRequest, user_pk: str):
+    try:
+        service_client = BlobServiceClient(
+            settings.STORAGE_BUCKET, DefaultAzureCredential()
+        )
+        container_client = service_client.get_container_client("pictures")
+        return HttpResponse(container_client.download_blob(user_pk).readall())
 
-        member = Member.objects.get(user=request.user)
-        member.picture = pic
-        member.save()
-
-        return redirect("perfil")
-
-    return HttpResponse(request.user.profile.picture.url)
+    except Exception as exc:
+        print("falha ao buscar img de perfil: " + exc.args[0])
+        raise Http404("Falha ao requisitar imagem")

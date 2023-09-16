@@ -37,6 +37,8 @@ SCHOOL_NAME = "ETEC Jorge Street"
 EMAIL_PATTERN = "{}.{}@etec.sp.gov.br"
 SECURITY_KEY = getenv("MASTER_KEY")
 
+STORAGE_BUCKET = "https://demzerfiles.blob.core.windows.net"
+
 # MAYBE: add these as a course attribute
 LESSON_DURATION = 50 
 TURNS = {"M": "7:00", "E": "13:00", "N": "19:00", "F": "7:50"}
