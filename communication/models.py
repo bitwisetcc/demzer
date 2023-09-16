@@ -23,7 +23,6 @@ class Alert(Model):
     title = CharField(max_length=30, default="Denúncia genérica")
     tags = CharField(max_length=50, null=True)
     description = TextField()
-    attachment = FileField(upload_to="uploads/alert_attachments/%Y/")
 
 
 class Announcement(Model):
@@ -32,7 +31,6 @@ class Announcement(Model):
     date = DateField(auto_now=True)
     course = ForeignKey(Course, SET_NULL, null=True)
     classroom = ForeignKey(Classroom, SET_NULL, null=True)
-    image = ImageField(upload_to="announcement/covers", null=True)
     private = BooleanField(default=False)
     info = TextField()
 

@@ -8,7 +8,6 @@ from django.db.models import (
     DateField,
     EmailField,
     ForeignKey,
-    ImageField,
     IntegerField,
     ManyToManyField,
     Model,

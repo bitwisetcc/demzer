@@ -1,32 +1,38 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.core.files import File
 from django.db.models import Q
 from django.http import HttpRequest
 from django.shortcuts import render
-from rolepermissions.checkers import has_role
+from rolepermissions.checkers import has_role, has_permission
 
 from communication.models import Alert, Announcement
 from core.utils import upload_img
 from management.models import Classroom, Course
 
 
-def new_alert(request: HttpRequest):
+
+def alerts(request: HttpRequest):
+    if has_permission(request.user, "see_alerts"):
+        return render(request, "communication/alert/list.html", {"alerts": Alert.objects.all()[:20]})
+
     if request.method == "POST":
-        Alert.objects.create(
+        alert = Alert.objects.create(
             emiter=request.user,
             title=request.POST["title"],
             description=request.POST["content"],
             tags=request.POST["tags"],
         )
 
+        try:
+            upload_img(request.FILES.get("attachment"), str(alert.pk), "alerts")
+        except Exception as exc:
+            messages.warning(
+                request, "Failed to upload picture: {}".format(exc.args[0])
+            )
+
         messages.success(request, "Alerta criado com sucesso!")
 
-    return render(request, "alert/alert.html")
-
-
-def list_alerts(request: HttpRequest):
-    return render(request, "alert/list.html", {"alerts": Alert.objects.all()[:20]})
+    return render(request, "communication/alert/alert.html")
 
 
 @login_required
@@ -51,7 +57,9 @@ def comunicados(request: HttpRequest):
                 request.FILES.get("picture"), str(announcement.pk), "announcements"
             )
         except Exception as exc:
-            messages.warning(request, "Failed to upload picture: {}".format(exc.args[0]))
+            messages.warning(
+                request, "Failed to upload picture: {}".format(exc.args[0])
+            )
 
         messages.success(
             request, "Comunicado {} criado com sucesso".format(announcement)

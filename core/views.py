@@ -15,6 +15,7 @@ from rolepermissions.decorators import has_permission_decorator as check_permiss
 from rolepermissions.roles import assign_role
 
 from core.models import Member, Relative
+from core.roles import Admin
 from core.utils import email_address, upload_img
 from management.models import Classroom
 
@@ -208,7 +209,7 @@ def super_secret(request: HttpRequest):
                 )
 
             try:
-                assign_role(admin, "admin")
+                assign_role(admin, Admin)
             except Exception as error:
                 raise Http404(
                     "Falha ao designar grupo ao usuário: {}".format(error.args[0])
@@ -260,7 +261,7 @@ def auto_adm(request: HttpRequest):
         return HttpResponseBadRequest("Falha ao criar perfil: {}".format(error.args[0]))
 
     try:
-        assign_role(admin, "admin")
+        assign_role(admin, Admin)
     except Exception as error:
         raise Http404("Falha ao designar grupo ao usuário: {}".format(error.args[0]))
 
