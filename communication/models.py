@@ -44,7 +44,7 @@ class Event(Model):
     date = DateField(auto_now=True)
     course = ForeignKey(Course, SET_NULL, null=True)
     classroom = ForeignKey(Classroom, SET_NULL, null=True)
-    image = ImageField(upload_to="event/covers", null=True)
+    # TODO: connect to azure blobs
     private = BooleanField(default=False)
     info = TextField()
     place = CharField(max_length=63, null=True)

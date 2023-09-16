@@ -19,7 +19,7 @@ class Assessment(Model):
     day = DateField()
     classroom = ForeignKey(Classroom, CASCADE)
     bimester = PositiveSmallIntegerField()
-    attachement = FileField(upload_to="assessments/attachements")
+    # TODO: connect to azure blobs
     content = TextField()
 
 

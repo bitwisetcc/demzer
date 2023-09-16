@@ -37,11 +37,11 @@ SCHOOL_NAME = "ETEC Jorge Street"
 EMAIL_PATTERN = "{}.{}@etec.sp.gov.br"
 SECURITY_KEY = getenv("MASTER_KEY")
 
-STORAGE_BUCKET = "https://demzerfiles.blob.core.windows.net"
+STORAGE_BUCKET = getenv("STORAGE_URL")
 
 # MAYBE: add these as a course attribute
 LESSON_DURATION = 50 
-TURNS = {"M": "7:00", "E": "13:00", "N": "19:00", "F": "7:50"}
+TURNS = {"M": "7:00", "E": "13:00", "N": "19:00"}
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 MEDIA_ROOT = BASE_DIR / "user_media"
@@ -109,25 +109,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "backend.wsgi.application"
 
-DB_ENGINE = environ.get("DB_ENGINE", "sqlite3")
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": getenv("DB_NAME", "dev_demzer"),
+        "USER": getenv("DB_USER", "root"),
+        "PASSWORD": getenv("DB_PASSWORD", "root"),
+        "HOST": getenv("DB_HOST", "localhost"),
+    }
+}
 
-if DB_ENGINE == "sqlite3":
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
-    }
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.{}".format(DB_ENGINE),
-            "NAME": environ.get("DB_NAME", "tcc"),
-            "USER": environ.get("DB_USER", "root"),
-            "PASSWORD": environ.get("DB_PASSWORD", "root"),
-            "HOST": environ.get("DB_PASSWORD", "localhost"),
-        }
-    }
+# TODO: require secure transport azure > bitwisetcc > server parameters > require_secure_transport -> ON
 
 
 AUTH_PASSWORD_VALIDATORS = [

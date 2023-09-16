@@ -79,3 +79,6 @@ Uma **última dica** é que, quando você abrir o projeto no VSCode, deverá apa
 - Introdução ao Alpine.js: [https://alpinejs.dev/start-here](https://alpinejs.dev/start-here)
 - Usando Git e GitHub no VSCode: [https://code.visualstudio.com/docs/sourcecontrol/intro-to-git](https://code.visualstudio.com/docs/sourcecontrol/intro-to-git)
 
+## OLHA PRA MIM
+
+Vc precisa baixar a CLI do Azure no seu computador e rodar `az login` com a sua conta da Etec antes de rodar o servidor. Também copie o arquivo `.env` do Discord para a raiz do projeto.
