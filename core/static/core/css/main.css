@@ -38,7 +38,7 @@ main.framed {
 }
 
 hr {
-  @apply my-3 mx-1;
+  @apply mx-1 my-3;
 }
 
 nav ul li a {
@@ -77,3 +77,22 @@ nav#navbar {
   scrollbar-width: none;
 }
 
+button[type="submit"] {
+  @apply rounded-full border-2 border-color-secondary bg-color-hover px-5 py-2 font-bold text-yellow-700;
+}
+
+button.alt {
+  @apply rounded-full border-2 border-color-secondary bg-transparent px-5 py-2 font-bold text-yellow-700 transition-all hover:bg-color-hover;
+}
+
+dialog {
+  @apply rounded-[1.75rem] bg-color-bg-lighter p-6 shadow-2xl shadow-gray-200 backdrop:bg-gray-50;
+}
+
+dialog header {
+  @apply mb-3 flex justify-between text-color-primary;
+}
+
+dialog header h2 {
+  @apply text-xl font-semibold;
+}

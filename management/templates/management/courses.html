@@ -58,29 +58,29 @@
 </script>
 {% endblock %} {% block content %}
 <main class="flex flex-col gap-5 px-24 py-10" x-data="dialogs">
-  <dialog :open="courseDialog" class="w-1/2 rounded-2xl p-6 shadow-lg">
+  <dialog :open="courseDialog">
+    <header>
+      <h2">Criar curso</h2>
+      <button @click.prevent="courseDialog = false">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="h-6 w-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+    </header>
     <form action="{% url 'courses' %}" method="POST">
       {% csrf_token %}
       <input type="hidden" name="pk" x-model="pk" />
-      <h2 class="mb-3 flex justify-between text-xl font-semibold">
-        <span class="text-color-primary">Criar curso</span>
-        <button @click.prevent="courseDialog = false">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="h-6 w-6"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
-      </h2>
       <div class="mb-3 flex items-center gap-2">
         <label for="txt-name">Nome:</label>
         <input
@@ -142,36 +142,31 @@
         ></textarea>
       </div>
       <div class="mt-3 flex justify-center">
-        <button
-          type="submit"
-          class="rounded-2xl border-2 border-color-secondary bg-color-hover px-5 py-2 font-bold text-yellow-700"
-        >
-          Salvar
-        </button>
+        <button type="submit">Salvar</button>
       </div>
     </form>
   </dialog>
-  <dialog :open="filterDialog" class="rounded-2xl p-6 shadow-lg">
+  <dialog :open="filterDialog">
+    <header>
+      <h2>Filtrar</h2>
+      <button @click.prevent="filterDialog = false">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="h-6 w-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+    </header>
     <form action="{% url 'courses' %}" method="get" class="flex flex-col gap-2">
-      <h2 class="mb-3 flex justify-between text-xl font-semibold">
-        <span class="text-color-primary">Filtrar</span>
-        <button @click.prevent="filterDialog = false">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="h-6 w-6"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
-      </h2>
       <div class="mb-1 flex items-center gap-2">
         <label for="txt-name">Nome:</label>
         <input
@@ -203,12 +198,7 @@
         </select>
       </div>
       <div class="mt-3 flex justify-center gap-3">
-        <button
-          type="reset"
-          class="rounded-full border-2 border-color-secondary bg-transparent px-5 py-2 font-bold text-yellow-700 transition-all hover:bg-color-hover"
-        >
-          Limpar
-        </button>
+        <button type="reset" class="alt">Limpar</button>
         <button
           type="submit"
           class="rounded-full border-2 border-color-secondary bg-transparent px-5 py-2 font-bold text-yellow-700 transition-all hover:bg-color-hover"
@@ -218,28 +208,28 @@
       </div>
     </form>
   </dialog>
-  <dialog :open="subjectDialog" class="rounded-2xl p-5 shadow-lg">
+  <dialog :open="subjectDialog">
+    <header>
+      <h2>Nova Matéria</h2>
+      <button @click.prevent="subjectDialog = false">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="h-6 w-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+    </header>
     <form action="{% url 'create_subject' %}" method="post">
       {% csrf_token %}
-      <h2 class="mb-3 flex justify-between text-xl font-bold">
-        <span class="text-color-primary">Nova matéria</span>
-        <button @click.prevent="subjectDialog = false">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="h-6 w-6"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
-      </h2>
       <div class="field">
         <label for="txt-name">Nome</label>
         <input type="text" name="name" id="txt-name" required maxlength="60" />
@@ -261,36 +251,36 @@
       <div class="mt-3 flex gap-2">
         <button
           @click.prevent="() => { subjectDialog = false; importDialog = true }"
-          class="btn"
+          class="alt"
         >
           Importar
         </button>
-        <button type="submit" class="btn">Criar</button>
+        <button type="submit">Criar</button>
       </div>
     </form>
   </dialog>
-  <dialog :open="importDialog" class="rounded-lg shadow-lg">
+  <dialog :open="importDialog">
+    <header>
+      <h2>Importar matérias</h2>
+      <button @click.prevent="importDialog = false">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="h-6 w-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+    </header>
     <form id="importSubjects" action="{% url 'create_subject' %}" method="post">
       {% csrf_token %}
-      <header class="flex justify-between">
-        <h2 class="text-xl font-bold text-color-primary">Importar matérias</h2>
-        <button @click.prevent="importDialog = false">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="h-6 w-6"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
-      </header>
       <template x-for="i in imports">
         <div class="input mt-2 flex gap-2">
           <input
@@ -315,13 +305,11 @@
       <div class="mt-3 flex gap-2">
         <button
           @click.prevent="imports.push({ name: '', slug: '' })"
-          class="btn"
+          class="alt"
         >
           +
         </button>
-        <button type="submit" class="btn" @click.prevent="sendSubject()">
-          Criar
-        </button>
+        <button type="submit" @click.prevent="sendSubject()">Criar</button>
       </div>
     </form>
   </dialog>
