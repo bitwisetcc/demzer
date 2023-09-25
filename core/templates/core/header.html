@@ -1,3 +1,4 @@
+{% load permission_tags %}
 <header
   class="fixed w-full flex items-center justify-between bg-zinc-100 px-8 py-5 shadow-sm"
   :class="open ? 'rounded-br-3xl' : 'rounded-b-3xl '"
@@ -27,9 +28,15 @@
       </p>
     </div>
     <span class="text-sm md:ml-1 md:mr-3 md:text-base md:text-gray-400">
-      {% if user.is_superuser %}
+      {% if user|has_role:'admin' %}
+        Administrador
+      {% elif user|has_role:'coordinator' %}
         Coordenador
-      {% elif user.is_staff %}
+      {% elif user|has_role:'secretary' %}
+        Secretário
+      {% elif user|has_role:'staff' %}
+        Funcionário
+      {% elif user|has_role:'teacher' %}
         Professor
       {% else %}
         Aluno
