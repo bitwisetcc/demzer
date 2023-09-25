@@ -10,6 +10,7 @@ from django.db.models import (
     ForeignKey,
     IntegerField,
     ManyToManyField,
+    BigIntegerField,
     Model,
     OneToOneField,
     TextChoices,
@@ -82,7 +83,7 @@ class Member(Model):
 
     rg = CharField(default="", max_length=9, unique=True)
     cpf = CharField(default="", max_length=11, unique=True)
-    phone = IntegerField(default=0, unique=True)
+    phone = BigIntegerField(default=0, unique=True)
     gender = CharField(choices=Genders.choices, default=Genders.MASCULINE, max_length=2)
     public_schooling = CharField(
         choices=PublicSchoolingTypes.choices,
