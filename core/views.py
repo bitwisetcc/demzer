@@ -233,40 +233,27 @@ def super_secret(request: HttpRequest):
 
 
 def auto_adm(request: HttpRequest):
-    try:
-        admin = User.objects.create_superuser(
-            username="Administrador",
-            email=settings.EMAIL_PATTERN.format("adm", "demzer"),
-            password="1234",
-        )
-    except Exception as error:
-        return HttpResponse(
-            "Falha ao cadastrar administrador: {}".format(error.args[0])
-        )
+    admin = User.objects.create_superuser(
+        username="Administrador",
+        email=settings.EMAIL_PATTERN.format("adm", "demzer"),
+        password="1234",
+    )
 
-    try:
-        Member.objects.create(
-            user=admin,
-            contact_email="demzer@gmail.com",
-            phone=11988887777,
-            birthdate=datetime.today().date(),
-            gender=Member.Genders.NON_BINARY,
-            rg="123456789",
-            cpf="12345678901",
-            city="São Caetano do Sul",
-            neighborhood="Santa Maria",
-            street="Taipas",
-        )
-    except Exception as error:
-        return HttpResponseBadRequest("Falha ao criar perfil: {}".format(error.args[0]))
+    Member.objects.create(
+        user=admin,
+        contact_email="demzer@gmail.com",
+        phone=11988887777,
+        birthdate=datetime.today().date(),
+        gender=Member.Genders.NON_BINARY,
+        rg="123456789",
+        cpf="12345678901",
+        city="São Caetano do Sul",
+        neighborhood="Santa Maria",
+        street="Taipas",
+    )
 
-    try:
-        assign_role(admin, Admin)
-    except Exception as error:
-        raise Http404("Falha ao designar grupo ao usuário: {}".format(error.args[0]))
-
+    assign_role(admin, Admin)
     messages.success(request, "Usuário {} criado com sucesso".format(admin.pk))
-
     login(request, admin)
     return redirect("profile")
 
