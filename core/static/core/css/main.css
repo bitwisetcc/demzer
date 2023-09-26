@@ -90,9 +90,9 @@ dialog {
 }
 
 dialog header {
-  @apply mb-3 flex justify-between text-color-primary;
+  @apply mb-3 flex justify-between w-full text-color-primary;
 }
 
-dialog header h2 {
-  @apply text-xl font-semibold;
+dialog h2 {
+  @apply text-xl font-semibold text-color-primary;
 }

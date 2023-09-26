@@ -22,10 +22,10 @@
 {% endblock %} {% block content %}
 <main class="flex flex-col gap-5 px-24 py-10" x-data="dialogs">
   <dialog :open="classroomDialog" class="z-10 rounded-lg p-4 shadow-lg">
+    <h2 class="mb-3 text-xl font-semibold">Criar turma</h2>
     <form action="{% url 'classrooms' %}" method="POST">
       {% csrf_token %}
       <input type="hidden" name="pk" x-model="pk" />
-      <h2 class="mb-3 text-xl font-semibold">Criar turma</h2>
       <div class="input mt-2 flex gap-2">
         <select name="course" id="sl-course" required>
           {% for course in courses %}
@@ -42,10 +42,10 @@
         />
       </div>
       <div class="mt-3 flex gap-2">
-        <button @click.prevent="classroomDialog = false" class="btn">
+        <button @click.prevent="classroomDialog = false" class="alt">
           Voltar
         </button>
-        <button type="submit" class="btn">Salvar</button>
+        <button type="submit">Salvar</button>
       </div>
     </form>
   </dialog>

@@ -1,16 +1,14 @@
 import json
 import os
 import re
-from collections import defaultdict
 from datetime import datetime as dt
 from datetime import timedelta as td
-from time import sleep
 
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
-from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, JsonResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_POST
 from rolepermissions.checkers import has_role
@@ -53,11 +51,14 @@ def read_csv(request: HttpRequest, file: str) -> tuple[list[list[str]], list[str
     return lines, lines.pop(0)
 
 
-def dfilter(d: dict, keys: list[str], exclude=False) -> dict:
-    return {k: v for k, v in d.items() if (k not in keys if exclude else k in keys)}
+def dfilter(d: dict, keys: list[str]) -> dict:
+    return {k: v for k, v in d.items() if k in keys}
 
 
-# TODO: Select students class? (optionally?)
+def dexc(d: dict, keys: list[str]) -> dict:
+    return {k: v for k, v in d.items() if k not in keys}
+
+
 # TODO: be able to suppress certain errors and leave blank fields
 def import_users(request: HttpRequest):
     if request.method == "POST":
@@ -65,9 +66,7 @@ def import_users(request: HttpRequest):
             lines: list[str] = list(map(csv_data, request.FILES["users"].readlines()))
             headers: list[str] = lines.pop(0)
 
-            classrooms = defaultdict(
-                None, {c.course.slug + str(c.year): c for c in Classroom.objects.all()}
-            )
+            classrooms = {str(c): c for c in Classroom.objects.all()}
 
             data = [
                 {
@@ -76,9 +75,7 @@ def import_users(request: HttpRequest):
                     "afro": row["afro"] == "true" or row["afro"] == "1",
                     "cpf": re.sub(r"[\./-]", "", row["cpf"]),
                     "rg": re.sub(r"[\./-]", "", row["rg"]),
-                    "classroom": classrooms.get(row["classroom"])
-                    if "classroom" in request.POST
-                    else None,
+                    "classroom": classrooms.get(row.get("classroom", ""), None),
                     # TODO: Send reset email
                     "password": make_password(
                         row["username"].split()[0]
@@ -92,36 +89,38 @@ def import_users(request: HttpRequest):
             ]
 
         except IndexError as error:
-            return HttpResponseBadRequest("Arquivo vazio. Tente novamente")
+            messages.error(request, "Arquivo vazio. Tente novamente")
+            return redirect("import/users")
         except Exception as error:
-            return HttpResponse("Falha ao ler arquivo: {}".format(error))
+            messages.error(request, "Falha ao ler arquivo: {}".format(error))
+            return redirect("import/users")
 
         try:
-            users = User.objects.bulk_create(
+            users_ghost = User.objects.bulk_create(
                 User(**dfilter(user, ["username", "email", "password"]))
                 for user in data
             )
+            # MySQL doesn't return the pk of the bulk-created rows
+            # Rework this if we ever migrate to PosteSQL or MariaDB
+            users = User.objects.filter(username__in=[u.username for u in users_ghost])
         except Exception as error:
-            return HttpResponse("Falha ao criar usuários: {}".format(error))
+            messages.error(request, "Falha ao criar usuários: {}".format(error))
+            return redirect("import/users")
 
         try:
             Member.objects.bulk_create(
-                Member(
-                    **dfilter(member, ["username", "email", "password"], True),
-                    user=user,
-                )
-                for user, member in zip(users, data)
+                Member(**dexc(member, ["username", "email", "password"]), user=user)
+                for member, user in zip(data, users)
             )
         except Exception as error:
-            return HttpResponse("Falha ao criar perfis: {}".format(error))
+            messages.error(request, "Falha ao criar perfis: {}".format(error))
+            return redirect("import/users")
 
         try:
             for user in users:
                 assign_role(user, request.POST.get("role"))
-        except Exception as error:
-            messages.error(
-                request, "Falha ao designar grupos aos usuários: " + str(error)
-            )
+        except:
+            messages.error(request, "Falha ao designar grupos aos usuários")
             return redirect("import/users")
 
         return redirect("dashboard")
