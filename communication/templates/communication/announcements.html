@@ -60,7 +60,7 @@
           >
             <img
               class="h-[178px] w-full rounded-2xl"
-              src="{{ announcement.image.url }}"
+              src="{% url 'img' 'announcements' announcement.pk %}"
             />
             <div class="ml-2">
               <label class="text-right text-xs font-normal text-gray-500">
@@ -110,7 +110,6 @@
         </header>
         <img
           class="h-[178px] w-full rounded-2xl"
-          src="{{ announcement.image.url }}"
         />
         <label class="text-right text-xs font-normal text-gray-500">
           {{ announcement.date|date:'d/m/Y' }}
@@ -329,13 +328,13 @@
           <div class="flex flex-row justify-center space-x-5 pt-10 text-lg">
             <button
               type="reset"
-              class="rounded-full border-2 border-solid border-color-secondary px-12 py-1 font-bold text-color-secondary transition hover:bg-color-hover"
+              class="alt"
             >
               Limpar
             </button>
             <button
               type="submit"
-              class="rounded-full border-2 border-solid border-color-secondary px-12 py-1 font-bold text-color-secondary transition hover:bg-color-hover"
+              
             >
               Aplicar
             </button>

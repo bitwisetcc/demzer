@@ -22,8 +22,7 @@ def email_address(username: str) -> str:
 
 
 def upload_img(file: Any, title: str, container="pictures"):
-    ext = file.name.split(".")[-1]
-
+    # ext = file.name.split(".")[-1]
     service_client = BlobServiceClient(
         settings.STORAGE_BUCKET, DefaultAzureCredential()
     )

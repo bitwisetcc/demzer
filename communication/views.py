@@ -10,10 +10,13 @@ from core.utils import upload_img
 from management.models import Classroom, Course
 
 
-
 def alerts(request: HttpRequest):
     if has_permission(request.user, "see_alerts"):
-        return render(request, "communication/alert/list.html", {"alerts": Alert.objects.all()[:20]})
+        return render(
+            request,
+            "communication/alert/list.html",
+            {"alerts": Alert.objects.all()[:20]},
+        )
 
     if request.method == "POST":
         alert = Alert.objects.create(
@@ -54,7 +57,7 @@ def comunicados(request: HttpRequest):
 
         try:
             upload_img(
-                request.FILES.get("picture"), str(announcement.pk), "announcements"
+                request.FILES.get("image"), str(announcement.pk), "announcements"
             )
         except Exception as exc:
             messages.warning(
@@ -78,5 +81,7 @@ def comunicados(request: HttpRequest):
         announcements = Announcement.objects.all()
 
     return render(
-        request, "core/comunicados.html", {"announcements": Announcement.objects.all()}
+        request,
+        "communication/announcements.html",
+        {"announcements": Announcement.objects.all()},
     )

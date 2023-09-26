@@ -7,9 +7,7 @@ from django.db.models import (
     CharField,
     DateField,
     DateTimeField,
-    FileField,
     ForeignKey,
-    ImageField,
     Model,
     TextField,
 )
