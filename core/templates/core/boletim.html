@@ -19,8 +19,8 @@
       <option>3º Ano</option>
     </select>
   </label>
-  <section class="box lg:w-max overflow-x-scroll">
-    <table class="main-table border-separate border-spacing-3 px-2">
+  <section class="box flex justify-left md:justify-center w-full overflow-x-scroll md:overflow-x-hidden">
+    <table class="main-table border-separate border-spacing-3 px-10">
       <thead>
         <tr>
           <th><!-- empty --></th>
@@ -175,54 +175,53 @@
   <h2 class="truncate text-3xl font-semibold text-color-primary">
     Ficha de Desempenho - Sala de Aula
   </h2>
-  <section class="box p-4">
-    <table>
-      <thead>
-        <tr>
-          <th class="info bg-color-primary-dimm">Instrumento</th>
-          <th class="info bg-color-primary-dimm">Data</th>
-          <th class="info bg-color-primary-dimm">Menção</th>
-          <th class="info bg-color-primary-dimm">Observação</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="info bg-color-grey">oii</td>
-          <td class="info bg-color-grey">asdasd</td>
-          <td class="info bg-color-grey">asdasd</td>
-          <td>
-            <form method="POST">
-              {% if request.user.is_superuser %} {% csrf_token %}
-              <input
-                type="text"
-                name="obs"
-                class="info bg-color-grey"
-                maxlength="200"
-                placeholder="Escreva Aqui!"
-              />
-              <button type="submit" class="btn rounded-lg bg-color-secondary">
-                Enviar
-              </button>
-              {% else %}
-              <div class="cursor-not-allowed rounded-full bg-color-grey">
-                <p
-                  name="obs_student"
-                  value="{{ request.POST.obs }}"
-                  readonly
-                ></p>
-              </div>
-              {% endif %}
-            </form>
-          </td>
-        </tr>
-        <tr>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-      </tbody>
-    </table>
+  <section
+    class="box lg:w-max lg:grid-cols-4 grid grid-cols-1 gap-6 p-4 px-5 py-3 text-center sm:grid-cols-4 overflow-x-scroll"
+  >
+    <div class="flex flex-row col-span-4 h-10 rounded-3xl justify-center items-center font-semibold bg-color-secondary">
+      <span>Ficha de Desempenho - Sala de Aula</span>
+    </div>
+    <div class="flex flex-col gap-3">
+      <span class="info text-white bg-color-primary-dimm">Instrumento</span>
+      <span class="info bg-color-grey">oii</span>
+    </div>
+    <div class="flex flex-col gap-3">
+      <span class="info text-white bg-color-primary-dimm">Datas</span>
+      <span class="info bg-color-grey">08/11/2005</span>
+    </div>
+    <div class="flex flex-col gap-3">
+      <span class="info text-white bg-color-primary-dimm">Menção</span>
+      <span class="info bg-color-grey">MB</span>
+    </div>
+    <div class="flex flex-col gap-3">
+      <span class="info text-white bg-color-primary-dimm">Observação</span>
+      <span class="info bg-color-grey">
+        <form method="POST">
+          {% if request.user.is_superuser %} {% csrf_token %}
+          <input
+            type="text"
+            name="obs"
+            class="info bg-color-grey"
+            maxlength="200"
+            placeholder="Escreva Aqui!"
+          />
+          <div class="flex pt-1 justify-center">
+            <button type="submit" class="rounded-lg pt-3 bg-color-secondary">
+              Enviar
+            </button>
+          </div>
+          {% else %}
+          <div class="cursor-not-allowed rounded-full bg-color-grey">
+            <p
+              name="obs_student"
+              value="{{ request.POST.obs }}"
+              readonly
+            ></p>
+          </div>
+          {% endif %}
+        </form>
+      </span>
+    </div>
   </section>
 
   <section
