@@ -176,7 +176,7 @@
     Ficha de Desempenho - Sala de Aula
   </h2>
   <section
-    class="box lg:w-max lg:grid-cols-4 grid grid-cols-1 gap-6 p-4 px-5 py-3 text-center sm:grid-cols-4 overflow-x-scroll"
+    class="box lg:w-max lg:grid-cols-4 grid grid-cols-1 gap-6 p-4 px-5 py-3 text-center sm:grid-cols-4 overflow-x-scroll md:overflow-hidden"
   >
     <div class="flex flex-row col-span-4 h-10 rounded-3xl justify-center items-center font-semibold bg-color-secondary">
       <span>Ficha de Desempenho - Sala de Aula</span>
@@ -201,7 +201,7 @@
           <input
             type="text"
             name="obs"
-            class="info bg-color-grey"
+            class="info w-[100%] bg-color-grey"
             maxlength="200"
             placeholder="Escreva Aqui!"
           />
@@ -211,7 +211,7 @@
             </button>
           </div>
           {% else %}
-          <div class="cursor-not-allowed rounded-full bg-color-grey">
+          <div class="cursor-not-allowed w-[100%] rounded-full bg-color-grey">
             <p
               name="obs_student"
               value="{{ request.POST.obs }}"
@@ -339,7 +339,7 @@
         </div>
       </div>
     </form>
-    <label class="ml-10 text-base text-gray-400">
+    <label class="ml-10 text-base text-gray-400 h-8">
       Clique no botão para conseguir sua reconsideração de nota
     </label>
   </section>
