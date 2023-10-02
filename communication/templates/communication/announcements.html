@@ -130,13 +130,8 @@
   >
     {% csrf_token %}
     <!-- FORM FOR CREATE COMUNICATE-->
-    <div
-      :class="createDialog ? 'flex' : 'hidden'"
-      class="fixed inset-0 items-center justify-center bg-black bg-opacity-25"
-    >
-      <div
-        class="no_scroll h-[600px] w-[600px] overflow-y-scroll rounded-3xl bg-color-grey pb-10"
-      >
+    <div :class="createDialog ? 'flex' : 'hidden'" class="dialog-backdrop">
+      <div class="dialog">
         <header class="mx-10 mb-3 mt-8 flex justify-between text-3xl font-bold">
           <h2>Criar Comunicado</h2>
           <div>
@@ -242,12 +237,7 @@
             />
           </div>
           <div class="flex justify-center pt-6">
-            <button
-              type="submit"
-              class="h-12 w-32 rounded-full border-2 border-solid border-color-secondary text-2xl font-bold text-color-secondary transition hover:bg-color-hover"
-            >
-              Aplicar
-            </button>
+            <button type="submit">Aplicar</button>
           </div>
         </section>
       </div>
