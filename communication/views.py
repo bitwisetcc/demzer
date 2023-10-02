@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -48,6 +49,7 @@ def comunicados(request: HttpRequest):
         announcement = Announcement.objects.create(
             title=request.POST.get("title"),
             info=request.POST.get("info"),
+            date=datetime.strptime(request.POST["date"], "%Y-%m-%d").date(),
             private=private,
             course=Course.objects.get(slug=course) if not private and course else None,
             classroom=Classroom.objects.get(slug=classroom)

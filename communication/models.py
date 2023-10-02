@@ -1,3 +1,4 @@
+from datetime import date
 from django.contrib.auth.models import User
 from django.db.models import (
     CASCADE,
@@ -25,12 +26,18 @@ class Alert(Model):
 
 class Announcement(Model):
     # if both date and course are None and private is False, it's a general announcement, meant for all users
-    title = CharField(max_length=80, default="")
-    date = DateField(auto_now=True)
+    title = CharField(max_length=60, default="")
+    date = DateField()
     course = ForeignKey(Course, SET_NULL, null=True)
     classroom = ForeignKey(Classroom, SET_NULL, null=True)
     private = BooleanField(default=False)
     info = TextField()
+
+    def published(self):
+        return date.today() >= self.date
+    
+    def __str__(self) -> str:
+        return self.title
 
     class Meta:
         ordering = ["-date"]

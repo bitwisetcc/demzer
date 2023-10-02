@@ -498,6 +498,7 @@
     <header class="mb-2 flex justify-between text-color-primary">
       <h2 class="mb-4 text-4xl font-semibold">Matérias</h2>
       <div class="flex gap-2">
+        {% if user|can:'create_course' %}
         <button @click="subjectDialog = true">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -530,6 +531,7 @@
             />
           </svg>
         </button>
+        {% endif %}
       </div>
     </header>
     <div class="flex gap-2">

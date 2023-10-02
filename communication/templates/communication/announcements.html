@@ -1,5 +1,4 @@
-{% extends 'core/base.html' %} {% load static %} {% load permission_tags %} 
-{% block head %}
+{% extends 'core/base.html' %} {% load static %} {% load permission_tags %} {% block head %}
 <title>Comunicados</title>
 {% endblock %} {% block content %}
 <main
@@ -46,14 +45,17 @@
       </button>
     </div>
   </header>
-  <div x-data="{seeDialog: false}">
+  <div x-data="{seeDialog: false, imgUrl: ''}">
     <article
       class="grid w-full grid-cols-2 content-center gap-16 pt-14 sm:ml-4 md2:grid-cols-1 sm2:ml-0 ultrawide:mx-4 ultrawide:grid-cols-8"
       :class="open ? 'gap-x-40' : ''"
     >
       {% for announcement in announcements %}
+      {% if announcement.published or user|has_role:'admin' %}
       <div class="flex justify-center">
-        <button @click="seeDialog = true">
+        <button
+          @click="() => {seeDialog = true; imgUrl = $el.querySelector('img').src}"
+        >
           <!-- OPEN COMUNICATE -->
           <div
             class="h-[300px] w-[350px] rounded-2xl bg-color-bg-perfil text-left shadow-xl"
@@ -69,11 +71,15 @@
               <!--Here we need to put a date when the communicate was registered-->
               <h3 class="text-base font-bold text-black">
                 {{ announcement.title }}
+                {% if not announcement.published %}
+                <span class="text-gray-500">- Em breve</span>
+                {% endif %}
               </h3>
             </div>
           </div>
         </button>
       </div>
+      {% endif %}
       {% endfor %}
     </article>
 
@@ -85,7 +91,7 @@
       <div
         class="h-[600px] w-[600px] overflow-y-scroll rounded-3xl bg-color-grey pb-10"
       >
-        <header class="mx-10 mb-3 mt-8 flex justify-between text-3xl font-bold">
+        <header class="mx-10 mb-3 mt-8 flex justify-end text-3xl font-bold">
           <div>
             <button
               @click.prevent="seeDialog = false"
@@ -108,9 +114,7 @@
             </button>
           </div>
         </header>
-        <img
-          class="h-[178px] w-full rounded-2xl"
-        />
+        <img class="w-full rounded-2xl" :src="imgUrl" />
         <label class="text-right text-xs font-normal text-gray-500">
           {{ announcement.date|date:'d/m/Y' }}
         </label>
@@ -131,7 +135,7 @@
       class="fixed inset-0 items-center justify-center bg-black bg-opacity-25"
     >
       <div
-        class="h-[600px] w-[600px] overflow-y-scroll rounded-3xl bg-color-grey pb-10"
+        class="no_scroll h-[600px] w-[600px] overflow-y-scroll rounded-3xl bg-color-grey pb-10"
       >
         <header class="mx-10 mb-3 mt-8 flex justify-between text-3xl font-bold">
           <h2>Criar Comunicado</h2>
@@ -326,18 +330,8 @@
             Outros
           </label>
           <div class="flex flex-row justify-center space-x-5 pt-10 text-lg">
-            <button
-              type="reset"
-              class="alt"
-            >
-              Limpar
-            </button>
-            <button
-              type="submit"
-              
-            >
-              Aplicar
-            </button>
+            <button type="reset" class="alt">Limpar</button>
+            <button type="submit">Aplicar</button>
           </div>
         </section>
       </div>

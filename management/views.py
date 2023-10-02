@@ -78,12 +78,14 @@ def import_users(request: HttpRequest):
                     "classroom": classrooms.get(row.get("classroom", ""), None),
                     # TODO: Send reset email
                     "password": make_password(
-                        row["username"].split()[0]
-                        + row["username"].split()[-1]
-                        + str(dt.strptime(row["birthdate"], "%Y-%m-%d").date().year)
+                        (
+                            row["username"].split()[0]
+                            + row["username"].split()[-1]
+                            + str(dt.strptime(row["birthdate"], "%Y-%m-%d").date().year)
+                        )
+                        if "reset_password" in request.POST or "password" not in row
+                        else row["password"]
                     )
-                    if "reset_password" in request.POST or "password" not in row
-                    else row["password"],
                 }
                 for line in lines
             ]

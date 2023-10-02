@@ -77,6 +77,14 @@ nav#navbar {
   scrollbar-width: none;
 }
 
+.no_scroll {
+  scrollbar-width: none;
+}
+
+.no_scroll::-webkit-scrollbar {
+  width: 0 !important;
+}
+
 button[type="submit"] {
   @apply rounded-full border-2 border-color-secondary bg-color-hover px-5 py-2 font-bold text-yellow-700;
 }
