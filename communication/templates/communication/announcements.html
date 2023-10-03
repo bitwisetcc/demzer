@@ -53,9 +53,7 @@
     </div>
   </header>
   <div x-data="{ seeDialog: false, imgUrl: '' }">
-    <article
-      class="feed w-full gap-8 pt-14"
-    >
+    <article class="feed w-full gap-8 pt-14">
       {% for announcement in announcements %}
       {% if announcement.published or user|has_role:'admin' %}
       <div
@@ -68,7 +66,7 @@
         />
 
         <div class="m-5 mt-3">
-          <p class="text-right text-xs font-normal text-gray-500 mb-1">
+          <p class="mb-1 text-right text-xs font-normal text-gray-500">
             {{ announcement.date|date:'d/m/Y' }}
           </p>
           <h2 class="text-base font-bold text-black">
@@ -81,36 +79,28 @@
       {% endif %} {% endfor %}
     </article>
 
-    <div
-      :class="seeDialog ? 'flex' : 'hidden'"
-      class="fixed inset-0 items-center justify-center bg-black bg-opacity-25"
-    >
-      <!-- COMUNICATE WINDOW -->
-      <div
-        class="h-[600px] w-[600px] overflow-y-scroll rounded-3xl bg-color-grey pb-10"
-      >
+    <section x-show="seeDialog" class="dialog-backdrop">
+      <div class="dialog">
         <header class="mx-10 mb-3 mt-8 flex justify-end text-3xl font-bold">
-          <div>
-            <button
-              @click.prevent="seeDialog = false"
-              class="text-3xl font-bold text-color-primary"
+          <button
+            @click.prevent="seeDialog = false"
+            class="text-3xl font-bold text-color-primary"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="h-6 w-6"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="h-6 w-6"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          </div>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
         </header>
         <img class="w-full rounded-2xl" :src="imgUrl" />
         <label class="text-right text-xs font-normal text-gray-500">
@@ -119,8 +109,9 @@
         <h3 class="text-base font-bold text-black">{{ announcement.title }}</h3>
         <label>{{ announcement.info}}</label>
       </div>
-    </div>
+    </section>
   </div>
+  
   <form
     method="post"
     action="{% url 'comunicados' %}"
@@ -129,8 +120,8 @@
     {% csrf_token %}
     <!-- FORM FOR CREATE COMUNICATE-->
     <section x-show="createDialog" class="dialog-backdrop">
-      <div class="dialog">
-        <header class="mx-10 mb-3 mt-8 flex justify-between text-3xl font-bold">
+      <div class="dialog no_scroll">
+        <header class="px-5 pt-4">
           <h2>Criar Comunicado</h2>
           <div>
             <button
@@ -154,13 +145,13 @@
             </button>
           </div>
         </header>
-        <section class="flex flex-col gap-3">
-          <div class="flex flex-col px-12 text-lg font-normal">
+        <section class="flex flex-col gap-3 px-5">
+          <div class="flex flex-col text-lg font-normal">
             <label>Titulo:</label>
             <input type="text" class="h-10" name="title" required />
           </div>
           <div
-            class="flex items-center gap-1 px-12 text-lg font-normal"
+            class="flex items-center gap-1 text-lg font-normal"
             x-data="{ imageName: 'Foto' }"
           >
             <label>Data de Lançamento:</label>
@@ -203,7 +194,7 @@
               @input="imageName = $el.files[0].name"
             />
           </div>
-          <div class="flex h-full flex-col px-12 text-lg font-normal">
+          <div class="flex h-full flex-col text-lg font-normal">
             <label class="pb-2">Conteúdo:</label>
             <textarea
               class="h-[180px] w-full resize-none"
@@ -212,11 +203,11 @@
               required
             ></textarea>
           </div>
-          <div class="flex items-center gap-1 px-12 text-lg font-normal">
+          <div class="flex items-center gap-1 text-lg font-normal">
             <label>Apenas para professores:</label>
             <input type="checkbox" name="staff_only" />
           </div>
-          <div class="flex flex-col px-12 text-lg font-normal">
+          <div class="flex flex-col text-lg font-normal">
             <label>Para o curso:</label>
             <input
               type="text"
@@ -225,7 +216,7 @@
               placeholder="Deixe em branco para um comunicado geral"
             />
           </div>
-          <div class="flex flex-col px-12 text-lg font-normal">
+          <div class="flex flex-col text-lg font-normal">
             <label>Para a turma:</label>
             <input
               type="text"
@@ -241,6 +232,7 @@
       </div>
     </section>
   </form>
+
   <form>
     <div
       :class="filterDialog ? 'flex' : 'hidden'"
