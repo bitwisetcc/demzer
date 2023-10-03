@@ -6,6 +6,25 @@
     justify-content: space-between;
   }
 </style>
+<script defer>
+  document.addEventListener("alpine:init", () => {
+    Alpine.data("post", () => ({
+      seeDialog: false,
+      imgUrl: "",
+      title: "",
+      info: "",
+      date: "",
+
+      fill(el) {
+        this.seeDialog = true;
+        this.imgUrl = el.querySelector("img").src;
+        this.title = el.querySelector("#title").textContent.trim();
+        this.info = el.querySelector("#info").textContent.trim();
+        this.date = el.querySelector("#date").textContent.trim();
+      },
+    }));
+  });
+</script>
 <title>Comunicados</title>
 {% endblock %} {% block content %}
 <main
@@ -52,13 +71,13 @@
       </button>
     </div>
   </header>
-  <div x-data="{ seeDialog: false, imgUrl: '' }">
+  <div x-data="post">
     <article class="feed w-full gap-8 pt-14">
       {% for announcement in announcements %}
       {% if announcement.published or user|has_role:'admin' %}
       <div
         class="cursor-pointer rounded-2xl bg-color-bg text-left shadow-lg"
-        @click="() => { seeDialog = true; imgUrl = $el.querySelector('img').src }"
+        @click="fill($el)"
       >
         <img
           class="h-48 w-full rounded-2xl"
@@ -66,22 +85,24 @@
         />
 
         <div class="m-5 mt-3">
-          <p class="mb-1 text-right text-xs font-normal text-gray-500">
+          <p class="text-right text-xs text-gray-500" id="date">
             {{ announcement.date|date:'d/m/Y' }}
           </p>
-          <h2 class="text-base font-bold text-black">
+          <h2 class="text-base font-bold text-black" id="title">
             {{ announcement.title }} {% if not announcement.published %}
             <span class="text-gray-500">- Em breve</span>
             {% endif %}
           </h2>
+          <p id="info" class="hidden">{{ announcement.info }}</p>
         </div>
       </div>
       {% endif %} {% endfor %}
     </article>
 
     <section x-show="seeDialog" class="dialog-backdrop">
-      <div class="dialog">
-        <header class="mx-10 mb-3 mt-8 flex justify-end text-3xl font-bold">
+      <div class="dialog no_scroll">
+        <header>
+          <span></span>
           <button
             @click.prevent="seeDialog = false"
             class="text-3xl font-bold text-color-primary"
@@ -102,16 +123,14 @@
             </svg>
           </button>
         </header>
-        <img class="w-full rounded-2xl" :src="imgUrl" />
-        <label class="text-right text-xs font-normal text-gray-500">
-          {{ announcement.date|date:'d/m/Y' }}
-        </label>
-        <h3 class="text-base font-bold text-black">{{ announcement.title }}</h3>
-        <label>{{ announcement.info}}</label>
+        <img class="w-full rounded-2xl object-center" :src="imgUrl" />
+        <p class="text-right text-xs font-normal text-gray-500" x-text="date"></p>
+        <h3 class="text-base font-bold text-color-primary" x-text="title"></h3>
+        <p x-text="info"></p>
       </div>
     </section>
   </div>
-  
+
   <form
     method="post"
     action="{% url 'comunicados' %}"
