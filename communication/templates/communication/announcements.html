@@ -1,4 +1,11 @@
 {% extends 'core/base.html' %} {% load static %} {% load permission_tags %} {% block head %}
+<style>
+  .feed {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 300px);
+    justify-content: space-between;
+  }
+</style>
 <title>Comunicados</title>
 {% endblock %} {% block content %}
 <main
@@ -45,42 +52,33 @@
       </button>
     </div>
   </header>
-  <div x-data="{seeDialog: false, imgUrl: ''}">
+  <div x-data="{ seeDialog: false, imgUrl: '' }">
     <article
-      class="grid w-full grid-cols-2 content-center gap-16 pt-14 sm:ml-4 md2:grid-cols-1 sm2:ml-0 ultrawide:mx-4 ultrawide:grid-cols-8"
-      :class="open ? 'gap-x-40' : ''"
+      class="feed w-full gap-8 pt-14"
     >
       {% for announcement in announcements %}
       {% if announcement.published or user|has_role:'admin' %}
-      <div class="flex justify-center">
-        <button
-          @click="() => {seeDialog = true; imgUrl = $el.querySelector('img').src}"
-        >
-          <!-- OPEN COMUNICATE -->
-          <div
-            class="h-[300px] w-[350px] rounded-2xl bg-color-bg-perfil text-left shadow-xl"
-          >
-            <img
-              class="h-[178px] w-full rounded-2xl"
-              src="{% url 'img' 'announcements' announcement.pk %}"
-            />
-            <div class="ml-2">
-              <label class="text-right text-xs font-normal text-gray-500">
-                {{ announcement.date|date:'d/m/Y' }}
-              </label>
-              <!--Here we need to put a date when the communicate was registered-->
-              <h3 class="text-base font-bold text-black">
-                {{ announcement.title }}
-                {% if not announcement.published %}
-                <span class="text-gray-500">- Em breve</span>
-                {% endif %}
-              </h3>
-            </div>
-          </div>
-        </button>
+      <div
+        class="cursor-pointer rounded-2xl bg-color-bg text-left shadow-lg"
+        @click="() => { seeDialog = true; imgUrl = $el.querySelector('img').src }"
+      >
+        <img
+          class="h-48 w-full rounded-2xl"
+          src="{% url 'img' 'announcements' announcement.pk %}"
+        />
+
+        <div class="m-5 mt-3">
+          <p class="text-right text-xs font-normal text-gray-500 mb-1">
+            {{ announcement.date|date:'d/m/Y' }}
+          </p>
+          <h2 class="text-base font-bold text-black">
+            {{ announcement.title }} {% if not announcement.published %}
+            <span class="text-gray-500">- Em breve</span>
+            {% endif %}
+          </h2>
+        </div>
       </div>
-      {% endif %}
-      {% endfor %}
+      {% endif %} {% endfor %}
     </article>
 
     <div
@@ -130,7 +128,7 @@
   >
     {% csrf_token %}
     <!-- FORM FOR CREATE COMUNICATE-->
-    <div :class="createDialog ? 'flex' : 'hidden'" class="dialog-backdrop">
+    <section x-show="createDialog" class="dialog-backdrop">
       <div class="dialog">
         <header class="mx-10 mb-3 mt-8 flex justify-between text-3xl font-bold">
           <h2>Criar Comunicado</h2>
@@ -241,7 +239,7 @@
           </div>
         </section>
       </div>
-    </div>
+    </section>
   </form>
   <form>
     <div
