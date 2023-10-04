@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Any
 
 from azure.identity import DefaultAzureCredential
@@ -28,3 +29,7 @@ def upload_img(file: Any, title: str, container="pictures"):
     )
     blob_client = service_client.get_blob_client(container, title)
     blob_client.upload_blob(file.read())
+
+
+def UTC_date(date: str):
+    return datetime.strptime(date, "%Y-%m-%d").date()

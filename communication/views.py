@@ -7,7 +7,7 @@ from django.shortcuts import render
 from rolepermissions.checkers import has_role, has_permission
 
 from communication.models import Alert, Announcement
-from core.utils import upload_img
+from core.utils import UTC_date, upload_img
 from management.models import Classroom, Course
 
 
@@ -86,8 +86,18 @@ def comunicados(request: HttpRequest):
     if len(request.GET) == 0:
         announcements = Announcement.objects.all()
     else:
+        start = request.GET.get("start-date")
+        end = request.GET.get("end-date")
+
+        filters = {
+            "title__startswith": request.GET.get("title"),
+            "date__gt": start and UTC_date(start),
+            "date__lt": end and UTC_date(end),
+            "category__in": ["r", "rp", "p", "*"], # TODO: filter category
+        }
+
         announcements = Announcement.objects.filter(
-            **{k: v for k, v in request.GET.dict().items() if v}
+            **{k: v for k, v in filters.items() if v}
         )
 
     return render(

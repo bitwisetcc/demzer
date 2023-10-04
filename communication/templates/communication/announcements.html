@@ -187,7 +187,7 @@
               class="btn ml-3 flex w-max cursor-pointer items-center gap-1"
             >
               <span
-                class="truncate"
+                class="truncate max-w-[4rem]"
                 x-text="imageName ?? 'Foto de perfil'"
               ></span>
               <svg
@@ -293,45 +293,34 @@
         <section class="flex flex-col gap-4 p-5">
           <input
             type="search"
+            name="title"
             class="mx-auto w-full rounded-lg border border-color-primary bg-gray-50 text-sm text-gray-900"
           />
           <div class="flex flex-row justify-between gap-2 text-lg font-normal">
             <label>
               De:
-              <input type="date" class="rounded-3xl border-color-primary"
+              <input type="date" name="start-date" class="rounded-3xl border-color-primary"
             /></label>
             <label>
               Até:
-              <input type="date" class="rounded-3xl border-color-primary"
+              <input type="date" name="end-date" class="rounded-3xl border-color-primary"
             /></label>
           </div>
 
           <label>
-            <input
-              type="checkbox"
-              class="h-5 w-5 rounded-full border-color-primary transition"
-            />
-            Palestras
-          </label>
-          <label
-            ><input
-              type="checkbox"
-              class="h-5 w-5 rounded-full border-color-primary transition"
-            />
-            Eventos
-          </label>
-          <label
-            ><input
-              type="checkbox"
-              class="h-5 w-5 rounded-full border-color-primary transition"
-            />
+            <input type="checkbox" name="r"/>
             Reuniões
           </label>
-          <label
-            ><input
-              type="checkbox"
-              class="h-5 w-5 rounded-full border-color-primary transition"
-            />
+          <label>
+            <input type="checkbox" name="p"/>
+            Palestras
+          </label>
+          <label>
+            <input type="checkbox" name="rp"/>
+            Reposições
+          </label>
+          <label>
+            <input type="checkbox" name="*"/>
             Outros
           </label>
           <div class="flex flex-row justify-center space-x-5 pt-4 text-lg">

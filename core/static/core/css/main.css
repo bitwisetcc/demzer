@@ -31,6 +31,9 @@
   [type="submit"] {
     @apply cursor-pointer rounded-3xl bg-color-secondary hover:shadow-md;
   }
+  [type="checkbox"] {
+    @apply h-5 w-5 rounded-full border-color-primary transition;
+  }
 }
 
 main.framed {
