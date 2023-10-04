@@ -191,7 +191,7 @@ def courses(request: HttpRequest):
         listing = Course.objects.all()
     else:
         listing = Course.objects.filter(
-            **({k: v for k, v in request.GET.dict().items() if v})
+            **{k: v for k, v in request.GET.dict().items() if v}
         )
 
     return render(

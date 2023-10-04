@@ -32,6 +32,7 @@ class Announcement(Model):
     classroom = ForeignKey(Classroom, SET_NULL, null=True)
     private = BooleanField(default=False)
     info = TextField()
+    category = CharField(max_length=15, default="*")
 
     def published(self):
         return date.today() >= self.date

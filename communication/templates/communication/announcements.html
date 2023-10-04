@@ -73,8 +73,7 @@
   </header>
   <div x-data="post">
     <article class="feed w-full gap-8 pt-14">
-      {% for announcement in announcements %}
-      {% if announcement.published or user|has_role:'admin' %}
+      {% for announcement in announcements %} {% if announcement.published or user|has_role:'admin' %}
       <div
         class="cursor-pointer rounded-2xl bg-color-bg text-left shadow-lg"
         @click="fill($el)"
@@ -124,7 +123,10 @@
           </button>
         </header>
         <img class="w-full rounded-2xl object-center" :src="imgUrl" />
-        <p class="text-right text-xs font-normal text-gray-500" x-text="date"></p>
+        <p
+          class="text-right text-xs font-normal text-gray-500"
+          x-text="date"
+        ></p>
         <h3 class="text-base font-bold text-color-primary" x-text="title"></h3>
         <p x-text="info"></p>
       </div>
@@ -223,6 +225,15 @@
             ></textarea>
           </div>
           <div class="flex items-center gap-1 text-lg font-normal">
+            <label>Categoria:</label>
+            <select name="category" id="sl-category">
+              <option value="r">Reunião</option>
+              <option value="p">Palestra</option>
+              <option value="rp">Reposição</option>
+              <option value="*">Outros</option>
+            </select>
+          </div>
+          <div class="flex items-center gap-1 text-lg font-normal">
             <label>Apenas para professores:</label>
             <input type="checkbox" name="staff_only" />
           </div>
@@ -252,44 +263,39 @@
     </section>
   </form>
 
-  <form>
-    <div
-      :class="filterDialog ? 'flex' : 'hidden'"
-      class="fixed inset-0 items-center justify-center bg-black bg-opacity-25"
-    >
-      <div class="h-4/5 w-2/5 rounded-3xl bg-color-grey">
+  <form method="get" action="{% url 'comunicados' %}">
+    <div x-show="filterDialog" class="dialog-backdrop">
+      <div class="dialog">
         <header
-          class="mx-10 mt-8 flex flex-row justify-between text-3xl font-bold"
+          class="mt-4 px-5 flex flex-row justify-between text-3xl font-bold"
         >
           <h2>Filtrar Comunicado</h2>
-          <div>
-            <button
-              @click.prevent="filterDialog = false"
-              class="text-3xl font-bold text-color-primary"
+          <button
+            @click.prevent="filterDialog = false"
+            class="text-3xl font-bold text-color-primary"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="h-6 w-6"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="h-6 w-6"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          </div>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
         </header>
-        <section class="flex flex-col gap-4 p-10">
+        <section class="flex flex-col gap-4 p-5">
           <input
             type="search"
             class="mx-auto w-full rounded-lg border border-color-primary bg-gray-50 text-sm text-gray-900"
           />
-          <div class="flex flex-row justify-between text-lg font-normal">
+          <div class="flex flex-row justify-between gap-2 text-lg font-normal">
             <label>
               De:
               <input type="date" class="rounded-3xl border-color-primary"
@@ -328,7 +334,7 @@
             />
             Outros
           </label>
-          <div class="flex flex-row justify-center space-x-5 pt-10 text-lg">
+          <div class="flex flex-row justify-center space-x-5 pt-4 text-lg">
             <button type="reset" class="alt">Limpar</button>
             <button type="submit">Aplicar</button>
           </div>
