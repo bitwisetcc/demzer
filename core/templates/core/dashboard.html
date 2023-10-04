@@ -23,10 +23,7 @@
         Professores
       </li>
       <li class="control bg-color-bg">
-        <a href="{% url 'courses' %}">Cursos</a>
-      </li>
-      <li class="control bg-color-bg">
-        <a href="{% url 'classrooms' %}">Turmas</a>
+        <span>Filtros</span>
       </li>
       {% if user|can:'create_user' %}
       <li class="btn control bg-color-primary-dimm">

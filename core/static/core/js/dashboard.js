@@ -18,14 +18,6 @@ document.addEventListener("alpine:init", () => {
       const csrfToken = document.cookie.slice(document.cookie.indexOf("=") + 1);
 
       switch (section) {
-        case "courses":
-          this.headers = ["Código", "Nome", "Descrição", "Turmas", "Alunos"];
-          break;
-
-        case "classrooms":
-          this.headers = ["Código", "Alunos", "Notas"];
-          break;
-
         default:
           this.headers = [
             "RM",
