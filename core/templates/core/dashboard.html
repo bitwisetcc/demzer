@@ -3,7 +3,8 @@
 <link rel="stylesheet" href="{% static 'core/dist/css/dashboard.css' %}" />
 <title>Dashboard</title>
 {% endblock %} {% block content %}
-<main x-data="dashboard">
+{% if user.is_staff %}
+<main x-data="dashboard"> <!-- entender porque o filterDialog não funciona aqui-->
   <h1 class="m-5 text-2xl font-bold">Dashboard</h1>
   <header id="sectors" class="bg-color-bg-alt p-5">
     {% csrf_token %}
@@ -75,7 +76,26 @@
     </ul>
   </header>
   <section class="p-5">
-    <h2 x-text="active" class="mb-4 text-xl font-semibold"></h2>
+    <div class="flex flex-row mb-4 text-xl font-semibold">
+      <h2 x-text="active" class="pr-[83%]"></h2>
+      <span class="pr-[1%]">Filtrar Alunos</span>
+      <button @click="filterDialog = true">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="h-7 w-7"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"
+          />
+        </svg>
+      </button>
+    </div>
     <table class="w-full">
       <thead>
         <tr>
@@ -95,5 +115,106 @@
       </tbody>
     </table>
   </section>
+  <form>
+    <div
+      :class="filterDialog ? 'flex' : 'hidden'"
+      class="hidden fixed inset-0 items-center justify-center bg-black bg-opacity-25"
+    >
+      <div class="h-4/5 w-2/5 rounded-3xl bg-color-grey">
+        <header
+          class="mx-10 mt-8 flex flex-row justify-between text-3xl font-bold"
+        >
+          <h2>Filtrar Comunicado</h2>
+          <div>
+            <button
+              @click.prevent="filterDialog = false"
+              class="text-3xl font-bold text-color-primary"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="h-6 w-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+        </header>
+        <section class="flex flex-col gap-4 p-10">
+          <input
+            type="search"
+            class="mx-auto w-full rounded-lg border border-color-primary bg-gray-50 text-sm text-gray-900"
+          />
+          <div class="flex flex-row justify-between text-lg font-normal">
+            <label>
+              De:
+              <input type="date" class="rounded-3xl border-color-primary"
+            /></label>
+            <label>
+              Até:
+              <input type="date" class="rounded-3xl border-color-primary"
+            /></label>
+          </div>
+
+          <label>
+            <input
+              type="checkbox"
+              class="h-5 w-5 rounded-full border-color-primary transition"
+            />
+            Palestras
+          </label>
+          <label
+            ><input
+              type="checkbox"
+              class="h-5 w-5 rounded-full border-color-primary transition"
+            />
+            Eventos
+          </label>
+          <label
+            ><input
+              type="checkbox"
+              class="h-5 w-5 rounded-full border-color-primary transition"
+            />
+            Reuniões
+          </label>
+          <label
+            ><input
+              type="checkbox"
+              class="h-5 w-5 rounded-full border-color-primary transition"
+            />
+            Outros
+          </label>
+          <div class="flex flex-row justify-center space-x-5 pt-10 text-lg">
+            <button
+              type="reset"
+              class="alt"
+            >
+              Limpar
+            </button>
+            <button
+              type="submit"
+              
+            >
+              Aplicar
+            </button>
+          </div>
+        </section>
+      </div>
+    </div>
+  </form>
 </main>
+{% endif %}
+{% if not user.is_staff %}
+<h1>ISTO É UM TESTE</h1>
+
+
+
+{% endif %}
 {% endblock %}
