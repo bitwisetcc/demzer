@@ -18,6 +18,7 @@ urlpatterns = [
     path("enroll/", enroll, name="enroll"),
     path("perfil/", perfil, name="profile"),
     path("boletim/", boletim, name="boletim"),
+    path("eventos/", eventos, name="eventos"),
     path("fetch_image/<str:container>/<str:title>/", read_img, name="img"),
 
     #RESET PASSOWRD
