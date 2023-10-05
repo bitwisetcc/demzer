@@ -49,6 +49,7 @@ document.addEventListener("alpine:init", () => {
     role: "student",
     cpf: "",
     rg: "",
+    name: "",
     tab: "identidade",
     errors: [],
     cpfOk: true,
@@ -78,7 +79,7 @@ document.addEventListener("alpine:init", () => {
     switchTab() {
       this.cpfOk = validateCPF(this.cpf.replace(/[\./-]/g, ""));
       this.rgOk = this.rg.length == 12;
-      if (this.cpfOk && this.rgOk) {
+      if (this.cpfOk && this.rgOk && this.name != "") {
         this.tab = "contato";
         if (secret) {
           this.confirmation = true;
