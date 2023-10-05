@@ -20,6 +20,7 @@
       </span>
     </header>
     <ul class="flex flex-col gap-4" :class="open || 'scale-0'">
+      {% if not user.is_staff %}
       <li>
         <a href="{% url 'dashboard' %}">
           <svg
@@ -38,6 +39,8 @@
           <span>Home</span>
         </a>
       </li>
+      {% endif %}
+      {% if user.is_staff %}
       <li>
         <a href="{% url 'dashboard' %}">
           <svg
@@ -56,6 +59,7 @@
           <span>Dashboard</span>
         </a>
       </li>
+      {% endif %}
       <li>
         <a href="{% url 'courses' %}">
           <svg

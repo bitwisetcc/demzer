@@ -18,13 +18,6 @@ module.exports = {
         "color-bg-lighter": "#f4f4f5",
       },
     },
-    screens: {
-      md: "768px",
-      sm: "640px",
-      md2: { max: "767px" },
-      sm2: { max: "375px" },
-      ultrawide: "2500px",
-    },
   },
   plugins: [require("@tailwindcss/forms")],
 };

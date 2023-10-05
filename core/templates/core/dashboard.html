@@ -1,7 +1,6 @@
 {% extends 'core/base.html' %} {% load static %} {% load permission_tags %} {% block head %}
-<script src="{% static 'core/js/dashboard.js' %}"></script>
+<script defer src="{% static 'core/js/dashboard.js' %}"></script>
 <link rel="stylesheet" href="{% static 'core/dist/css/dashboard.css' %}" />
-<script defer src="{% static 'core/js/homealunos.js' %}"></script>
 <title>Dashboard</title>
 {% endblock %} {% block content %}
 {% if user.is_staff %}
@@ -363,7 +362,7 @@
     </div>
     <div class="hidden items-center justify-center md:flex">
       <img
-        src="{% static '/core/images/bg-professores.png' %}"
+        src="{% static '/core/images/aluno.png' %}"
         class="mb-5 ml-10 h-[300px] w-[380px] md:block"
       />
     </div>
@@ -375,7 +374,7 @@
   </h1>
 
   <div class="mb-6 mt-6 flex justify-center md:mt-8">
-    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-10">
+    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5 gap-10">
       <!-- Card 1 -->
       <div class="flex justify-center ">
         <div class="flex h-[150px] w-[270px] flex-col items-center justify-center rounded-2xl bg-white px-4 py-8 xl:px-2">
