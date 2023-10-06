@@ -64,7 +64,7 @@
     </div>
   </header>
 
-  <article class="mt-10">
+  <article class="mt-10 flex flex-col gap-8">
     {% for event in events %}
     <div
       class="mx-auto max-w-xl rounded-3xl bg-color-bg-lighter"
@@ -83,7 +83,7 @@
               <img
                 src="{% url 'img' 'events' event.pk %}"
                 alt="Reunião"
-                class="w-28 rounded-full"
+                class="w-28 rounded-full aspect-square"
               />
               <div>
                 <h3 class="pl-10 font-bold">{{ event.title }}</h3>
@@ -105,16 +105,16 @@
                   <td class="text-color-secondary">
                     <table style="width: 5px; padding: none">
                       <tr>
-                        <td style="color: rgb(230 168 46)">Categoria:</td>
-                        <td style="color: rgb(230 168 46)">Reunião</td>
+                        <td class="text-color-secondary">Categoria:</td>
+                        <td class="text-color-secondary">Reunião</td>
                       </tr>
                       <tr>
-                        <td style="color: rgb(230 168 46)">Local:</td>
-                        <td style="color: rgb(230 168 46)">Auditório</td>
+                        <td class="text-color-secondary">Local:</td>
+                        <td class="text-color-secondary">Auditório</td>
                       </tr>
                       <tr>
-                        <td style="color: rgb(230 168 46)">Horário</td>
-                        <td style="color: rgb(230 168 46)">18h00</td>
+                        <td class="text-color-secondary">Horário</td>
+                        <td class="text-color-secondary">18h00</td>
                       </tr>
                     </table>
                   </td>
