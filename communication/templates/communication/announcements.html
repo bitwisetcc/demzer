@@ -28,7 +28,7 @@
 <title>Comunicados</title>
 {% endblock %} {% block content %}
 <main
-  class="m-20 min-h-full md2:justify-normal md2:pl-5 md2:pt-16"
+  class="mx-20 my-10 min-h-full md2:justify-normal md2:pl-5 md2:pt-16"
   x-data="{ createDialog: false, filterDialog: false}"
 >
   <header class="flex w-full justify-between text-color-primary">
@@ -52,7 +52,6 @@
         </svg>
       </button>
       {% endif %}
-
       <button @click="filterDialog = true">
         <svg
           xmlns="http://www.w3.org/2000/svg"
