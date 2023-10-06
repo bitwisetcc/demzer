@@ -7,6 +7,7 @@ function getAge(birthday) {
 document.addEventListener("alpine:init", () => {
   Alpine.data("dashboard", () => ({
     active: "Alunos",
+    filterDialog: false,
     headers: [""],
     rows: [[]],
     /**

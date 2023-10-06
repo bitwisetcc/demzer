@@ -20,7 +20,6 @@ from core.utils import email_address, upload_img
 from management.models import Classroom
 
 
-@login_required
 def dashboard(request: HttpRequest):
     return render(request, "core/dashboard.html")
 
