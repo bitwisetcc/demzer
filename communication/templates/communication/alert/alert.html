@@ -3,7 +3,7 @@
 {% endblock %} {% block content %}
 <h1 class="m-5 text-2xl font-bold">Gerar denúncia</h1>
 <form
-  action="{% url 'new_alert' %}"
+  action="{% url 'alerts' %}"
   method="post"
   class="flex flex-col gap-3 px-6 py-1"
   x-data="{ alertTarget: '' }"
