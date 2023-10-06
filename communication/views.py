@@ -111,7 +111,6 @@ def events(request: HttpRequest):
             info=request.POST.get("info"),
             date=datetime.strptime(request.POST["date"], "%Y-%m-%d").date(),
             private=private,
-            category=request.POST.get("category"),
             course=Course.objects.get(slug=course) if not private and course else None,
             classroom=Classroom.objects.get(slug=classroom)
             if not private and classroom
@@ -142,4 +141,4 @@ def events(request: HttpRequest):
     events = Event.objects.filter(
         **{k: v for k, v in filters.items() if v}
     )
-    return render(request, "communication/events.html", events)
+    return render(request, "communication/events.html", {"events": events})
