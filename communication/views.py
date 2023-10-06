@@ -105,3 +105,7 @@ def comunicados(request: HttpRequest):
         "communication/announcements.html",
         {"announcements": announcements},
     )
+
+
+def events(request: HttpRequest):
+    return render(request, "communication/events.html")
