@@ -72,7 +72,7 @@
   </header>
   <div x-data="post">
     <article class="feed w-full gap-8 pt-14">
-      {% for announcement in announcements %} {% if announcement.published or user|has_role:'admin' %}
+      {% for announcement in announcements %}
       <div
         class="cursor-pointer rounded-2xl bg-color-bg text-left shadow-lg"
         @click="fill($el)"
@@ -94,7 +94,7 @@
           <p id="info" class="hidden">{{ announcement.info }}</p>
         </div>
       </div>
-      {% endif %} {% endfor %}
+      {% endfor %}
     </article>
 
     <section x-show="seeDialog" class="dialog-backdrop">
@@ -228,7 +228,7 @@
             <select name="category" id="sl-category">
               <option value="r">Reunião</option>
               <option value="p">Palestra</option>
-              <option value="rp">Reposição</option>
+              <option value="a">Reposição</option>
               <option value="*">Outros</option>
             </select>
           </div>
@@ -315,7 +315,7 @@
             Palestras
           </label>
           <label>
-            <input type="checkbox" name="rp"/>
+            <input type="checkbox" name="a"/>
             Reposições
           </label>
           <label>

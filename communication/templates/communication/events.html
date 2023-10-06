@@ -65,7 +65,7 @@
   </header>
 
   <article>
-    
+
   </article>
   <div class>
     <div class="mr-8">
@@ -214,11 +214,11 @@
   </div>
   <form
     method="post"
-    action="{% url 'comunicados' %}"
+    action="{% url 'eventos' %}"
     enctype="multipart/form-data"
   >
     {% csrf_token %}
-    <!-- FORM FOR CREATE COMUNICATE-->
+    <!-- FORM FOR CREATE EVENT -->
     <section x-show="createDialog" class="dialog-backdrop">
       <div class="dialog no_scroll">
         <header class="px-5 pt-4">
@@ -346,7 +346,7 @@
     </section>
   </form>
 
-  <form method="get" action="{% url 'comunicados' %}">
+  <form method="get" action="{% url 'eventos' %}">
     <div x-show="filterDialog" class="dialog-backdrop">
       <div class="dialog">
         <header
