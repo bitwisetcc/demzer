@@ -1,21 +1,51 @@
-{% extends 'core/base.html' %} {% load static %} {% block content %}
+{% extends 'core/base.html' %} {% block head %}
+<title>Alertas</title>
+<script>
+  document.addEventListener("alpine:init", () => {
+    Alpine.data("alert", () => ({
+      seeDialog: false,
+      imgUrl: "",
+      title: "",
+      info: "",
+      date: "",
+
+      fillIn(el) {
+        this.seeDialog = true;
+        this.imgUrl = el.querySelector("#img").textContent.trim();
+        this.title = el.querySelector("#title").textContent.trim();
+        this.info = el.querySelector("#description").textContent.trim();
+        this.date = el.querySelector("#date").textContent.trim();
+      },
+    }));
+  });
+</script>
+{% endblock %} {% block content %}
 <main class="flex-1 p-5">
-  <h1 class="mb-3 font-sans text-3xl font-bold">Administrador</h1>
-  <section
-    class="grid grid-cols-2 divide-x-2 divide-gray-600"
-    x-data="{ title: '{{ alerts.0.title }}' }"
-  >
-    <ul class="flex">
+  <h1 class="mb-3 font-sans text-3xl font-bold text-color-primary">
+    Alertas
+  </h1>
+  <section class="mt-10 grid grid-cols-2 gap-10 divide-gray-600" x-data="alert">
+    <ul class="flex flex-col gap-5">
       {% for alert in alerts %}
-      <li class="rounded-lg border bg-slate-300 p-3">
-        <span>{{ alert.title }}</span>
-        <span class="text-slate-500">por {{ alert.emiter }}</span>
+      <li
+        class="rounded-lg border-2 border-slate-600 bg-color-bg-perfil p-5"
+        @click="fillIn($el)"
+      >
+        <h2 id="title">{{ alert.title }}</h2>
+        <h3 class="text-slate-500">
+          por {{ alert.emiter }} |
+          <span id="date">{{ alert.date|date:'d/m/Y' }}</span>
+        </h3>
+        <p id="description" class="hidden">{{ alert.description }}</p>
+        <span id="img" class="hidden">{% url 'img' 'alerts' 0 %}</span>
       </li>
       {% endfor %}
     </ul>
     <article>
-      <h2 x-text="title"></h2>
+      <h2 x-text="title" class="font-semibold text-color-primary"></h2>
+      <img :src="imgUrl" alt="imagem do alerta">
+      <p x-text="info"></p>
     </article>
   </section>
 </main>
-{% endblock content %}
+{% endblock %}
