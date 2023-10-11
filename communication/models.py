@@ -19,8 +19,7 @@ from management.models import Classroom, Course, Subject
 class Alert(Model):
     emiter = ForeignKey(User, PROTECT)
     date = DateTimeField(auto_created=True, null=True)
-    title = CharField(max_length=30, default="Denúncia genérica")
-    tags = CharField(max_length=50, null=True)
+    tag = CharField(max_length=15, null=True)
     description = TextField()
 
 
