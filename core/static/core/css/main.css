@@ -92,7 +92,7 @@ button[type="submit"] {
   @apply rounded-full border-2 border-color-secondary bg-color-hover px-5 py-2 font-bold text-yellow-700;
 }
 
-button.alt {
+.alt {
   @apply rounded-full border-2 border-color-secondary bg-transparent px-5 py-2 font-bold text-yellow-700 transition-all hover:bg-color-hover;
 }
 
@@ -113,4 +113,12 @@ dialog header,
 dialog h2,
 .dialog h2 {
   @apply text-xl font-semibold text-color-primary;
+}
+
+label.file {
+  @apply w-max bg-color-hover cursor-pointer;
+}
+
+label.file input {
+  @apply hidden;
 }

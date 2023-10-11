@@ -23,9 +23,8 @@ def alerts(request: HttpRequest):
     if request.method == "POST":
         alert = Alert.objects.create(
             emiter=request.user,
-            title=request.POST["title"],
-            description=request.POST["content"],
-            tags=request.POST["tags"],
+            tag=request.POST["tag"],
+            description=request.POST["description"],
         )
 
         try:

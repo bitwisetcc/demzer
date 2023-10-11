@@ -1,58 +1,85 @@
-{% extends 'core/base.html' %} {% block head %}
+{% extends 'core/base.html' %} {% block head %} {% load static %}
 <title>Gerar denúncia</title>
+<link rel="stylesheet" href="{% static 'core/dist/css/alert.css' %}" />
 {% endblock %} {% block content %}
-<h1 class="m-5 text-2xl font-bold">Gerar denúncia</h1>
-<form
-  action="{% url 'alerts' %}"
-  method="post"
-  class="flex flex-col gap-3 px-6 py-1"
-  x-data="{ alertTarget: '' }"
->
-  {% csrf_token %}
-  <div class="field">
-    <label for="txt-title">Título</label>
-    <input type="text" name="title" id="txt-title" maxlength="30"></input>
-  </div>
-  <div class="field">
-    <label for="txt-tags" title="Lista separada por vírgulas text" class="decoration-dashed underline decoration-slate-700">Tags</label>
-    <input type="text" name="tags" id="txt-tags" maxlength="50"></input>
-  </div>
-  <div class="field">
-    <label for="txt-content">Descrição</label>
-    <textarea name="content" id="txt-content" cols="50" rows="6"></textarea>
-  </div>
-
-  <label
-    for="file-users"
-    class="btn flex w-max cursor-pointer items-center gap-1"
+<main class="m-auto w-2/3">
+  <h1 class="my-6 font-sans text-3xl font-bold text-color-primary">
+    Reportar problema
+  </h1>
+  <form
+    action="{% url 'alerts' %}"
+    method="post"
+    enctype="multipart/form-data"
+    class="flex flex-col gap-3"
+    x-data="{ alertTarget: '' }"
   >
-    <span>Anexar arquivo</span>
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke-width="2.2"
-      stroke="currentColor"
-      class="h-5 w-5"
-    >
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15"
-      />
-    </svg>
-  </label>
-  <input
-    type="file"
-    name="attachment"
-    id="file-users"
-    accept=".xls,.xlsx,.csv"
-    @input="readFile"
-    hidden
-  />
+    {% csrf_token %}
+    <div class="tags">
+      <label for="rd-teacher">
+        <input type="radio" name="tag" id="rd-teacher" value="teacher" />
+        <div>
+          <span>🧑‍🏫</span>
+          <span>Professor</span>
+        </div>
+      </label>
+      <label for="rd-student">
+        <input type="radio" name="tag" id="rd-student" value="student" />
+        <div>
+          <span>🧑‍🎓</span>
+          <span>Aluno</span>
+        </div>
+      </label>
+      <label for="rd-staff">
+        <input type="radio" name="tag" id="rd-staff" value="staff" />
+        <div>
+          <span>🧑‍💼</span>
+          <span>Funcionário</span>
+        </div>
+      </label>
+      <label for="rd-repair">
+        <input type="radio" name="tag" id="rd-repair" value="reapir" />
+        <div>
+          <span>🔧</span>
+          <span>Conserto</span>
+        </div>
+      </label>
+      <label for="rd-cleanup">
+        <input type="radio" name="tag" id="rd-cleanup" value="cleanup" />
+        <div>
+          <span>🧹</span>
+          <span>Limpeza</span>
+        </div>
+      </label>
+      <label for="rd-other">
+        <input type="radio" name="tag" id="rd-other" value="other" />
+        <div>
+          <span>👍</span>
+          <span>Outro</span>
+        </div>
+      </label>
+    </div>
+    <div class="field">
+      <label for="txt-content">Descrição</label>
+      <textarea
+        name="description"
+        id="txt-content"
+        cols="50"
+        rows="6"
+      ></textarea>
+    </div>
 
-  <div>
-    <input type="submit" value="Enviar" class="btn px-16 font-semibold" />
-  </div>
-</form>
+    <div>
+      <label for="attachment" class="file alt mr-4">
+        <input
+          type="file"
+          name="attachment"
+          id="attachment"
+          accept="accept=image/*"
+        />
+        <span>Anexar arquivo</span>
+      </label>
+      <button type="submit" class="w-max self-center px-20">Enviar</button>
+    </div>
+  </form>
+</main>
 {% endblock %}
