@@ -1,5 +1,4 @@
 import json
-import os
 import re
 from datetime import datetime as dt
 from datetime import timedelta as td
@@ -11,11 +10,13 @@ from django.contrib.auth.models import User
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_POST
-from rolepermissions.checkers import has_role
+from rolepermissions.checkers import has_role, has_permission
 from rolepermissions.decorators import has_permission_decorator as check_permission
 from rolepermissions.roles import assign_role
 
 from core.models import Member
+from core.roles import Student, Teacher
+from core.utils import csv_data, dexc, dfilter, get_coordinator
 from management.models import Course, Subject, Programming, Classroom
 
 
@@ -40,23 +41,6 @@ def students(request: HttpRequest, role: str, row=1):
 def purge(request: HttpRequest, role: str):
     User.objects.filter(groups__name=role).delete()
     return redirect("dashboard")
-
-
-def csv_data(line: bytes) -> list[str]:
-    return line.decode().replace(os.linesep, "").replace("\n", "").split(",")
-
-
-def read_csv(request: HttpRequest, file: str) -> tuple[list[list[str]], list[str]]:
-    lines = list(map(csv_data, request.FILES[file].readlines()))
-    return lines, lines.pop(0)
-
-
-def dfilter(d: dict, keys: list[str]) -> dict:
-    return {k: v for k, v in d.items() if k in keys}
-
-
-def dexc(d: dict, keys: list[str]) -> dict:
-    return {k: v for k, v in d.items() if k not in keys}
 
 
 # TODO: be able to suppress certain errors and leave blank fields
@@ -85,7 +69,7 @@ def import_users(request: HttpRequest):
                         )
                         if "reset_password" in request.POST or "password" not in row
                         else row["password"]
-                    )
+                    ),
                 }
                 for line in lines
             ]
@@ -128,15 +112,6 @@ def import_users(request: HttpRequest):
         return redirect("dashboard")
     else:
         return render(request, "management/import.html")
-
-
-def get_coordinator(pk: str) -> User:
-    coordinator = User.objects.get(username__startswith=pk)
-
-    if not has_role(coordinator, ["coordinator", "admin", "teacher"]):
-        raise Exception("Usuário {} não tem privilégios necessários".format(pk))
-
-    return coordinator
 
 
 def courses(request: HttpRequest):
@@ -191,7 +166,6 @@ def courses(request: HttpRequest):
         listing = Course.objects.all()
     else:
         listing = Course.objects.filter(
-
             **{k: v for k, v in request.GET.dict().items() if v}
         )
 
@@ -316,9 +290,13 @@ def create_subject(request: HttpRequest):
 
 # TODO: if the cell is empty and you try to create a split programming, only the last one is created
 def schedules(request: HttpRequest, classroom_id: int):
-    classroom = Classroom.objects.get(pk=classroom_id)
-
     if request.method == "POST":
+        if not has_permission(request.user, "create_schedule"):
+            messages.warning(request, "Você não tem permissão para marcar aulas")
+            return redirect("schedules", classroom_id=classroom_id)
+
+        classroom = Classroom.objects.get(pk=classroom_id)
+
         if "group" in request.POST:
             Programming.create(
                 request,
@@ -339,13 +317,30 @@ def schedules(request: HttpRequest, classroom_id: int):
                 request, classroom, request.POST["teacher"], request.POST["subject"]
             )
 
-    # TODO: add all these as course attributes
     lessons_qtd = 6
     break_position = 3
     break_duration = 20
 
+    if has_role(request.user, Teacher):
+        lessons_qtd = 12
+        programmings = Programming.objects.filter(teacher=request.user)
+        start = dt.strptime(settings.TURNS[Course.Timing.MORNING], "%H:%M")
+    else:
+        # Students and Admins
+        lessons_qtd = 6
+        break_position = 3
+        break_duration = 20
+
+        classroom = (
+            request.user.profile.classroom
+            or classroom
+            or Classroom.objects.get(pk=classroom_id)
+        )
+        
+        start = dt.strptime(settings.TURNS[classroom.course.time], "%H:%M")
+        programmings = Programming.objects.filter(classroom=classroom)
+
     lesson = td(minutes=settings.LESSON_DURATION)
-    start = dt.strptime(settings.TURNS[classroom.course.time], "%H:%M")
 
     time_table = [start] + [
         start + lesson * i + td(minutes=break_duration * (i > break_position))
@@ -360,6 +355,6 @@ def schedules(request: HttpRequest, classroom_id: int):
             "time_table": [t.strftime("%H:%M") for t in time_table],
             "subjects": Subject.objects.all(),
             "days": [c for c in Programming.Days.choices],
-            "programmings": Programming.objects.filter(classroom=classroom),
+            "programmings": programmings,
         },
     )

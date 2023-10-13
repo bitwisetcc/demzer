@@ -9,6 +9,7 @@ class Admin(AbstractUserRole):
         "create_subject": True,
         "create_course": True,
         "create_classroom": True,
+        "create_schedule": True,
     }
 
 

@@ -169,8 +169,11 @@
           class="my-2 ml-3 flex origin-top flex-col gap-4 border-l-[3px] border-l-color-primary-dimm py-2 pl-2 transition duration-500"
           :class="open || 'hidden'"
         >
+          {% if not user|has_role:'admin' %}
           <li>
-            <a href="">
+            <a
+            href="{% url 'schedules' user.profile.classroom.pk %}"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -188,6 +191,7 @@
               <span>Horário de aulas</span>
             </a>
           </li>
+          {% endif %}
           <li>
             <a href="{% url 'eventos' %}">
               <svg
