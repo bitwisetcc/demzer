@@ -15,7 +15,7 @@ from rolepermissions.decorators import has_permission_decorator as check_permiss
 from rolepermissions.roles import assign_role
 
 from core.models import Member
-from core.roles import Student, Teacher
+from core.roles import Admin, Student, Teacher
 from core.utils import csv_data, dexc, dfilter, get_coordinator
 from management.models import Course, Subject, Programming, Classroom
 
@@ -317,14 +317,15 @@ def schedules(request: HttpRequest, classroom_id: int):
                 request, classroom, request.POST["teacher"], request.POST["subject"]
             )
 
-    lessons_qtd = 6
-    break_position = 3
-    break_duration = 20
-
     if has_role(request.user, Teacher):
+        # TODO: fix times -> use list for breaks
         lessons_qtd = 12
+        break_position = 3
+        break_duration = 20
+
         programmings = Programming.objects.filter(teacher=request.user)
         start = dt.strptime(settings.TURNS[Course.Timing.MORNING], "%H:%M")
+        classroom = Classroom.objects.first()
     else:
         # Students and Admins
         lessons_qtd = 6
@@ -333,7 +334,6 @@ def schedules(request: HttpRequest, classroom_id: int):
 
         classroom = (
             request.user.profile.classroom
-            or classroom
             or Classroom.objects.get(pk=classroom_id)
         )
         

@@ -161,3 +161,4 @@ EMAIL_HOST_USER = 'socialdemzer@gmail.com'
 EMAIL_HOST_PASSWORD = 'ogeqmgjlmqxlcmex'
 
 ROLEPERMISSIONS_MODULE = "core.roles"
+ROLEPERMISSIONS_SUPERUSER_SUPERPOWERS = False
