@@ -15,7 +15,7 @@ from rolepermissions.decorators import has_permission_decorator as check_permiss
 from rolepermissions.roles import assign_role
 
 from core.models import Member
-from core.roles import Admin, Student, Teacher
+from core.roles import Teacher
 from core.utils import csv_data, dexc, dfilter, get_coordinator
 from management.models import Course, Subject, Programming, Classroom
 
@@ -318,10 +318,9 @@ def schedules(request: HttpRequest, classroom_id: int):
             )
 
     if has_role(request.user, Teacher):
-        # TODO: fix times -> use list for breaks
+        # Teachers
         lessons_qtd = 12
-        break_position = 3
-        break_duration = 20
+        breaks = [(3, 20), (6, 110), (9, 20)]
 
         programmings = Programming.objects.filter(teacher=request.user)
         start = dt.strptime(settings.TURNS[Course.Timing.MORNING], "%H:%M")
@@ -329,23 +328,23 @@ def schedules(request: HttpRequest, classroom_id: int):
     else:
         # Students and Admins
         lessons_qtd = 6
-        break_position = 3
-        break_duration = 20
+        breaks = [(3, 20)]
 
-        classroom = (
-            request.user.profile.classroom
-            or Classroom.objects.get(pk=classroom_id)
+        classroom = request.user.profile.classroom or Classroom.objects.get(
+            pk=classroom_id
         )
-        
+
         start = dt.strptime(settings.TURNS[classroom.course.time], "%H:%M")
         programmings = Programming.objects.filter(classroom=classroom)
 
     lesson = td(minutes=settings.LESSON_DURATION)
-
-    time_table = [start] + [
-        start + lesson * i + td(minutes=break_duration * (i > break_position))
-        for i in range(1, lessons_qtd)
-    ]
+    time_table = [start]
+    delay = td(minutes=0)
+    for i in range(1, lessons_qtd):
+        for b in breaks:
+            if i == b[0]:
+                delay += td(minutes=b[1])
+        time_table.append(start + lesson * i + delay)
 
     return render(
         request,

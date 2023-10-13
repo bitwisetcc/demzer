@@ -57,7 +57,6 @@ class Course(Model):
         MORNING = "M", _("Manhã")
         EVENING = "E", _("Tarde")
         NIGHT = "N", _("Noite")
-        FULL = "F", _("Integral")
 
     name = CharField(max_length=60)
     slug = SlugField(max_length=2, default="-", unique=True)
