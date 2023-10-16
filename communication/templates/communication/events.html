@@ -1,24 +1,5 @@
 {% extends 'core/base.html' %} {% load permission_tags %} {% block head %}
 <title>Eventos</title>
-<script defer>
-  document.addEventListener("alpine:init", () => {
-    Alpine.data("post", () => ({
-      seeDialog: false,
-      imgUrl: "",
-      title: "",
-      info: "",
-      date: "",
-
-      fill(el) {
-        this.seeDialog = true;
-        this.imgUrl = el.querySelector("img").src;
-        this.title = el.querySelector("#title").textContent.trim();
-        this.info = el.querySelector("#info").textContent.trim();
-        this.date = el.querySelector("#date").textContent.trim();
-      },
-    }));
-  });
-</script>
 {% endblock %} {% block content %}
 <main
   class="mx-20 my-10 min-h-full md2:justify-normal md2:pl-5 md2:pt-16"
@@ -64,68 +45,57 @@
     </div>
   </header>
 
-  <article class="mt-10 flex flex-col gap-8">
+  <article class="mt-10 flex flex-col items-center gap-8">
     {% for event in events %}
     <div
-      class="mx-auto max-w-xl rounded-3xl bg-color-bg-lighter"
-      x-data="{ selected: false }"
+      class="rounded-3xl bg-gray-100 shadow md:w-2/3"
+      x-data="{ options: false, details: false }"
     >
-      <ul class="shadow-box">
-        <li class="border-black-200 relative border-b">
-          <button
-            type="button"
-            class="w-full px-8 py-6 text-left"
-            @click="selected = !selected"
-          >
-            <div
-              class="justify-between, flex w-[70%] items-center text-[20px] font-semibold text-color-primary"
-            >
-              <img
-                src="{% url 'img' 'events' event.pk %}"
-                alt="Reunião"
-                class="w-28 rounded-full aspect-square"
-              />
-              <div>
-                <h3 class="pl-10 font-bold">{{ event.title }}</h3>
-                <p class="pl-10 text-color-secondary">
-                  {{ event.date|date:'d/m/Y' }}
-                </p>
-              </div>
-            </div>
-          </button>
-
-          <div
-            class="relative max-h-0 overflow-hidden transition-all duration-500"
-            x-ref="container1"
-            x-bind:style="selected ? 'max-height: ' + $refs.container1.scrollHeight + 'px' : ''"
-          >
-            <div class="p-6">
-              <table>
-                <tr>
-                  <td class="text-color-secondary">
-                    <table style="width: 5px; padding: none">
-                      <tr>
-                        <td class="text-color-secondary">Categoria:</td>
-                        <td class="text-color-secondary">Reunião</td>
-                      </tr>
-                      <tr>
-                        <td class="text-color-secondary">Local:</td>
-                        <td class="text-color-secondary">Auditório</td>
-                      </tr>
-                      <tr>
-                        <td class="text-color-secondary">Horário</td>
-                        <td class="text-color-secondary">18h00</td>
-                      </tr>
-                    </table>
-                  </td>
-
-                  <td>{{ event.info }}</td>
-                </tr>
-              </table>
-            </div>
+      <header class="flex justify-between px-6 py-4">
+        <div
+          class="justify-between, flex w-[70%] items-center text-[20px] font-semibold text-color-primary"
+        >
+          <img
+            src="{% url 'img' 'events' event.pk %}"
+            alt="Reunião"
+            class="aspect-square w-24 rounded-full"
+          />
+          <div>
+            <h3 class="w-max pl-10 text-xl font-semibold">{{ event.title }}</h3>
+            <p class="pl-10 text-color-secondary">
+              {{ event.date|date:'d/m/Y' }}
+            </p>
           </div>
-        </li>
-      </ul>
+        </div>
+        <div class="relative">
+          <button @click="details = !details">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="h-6 w-6 transition-transform"
+              :class="details && 'rotate-180'"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+              />
+            </svg>
+          </button>
+        </div>
+      </header>
+      <div
+        class="origin-top rounded-b-3xl bg-gray-200 p-5 transition-all"
+        :class="details || 'scale-y-0 h-0 py-0'"
+      >
+        <div class="pl-3">
+          <p>Local: {{ event.place }}</p>
+          <p>Data: {{ event.date }}</p>
+        </div>
+      </div>
     </div>
     {% endfor %}
   </article>
@@ -136,7 +106,6 @@
     enctype="multipart/form-data"
   >
     {% csrf_token %}
-    <!-- FORM FOR CREATE EVENT -->
     <section x-show="createDialog" class="dialog-backdrop">
       <div class="dialog no_scroll">
         <header class="px-5 pt-4">

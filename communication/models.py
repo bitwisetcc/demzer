@@ -21,6 +21,7 @@ class Alert(Model):
     date = DateField(auto_created=True, null=True)
     tag = CharField(max_length=15, null=True)
     description = TextField()
+    # TODO: marcar alerta como solucionado
 
 
 class Announcement(Model):
