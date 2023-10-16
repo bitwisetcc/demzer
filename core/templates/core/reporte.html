@@ -1,8 +1,9 @@
 {% extends 'core/base.html' %} {% load static %} {% block head %}
-
-<script defer src="{% static 'core/js/reporte.js' %}"></script>
-<link rel="stylesheet" href="{% static 'core/css/reporte.css' %}" />
-
+<style>
+  input[type="radio"]:checked + label {
+    background-color: #68a4f3;
+  }
+</style>
 {% endblock %} {% block content %}
 <main class="framed m-8 mb-20 px-5">
   <h1
@@ -11,7 +12,9 @@
     Reporte de Problemas
   </h1>
   <div class="flex flex-col justify-center">
-    <span class="mb-8 text-center text-[30px] font-semibold text-color-primary">Assunto</span>
+    <span class="mb-8 text-center text-[30px] font-semibold text-color-primary"
+      >Assunto</span
+    >
     <div class="flex justify-center">
       <div
         class="flex h-[800px] w-[880] flex-col items-center justify-center rounded-2xl bg-white md:h-[160px] md:flex-row md:justify-center"
@@ -60,7 +63,8 @@
         </label>
       </div>
     </div>
-    <span class="mb-8 mt-8 text-center text-[30px] font-semibold text-color-primary"
+    <span
+      class="mb-8 mt-8 text-center text-[30px] font-semibold text-color-primary"
       >Sobre</span
     >
     <div class="flex justify-center">
@@ -69,33 +73,55 @@
           <textarea
             id="reclamacao"
             name="reclamacao"
-            class="h-80 w-full rounded border border-gray-300 px-4 py-2 resize-none"
+            class="h-80 w-full resize-none rounded border border-gray-300 px-4 py-2"
             placeholder="Digite sua reclamação aqui"
           ></textarea>
         </div>
       </div>
     </div>
-    <span class="mb-8 mt-8 text-center text-[30px] font-semibold text-color-primary"
+    <span
+      class="mb-8 mt-8 text-center text-[30px] font-semibold text-color-primary"
       >Upload a File</span
     >
     <div class="flex items-center justify-center">
-      <div class="p-6 w-[880px] bg-white rounded-lg shadow-md">
-        <div class="bg-gray-300 rounded-md p-4">
+      <div class="w-[880px] rounded-lg bg-white p-6 shadow-md">
+        <div class="rounded-md bg-gray-300 p-4">
           <div class="flex justify-center space-x-4">
-            <i class="fas fa-file-image text-4xl transform -rotate-45"></i>
-            <i class="fas fa-file-alt text-2xl transform -translate-y-4"></i>
-            <i class="fas fa-file-pdf text-4xl transform rotate-45"></i>
+            <i class="fas fa-file-image -rotate-45 transform text-4xl"></i>
+            <i class="fas fa-file-alt -translate-y-4 transform text-2xl"></i>
+            <i class="fas fa-file-pdf rotate-45 transform text-4xl"></i>
           </div>
           <label class="cursor-pointer">
-            <div class="rounded-md p-4 mt-6 text-center">
-              <div x-data="{ isUploading: false }" x-on:dragover="isUploading = true" x-on:dragleave="isUploading = false" x-on:drop="isUploading = false">
-                <div x-show="isUploading" class="text-indigo-800 font-semibold text-sm">
+            <div class="mt-6 rounded-md p-4 text-center">
+              <div
+                x-data="{ isUploading: false }"
+                x-on:dragover="isUploading = true"
+                x-on:dragleave="isUploading = false"
+                x-on:drop="isUploading = false"
+              >
+                <div
+                  x-show="isUploading"
+                  class="text-sm font-semibold text-indigo-800"
+                >
                   Drop to upload
                 </div>
                 <div x-show="!isUploading">
-                  <input type="file" class="hidden" x-on:change="isUploading = true" x-ref="fileInput" x-bind:disabled="isUploading">
-                  <p class="text-indigo-800 font-semibold text-sm mt-2">
-                    Drag and drop files here, or <a href="#" class="text-blue-600 border-b border-dotted border-blue-600" x-on:click.prevent="$refs.fileInput.click()">browse</a> your computer.
+                  <input
+                    type="file"
+                    class="hidden"
+                    x-on:change="isUploading = true"
+                    x-ref="fileInput"
+                    x-bind:disabled="isUploading"
+                  />
+                  <p class="mt-2 text-sm font-semibold text-indigo-800">
+                    Drag and drop files here, or
+                    <a
+                      href="#"
+                      class="border-b border-dotted border-blue-600 text-blue-600"
+                      x-on:click.prevent="$refs.fileInput.click()"
+                      >browse</a
+                    >
+                    your computer.
                   </p>
                 </div>
               </div>
