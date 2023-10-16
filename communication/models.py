@@ -18,7 +18,7 @@ from management.models import Classroom, Course, Subject
 
 class Alert(Model):
     emiter = ForeignKey(User, PROTECT)
-    date = DateTimeField(auto_created=True, null=True)
+    date = DateField(auto_created=True, null=True)
     tag = CharField(max_length=15, null=True)
     description = TextField()
 

@@ -27,7 +27,7 @@
 }
 
 .tags label div span:last-child {
-  @apply text-sm md:text-lg;
+  @apply text-sm md:text-base;
 }
 
 textarea {
