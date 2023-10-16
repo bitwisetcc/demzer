@@ -50,6 +50,8 @@
         <input
           type="date"
           class="w-full rounded-full text-center"
+          :min="new Date().toISOString().split('T')[0]"
+          :value="new Date().toISOString().split('T')[0]"
           id="dataAtual"
         />
       </div>
