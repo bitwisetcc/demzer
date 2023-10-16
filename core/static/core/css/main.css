@@ -116,7 +116,7 @@ dialog h2,
 }
 
 label.file {
-  @apply w-max bg-color-hover cursor-pointer;
+  @apply w-max cursor-pointer;
 }
 
 label.file input {
