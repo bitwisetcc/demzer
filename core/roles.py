@@ -14,6 +14,7 @@ class Admin(AbstractUserRole):
 
 
 class Coordinator(AbstractUserRole):
+
     available_permissions = {"see_alerts": True}
 
 
@@ -30,4 +31,6 @@ class Teacher(AbstractUserRole):
 
 
 class Student(AbstractUserRole):
+    def __str__():
+        return "Estudante"
     available_permissions = {}

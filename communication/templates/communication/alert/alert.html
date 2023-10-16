@@ -16,7 +16,7 @@
     {% csrf_token %}
     <div class="tags">
       <label for="rd-teacher">
-        <input type="radio" name="tag" id="rd-teacher" value="teacher" />
+        <input type="radio" name="tag" id="rd-teacher" value="teacher" required />
         <div>
           <span>🧑‍🏫</span>
           <span>Professor</span>
@@ -37,7 +37,7 @@
         </div>
       </label>
       <label for="rd-repair">
-        <input type="radio" name="tag" id="rd-repair" value="reapir" />
+        <input type="radio" name="tag" id="rd-repair" value="repair" />
         <div>
           <span>🔧</span>
           <span>Conserto</span>
@@ -67,18 +67,20 @@
         rows="6"
         maxlength="400"
         class="appearance-none"
+        required
       ></textarea>
     </div>
 
     <div class="m-auto">
-      <label for="attachment" class="file alt mr-4">
+      <label for="attachment" class="file alt mr-4" x-data="{ filename: '' }">
         <input
           type="file"
           name="attachment"
           id="attachment"
           accept="accept=image/*"
+          @input="filename = $el.files[0].name"
         />
-        <span>Anexar arquivo</span>
+        <span x-text="filename || 'Anexar arquivo'"></span>
       </label>
       <button type="submit" class="w-max self-center px-20">Enviar</button>
     </div>

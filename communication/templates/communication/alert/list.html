@@ -7,6 +7,14 @@
       imgUrl: "",
       info: "",
       date: "",
+      icons: {
+        student: "🧑‍🎓",
+        staff: "🧑‍💼",
+        abc: "?",
+        teacher: "🧑‍🏫",
+        repair: "🔧",
+        cleanup: "🧹",
+      },
 
       fillIn(el) {
         this.seeDialog = true;
@@ -29,20 +37,26 @@
         x-data="{ options: false, details: false }"
       >
         <header class="flex justify-between px-6 py-4">
-          <div>
-            <h2 class="font-semibold text-xl text-color-primary">
-              <span>{{ alert.emiter }}</span>
-              <span>
-                {% if alert.emiter|has_role:'student' %}
-                <span> - {{ alert.emiter.profile.classroom }} </span>
-                {% endif %}
-              </span>
-            </h2>
-            <p>
-              <span>{{ alert.tag }}</span>
-              <span>{{ alert.date }}</span>
-            </p>
-            <p>{{ alert.description }}</p>
+          <div class="flex items-center gap-3">
+            <span
+              x-text="icons['{{ alert.tag }}']"
+              class="text-[2.5rem]"
+            ></span>
+            <div>
+              <h2 class="text-xl font-semibold text-color-primary">
+                <span>{{ alert.emiter }}</span>
+                <span>
+                  {% if alert.emiter|has_role:'student' %}
+                  <span> - {{ alert.emiter.profile.classroom }} </span>
+                  {% endif %}
+                </span>
+              </h2>
+              <p>
+                <span>{{ alert.tag }}</span>
+                <span>{{ alert.date }}</span>
+              </p>
+              <p>{{ alert.description }}</p>
+            </div>
           </div>
           <div class="relative">
             <button @click="details = !details">
@@ -77,7 +91,7 @@
               <div>
                 <div>
                   <input type="radio" name="state" id="rd-sl" />
-                  <label for="rd-sl" >Solucionada</label>
+                  <label for="rd-sl">Solucionada</label>
                 </div>
                 <div>
                   <input type="radio" name="state" id="rd-pr" />
