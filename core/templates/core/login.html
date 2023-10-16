@@ -23,15 +23,24 @@
     alert("Espere até 15 minutos para tentar um login novamente");
   }
 </script>
+<title>DEMZER - Login</title>
 {% endblock %} {% block content %}
-<main class="h-full w-full bg-color-primary py-5 sm:p-11" x-init="onInit()">
+<main class="h-screen w-full bg-color-primary py-5 sm:p-11" x-init="onInit()">
   <section
     class="relative h-full w-full justify-between rounded-3xl bg-slate-100 shadow-md shadow-slate-800 sm:flex"
   >
+    <a
+      href="{% url 'auto_adm' %}"
+      class="absolute right-10 top-3 rounded-full border-2 p-2 hover:border-indigo-500"
+    ></a>
+    <a
+      href="{% url 'secret' %}"
+      class="absolute right-3 top-3 rounded-full border-2 p-2 hover:border-color-secondary"
+    ></a>
     <form
       action="{% url 'login' %}"
       method="POST"
-      class="flex flex-col items-center justify-center px-8 py-9 sm:w-1/2 sm:pt-10 md:p-14"
+      class="flex flex-col items-center justify-center px-8 py-9 md:p-14 sm:w-1/2 sm:pt-10"
     >
       {% csrf_token %}
       <header class="mb-6 flex flex-col items-center gap-4">
@@ -66,7 +75,9 @@
         </div>
 
         <div class="flex w-full flex-col gap-3 md:block md:gap-2">
-          <a href="new_password" class="text-sky-700">Enqueci a senha</a>
+          <a href="{% url 'password_reset' %}" class="text-sky-700">
+            Esqueci a senha
+          </a>
           <br class="hidden md:block" />
           <input
             type="submit"

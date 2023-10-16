@@ -1,0 +1,15 @@
+th {
+  @apply mx-4 rounded-xl bg-color-hover px-5 py-2 first:bg-transparent;
+}
+
+tbody tr:first-child td {
+  @apply rounded-t-xl;
+}
+
+tbody tr:last-child td {
+  @apply rounded-b-xl;
+}
+
+tbody tr td {
+  @apply border-0 bg-slate-100 px-5 py-2 cursor-pointer;
+}

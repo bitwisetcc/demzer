@@ -7,4 +7,4 @@ window.Alpine = Alpine;
 Alpine.plugin(mask);
 Alpine.start();
 
-tippy("#home-icon", { content: "Dashboard", placement: "bottom" });
+tippy('[data-tippy-content]', { placement: "right" });
