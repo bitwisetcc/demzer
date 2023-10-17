@@ -1,4 +1,4 @@
-{% extends 'core/base.html' %} {% load static %} {% load permission_tags %} {% block head %}
+{% extends 'core/base.html' %} {% load permission_tags %} {% block head %}
 <style>
   .feed {
     display: grid;
@@ -28,7 +28,7 @@
 <title>Comunicados</title>
 {% endblock %} {% block content %}
 <main
-  class="mx-20 my-10 min-h-full md2:justify-normal md2:pl-5 md2:pt-16"
+  class="m-8 min-h-full md:mx-20 md:justify-normal"
   x-data="{ createDialog: false, filterDialog: false}"
 >
   <header class="flex w-full justify-between text-color-primary">
@@ -98,7 +98,7 @@
     </article>
 
     <section x-show="seeDialog" class="dialog-backdrop">
-      <div class="dialog no_scroll w-[60%]">
+      <div class="dialog no_scroll w-5/6 md:w-[60%]">
         <header>
           <span></span>
           <button
@@ -121,7 +121,10 @@
             </svg>
           </button>
         </header>
-        <img class="h-[50vh] w-full block rounded-2xl object-center" :src="imgUrl" />
+        <img
+          class="block w-full rounded-2xl object-center md:h-[50vh]"
+          :src="imgUrl"
+        />
         <p
           class="text-right text-xs font-normal text-gray-500"
           x-text="date"
@@ -138,7 +141,6 @@
     enctype="multipart/form-data"
   >
     {% csrf_token %}
-    <!-- FORM FOR CREATE COMUNICATE-->
     <section x-show="createDialog" class="dialog-backdrop">
       <div class="dialog no_scroll">
         <header class="px-5 pt-4">
@@ -186,7 +188,7 @@
               class="btn ml-3 flex w-max cursor-pointer items-center gap-1"
             >
               <span
-                class="truncate max-w-[4rem]"
+                class="max-w-[4rem] truncate"
                 x-text="imageName ?? 'Foto de perfil'"
               ></span>
               <svg
@@ -266,7 +268,7 @@
     <div x-show="filterDialog" class="dialog-backdrop">
       <div class="dialog">
         <header
-          class="mt-4 px-5 flex flex-row justify-between text-3xl font-bold"
+          class="mt-4 flex flex-row justify-between px-5 text-3xl font-bold"
         >
           <h2>Filtrar Comunicado</h2>
           <button
@@ -298,28 +300,34 @@
           <div class="flex flex-row justify-between gap-2 text-lg font-normal">
             <label>
               De:
-              <input type="date" name="start-date" class="rounded-3xl border-color-primary"
+              <input
+                type="date"
+                name="start-date"
+                class="rounded-3xl border-color-primary"
             /></label>
             <label>
               Até:
-              <input type="date" name="end-date" class="rounded-3xl border-color-primary"
+              <input
+                type="date"
+                name="end-date"
+                class="rounded-3xl border-color-primary"
             /></label>
           </div>
 
           <label>
-            <input type="checkbox" name="r"/>
+            <input type="checkbox" name="r" />
             Reuniões
           </label>
           <label>
-            <input type="checkbox" name="p"/>
+            <input type="checkbox" name="p" />
             Palestras
           </label>
           <label>
-            <input type="checkbox" name="a"/>
+            <input type="checkbox" name="a" />
             Reposições
           </label>
           <label>
-            <input type="checkbox" name="*"/>
+            <input type="checkbox" name="*" />
             Outros
           </label>
           <div class="flex flex-row justify-center space-x-5 pt-4 text-lg">
