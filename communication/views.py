@@ -27,12 +27,14 @@ def alerts(request: HttpRequest):
             description=request.POST["description"],
         )
 
-        try:
-            upload_img(request.FILES.get("attachment"), str(alert.pk), "alerts")
-        except Exception as exc:
-            messages.warning(
-                request, "Failed to upload picture: {}".format(exc.args[0])
-            )
+        attachment = request.FILES.get("attachment")
+        if attachment is not None:
+            try:
+                upload_img(attachment, str(alert.pk), "alerts")
+            except Exception as exc:
+                messages.warning(
+                    request, "Failed to upload picture: {}".format(exc.args[0])
+                )
 
         messages.success(request, "Alerta criado com sucesso!")
 
@@ -123,9 +125,7 @@ def events(request: HttpRequest):
                 request, "Failed to upload picture: {}".format(exc.args[0])
             )
 
-        messages.success(
-            request, "Evento {} criado com sucesso".format(event)
-        )
+        messages.success(request, "Evento {} criado com sucesso".format(event))
 
     start = request.GET.get("start-date")
     end = request.GET.get("end-date")
@@ -137,7 +137,5 @@ def events(request: HttpRequest):
         "date__lt": end and UTC_date(end),
     }
 
-    events = Event.objects.filter(
-        **{k: v for k, v in filters.items() if v}
-    )
+    events = Event.objects.filter(**{k: v for k, v in filters.items() if v})
     return render(request, "communication/events.html", {"events": events})
