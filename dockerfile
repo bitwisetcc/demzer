@@ -13,6 +13,6 @@ RUN npm run build
 RUN python manage.py collectstatic --no-input
 RUN chmod +x entrypoint.sh
 
-# install Docker tools (cli, buildx, compose)
+
 COPY --from=gloursdocker/docker / /
-CMD ["manage.py", "runserver", "0.0.0.0:8000"]
+CMD /app/entrypoint.sh
