@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  app:
+    build: 
+      context: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
+      - static:/app/static
+    command: python manage.py runserver 0.0.0.0:8080
+    env_file:
+      - .env
+    environment:
+      - DEBUG=1
+    depends_on:
+      - node
+  
+  node:
+    image: node:20
+    user: node
+    working_dir: /app
+    volumes:
+      - .:/app
+      - static:/app/static
+    command: npm run watch
+
+volumes:
+  static:

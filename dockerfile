@@ -1,18 +1,13 @@
-# syntax=docker/dockerfile:1.4
-
 FROM python:3.11-alpine
-EXPOSE 8000
-WORKDIR /app 
 
-COPY . /app 
+WORKDIR /app
 
-RUN apk add --update --no-cache --virtual build-essential gcc libc-dev linux-headers nodejs npm mysql-dev bash
+COPY . .
+
+RUN apk add --update --no-cache --virtual build-essential gcc libc-dev linux-headers nodejs npm mysql-dev
+
 RUN pip install -r requirements.txt
 RUN npm i
-RUN npm run build
-RUN python manage.py collectstatic --no-input
 RUN chmod +x entrypoint.sh
 
-
-COPY --from=gloursdocker/docker / /
 CMD /app/entrypoint.sh
