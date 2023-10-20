@@ -1,5 +1,5 @@
 {% extends 'core/base.html' %} {% load static %} {% load permission_tags %} {% block head %}
-<script src="{% static 'core/js/dashboard.js' %}"></script>
+<script defer src="{% static 'core/js/dashboard.js' %}"></script>
 <link rel="stylesheet" href="{% static 'core/dist/css/dashboard.css' %}" />
 <title>Dashboard</title>
 {% endblock %} {% block content %}
@@ -22,11 +22,8 @@
       >
         Professores
       </li>
-      <li class="control bg-color-bg">
-        <a href="{% url 'courses' %}">Cursos</a>
-      </li>
-      <li class="control bg-color-bg">
-        <a href="{% url 'classrooms' %}">Turmas</a>
+      <li class="control bg-color-bg" @click="filterDialog = true">
+        Filtros
       </li>
       {% if user|can:'create_user' %}
       <li class="btn control bg-color-primary-dimm">
@@ -75,10 +72,9 @@
     </ul>
   </header>
   <section class="p-5">
-    <h2 x-text="active" class="mb-4 text-xl font-semibold"></h2>
     <table class="w-full">
       <thead>
-        <tr>
+        <tr class="border-separate border-spacing-3 font-semibold bg-color-hover">
           <template x-for="header in headers">
             <td x-text="header"></td>
           </template>
@@ -95,5 +91,94 @@
       </tbody>
     </table>
   </section>
+  <form>
+    <div
+      :class="filterDialog ? 'flex' : 'hidden'"
+      class="fixed inset-0 items-center justify-center bg-black bg-opacity-25"
+    >
+      <div class="h-4/5 w-2/5 rounded-3xl bg-color-grey">
+        <header
+          class="mx-10 mt-8 flex flex-row justify-between text-3xl font-bold"
+        >
+          <h2>Filtrar Alunos</h2>
+          <div>
+            <button
+              @click.prevent="filterDialog = false"
+              class="text-3xl font-bold text-color-primary"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="h-6 w-6 hover:h-7 hover:w-7 transition-all"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+        </header>
+        <section class="flex flex-col gap-4 p-10">
+          <label>
+            RM
+            <input
+              type="search"
+              placeholder="Escreva o RM"
+              class="mx-auto w-full rounded-lg border border-color-primary bg-gray-50 text-sm text-gray-900"
+            />
+          </label>
+          <label>
+            CPF
+            <input
+              type="search"
+              placeholder="Escreva o CPF"
+              class="mx-auto w-full rounded-lg border border-color-primary bg-gray-50 text-sm text-gray-900"
+            />
+          </label>
+          <label>
+            Nome
+            <input
+              type="search"
+              placeholder="Escreva o Nome"
+              class="mx-auto w-full rounded-lg border border-color-primary bg-gray-50 text-sm text-gray-900"
+            />
+          </label>
+          <label>
+            Turma
+            <select class="mx-auto w-full rounded-lg border border-color-primary bg-gray-50 text-sm text-gray-900">
+              <option></option>
+              <option>teste</option>
+              <option>teste</option>
+            </select>
+          </label>
+          <div class="flex flex-row justify-between text-lg font-normal">
+            <label>
+              Data de nascimento:
+              <input type="date" class="rounded-3xl border-color-primary"
+              />
+            </label>
+          <div class="flex flex-row justify-center space-x-5 pt-6 text-lg">
+            <button
+              type="reset"
+              class="alt"
+            >
+              Limpar
+            </button>
+            <button
+              type="submit"
+              
+            >
+              Aplicar
+            </button>
+          </div>
+        </section>
+      </div>
+    </div>
+  </form>
 </main>
 {% endblock %}

@@ -11,6 +11,7 @@ from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.http import Http404, HttpRequest, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import redirect, render
+from rolepermissions.checkers import has_role
 from rolepermissions.decorators import has_permission_decorator as check_permission
 from rolepermissions.roles import assign_role
 
@@ -22,7 +23,10 @@ from management.models import Classroom
 
 @login_required
 def dashboard(request: HttpRequest):
-    return render(request, "core/dashboard.html")
+    if has_role(request.user, Admin):
+        return render(request, "core/dashboard.html")
+    else:
+        return render(request, "core/home.html")
 
 
 def login_user(request: HttpRequest, failed=0):
@@ -277,4 +281,3 @@ def read_img(request: HttpRequest, container: str, title: str):
     except Exception as exc:
         print("falha ao buscar img de perfil: {}" + exc.args[0])
         raise Http404("Falha ao requisitar imagem")
-

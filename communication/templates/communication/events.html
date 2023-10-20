@@ -1,11 +1,5 @@
-{% extends 'core/base.html' %} {% load static %} {% load permission_tags %} {% block head %}
-<style>
-  .feed {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, 300px);
-    justify-content: space-between;
-  }
-</style>
+{% extends 'core/base.html' %} {% load permission_tags %} {% block head %}
+<title>Eventos</title>
 <script defer>
   document.addEventListener("alpine:init", () => {
     Alpine.data("post", () => ({
@@ -25,16 +19,15 @@
     }));
   });
 </script>
-<title>Comunicados</title>
 {% endblock %} {% block content %}
 <main
   class="mx-20 my-10 min-h-full md2:justify-normal md2:pl-5 md2:pt-16"
-  x-data="{ createDialog: false, filterDialog: false}"
+  x-data="{ createDialog: false, filterDialog: false }"
 >
   <header class="flex w-full justify-between text-color-primary">
-    <h1 class="text-4xl font-semibold">Comunicados</h1>
-    <div class="flex gap-2">
-      {% if user|has_role:'admin' %}
+    <h1 class="text-4xl font-semibold">Eventos</h1>
+    {% if user|has_role:'admin' %}
+    <div>
       <button @click="createDialog = true" class="text-base">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -70,79 +63,84 @@
       </button>
     </div>
   </header>
-  <div x-data="post">
-    <article class="feed w-full gap-8 pt-14">
-      {% for announcement in announcements %}
-      <div
-        class="cursor-pointer rounded-2xl bg-color-bg text-left shadow-lg"
-        @click="fill($el)"
-      >
-        <img
-          class="h-48 w-full rounded-2xl"
-          src="{% url 'img' 'announcements' announcement.pk %}"
-        />
 
-        <div class="m-5 mt-3">
-          <p class="text-right text-xs text-gray-500" id="date">
-            {{ announcement.date|date:'d/m/Y' }}
-          </p>
-          <h2 class="text-base font-bold text-black" id="title">
-            {{ announcement.title }} {% if not announcement.published %}
-            <span class="text-gray-500">- Em breve</span>
-            {% endif %}
-          </h2>
-          <p id="info" class="hidden">{{ announcement.info }}</p>
-        </div>
-      </div>
-      {% endfor %}
-    </article>
-
-    <section x-show="seeDialog" class="dialog-backdrop">
-      <div class="dialog no_scroll w-[60%]">
-        <header>
-          <span></span>
+  <article class="mt-10 flex flex-col gap-8">
+    {% for event in events %}
+    <div
+      class="mx-auto max-w-xl rounded-3xl bg-color-bg-lighter"
+      x-data="{ selected: false }"
+    >
+      <ul class="shadow-box">
+        <li class="border-black-200 relative border-b">
           <button
-            @click.prevent="seeDialog = false"
-            class="text-3xl font-bold text-color-primary"
+            type="button"
+            class="w-full px-8 py-6 text-left"
+            @click="selected = !selected"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="h-6 w-6"
+            <div
+              class="justify-between, flex w-[70%] items-center text-[20px] font-semibold text-color-primary"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M6 18L18 6M6 6l12 12"
+              <img
+                src="{% url 'img' 'events' event.pk %}"
+                alt="Reunião"
+                class="w-28 rounded-full aspect-square"
               />
-            </svg>
+              <div>
+                <h3 class="pl-10 font-bold">{{ event.title }}</h3>
+                <p class="pl-10 text-color-secondary">
+                  {{ event.date|date:'d/m/Y' }}
+                </p>
+              </div>
+            </div>
           </button>
-        </header>
-        <img class="h-[50vh] w-full block rounded-2xl object-center" :src="imgUrl" />
-        <p
-          class="text-right text-xs font-normal text-gray-500"
-          x-text="date"
-        ></p>
-        <h3 class="text-base font-bold text-color-primary" x-text="title"></h3>
-        <p x-text="info"></p>
-      </div>
-    </section>
-  </div>
+
+          <div
+            class="relative max-h-0 overflow-hidden transition-all duration-500"
+            x-ref="container1"
+            x-bind:style="selected ? 'max-height: ' + $refs.container1.scrollHeight + 'px' : ''"
+          >
+            <div class="p-6">
+              <table>
+                <tr>
+                  <td class="text-color-secondary">
+                    <table style="width: 5px; padding: none">
+                      <tr>
+                        <td class="text-color-secondary">Categoria:</td>
+                        <td class="text-color-secondary">Reunião</td>
+                      </tr>
+                      <tr>
+                        <td class="text-color-secondary">Local:</td>
+                        <td class="text-color-secondary">Auditório</td>
+                      </tr>
+                      <tr>
+                        <td class="text-color-secondary">Horário</td>
+                        <td class="text-color-secondary">18h00</td>
+                      </tr>
+                    </table>
+                  </td>
+
+                  <td>{{ event.info }}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+    {% endfor %}
+  </article>
 
   <form
     method="post"
-    action="{% url 'comunicados' %}"
+    action="{% url 'eventos' %}"
     enctype="multipart/form-data"
   >
     {% csrf_token %}
-    <!-- FORM FOR CREATE COMUNICATE-->
+    <!-- FORM FOR CREATE EVENT -->
     <section x-show="createDialog" class="dialog-backdrop">
       <div class="dialog no_scroll">
         <header class="px-5 pt-4">
-          <h2>Criar Comunicado</h2>
+          <h2>Criar Evento</h2>
           <div>
             <button
               @click.prevent="createDialog = false"
@@ -170,6 +168,10 @@
             <label>Titulo:</label>
             <input type="text" class="h-10" name="title" required />
           </div>
+          <div class="flex flex-col text-lg font-normal">
+            <label>Local:</label>
+            <input type="text" class="h-10" name="place" required />
+          </div>
           <div
             class="flex items-center gap-1 text-lg font-normal"
             x-data="{ imageName: 'Foto' }"
@@ -186,7 +188,7 @@
               class="btn ml-3 flex w-max cursor-pointer items-center gap-1"
             >
               <span
-                class="truncate max-w-[4rem]"
+                class="max-w-[4rem] truncate"
                 x-text="imageName ?? 'Foto de perfil'"
               ></span>
               <svg
@@ -224,15 +226,6 @@
             ></textarea>
           </div>
           <div class="flex items-center gap-1 text-lg font-normal">
-            <label>Categoria:</label>
-            <select name="category" id="sl-category">
-              <option value="r">Reunião</option>
-              <option value="p">Palestra</option>
-              <option value="a">Reposição</option>
-              <option value="*">Outros</option>
-            </select>
-          </div>
-          <div class="flex items-center gap-1 text-lg font-normal">
             <label>Apenas para professores:</label>
             <input type="checkbox" name="staff_only" />
           </div>
@@ -262,13 +255,13 @@
     </section>
   </form>
 
-  <form method="get" action="{% url 'comunicados' %}">
+  <form method="get" action="{% url 'eventos' %}">
     <div x-show="filterDialog" class="dialog-backdrop">
       <div class="dialog">
         <header
-          class="mt-4 px-5 flex flex-row justify-between text-3xl font-bold"
+          class="mt-4 flex flex-row justify-between px-5 text-3xl font-bold"
         >
-          <h2>Filtrar Comunicado</h2>
+          <h2>Filtrar Eventos</h2>
           <button
             @click.prevent="filterDialog = false"
             class="text-3xl font-bold text-color-primary"
@@ -298,30 +291,19 @@
           <div class="flex flex-row justify-between gap-2 text-lg font-normal">
             <label>
               De:
-              <input type="date" name="start-date" class="rounded-3xl border-color-primary"
+              <input
+                type="date"
+                name="start-date"
+                class="rounded-3xl border-color-primary"
             /></label>
             <label>
               Até:
-              <input type="date" name="end-date" class="rounded-3xl border-color-primary"
+              <input
+                type="date"
+                name="end-date"
+                class="rounded-3xl border-color-primary"
             /></label>
           </div>
-
-          <label>
-            <input type="checkbox" name="r"/>
-            Reuniões
-          </label>
-          <label>
-            <input type="checkbox" name="p"/>
-            Palestras
-          </label>
-          <label>
-            <input type="checkbox" name="a"/>
-            Reposições
-          </label>
-          <label>
-            <input type="checkbox" name="*"/>
-            Outros
-          </label>
           <div class="flex flex-row justify-center space-x-5 pt-4 text-lg">
             <button type="reset" class="alt">Limpar</button>
             <button type="submit">Aplicar</button>
@@ -331,5 +313,4 @@
     </div>
   </form>
 </main>
-
 {% endblock %}

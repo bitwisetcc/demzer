@@ -58,307 +58,318 @@
 </script>
 {% endblock %} {% block content %}
 <main class="flex flex-col gap-5 px-24 py-10" x-data="dialogs">
-  <dialog :open="courseDialog">
-    <header>
-      <h2>Criar curso</h2>
-      <button @click.prevent="courseDialog = false">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="currentColor"
-          class="h-6 w-6"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
-      </button>
-    </header>
-    <form action="{% url 'courses' %}" method="POST">
-      {% csrf_token %}
-      <input type="hidden" name="pk" x-model="pk" />
-      <div class="mb-3 flex items-center gap-2">
-        <label for="txt-name">Nome:</label>
-        <input
-          type="text"
-          name="name"
-          id="txt-name"
-          required
-          class="flex-1"
-          maxlength="60"
-          x-model="name"
-        />
-      </div>
-      <div class="mb-3 flex items-center justify-around gap-2">
-        <label for="txt-slug">Código:</label>
-        <input
-          type="text"
-          name="slug"
-          class="md:w-20"
-          id="txt-slug"
-          maxlength="2"
-          required
-          x-model="slug"
-        />
-        <label for="sl-time">Horário:</label>
-        <select name="time" id="sl-time" x-model="time">
-          <option value="M" selected>Manhã</option>
-          <option value="E">Tarde</option>
-          <option value="N">Noite</option>
-        </select>
-        <label for="txt-duration">Duração:</label>
-        <input
-          type="number"
-          name="duration"
-          id="txt-duration"
-          size="1"
-          x-model="duration"
-          step="0.5"
-          class="[appearance:textfield]"
-        />
-      </div>
-      <div class="mb-1 flex items-center gap-2">
-        <label for="txt-coordinator">Coordenador:</label>
-        <input
-          type="text"
-          name="coordinator"
-          id="txt-coordinator"
-          x-model="coordinator"
-          class="flex-1"
-        />
-      </div>
-      <div class="mb-3 flex flex-col gap-2">
-        <label for="txt-info">Informações:</label>
-        <textarea
-          name="info"
-          id="txt-info"
-          cols="30"
-          rows="4"
-          x-model="info"
-        ></textarea>
-      </div>
-      <div class="mt-3 flex justify-center">
-        <button type="submit">Salvar</button>
-      </div>
-    </form>
-  </dialog>
-  <dialog :open="filterDialog">
-    <header>
-      <h2>Filtrar</h2>
-      <button @click.prevent="filterDialog = false">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="currentColor"
-          class="h-6 w-6"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
-      </button>
-    </header>
-    <form action="{% url 'courses' %}" method="get" class="flex flex-col gap-2">
-      <div class="mb-1 flex items-center gap-2">
-        <label for="txt-name">Nome:</label>
-        <input
-          type="text"
-          maxlength="60"
-          name="name"
-          id="txt-name"
-          class="flex-1"
-        />
-        <label for="txt-slug">Código:</label>
-        <input type="text" maxlength="5" size="4" name="slug" id="txt-slug" />
-      </div>
-      <div class="mb-1 flex items-center gap-2">
-        <label for="txt-duration">Duração:</label>
-        <input
-          type="number"
-          size="4"
-          max="10"
-          name="duration"
-          id="txt-duration"
-        />
-        <label for="sl-time">Horário:</label>
-        <select name="time" id="sl-time" x-model="time">
-          <option value="" selected>-</option>
-          <option value="M">Manhã</option>
-          <option value="E">Tarde</option>
-          <option value="N">Noite</option>
-          <option value="F">Integral</option>
-        </select>
-      </div>
-      <div class="mt-3 flex justify-center gap-3">
-        <button type="reset" class="alt">Limpar</button>
-        <button
-          type="submit"
-          class="rounded-full border-2 border-color-secondary bg-transparent px-5 py-2 font-bold text-yellow-700 transition-all hover:bg-color-hover"
-        >
-          Aplicar
+  <section x-show="courseDialog" class="dialog-backdrop">
+    <div class="dialog">
+      <header>
+        <h2>Criar curso</h2>
+        <button @click.prevent="courseDialog = false">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-6 w-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
         </button>
-      </div>
-    </form>
-  </dialog>
-  <dialog :open="subjectDialog">
-    <header>
-      <h2>Nova Matéria</h2>
-      <button @click.prevent="subjectDialog = false">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="currentColor"
-          class="h-6 w-6"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
-      </button>
-    </header>
-    <form action="{% url 'create_subject' %}" method="post">
-      {% csrf_token %}
-      <div class="field">
-        <label for="txt-name">Nome</label>
-        <input type="text" name="name" id="txt-name" required maxlength="60" />
-      </div>
-      <div class="field">
-        <label for="txt-slug">Código</label>
-        <input type="text" name="slug" id="txt-slug" required maxlength="5" />
-      </div>
-      <div class="field">
-        <label for="txt-desc">Descrição</label>
-        <textarea
-          name="description"
-          id="txt-desc"
-          cols="30"
-          rows="4"
-          maxlength="127"
-        ></textarea>
-      </div>
-      <div class="mt-3 flex gap-2 justify-center">
-        <button
-          @click.prevent="() => { subjectDialog = false; importDialog = true }"
-          class="alt"
-        >
-          Importar
-        </button>
-        <button type="submit">Criar</button>
-      </div>
-    </form>
-  </dialog>
-  <dialog :open="importDialog">
-    <header>
-      <h2>Importar matérias</h2>
-      <button @click.prevent="importDialog = false">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="currentColor"
-          class="h-6 w-6"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
-      </button>
-    </header>
-    <form id="importSubjects" action="{% url 'create_subject' %}" method="post">
-      {% csrf_token %}
-      <template x-for="i in imports">
-        <div class="input mt-2 flex gap-2">
+      </header>
+      <form action="{% url 'courses' %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="pk" x-model="pk" />
+        <div class="mb-3 flex items-center gap-2">
+          <label for="txt-name">Nome:</label>
           <input
             type="text"
-            name=""
-            id=""
-            size="25"
+            name="name"
+            id="txt-name"
+            required
+            class="flex-1"
             maxlength="60"
-            placeholder="Nome"
-          />
-          <input
-            type="text"
-            name=""
-            id=""
-            size="5"
-            maxlength="5"
-            placeholder="Código"
+            x-model="name"
           />
         </div>
-      </template>
-      <input type="hidden" name="import" />
-      <div class="mt-3 flex gap-2">
-        <button
-          @click.prevent="imports.push({ name: '', slug: '' })"
-          class="alt"
-        >
-          +
+        <div class="mb-3 flex items-center justify-around gap-2">
+          <label for="txt-slug">Código:</label>
+          <input
+            type="text"
+            name="slug"
+            class="md:w-20"
+            id="txt-slug"
+            maxlength="2"
+            required
+            x-model="slug"
+          />
+          <label for="sl-time">Horário:</label>
+          <select name="time" id="sl-time" x-model="time">
+            <option value="M" selected>Manhã</option>
+            <option value="E">Tarde</option>
+            <option value="N">Noite</option>
+          </select>
+          <label for="txt-duration">Duração:</label>
+          <input
+            type="number"
+            name="duration"
+            id="txt-duration"
+            size="1"
+            x-model="duration"
+            step="0.5"
+            class="[appearance:textfield]"
+          />
+        </div>
+        <div class="mb-1 flex items-center gap-2">
+          <label for="txt-coordinator">Coordenador:</label>
+          <input
+            type="text"
+            name="coordinator"
+            id="txt-coordinator"
+            x-model="coordinator"
+            class="flex-1"
+          />
+        </div>
+        <div class="mb-3 flex flex-col gap-2">
+          <label for="txt-info">Informações:</label>
+          <textarea
+            name="info"
+            id="txt-info"
+            cols="30"
+            rows="4"
+            x-model="info"
+          ></textarea>
+        </div>
+        <div class="mt-3 flex justify-center">
+          <button type="submit">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </section>
+  <section class="dialog-backdrop" x-show="filterDialog">
+    <div class="dialog">
+      <header>
+        <h2>Filtrar</h2>
+        <button @click.prevent="filterDialog = false">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-6 w-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
         </button>
-        <button type="submit" @click.prevent="sendSubject()">Criar</button>
-      </div>
-    </form>
-  </dialog>
-  <dialog :open="deleteDialog" class="rounded-2xl p-6 shadow-lg">
-    <form
-      action="{% url 'delete_course' %}"
-      method="post"
-      class="flex flex-col items-center gap-3"
-    >
-      {% csrf_token %}
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="h-16 w-16 text-red-500"
+      </header>
+      <form
+        action="{% url 'courses' %}"
+        method="get"
+        class="flex flex-col gap-2"
       >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
-        />
-      </svg>
-      <p class="text-center">
-        Cuidado! Isso pode <br />
-        desalocar turmas e horários.
-      </p>
-      <input type="hidden" name="pk" x-model="pk" />
-      <div class="flex gap-3">
-        <button
-          @click.prevent="deleteDialog = false"
-          class="rounded-lg border border-slate-500 p-3"
-        >
-          Voltar
+        <div class="mb-1 flex items-center gap-2">
+          <label for="txt-name">Nome:</label>
+          <input
+            type="text"
+            maxlength="60"
+            name="name"
+            id="txt-name"
+            class="flex-1"
+          />
+          <label for="txt-slug">Código:</label>
+          <input type="text" maxlength="5" size="4" name="slug" id="txt-slug" />
+        </div>
+        <div class="mb-1 flex items-center gap-2">
+          <label for="txt-duration">Duração:</label>
+          <input
+            type="number"
+            size="4"
+            max="10"
+            name="duration"
+            id="txt-duration"
+          />
+          <label for="sl-time">Horário:</label>
+          <select name="time" id="sl-time" x-model="time">
+            <option value="" selected>-</option>
+            <option value="M">Manhã</option>
+            <option value="E">Tarde</option>
+            <option value="N">Noite</option>
+            <option value="F">Integral</option>
+          </select>
+        </div>
+        <div class="mt-3 flex justify-center gap-3">
+          <button type="reset" class="alt">Limpar</button>
+          <button type="submit">Aplicar</button>
+        </div>
+      </form>
+    </div>
+  </section>
+  <section class="dialog-backdrop" x-show="subjectDialog">
+    <div class="dialog">
+      <header>
+        <h2>Nova Matéria</h2>
+        <button @click.prevent="subjectDialog = false">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-6 w-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
         </button>
-        <button
-          type="submit"
-          class="rounded-lg border-0 bg-red-500 p-3 text-white"
-        >
-          Confirmar
+      </header>
+      <form action="{% url 'create_subject' %}" method="post">
+        {% csrf_token %}
+        <div class="field">
+          <label for="txt-name">Nome</label>
+          <input
+            type="text"
+            name="name"
+            id="txt-name"
+            required
+            maxlength="60"
+          />
+        </div>
+        <div class="field">
+          <label for="txt-slug">Código</label>
+          <input type="text" name="slug" id="txt-slug" required maxlength="5" />
+        </div>
+        <div class="field">
+          <label for="txt-desc">Descrição</label>
+          <textarea
+            name="description"
+            id="txt-desc"
+            cols="30"
+            rows="4"
+            maxlength="127"
+          ></textarea>
+        </div>
+        <div class="mt-3 flex justify-center gap-2">
+          <button
+            @click.prevent="() => { subjectDialog = false; importDialog = true }"
+            class="alt"
+          >
+            Importar
+          </button>
+          <button type="submit">Criar</button>
+        </div>
+      </form>
+    </div>
+  </section>
+  <section class="dialog-backdrop" x-show="importDialog">
+    <div class="dialog">
+      <header>
+        <h2>Importar matérias</h2>
+        <button @click.prevent="importDialog = false">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-6 w-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
         </button>
-      </div>
-    </form>
-  </dialog>
+      </header>
+      <form
+        id="importSubjects"
+        action="{% url 'create_subject' %}"
+        method="post"
+      >
+        {% csrf_token %}
+        <template x-for="i in imports">
+          <div class="input mt-2 flex gap-2">
+            <input
+              type="text"
+              name=""
+              id=""
+              size="25"
+              maxlength="60"
+              placeholder="Nome"
+            />
+            <input
+              type="text"
+              name=""
+              id=""
+              size="5"
+              maxlength="5"
+              placeholder="Código"
+            />
+          </div>
+        </template>
+        <input type="hidden" name="import" />
+        <div class="mt-3 flex gap-2">
+          <button
+            @click.prevent="imports.push({ name: '', slug: '' })"
+            class="alt"
+          >
+            +
+          </button>
+          <button type="submit" @click.prevent="sendSubject()">Criar</button>
+        </div>
+      </form>
+    </div>
+  </section>
+  <section class="dialog-backdrop" x-show="deleteDialog">
+    <div class="dialog">
+      <form
+        action="{% url 'delete_course' %}"
+        method="post"
+        class="flex flex-col items-center gap-3"
+      >
+        {% csrf_token %}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="h-16 w-16 text-red-500"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+          />
+        </svg>
+        <p class="text-center">
+          Cuidado! Isso pode <br />
+          desalocar turmas e horários.
+        </p>
+        <input type="hidden" name="pk" x-model="pk" />
+        <div class="flex gap-3">
+          <button @click.prevent="deleteDialog = false" class="alt">
+            Voltar
+          </button>
+          <button type="submit">Confirmar</button>
+        </div>
+      </form>
+    </div>
+  </section>
 
   <section class="flex flex-col gap-6">
     <header class="flex justify-between text-color-primary">
-      <h1 class="mb-4 text-4xl font-semibold">Cursos</h1>
+      <h1 class="mb-4 text-4xl font-semibold text-color-primary">Cursos</h1>
       <div class="flex gap-2">
         {% if user|can:'create_course' %}
         <button @click="clear()">
@@ -403,8 +414,15 @@
     >
       <header class="flex justify-between px-6 py-4">
         <div>
-          <h2>{{ course.name }} - {{ course.slug }}</h2>
-          <span>Turno: {{ course.get_time_display }}</span>
+          <h2 class="font-semibold text-color-primary">
+            {{ course.name }} - {{ course.slug }}
+          </h2>
+          <div>
+            <span class="text-color-primary">Turno:</span>
+            <span class="text-color-secondary">
+              {{ course.get_time_display }}
+            </span>
+          </div>
         </div>
         <div class="relative">
           <button @click="details = !details">
@@ -498,6 +516,7 @@
     <header class="mb-2 flex justify-between text-color-primary">
       <h2 class="mb-4 text-4xl font-semibold">Matérias</h2>
       <div class="flex gap-2">
+        {% if user|can:'create_course' %}
         <button @click="subjectDialog = true">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -530,6 +549,7 @@
             />
           </svg>
         </button>
+        {% endif %}
       </div>
     </header>
     <div class="flex gap-2">

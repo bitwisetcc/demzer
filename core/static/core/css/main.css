@@ -31,6 +31,9 @@
   [type="submit"] {
     @apply cursor-pointer rounded-3xl bg-color-secondary hover:shadow-md;
   }
+  [type="checkbox"] {
+    @apply h-5 w-5 rounded-full border-color-primary transition;
+  }
 }
 
 main.framed {
@@ -77,22 +80,45 @@ nav#navbar {
   scrollbar-width: none;
 }
 
+.no_scroll {
+  scrollbar-width: none;
+}
+
+.no_scroll::-webkit-scrollbar {
+  width: 0 !important;
+}
+
 button[type="submit"] {
   @apply rounded-full border-2 border-color-secondary bg-color-hover px-5 py-2 font-bold text-yellow-700;
 }
 
-button.alt {
+.alt {
   @apply rounded-full border-2 border-color-secondary bg-transparent px-5 py-2 font-bold text-yellow-700 transition-all hover:bg-color-hover;
 }
 
-dialog {
-  @apply rounded-[1.75rem] bg-color-bg-lighter p-6 shadow-2xl shadow-gray-200 backdrop:bg-gray-50;
+dialog,
+.dialog {
+  @apply max-h-[80vh] overflow-x-clip overflow-y-scroll rounded-[1.75rem] bg-color-bg-lighter p-6 shadow-2xl backdrop:bg-gray-50;
 }
 
-dialog header {
-  @apply mb-3 flex justify-between w-full text-color-primary;
+.dialog-backdrop {
+  @apply fixed inset-0 flex items-center justify-center bg-black bg-opacity-25;
 }
 
-dialog h2 {
+dialog header,
+.dialog header {
+  @apply mb-3 flex w-full justify-between text-color-primary;
+}
+
+dialog h2,
+.dialog h2 {
   @apply text-xl font-semibold text-color-primary;
+}
+
+label.file {
+  @apply w-max bg-color-hover cursor-pointer;
+}
+
+label.file input {
+  @apply hidden;
 }

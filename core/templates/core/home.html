@@ -1,110 +1,226 @@
-{% extends 'core/base.html' %} {% load static %} {% block content %}
-<main class="flex-1 p-5">
-  <h1 class="mb-3 from-sky-800 font-sans text-3xl font-bold">Alunos</h1>
-  <form action="" method="get" class="flex items-stretch justify-between">
+{% extends 'core/base.html' %} {% load static %} {% load permission_tags %} {% block head %}
+<script defer src="{% static 'core/js/dashboard.js' %}"></script>
+<link rel="stylesheet" href="{% static 'core/dist/css/dashboard.css' %}" />
+<title>Home</title>
+{% endblock %} {% block content %}
+<main class=" m-8 mb-10 px-5">
+  <div class="mt-10 flex justify-center md:mt-16">
     <div
-      class="relative flex gap-3"
-      x-data="{ input: '', clear() { this.input = '' } }"
+      class="flex h-[300px] w-[360px] items-center justify-center lg:h-[380px] lg:w-[460px]"
     >
-      <label for="slField" class="text-xl font-medium">Procurar por:</label>
-      <select name="query_field" id="slField">
-        <option value="name" selected>Nome</option>
-        <option value="email">Email ETEC</option>
-        <option value="email">Email pessoal</option>
-        <option value="parent">Nome do Pai/Mãe</option>
-        <option value="class">Classe</option>
-        <option value="grade">Série</option>
-        <option value="rm">RM</option>
-        <option value="custom">Customizado</option>
-      </select>
-      <input type="search" name="query" id="searchQuery" x-model:="input" />
-      <button
-        class="absolute right-2 top-2 transition-all"
-        :class="input || 'scale-0'"
-        @click.prevent="clear()"
-      >
-        <box-icon name="x-circle" color="gray" />
-      </button>
+      <div class="swiper mySwiper carousel1">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide justify-center">
+            <div class="flex justify-center px-12">
+              <div
+                class="h-[280px] w-[360px] flex-col rounded-2xl bg-white px-4 py-8 lg:h-[320px] lg:w-[480px] lg:px-6 lg:py-8"
+              >
+                <div class="ml-2 leading-[44px] lg:leading-[50px]">
+                  <span
+                    class="text-left text-[16px] font-normal text-color-primary lg:text-[22px]"
+                    >Próxima Aula</span
+                  >
+                  <span
+                    class="text-left text-xl font-normal text-color-secondary lg:text-[22px]"
+                    >(13:00-13:50)</span
+                  ><br />
+                  <span
+                    class="text-xl font-bold uppercase text-color-primary lg:text-[26px]"
+                    >Sex, 05 de Maio</span
+                  ><br />
+                  <span
+                    class="text-left text-sm font-normal text-color-secondary lg:text-[18px]"
+                    >Fundamentos da Informática</span
+                  ><br />
+                  <span
+                    class="text-left text-sm font-normal text-color-secondary lg:text-[18px]"
+                    >3º Desenvolvimento de Sistemas</span
+                  ><br />
+                  <span
+                    class="text-left text-sm font-normal text-color-secondary lg:text-[18px]"
+                    >Lab 30 - Área de Informática</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="swiper-slide justify-center">
+            <div class="flex justify-center px-12">
+              <div
+                class="h-[280px] w-[360px] flex-col rounded-2xl bg-white px-4 py-8 lg:h-[320px] lg:w-[480px] lg:px-6 lg:py-8"
+              >
+                <div class="ml-2 leading-[44px] lg:leading-[50px]">
+                  <span
+                    class="text-left text-[16px] font-normal text-color-primary lg:text-[22px]"
+                    >Próxima Aula</span
+                  >
+                  <span
+                    class="text-left text-xl font-normal text-color-secondary lg:text-[22px]"
+                    >(13:00-13:50)</span
+                  ><br />
+                  <span
+                    class="text-xl font-bold uppercase text-color-primary lg:text-[26px]"
+                    >Sex, 05 de Maio</span
+                  ><br />
+                  <span
+                    class="text-left text-sm font-normal text-color-secondary lg:text-[18px]"
+                    >Fundamentos da Informática</span
+                  ><br />
+                  <span
+                    class="text-left text-sm font-normal text-color-secondary lg:text-[18px]"
+                    >3º Desenvolvimento de Sistemas</span
+                  ><br />
+                  <span
+                    class="text-left text-sm font-normal text-color-secondary lg:text-[18px]"
+                    >Lab 30 - Área de Informática</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="swiper-slide justify-center">
+            <div class="flex justify-center px-12">
+              <div
+                class="h-[280px] w-[360px] flex-col rounded-2xl bg-white px-4 py-8 lg:h-[320px] lg:w-[480px] lg:px-6 lg:py-8"
+              >
+                <div class="ml-2 leading-[44px] lg:leading-[50px]">
+                  <span
+                    class="text-left text-[16px] font-normal text-color-primary lg:text-[22px]"
+                    >Próxima Aula</span
+                  >
+                  <span
+                    class="text-left text-xl font-normal text-color-secondary lg:text-[22px]"
+                    >(13:00-13:50)</span
+                  ><br />
+                  <span
+                    class="text-xl font-bold uppercase text-color-primary lg:text-[26px]"
+                    >Sex, 05 de Maio</span
+                  ><br />
+                  <span
+                    class="text-left text-sm font-normal text-color-secondary lg:text-[18px]"
+                    >Fundamentos da Informática</span
+                  ><br />
+                  <span
+                    class="text-left text-sm font-normal text-color-secondary lg:text-[18px]"
+                    >3º Desenvolvimento de Sistemas</span
+                  ><br />
+                  <span
+                    class="text-left text-sm font-normal text-color-secondary lg:text-[18px]"
+                    >Lab 30 - Área de Informática</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="swiper-slide justify-center">
+            <div class="flex justify-center px-12">
+              <div
+                class="h-[280px] w-[360px] flex-col rounded-2xl bg-white px-4 py-8 lg:h-[320px] lg:w-[480px] lg:px-6 lg:py-8"
+              >
+                <div class="ml-2 leading-[44px] lg:leading-[50px]">
+                  <span
+                    class="text-left text-[16px] font-normal text-color-primary lg:text-[22px]"
+                    >Próxima Aula</span
+                  >
+                  <span
+                    class="text-left text-xl font-normal text-color-secondary lg:text-[22px]"
+                    >(13:00-13:50)</span
+                  ><br />
+                  <span
+                    class="text-xl font-bold uppercase text-color-primary lg:text-[26px]"
+                    >Sex, 05 de Maio</span
+                  ><br />
+                  <span
+                    class="text-left text-sm font-normal text-color-secondary lg:text-[18px]"
+                    >Fundamentos da Informática</span
+                  ><br />
+                  <span
+                    class="text-left text-sm font-normal text-color-secondary lg:text-[18px]"
+                    >3º Desenvolvimento de Sistemas</span
+                  ><br />
+                  <span
+                    class="text-left text-sm font-normal text-color-secondary lg:text-[18px]"
+                    >Lab 30 - Área de Informática</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+      </div>
     </div>
-    <a href="{% url 'enroll' %}" class="btn flex items-center font-semibold">
-      <span class="mr-1 font-semibold">Matricular</span>
-      <box-icon name="user-plus" color="white" />
-    </a>
-  </form>
-
-  <table class="mt-4 table-auto">
-    <thead>
-      <tr>
-        <td>RM</td>
-        <td>Nome</td>
-        <td>Nascimento</td>
-        <td>Gênero</td>
-        <td>E-mail</td>
-        <td>Telefone</td>
-      </tr>
-    </thead>
-    {% for user in users %}
-    {% if not user.is_staff %}
-    <tr>
-      <td>{{ user.rm }}</td>
-      <td>{{ user.username }}</td>
-      <td>{{ user.birthdate|date:'d/m/Y' }}</td>
-      <td>{{ user.gender }}</td>
-      <td>{{ user.email }}</td>
-      <td>{{ user.phone }}</td>
-    </tr>
-    {% endif %}
-    {% endfor %}
-  </table>
-
-  <h1 class="mt-5 mb-3 from-sky-800 font-sans text-3xl font-bold">Professores</h1>
-  <form action="sla" method="get" class="flex items-stretch justify-between">
-    <div class="relative flex gap-3" x-data="{ input: '', clear() { this.input = '' } }">
-      <label for="slField" class="text-xl font-medium">Procurar por:</label>
-      <select name="query_field" id="slField">
-        <option value="name" selected>Nome</option>
-        <option value="email">Email ETEC</option>
-        <option value="email">Email pessoal</option>
-        <option value="parent">Nome do Pai/Mãe</option>
-        <option value="class">Classe</option>
-        <option value="grade">Série</option>
-        <option value="rm">RM</option>
-        <option value="custom">Customizado</option>
-      </select>
-      <input type="search" name="query" id="searchQuery" x-model:="input" />
-      <button class="absolute right-2 top-2 transition-all" :class="input || 'scale-0'" @click.prevent="clear()">
-        <box-icon name="x-circle" color="gray" />
-      </button>
+    <div class="hidden items-center justify-center md:flex">
+      <img
+        src="{% static '/core/images/aluno.png' %}"
+        class="mb-5 ml-10 h-[300px] w-[380px] md:block"
+      />
     </div>
-    <a href="{% url 'enrollprofessores' %}" class="btn flex items-center font-semibold">
-      <span class="mr-1 font-semibold">Matricular</span>
-      <box-icon name="user-plus" color="white" />
-    </a>
-  </form>
+  </div>
+  <h1
+    class="mb-10 mt-6 text-center text-[40px] font-bold text-color-primary md:text-left"
+  >
+    Semana
+  </h1>
+
+  <div class="mb-6 mt-6 flex justify-center md:mt-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5 gap-10">
+      <!-- Card 1 -->
+      <div class="flex justify-center ">
+        <div class="flex h-[150px] w-[270px] flex-col items-center justify-center rounded-2xl bg-white px-4 py-8 xl:px-2">
+          <div class="ml-2 leading-[30px]">
+            <span class="text-[28px] font-normal text-color-primary">22 | Seg</span><br />
+            <span class="text-left text-sm font-normal text-gray-500">Fundamentos da Informática</span><br />
+            <span class="text-left text-sm font-normal text-gray-500">3º Desenvolvimento de Sistemas</span>
+          </div>
+        </div>
+      </div>
   
-  <table class="mt-4 table-auto">
-    <thead>
-      <tr>
-        <td>RM</td>
-        <td>Nome</td>
-        <td>Nascimento</td>
-        <td>Gênero</td>
-        <td>E-mail</td>
-        <td>Telefone</td>
-      </tr>
-    </thead>
-    {% for user in users %}
-    {% if user.is_staff %}
-    <tr>
-      <td>{{ user.rm }}</td>
-      <td>{{ user.username }}</td>
-      <td>{{ user.birthdate|date:'d/m/Y' }}</td>
-      <td>{{ user.gender }}</td>
-      <td>{{ user.email }}</td>
-      <td>{{ user.phone }}</td>
-    </tr>
-    {% endif %}
-    {% endfor %}
-  </table>
+      <!-- Card 2 -->
+      <div class="flex justify-center ">
+        <div class="flex h-[150px] w-[270px] flex-col items-center justify-center rounded-2xl bg-white px-4 py-8 xl:px-2">
+          <div class="ml-2 leading-[30px]">
+            <span class="text-[28px] font-normal text-color-primary">22 | Seg</span><br />
+            <span class="text-left text-sm font-normal text-gray-500">Fundamentos da Informática</span><br />
+            <span class="text-left text-sm font-normal text-gray-500">3º Desenvolvimento de Sistemas</span>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Card 3 -->
+      <div class="flex justify-center ">
+        <div class="flex h-[150px] w-[270px] flex-col items-center justify-center rounded-2xl bg-white px-4 py-8 xl:px-2">
+          <div class="ml-2 leading-[30px]">
+            <span class="text-[28px] font-normal text-color-primary">22 | Seg</span><br />
+            <span class="text-left text-sm font-normal text-gray-500">Fundamentos da Informática</span><br />
+            <span class="text-left text-sm font-normal text-gray-500">3º Desenvolvimento de Sistemas</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="flex justify-center ">
+        <div class="flex h-[150px] w-[270px] flex-col items-center justify-center rounded-2xl bg-white px-4 py-8 xl:px-2">
+          <div class="ml-2 leading-[30px]">
+            <span class="text-[28px] font-normal text-color-primary">22 | Seg</span><br />
+            <span class="text-left text-sm font-normal text-gray-500">Fundamentos da Informática</span><br />
+            <span class="text-left text-sm font-normal text-gray-500">3º Desenvolvimento de Sistemas</span>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Card 4 -->
+      <div class="flex justify-center">
+        <div class="flex h-[150px] w-[270px] flex-col items-center justify-center rounded-2xl bg-white px-4 py-8 xl:px-2">
+          <div class="ml-2 leading-[30px]">
+            <span class="text-[28px] font-normal text-color-primary">22 | Seg</span><br />
+            <span class="text-left text-sm font-normal text-gray-500">Fundamentos da Informática</span><br />
+            <span class="text-left text-sm font-normal text-gray-500">3º Desenvolvimento de Sistemas</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </main>
-{% endblock content %}
+{% endblock %}
