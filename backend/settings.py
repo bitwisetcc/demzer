@@ -25,6 +25,7 @@ from os import environ, getenv
 from pathlib import Path
 from datetime import date
 import dotenv
+import os
 
 dotenv.load_dotenv()
 
@@ -43,8 +44,8 @@ STORAGE_BUCKET = getenv("STORAGE_URL")
 LESSON_DURATION = 50 
 TURNS = {"M": "7:00", "E": "13:00", "N": "19:00"}
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-MEDIA_ROOT = BASE_DIR / "user_media"
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+MEDIA_ROOT = os.path.join(BASE_DIR, 'user_media')
 
 SECRET_KEY = getenv("CSRF_KEY", "DEMZER-INSECURE-KEY")
 
@@ -53,11 +54,6 @@ DEBUG = True
 SECURE_SSL_REDIRECT = False
 
 ALLOWED_HOSTS = []
-
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-    # "/var/www/static/",
-]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -145,7 +141,9 @@ USE_I18N = True
 
 USE_TZ = True
 
-STATIC_URL = "static/"
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
