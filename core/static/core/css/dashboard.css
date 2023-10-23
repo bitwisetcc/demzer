@@ -1,3 +1,5 @@
 .control {
   @apply w-40 cursor-pointer rounded-xl p-4 text-lg shadow;
 }
+
+

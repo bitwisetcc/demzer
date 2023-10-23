@@ -18,7 +18,7 @@ from rolepermissions.roles import assign_role
 from core.models import Member, Relative
 from core.roles import Admin
 from core.utils import email_address, upload_img
-from management.models import Classroom
+from management.models import Classroom, Programming
 
 
 @login_required
@@ -26,7 +26,14 @@ def dashboard(request: HttpRequest):
     if has_role(request.user, Admin):
         return render(request, "core/dashboard.html")
     else:
-        return render(request, "core/home.html")
+        day = datetime.today().weekday()
+        programmings = Programming.objects.filter(
+            classroom=request.user.profile.classroom, day=day
+        )
+
+        return render(
+            request, "core/home.html", {"programmings": programmings, "day": day}
+        )
 
 
 def login_user(request: HttpRequest, failed=0):
@@ -84,7 +91,9 @@ def enroll(request: HttpRequest):
         try:
             upload_img(request.FILES.get("picture"), str(user.pk))
         except Exception as exc:
-            messages.warning(request, "Failed to upload picture: {}".format(exc.args[0]))
+            messages.warning(
+                request, "Failed to upload picture: {}".format(exc.args[0])
+            )
 
         try:
             profile = Member.objects.create(

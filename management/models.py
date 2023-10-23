@@ -18,7 +18,6 @@ from django.db.models import (
     IntegerField,
     SlugField,
     PositiveSmallIntegerField,
-    Q
 )
 from django.forms import ValidationError
 from django.http import HttpRequest
@@ -94,7 +93,7 @@ class Programming(Model):
         TUESDAY = 1, _("Terça")
         WEDNESDAY = 2, _("Quarta")
         THURSDAY = 3, _("Quinta")
-        SUNDAY = 4, _("Sexta")
+        FRIDAY = 4, _("Sexta")
 
     classroom = ForeignKey(Classroom, CASCADE, related_name="+", null=True)
     teacher = ForeignKey(User, SET_NULL, null=True)
@@ -113,7 +112,9 @@ class Programming(Model):
         try:
             day = Programming.Days.choices[int(request.POST.get("day"))][0]
             time = request.POST.get("time")
-            teacher = User.objects.get(username__startswith=teacher_name)
+            teacher = User.objects.get(
+                username__startswith=teacher_name, groups__name__in=["Teacher"]
+            )
             subject = Subject.objects.get(pk=subject_pk)
 
             if not has_role(teacher, Teacher):
