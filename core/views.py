@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.http import Http404, HttpRequest, HttpResponse, HttpResponseBadRequest
+from django.db.models import Q
 from django.shortcuts import redirect, render
 from rolepermissions.checkers import has_role
 from rolepermissions.decorators import has_permission_decorator as check_permission
@@ -28,8 +29,10 @@ def dashboard(request: HttpRequest):
     else:
         day = datetime.today().weekday()
         programmings = Programming.objects.filter(
-            classroom=request.user.profile.classroom, day=day
-        )
+            Q(group=None) | Q(group=request.user.profile.division),
+            classroom=request.user.profile.classroom,
+            day=day,
+        ).order_by("order")
 
         return render(
             request, "core/home.html", {"programmings": programmings, "day": day}

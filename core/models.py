@@ -14,6 +14,7 @@ from django.db.models import (
     Model,
     OneToOneField,
     TextChoices,
+    PositiveSmallIntegerField,
 )
 from django.utils.translation import gettext_lazy as _
 
@@ -109,7 +110,7 @@ class Member(Model):
     relatives = ManyToManyField(Relative)
     classroom = ForeignKey(Classroom, SET_NULL, related_name="students", null=True)
     status = CharField(null=True, max_length=10)
-    division = CharField(max_length=1, null=True)
+    division = PositiveSmallIntegerField(null=True, default=1)
 
     def json(self):
         return {
