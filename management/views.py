@@ -15,7 +15,7 @@ from rolepermissions.decorators import has_permission_decorator as check_permiss
 from rolepermissions.roles import assign_role
 
 from core.models import Member
-from core.roles import Teacher
+from core.roles import Admin, Teacher
 from core.utils import csv_data, dexc, dfilter, get_coordinator
 from management.models import Course, Subject, Programming, Classroom
 
@@ -291,7 +291,8 @@ def create_subject(request: HttpRequest):
 # TODO: if the cell is empty and you try to create a split programming, only the last one is created
 def schedules(request: HttpRequest, classroom_id: int):
     if request.method == "POST":
-        if not has_permission(request.user, "create_schedule"):
+        # TODO: use `has_permission`
+        if not has_role(request.user, Admin):
             messages.warning(request, "Você não tem permissão para marcar aulas")
             return redirect("schedules", classroom_id=classroom_id)
 
@@ -357,3 +358,20 @@ def schedules(request: HttpRequest, classroom_id: int):
             "programmings": programmings,
         },
     )
+
+
+# TODO: check permission
+@require_POST
+def delete_schedule(request: HttpRequest):
+    body = json.loads(request.body.decode())
+    classroom_id = int(body["classroom"])
+
+    query = Programming.objects.filter(
+        classroom=Classroom.objects.get(pk=classroom_id),
+        day=body["day"],
+        order=body["time"],
+    )
+
+    messages.success(request, "{} aulas foram excluídas".format(query.count()))
+    query.delete()
+    return redirect("schedules", classroom_id=classroom_id)
