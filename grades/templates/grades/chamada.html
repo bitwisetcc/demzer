@@ -1,0 +1,120 @@
+{% extends 'core/base.html' %} {% load static %} {% block head %}
+
+<script defer src="{% static 'core/js/chamada.js' %}"></script>
+
+{% endblock %} {% block content %}
+<main class="framed m-8 mb-10 px-5">
+  <h1
+    class="mt-6 text-center text-[40px] font-bold text-color-secondary md:text-left"
+  >
+    Turma
+  </h1>
+
+  <div class="flex w-[100%] justify-center">
+    <div
+      class="mt-2 flex w-full flex-col items-center justify-center md:flex-row"
+    >
+      <div class="my-2 w-full md:mx-3">
+        <span class="my-2 flex justify-center text-xl text-color-primary"
+          >Sala</span
+        >
+        <select name="Sala" class="w-full rounded-full text-center">
+          <option>1ºGT</option>
+          <option>2ºHT</option>
+        </select>
+      </div>
+      <div class="my-2 w-full md:mx-3">
+        <span class="my-2 flex justify-center text-xl text-color-primary"
+          >Turma</span
+        >
+        <select name="Turma" class="w-full rounded-full text-center">
+          <option>Todas</option>
+          <option>A</option>
+          <option>B</option>
+        </select>
+      </div>
+      <div class="my-2 w-full md:mx-3">
+        <span class="my-2 flex justify-center text-xl text-color-primary"
+          >Aula</span
+        >
+        <select name="Aula" class="w-full rounded-full text-center">
+          <option>PW1</option>
+          <option>TPA</option>
+          <option>GEO</option>
+        </select>
+      </div>
+      <div class="my-2 w-full md:mx-3">
+        <span class="my-2 flex justify-center text-xl text-color-primary"
+          >Data</span
+        >
+        <input
+          type="date"
+          class="w-full rounded-full text-center"
+          id="dataAtual"
+        />
+      </div>
+      <div class="my-2 w-full md:mx-3">
+        <span class="my-2 flex justify-center text-xl text-color-primary"
+          >Quantidade</span
+        >
+        <select id="quantidadeAulas" class="w-full rounded-full text-center">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <h1
+    class="mt-6 text-center text-[40px] font-bold text-color-secondary md:text-left"
+  >
+    Chamada
+  </h1>
+  <div class="flex flex-col md:flex-row">
+    <div class="md:w-1/2">
+      <div class="container mx-auto mt-6">
+        <table class="w-full rounded-none border bg-white shadow-md">
+          <thead class="bg-color-secondary">
+            <tr>
+              <!-- Conteúdo do cabeçalho da tabela -->
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Conteúdo do corpo da tabela -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="md:w-1/2 md:pl-10">
+      <div class="mt-5 flex w-full justify-center md:justify-start">
+        <div
+          class="block h-[380px] w-full rounded-2xl bg-white px-6 py-2 md:h-[380px]"
+        >
+          <h1
+            class="mb-2 mt-2 text-center text-[40px] font-bold text-color-secondary md:text-left"
+          >
+            Diário
+          </h1>
+          <div class="field flex-grow">
+            <textarea
+              id="conteudo"
+              name="reclamacao"
+              class="h-64 w-full rounded border border-gray-300 px-4 py-2"
+              placeholder="Digite o conteúdo da aula aqui"
+            ></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-10">
+        <input
+          type="submit"
+          value="Enviar"
+          class="text-bold bg-color-secondary-dimm block w-full rounded-full border border-color-secondary px-12 py-4 text-[21px] font-bold text-color-secondary md:mx-auto md:mt-3"
+        />
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}

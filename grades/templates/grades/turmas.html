@@ -1,0 +1,563 @@
+{% extends 'core/base.html' %} {% load static %} {% block head %}
+<script defer>
+  const inputDate = document.getElementById("dataAtual");
+  const dataAtual = new Date().toISOString().split("T")[0];
+  inputDate.value = dataAtual;
+</script>
+<title>Turmas</title>
+{% endblock %} {% block content %}
+<main class="framed m-2 mb-20 px-5 md:m-8" x-data="{ createDialog: false }">
+  <h1
+    class="mt-6 text-center text-[40px] font-bold text-color-secondary md:text-left"
+  >
+    Turma
+  </h1>
+
+  <!--Inicio Menu Filtros -->
+
+  <div class="flex w-[100%] justify-center">
+    <div
+      class="mt-2 flex w-full flex-col items-center justify-center md:flex-row"
+    >
+      <div class="my-2 w-full md:mx-3">
+        <span class="my-2 flex justify-center text-xl text-color-primary"
+          >Sala</span
+        >
+        <select name="Sala" class="w-full rounded-full text-center">
+          <option>1ºGT</option>
+          <option>2ºHT</option>
+        </select>
+      </div>
+      <div class="my-2 w-full md:mx-3">
+        <span class="my-2 flex justify-center text-xl text-color-primary"
+          >Turma</span
+        >
+        <select name="Turma" class="w-full rounded-full text-center">
+          <option>Todas</option>
+          <option>A</option>
+          <option>B</option>
+        </select>
+      </div>
+      <div class="my-2 w-full md:mx-3">
+        <span class="my-2 flex justify-center text-xl text-color-primary"
+          >Aula</span
+        >
+        <select name="Aula" class="w-full rounded-full text-center">
+          <option>PW1</option>
+          <option>TPA</option>
+          <option>GEO</option>
+        </select>
+      </div>
+      <div class="my-2 w-full md:mx-3">
+        <span class="my-2 flex justify-center text-xl text-color-primary"
+          >Data</span
+        >
+        <input
+          type="date"
+          class="w-full rounded-full text-center"
+          id="dataAtual"
+        />
+      </div>
+    </div>
+  </div>
+
+  <!--Fim do Menu Filtros-->
+
+  <!--Inicio Tabs-->
+
+  <div class="mt-6" x-data="{ selected: 'option-1' }">
+    <nav class="">
+      <ul class="flex justify-center">
+        <!-- Option Notas -->
+        <li
+          class="flex items-center px-4 py-2"
+          :class="{ 'border-b-2 border-color-primary': selected === 'option-1' }"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            class="h-6 w-6 text-color-primary"
+            @click="selected = 'option-1'"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z"
+            />
+          </svg>
+          <a
+            href="#option-1"
+            @click="selected = 'option-1'"
+            class="hidden text-color-primary md:block"
+            >Notas</a
+          >
+        </li>
+        <!-- Option Provas -->
+        <li
+          class="flex items-center px-4 py-2"
+          :class="{ 'border-b-2 border-color-primary': selected === 'option-2' }"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-6 w-6 text-color-primary"
+            @click="selected = 'option-2'"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z"
+            />
+          </svg>
+          <a
+            href="#option-2"
+            @click="selected = 'option-2'"
+            class="hidden text-color-primary md:block"
+            >Prova | Atividade</a
+          >
+        </li>
+        <!-- Option Reposições -->
+        <li
+          class="flex items-center px-4 py-2"
+          :class="{ 'border-b-2 border-color-primary': selected === 'option-3' }"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-6 w-6 text-color-primary"
+            @click="selected = 'option-3'"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125"
+            />
+          </svg>
+          <a
+            href="#option-3"
+            @click="selected = 'option-3'"
+            class="hidden text-color-primary md:block"
+            >Reposições</a
+          >
+        </li>
+        <!-- Option Plano de Ensino -->
+        <li
+          class="flex items-center px-4 py-2"
+          :class="{ 'border-b-2 border-color-primary': selected === 'option-4' }"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-6 w-6 text-color-primary"
+            @click="selected = 'option-4'"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5"
+            />
+          </svg>
+          <a
+            href="#option-4"
+            @click="selected = 'option-4'"
+            class="hidden text-color-primary md:block"
+            >Plano de Ensino</a
+          >
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Inicio Notas Screen -->
+
+    <div
+      x-show.transition.in.opacity.duration.750ms="selected === 'option-1'"
+      class="p-4"
+    >
+      <div
+        class="mb-6 mt-4 flex flex-row items-center justify-center text-center"
+      >
+        <span
+          class="mr-2 text-center text-[25px] font-semibold text-color-primary"
+          >Bimestre:</span
+        >
+        <select name="Bimestre" class="h-10 w-80 rounded-full text-center">
+          <option>1ºBimestre</option>
+          <option>2ºBimestre</option>
+          <option>3ºBimestre</option>
+          <option>4ºBimestre</option>
+        </select>
+      </div>
+      <div class="flex flex-col md:flex-row">
+        <div
+          class="flex w-full flex-grow flex-col rounded-2xl bg-white p-5 md:mr-2 md:mt-4 md:flex-col md:justify-center"
+        >
+          <span
+            class="md:text[38px] mb-2 text-center text-[30px] font-semibold text-color-secondary"
+            >Atribuir Nota</span
+          >
+          <div class="my-4 flex flex-col gap-4 text-center">
+            <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
+            <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
+            <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
+            <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
+            <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
+            <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
+            <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
+            <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
+            <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
+            <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
+            <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
+            <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
+            <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
+            <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
+            <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
+            <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
+          </div>
+        </div>
+        <div
+          class="mt-4 flex w-full flex-grow flex-col rounded-2xl bg-white p-5 md:ml-2 md:justify-center"
+        >
+          <span class="text-center text-[28px] font-semibold text-color-primary"
+            >Apolo Fonseca da Bezerra</span
+          >
+          <div class="my-2 w-full">
+            <span class="my-2 flex justify-center text-xl text-color-secondary"
+              >Tarefa</span
+            >
+            <select name="Tarefa" class="w-full rounded-full text-center">
+              <option>Prova</option>
+              <option>Atividade</option>
+            </select>
+          </div>
+          <div class="my-2 w-full">
+            <span class="my-2 flex justify-center text-xl text-color-secondary"
+              >Nota</span
+            >
+            <select name="Nota" class="w-full rounded-full text-center">
+              <option>I</option>
+              <option>R</option>
+              <option>B</option>
+              <option>MB</option>
+            </select>
+          </div>
+          <div class="my-2 w-full">
+            <span class="my-2 flex justify-center text-xl text-color-secondary"
+              >Menções</span
+            >
+            <select name="Mencao" class="w-full rounded-full text-center">
+              <option>M1</option>
+              <option>M2</option>
+              <option>M3</option>
+            </select>
+          </div>
+          <div class="field flex flex-row justify-center text-center">
+            <div class="w-full">
+              <span
+                class="my-2 flex justify-center text-center text-xl text-color-secondary"
+                >Justificativa</span
+              >
+            </div>
+            <textarea
+              id="reclamacao"
+              name="reclamacao"
+              class="h-80 w-full resize-none rounded border border-gray-300 px-4 py-2"
+              placeholder="Digite sua reclamação aqui"
+            ></textarea>
+          </div>
+          <div class="flex w-full flex-col gap-3 md:block md:gap-2">
+            <input
+              type="submit"
+              value="Enviar"
+              class="text-bold bg-color-secondary-dimm mt-6 rounded-full border border-color-secondary px-12 py-4 text-[21px] font-bold text-color-secondary md:mx-auto md:block"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="mt-4 flex h-[950px] w-[full] flex-col rounded-2xl bg-white p-5 md:h-[800px] md:flex-col"
+      >
+        <div class="flex h-[8%] w-full flex-row items-center">
+          <span
+            class="mr-1 text-[30px] font-semibold text-color-secondary md:mr-2 md:text-[32px]"
+            >Visão Geral</span
+          >
+          <div
+            class="flex flex-row rounded-full border border-color-secondary px-4 py-1"
+          >
+            <span
+              class="mr-2 hidden font-extralight text-color-secondary sm:block"
+              >Importar</span
+            >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="h-6 w-6 text-color-secondary"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15"
+              />
+            </svg>
+          </div>
+          <div class="flex items-end md:ml-auto">
+            <span>entrega de notas entre 23/06 e 27/06</span>
+          </div>
+        </div>
+        <div class="flex justify-center">
+          <section class="box lg:w-max overflow-x-scroll">
+            <table class="main-table border-separate border-spacing-3 px-2">
+              <thead>
+                <tr>
+                  <th><!-- empty --></th>
+                  <th>M1</th>
+                  <th>M2</th>
+                  <th>M3</th>
+                  <th>MF</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td data-tippy-content="">Giovanni de Pita Cicero</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fim Notas Screen -->
+
+    <!-- Inicio Provas Screen -->
+
+    <div
+      x-show.transition.in.opacity.duration.750ms="selected === 'option-2'"
+      class="p-4"
+    >
+      <div
+        class="mb-6 mt-4 flex w-full flex-row items-center justify-between text-center"
+      >
+        <select
+          name="Bimestre"
+          class="mr-1 h-10 w-64 rounded-full text-center md:mr-0"
+        >
+          <option>1ºBimestre</option>
+          <option>2ºBimestre</option>
+          <option>3ºBimestre</option>
+          <option>4ºBimestre</option>
+        </select>
+        <button @click="createDialog = true">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-10 w-10 text-color-primary"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+        </button>
+      </div>
+
+      <div
+        :class="createDialog ? 'flex' : 'hidden'"
+        class="fixed inset-0 items-center justify-center bg-black bg-opacity-25"
+      >
+        <div
+          class="m-4 h-[90%] w-[90%] rounded-3xl bg-white pb-10 md:h-[600px] md:w-[600px]"
+        >
+          <header class="mx-10 mt-8 flex justify-between text-3xl font-bold">
+            <h2 class="text-color-primary">Marcar Avaliações</h2>
+            <div>
+              <button
+                @click.prevent="createDialog = false"
+                class="text-3xl font-bold text-color-primary"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="h-6 w-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+          </header>
+          <section class="flex flex-col gap-3 p-10">
+            <div class="flex flex-col text-lg font-normal">
+              <label>Bimestre:</label>
+              <select
+                name="Bimestre"
+                class="mb-1 h-10 w-64 rounded-full text-center"
+              >
+                <option>1ºBimestre</option>
+                <option>2ºBimestre</option>
+                <option>3ºBimestre</option>
+                <option>4ºBimestre</option>
+              </select>
+            </div>
+            <div class="flex flex-row">
+              <div class="flex w-full flex-col text-lg font-normal">
+                <label>Peso:</label>
+                <select name="Peso" class="h-10 w-36 rounded-full text-center">
+                  <option>M1</option>
+                  <option>M2</option>
+                  <option>M3</option>
+                  <option>M4</option>
+                </select>
+              </div>
+              <div class="flex w-full flex-col text-lg font-normal">
+                <label>Tipo:</label>
+                <select name="Tipo" class="h-10 w-36 rounded-full text-center">
+                  <option>Atividade</option>
+                  <option>Prova</option>
+                </select>
+              </div>
+            </div>
+            <div class="flex flex-col px-12 text-lg font-normal">
+              <label>Titulo:</label>
+              <input type="text" class="h-10" name="title" required />
+            </div>
+            <div
+              class="flex items-center gap-1 px-12 text-lg font-normal"
+              x-data="{ anexoMencao: 'Anexo' }"
+            >
+              <label>Data de Lançamento:</label>
+              <input
+                type="date"
+                :min="new Date().toISOString().split('T')[0]"
+                :value="new Date().toISOString().split('T')[0]"
+                name="date"
+              />
+              <label
+                for="file-picture"
+                class="btn ml-3 flex w-max cursor-pointer items-center gap-1"
+              >
+                <span
+                  class="truncate"
+                  x-text="anexoMencao ?? 'Foto de perfil'"
+                ></span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2.2"
+                  stroke="currentColor"
+                  class="h-5 w-5"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15"
+                  />
+                </svg>
+              </label>
+              <input
+                type="file"
+                name="image"
+                id="file-picture"
+                accept="image/*"
+                required
+                hidden
+                @input="imageName = $el.files[0].name"
+              />
+            </div>
+            <div class="flex h-full flex-col px-12 text-lg font-normal">
+              <label class="pb-2">Conteúdo:</label>
+              <textarea
+                class="h-[180px] w-full resize-none"
+                placeholder="Digite o Comunicado aqui"
+                name="info"
+                required
+              ></textarea>
+            </div>
+            <div class="flex items-center gap-1 px-12 text-lg font-normal">
+              <label>Apenas para professores:</label>
+              <input type="checkbox" name="staff_only" />
+            </div>
+            <div class="flex flex-col px-12 text-lg font-normal">
+              <label>Para o curso:</label>
+              <input
+                type="text"
+                class="h-10"
+                name="course"
+                placeholder="Deixe em branco para um comunicado geral"
+              />
+            </div>
+            <div class="flex flex-col px-12 text-lg font-normal">
+              <label>Para a turma:</label>
+              <input
+                type="text"
+                class="h-10"
+                name="course"
+                placeholder="Deixe em branco para um comunicado geral"
+              />
+            </div>
+            <div class="flex justify-center pt-6">
+              <button
+                type="submit"
+                class="h-12 w-32 rounded-full border-2 border-solid border-color-secondary text-2xl font-bold text-color-secondary transition hover:bg-color-hover"
+              >
+                Aplicar
+              </button>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fim Provas Screen -->
+
+    <div
+      x-show.transition.in.opacity.duration.750ms="selected === 'option-3'"
+      class="p-4"
+    >
+      Reposições
+    </div>
+
+    <div
+      x-show.transition.in.opacity.duration.750ms="selected === 'option-4'"
+      class="p-4"
+    >
+      Plano de Ensino
+    </div>
+  </div>
+
+  <!-- Fim Tabs -->
+</main>
+{% endblock %}
