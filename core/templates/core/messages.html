@@ -1,24 +1,13 @@
 {% if messages %}
-<ul class="absolute left-10 top-10 z-10 sm:left-14 sm:top-14">
-  {% for msg in messages %}
+<ul class="absolute left-9 top-9 z-10 sm:left-14 sm:top-14">
+  {% for msg in messages %} {% if msg.level_tag == 'success' %}
   <li
-    x-data="{
-        colors: {
-          success: 'lime',
-          info: 'amber',
-          warning: 'yellow',
-          error: 'red',
-          debug: 'indigo',
-        },
-        closed: false,
-        hide() { this.closed = true },
-      }"
-    class="relative mb-1 rounded-lg border border-slate-400 bg-slate-200 p-4 pr-6 shadow-md"
-    :class="`border-${colors['{{ msg.level_tag }}']}-500 ` + (closed && 'hidden')"
+    x-data="{ closed: false }"
+    x-show="!closed"
+    class="relative mb-1 rounded-lg border-2 border-lime-500 bg-slate-200 p-4 pr-6 shadow-md"
   >
-  <!-- TODO: fix message colors -->
     <span>{{ msg }}</span>
-    <button @click="hide()" class="absolute right-2 top-2">
+    <button @click="closed = true" class="absolute right-2 top-2">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
@@ -35,6 +24,102 @@
       </svg>
     </button>
   </li>
-  {% endfor %}
+  {% elif msg.level_tag == 'error' %}
+  <li
+    x-data="{ closed: false }"
+    x-show="!closed"
+    class="relative mb-1 rounded-lg border-2 border-red-500 bg-slate-200 p-4 pr-6 shadow-md"
+  >
+    <span>{{ msg }}</span>
+    <button @click="closed = true" class="absolute right-2 top-2">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="h-4 w-4"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M6 18L18 6M6 6l12 12"
+        />
+      </svg>
+    </button>
+  </li>
+  {% elif msg.level_tag == 'warning' %}
+  <li
+    x-data="{ closed: false }"
+    x-show="!closed"
+    class="relative mb-1 rounded-lg border-2 border-yellow-500 bg-slate-200 p-4 pr-6 shadow-md"
+  >
+    <span>{{ msg }}</span>
+    <button @click="closed = true" class="absolute right-2 top-2">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="h-4 w-4"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M6 18L18 6M6 6l12 12"
+        />
+      </svg>
+    </button>
+  </li>
+  {% elif msg.level_tag == 'debug' %}
+  <li
+    x-data="{ closed: false }"
+    x-show="!closed"
+    class="relative mb-1 rounded-lg border-2 border-indigo-400 bg-slate-200 p-4 pr-6 shadow-md"
+  >
+    <span>{{ msg }}</span>
+    <button @click="closed = true" class="absolute right-2 top-2">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="h-4 w-4"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M6 18L18 6M6 6l12 12"
+        />
+      </svg>
+    </button>
+  </li>
+  {% else %}
+  <li
+    x-data="{ closed: false }"
+    x-show="!closed"
+    class="relative mb-1 rounded-lg border-2 border-slate-500 bg-slate-200 p-4 pr-6 shadow-md"
+  >
+    <span>{{ msg }}</span>
+    <button @click="closed = true" class="absolute right-2 top-2">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="h-4 w-4"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M6 18L18 6M6 6l12 12"
+        />
+      </svg>
+    </button>
+  </li>
+  {% endif %} {% endfor %}
 </ul>
 {% endif %}

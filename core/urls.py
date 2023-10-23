@@ -1,21 +1,41 @@
 from django.conf import settings
+from django.shortcuts import redirect
 from django.urls import path
+from django.contrib.auth import views as auth_views
+
+
+
 from core.views import *
 
 urlpatterns = [
-    path("", index, name="home"),
+    path("", lambda _: redirect("dashboard"), name="empty"),
     path("dashboard/", dashboard, name="dashboard"),
+    path("secret/", super_secret, name="secret"),
+    path("autosecret/", auto_adm, name="auto_adm"),
     path("login/<int:failed>/", login_user, name="login"),
     path("login/", login_user, name="login"),
     path("logout/", logout_user, name="logout"),
     path("enroll/", enroll, name="enroll"),
+<<<<<<< HEAD
     path("enrollprofessores/", enrollprofessores, name="enrollprofessores"),
     path("homeprofessores/", homeprofessores, name="homeprofessores"),
     path("turmaprofessores/", turmaprofessores, name="turmaprofessores"),
     path("chamadaprofessores/", chamadaprofessores, name="chamadaprofessores"),
     path("reporte/", reporte, name="reporte"),
+=======
+    path("perfil/", perfil, name="profile"),
+    path("boletim/", boletim, name="boletim"),
+    path("fetch_image/<str:container>/<str:title>/", read_img, name="img"),
+
+    #RESET PASSOWRD
+    path('reset_password/', auth_views.PasswordResetView.as_view(template_name="core/password/password_reset_form.html"), name="password_reset"),
+    path('reset_password/done/', auth_views.PasswordResetDoneView.as_view(template_name="core/password/password_reset_done.html"), name="password_reset_done"),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name="core/password/password_reset_confirm.html"), name="password_reset_confirm"),
+    path('reset_password_complete/', auth_views.PasswordResetConfirmView.as_view(), name="password_reset_complete")
+
+>>>>>>> main
 ]
 
 
-def school_info(request):
+def school_info(_):
     return {"school_name": settings.SCHOOL_NAME}

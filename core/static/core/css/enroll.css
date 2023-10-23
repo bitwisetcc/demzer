@@ -1,11 +1,7 @@
-main.framed {
-  @apply border border-slate-400 shadow-md;
-}
-
 form > section > article > * {
   @apply mb-2 last:mb-0;
 }
 
 form section article {
-  @apply border border-slate-300 bg-slate-200 px-11 py-9;
+  @apply border border-slate-300 bg-gray-200 px-11 py-7;
 }

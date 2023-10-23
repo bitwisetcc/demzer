@@ -21,9 +21,12 @@ Internationalization
 https://docs.djangoproject.com/en/4.1/topics/i18n
 """
 
-from os import environ
+from os import environ, getenv
 from pathlib import Path
 from datetime import date
+import dotenv
+
+dotenv.load_dotenv()
 
 DEFAULT_COUNTRY = "Brasil"
 DEFAULT_STATE = "SP"
@@ -32,12 +35,18 @@ DEFAULT_BIRTHDATE = date(date.today().year - 15, 1, 1)
 
 SCHOOL_NAME = "ETEC Jorge Street"
 EMAIL_PATTERN = "{}.{}@etec.sp.gov.br"
+SECURITY_KEY = getenv("MASTER_KEY")
 
+STORAGE_BUCKET = getenv("STORAGE_URL")
+
+# MAYBE: add these as a course attribute
+LESSON_DURATION = 50 
+TURNS = {"M": "7:00", "E": "13:00", "N": "19:00"}
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+MEDIA_ROOT = BASE_DIR / "user_media"
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-j*9=2)w4ojo9evy9yje0kc)3aysl^e!p1m9w)j6)sr2akot4j="
+SECRET_KEY = getenv("CSRF_KEY", "DEMZER-INSECURE-KEY")
 
 DEBUG = True
 
@@ -47,7 +56,7 @@ ALLOWED_HOSTS = []
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
-    "/var/www/static/",
+    # "/var/www/static/",
 ]
 
 INSTALLED_APPS = [
@@ -57,8 +66,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rolepermissions",
     "core",
     "management",
+    "grades",
+    "communication",
 ]
 
 REST_FRAMEWORK = {
@@ -97,21 +109,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "backend.wsgi.application"
 
-DB_ENGINE = environ.get("DB_ENGINE", "sqlite3")
-
-
-if DB_ENGINE == "sqlite3":
-    DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": BASE_DIR / "db.sqlite3"}}
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.{}".format(DB_ENGINE),
-            "NAME": environ.get("DB_NAME", "tcc"),
-            "USER": environ.get("DB_USER", "root"),
-            "PASSWORD": environ.get("DB_PASSWORD", "root"),
-            "HOST": environ.get("DB_PASSWORD", "localhost"),
-        }
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": getenv("DB_NAME", "dev_demzer"),
+        "USER": getenv("DB_USER", "root"),
+        "PASSWORD": getenv("DB_PASSWORD", "root"),
+        "HOST": getenv("DB_HOST", "localhost"),
     }
+}
+
+# TODO: require secure transport azure > bitwisetcc > server parameters > require_secure_transport -> ON
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -144,3 +152,13 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "auth.User"
 
 LOGIN_URL = "/login/"
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = "587"
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'socialdemzer@gmail.com'
+EMAIL_HOST_PASSWORD = 'ogeqmgjlmqxlcmex'
+
+ROLEPERMISSIONS_MODULE = "core.roles"
+ROLEPERMISSIONS_SUPERUSER_SUPERPOWERS = False

@@ -1,0 +1,234 @@
+{% extends 'core/base.html' %} {% load permission_tags %} {% load static %} {% block head %}
+<title>Horários</title>
+<link rel="stylesheet" href="{% static 'core/dist/css/schedule.css' %}" />
+<script defer>
+  // To whoever may optimize this in the future:
+  // Remember to go outside and get some fresh air.
+  document.addEventListener("alpine:init", () => {
+    Alpine.data("timeTable", () => ({
+      init() {
+        // days monday - friday
+        const days = [
+          // {% for day in days %}
+          "{{ day.1 }}",
+          // {% endfor %}
+        ];
+
+        // time stamp ex: 13:00
+        const times = [
+          // {% for t in time_table %}
+          "{{ t }}",
+          // {% endfor %}
+        ];
+
+        // existing programmings to be displayed
+        const programmings = [
+          //{% for p in programmings %}
+          JSON.parse("{{ p.json }}".replace(/&quot;/g, '"')),
+          // {% endfor %}
+        ];
+
+        // find all cells of the calendar
+        const cells = document.querySelectorAll("tr > td:not(:first-child)");
+
+        // populate cells
+        programmings.forEach((p) => {
+          const cell = cells[p.order * 5 + p.day];
+          if (cell.innerHTML == "") cell.innerHTML = p.subject_slug;
+          else if (cell.innerHTML != p.subject_slug)
+            cell.innerHTML += " | " + p.subject_slug;
+        });
+
+        // display data to form when click
+        cells.forEach((el, i) =>
+          el.addEventListener("click", () => {
+            this.programmingTime = Math.floor(i / 5);
+            this.programmingTimeShow = times[this.programmingTime];
+            this.programmingDay = i % 5;
+            this.programmingDayShow = days[this.programmingDay];
+
+            // all programmings matching the current cell
+            const selected = programmings.filter(
+              (p) => p.order == Math.floor(i / 5) && p.day == i % 5
+            );
+
+            const empty = selected.length == 0;
+            const split = selected.length == 2;
+
+            this.studentGroup = split;
+            this.teacher = !empty ? selected[0].teacher : null;
+            this.subject = !empty ? selected[0].subject_pk : null;
+            this.teacherB = split ? selected[1].teacher : null;
+            this.subjectB = split ? selected[1].subject_pk : null;
+
+            if (selected.length > 2) {
+              console.warn("More than 2 programmings detected:");
+              console.log(selected);
+            }
+          })
+        );
+      },
+      programmingTime: 1,
+      programmingTimeShow: "",
+      programmingDay: 1,
+      programmingDayShow: "",
+      teacher: "",
+      teacherB: "",
+      subject: "",
+      subjectB: "",
+      studentGroup: false,
+      locked: "{{ user|has_role:'admin' }}" == "False",
+    }));
+  });
+</script>
+{% endblock %} {% block content %}
+<main class="p-10" x-data="timeTable">
+  <h1 class="mb-4 text-4xl font-semibold text-color-primary">
+    Horários - {{ classroom }}
+  </h1>
+  <article class="grid grid-cols-2 gap-20">
+    <table
+      class="table-fixed border-separate border-spacing-2 rounded-2xl bg-zinc-300 p-4"
+    >
+      <thead class="bg-transparent">
+        <tr>
+          <th></th>
+          {% for day in days %}
+          <th class="text-yellow-900">{{ day.1 }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for t in time_table %}
+        <tr>
+          <td class="mr-10 rounded-xl bg-color-primary-dimm text-white">
+            {{ t }}
+          </td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <section class="rounded-xl bg-zinc-300 p-5">
+      <h2 class="mb-1 ml-1 mt-1 text-2xl font-semibold">
+        {% if user|has_role:'admin' %} Editar aula {% else %} Detalhes {% endif %}
+      </h2>
+      <form
+        action="{% url 'schedules' classroom.pk %}"
+        method="post"
+        class="flex flex-col justify-end"
+      >
+        {% csrf_token %}
+        <input type="hidden" name="classroom" value="{{ classroom.pk }}" />
+        <section class="flex gap-2 p-4">
+          <input type="text" hidden id="txt-classroom" name="classroom" />
+          <div>
+            <label class="text-slate-500" id="txt-day">Dia:</label>
+            <input
+              type="text"
+              readonly
+              class="bg-slate-200 text-slate-500"
+              id="txt-day"
+              size="8"
+              maxlength="3"
+              x-model="programmingDayShow"
+            />
+            <input type="number" hidden name="day" x-model="programmingDay" />
+          </div>
+          <div>
+            <label class="text-slate-500" id="txt-time">Horário:</label>
+            <input
+              type="text"
+              readonly
+              class="bg-slate-200 text-slate-500"
+              id="txt-time"
+              size="6"
+              x-model="programmingTimeShow"
+            />
+            <input type="number" hidden name="time" x-model="programmingTime" />
+          </div>
+        </section>
+        <section class="flex flex-col gap-3 rounded-xl bg-zinc-200 p-4">
+          <div class="flex">
+            <div class="flex flex-col gap-3">
+              <div>
+                <label
+                  for="sl-subject"
+                  x-text="`Matéria${studentGroup ? ' A' : ''}:`"
+                ></label>
+                <select
+                  name="subject"
+                  id="sl-subject"
+                  x-model="subject"
+                  :disabled="locked"
+                >
+                  {% for subject in subjects %}
+                  <option value="{{ subject.pk }}">{{ subject.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div>
+                <label
+                  for="txt-teacher"
+                  x-text="`Professor${studentGroup ? ' A' : ''}:`"
+                ></label>
+                <input
+                  type="text"
+                  name="teacher"
+                  id="txt-teacher"
+                  x-model="teacher"
+                  :disabled="locked"
+                />
+              </div>
+            </div>
+            <template x-if="studentGroup != ''">
+              <div class="flex flex-col gap-3">
+                <div>
+                  <label for="sl-subject">Matéria B:</label>
+                  <select
+                    name="subject_b"
+                    id="sl-subject"
+                    x-model="subjectB"
+                    :disabled="locked"
+                  >
+                    {% for subject in subjects %}
+                    <option value="{{ subject.pk }}">{{ subject.name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div>
+                  <label for="txt-teacher">Professor B:</label>
+                  <input
+                    type="text"
+                    name="teacher_b"
+                    id="txt-teacher"
+                    x-model="teacherB"
+                    :disabled="locked"
+                  />
+                </div>
+              </div>
+            </template>
+          </div>
+          {% if user|has_role:'admin' %}
+          <div class="flex items-center gap-2">
+            <label for="ch-group">Divisão de turmas:</label>
+            <input
+              type="checkbox"
+              name="group"
+              id="ch-group"
+              x-model="studentGroup"
+            />
+          </div>
+          <button type="submit" class="mx-auto px-6 py-2">Salvar</button>
+          {% endif %}
+        </section>
+      </form>
+    </section>
+  </article>
+</main>
+{% endblock %}

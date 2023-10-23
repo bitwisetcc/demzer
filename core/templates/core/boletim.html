@@ -1,0 +1,227 @@
+{% extends 'core/base.html' %} {% load static %} {% block head %}
+<title>Boletim</title>
+<link rel="stylesheet" href="{% static 'core/dist/css/boletim.css' %}" />
+<script defer src="{% static 'core/js/filter.js' %}"></script>
+{% endblock %} {% block content %}
+<main class="px-8 pb-10">
+  <h1 class="my-8 ml-12 text-3xl font-semibold text-color-primary">Boletim</h1>
+  <label class="ml-12 text-color-primary">
+    Curso:
+    <select class="text-zinc-500">
+      <option>{{ user.profile.classroom.course.name }}</option>
+    </select>
+  </label>
+  <label class="ml-12 text-color-primary">
+    Ano/Módulo:
+    <select class="text-zinc-500">
+      <option>1º Ano</option>
+      <option>2º Ano</option>
+      <option>3º Ano</option>
+    </select>
+  </label>
+  <section class="box flex justify-left md:justify-center w-full overflow-x-scroll md:overflow-x-hidden">
+    <table class="main-table border-separate border-spacing-3 px-10">
+      <thead>
+        <tr>
+          <th><!-- empty --></th>
+          <th>1 ºBim</th>
+          <th>2 ºBim</th>
+          <th>3 ºBim</th>
+          <th>4 ºBim</th>
+          <th>Final</th>
+          <th>Conselho</th>
+          <th>Recon</th>
+          <th>Recla.</th>
+          <th><!-- empty --></th>
+          <th>Aulas</th>
+          <th>Faltas</th>
+          <th>Situação</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-tippy-content="Lingua Portuguesa">LPLC</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td><!-- empty --></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td data-tippy-content="Inglês">ING</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td><!-- empty --></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td data-tippy-content="Matemática">MAT</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td><!-- empty --></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td data-tippy-content="Planejamento e Desenvolvimento de TCC">
+            TCC
+          </td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td><!-- empty --></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td data-tippy-content="Programação Web I">PW2</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td><!-- empty --></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td data-tippy-content="Banco de Dados II">BD2</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td><!-- empty --></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td data-tippy-content="Programação Mobile II">PM2</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td><!-- empty --></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <h2 class="text-3xl font-semibold text-color-primary">Total</h2>
+  <section
+    class="box lg:w-max lg:grid-cols-4 grid grid-cols-1 gap-6 p-4 px-5 py-3 text-center sm:grid-cols-2"
+  >
+    <div class="flex flex-col gap-3">
+      <span class="info bg-color-primary-dimm">Aulas Dadas</span>
+      <span class="info bg-color-grey">222</span>
+    </div>
+    <div class="flex flex-col gap-3">
+      <span class="info bg-color-primary-dimm">Faltas</span>
+      <span class="info bg-color-grey">222</span>
+    </div>
+    <div class="flex flex-col gap-3">
+      <span class="info bg-color-primary-dimm">Frequência</span>
+      <span class="info bg-color-grey">222</span>
+    </div>
+    <div class="flex flex-col gap-3">
+      <span class="info bg-color-primary-dimm">Faltas Permitidas</span>
+      <span class="info bg-color-grey">222</span>
+    </div>
+  </section>
+
+  <h2 class="truncate text-3xl font-semibold text-color-primary">
+    Ficha de Desempenho - Sala de Aula
+  </h2>
+  <section
+    class="box lg:w-max lg:grid-cols-4 grid grid-cols-1 gap-6 p-4 px-5 py-3 text-center sm:grid-cols-4 overflow-x-scroll md:overflow-hidden"
+  >
+    <div class="flex flex-row col-span-4 h-10 rounded-3xl justify-center items-center font-semibold bg-color-secondary">
+      <span>Ficha de Desempenho - Sala de Aula</span>
+    </div>
+    <div class="flex flex-col gap-3">
+      <span class="info text-white bg-color-primary-dimm">Instrumento</span>
+      <span class="info bg-color-grey">oii</span>
+    </div>
+    <div class="flex flex-col gap-3">
+      <span class="info text-white bg-color-primary-dimm">Datas</span>
+      <span class="info bg-color-grey">08/11/2005</span>
+    </div>
+    <div class="flex flex-col gap-3">
+      <span class="info text-white bg-color-primary-dimm">Menção</span>
+      <span class="info bg-color-grey">MB</span>
+    </div>
+    <div class="flex flex-col gap-3">
+      <span class="info text-white bg-color-primary-dimm">Observação</span>
+      <span class="info bg-color-grey">
+        <form method="POST">
+          {% if request.user.is_superuser %} {% csrf_token %}
+          <input
+            type="text"
+            name="obs"
+            class="info w-[100%] bg-color-grey"
+            maxlength="200"
+            placeholder="Escreva Aqui!"
+          />
+          <div class="flex pt-1 justify-center">
+            <button type="submit" class="rounded-lg pt-3 bg-color-secondary">
+              Enviar
+            </button>
+          </div>
+          {% else %}
+          <div class="cursor-not-allowed w-[100%] rounded-full bg-color-grey">
+            <p
+              name="obs_student"
+              value="{{ request.POST.obs }}"
+              readonly
+            ></p>
+          </div>
+          {% endif %}
+        </form>
+      </span>
+    </div>
+  </section>
+</main>
+{% endblock %}

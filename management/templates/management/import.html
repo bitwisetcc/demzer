@@ -1,5 +1,6 @@
 {% extends 'core/base.html' %} {% load static %} {% block head %}
-<script defer src="{% static 'management/js/students.js' %}"></script>
+<script defer src="{% static 'management/js/import.js' %}"></script>
+<title>Importar usuários</title>
 {% endblock %} {% block content %}
 <main class="p-7" x-data="userData">
   <h2 class="mb-2 text-xl font-bold">Campos necessários</h2>
@@ -56,7 +57,7 @@
     </table>
   </section>
 
-  <h2 class="mb-2 text-xl font-bold">Campos necessários</h2>
+  <h2 class="mb-2 text-xl font-bold">Campos opcionais</h2>
 
   <section
     class="relative mb-3 overflow-x-auto rounded-lg bg-slate-300 p-4 shadow"
@@ -110,17 +111,17 @@
     </table>
   </section>
 
-  
   <form
-  action="{% url 'management/students' %}"
-  method="POST"
-  class="flex flex-col gap-3"
+    action="{% url 'import/users' %}"
+    method="POST"
+    class="flex flex-col gap-3"
     enctype="multipart/form-data"
+    @submit="submit"
   >
-  {% csrf_token %}
+    {% csrf_token %}
     <label
-    for="file-users"
-    class="btn flex w-max cursor-pointer items-center gap-1"
+      for="file-users"
+      class="btn flex w-max cursor-pointer items-center gap-1"
     >
       <span>Selecionar arquivo</span>
       <svg
@@ -131,39 +132,60 @@
         stroke="currentColor"
         class="h-5 w-5"
       >
-      <path
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15"
-      />
-    </svg>
-  </label>
-  <input
-  type="file"
-  name="users"
-  id="file-users"
-  accept=".xls,.xlsx,.csv"
-  @input="readFile"
-  hidden
-  />
-  <div class="flex gap-3 items-center">
-    <label for="ch-reset">Resetar senhas:</label>
-    <input type="checkbox" name="reset-password" id="ch-reset" />
-    <p class="my-4">
-      Exemplo: Leonardo da Silva Figueira, 20/4/2001. Senha: LeonardoFigueira2001
-    </p>
-  </div>
-  <input type="submit" value="Enviar" class="btn" />
-</form>
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15"
+        />
+      </svg>
+    </label>
+    <input
+      type="file"
+      name="users"
+      id="file-users"
+      accept=".xls,.xlsx,.csv"
+      @input="readFile"
+      hidden
+    />
+    <div class="flex items-center gap-3">
+      <label for="ch-reset">Resetar senhas:</label>
+      <input type="checkbox" name="reset-password" id="ch-reset" />
+      <p class="my-4">
+        Exemplo: Leonardo da Silva Figueira, 20/4/2001. Senha:
+        LeonardoFigueira2001
+      </p>
+    </div>
+    <div class="flex items-center gap-3">
+      <label for="ch-reset">Cargo:</label>
+      <select name="role" id="sl-role" x-model="role">
+        <option selected value="student">Estudante</option>
+        <option value="teacher">Professor</option>
+        <option value="staff">Funcionário</option>
+        <option value="secretary">Secretário</option>
+        <option value="coordinator">Coordenador</option>
+      </select>
+    </div>
+    <input type="submit" value="Enviar" class="btn" />
+  </form>
 
-<div class="mt-4 overflow-x-auto border-slate-400">
-  <table class="table-auto">
-    <thead class="bg-slate-300">
-      <tr>
-        <template x-for="(header, i) in headers">
-          <td class="w-max p-3 hover:text-sky-500" x-text="header"></td>
-        </template>
-      </tr>
+  <ul>
+    <template x-for="err in errors">
+      <li>
+        <em x-text="err.user.split()[0]" class="text-slate-500"></em>
+        <strong x-text="err.field"></strong>
+        <span x-text="err.msg"></span>
+      </li>
+    </template>
+  </ul>
+
+  <div class="mt-4 overflow-x-auto border-slate-400">
+    <table class="table-auto">
+      <thead class="bg-slate-300">
+        <tr>
+          <template x-for="(header, i) in headers">
+            <td class="w-max p-3 hover:text-sky-500" x-text="header"></td>
+          </template>
+        </tr>
       </thead>
       <tbody>
         <template x-for="row in rows">
