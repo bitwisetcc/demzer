@@ -4,75 +4,40 @@
 <title>Home</title>
 {% endblock %} {% block content %}
 <main class="m-8 mb-10 px-5">
-  <h1>
-    Segunda, 23 de outubro - GT2021
-  </h1>
-  <div>
-    <h2>
-      Próxima aula
-      <span>(13:00 - 13:50)</span>
-    </h2>
-    <p>Programação Mobile</p>
-    <p>Nelson</p>
-  </div>
-  <div class="mt-10 flex justify-center md:mt-16">
-    <div
-      class="lg:h-[380px] lg:w-[460px] flex h-[300px] w-[360px] items-center justify-center"
-    >
+  <h1 class="text-xl  text-color-primary font-bold mb-4">Segunda, 23 de outubro</h1>
+  <h2 class="text-xl  text-color-primary font-bold">{{ user.profile.classroom }}</h2>
+  
+  <div class="mt-8 flex justify-center md:mt-16">
+    <div class="lg:h-96 lg:w-96 flex h-40 w-96 items-center justify-center">
       <div class="swiper mySwiper carousel1">
         <div class="swiper-wrapper">
           {% for prog in programmings %}
           <div class="swiper-slide justify-center">
-            <div class="flex justify-center px-12">
-              <div
-                class="lg:h-[320px] lg:w-[480px] lg:px-6 lg:py-8 h-[280px] w-[360px] rounded-2xl bg-white px-4 py-8"
-              >
-                <div
-                  class="lg:leading-[50px] ml-2 flex flex-col gap-3 leading-[44px]"
-                >
-                  <h2 class="font-semibold text-color-primary">
-                    {% if forloop.first %}Próxima Aula{% endif %}
-                    <span class="font-normal text-color-secondary">
-                      (13:00-13:50)
-                    </span>
-                  </h2>
-                  <span
-                    class="lg:text-[26px] text-xl font-bold uppercase text-color-primary"
-                  >
-                    Sex, 05 de Maio
-                  </span>
-                  <span
-                    class="lg:text-[18px] text-left text-sm font-normal text-color-secondary"
-                  >
-                    {{ prog.subject.name }}
-                  </span>
-                  <span
-                    class="lg:text-[18px] text-left text-sm font-normal text-color-secondary"
-                  >
-                    {{ user.profile.classroom }}
-                  </span>
-                  <span
-                    class="lg:text-[18px] text-left text-sm font-normal text-color-secondary"
-                    >Lab 30 - Área de Informática</span
-                  >
-                </div>
-              </div>
-            </div>
+            <section
+              class="m-4 ml-14 w-8/12 rounded-xl bg-color-bg-perfil px-6 py-4 shadow"
+            >
+              <h2 class="mb-3 font-bold text-color-primary">
+                {% if forloop.first %}Próxima Aula{% endif %}
+                <span class="font-normal text-color-secondary">
+                  (13:00 - 13:50)
+                </span>
+              </h2>
+              <p>
+                {{ prog.subject.name }}
+                <br />
+                {{ prog.teacher }}
+                <br />
+                Laboratório 10
+              </p>
+            </section>
           </div>
           {% empty %}
           <div class="swiper-slide justify-center">
-            <div class="flex justify-center px-12">
-              <div
-                class="lg:h-[320px] lg:w-[480px] lg:px-6 lg:py-8 h-[280px] w-[360px] flex-col rounded-2xl bg-white px-4 py-8"
-              >
-                <div class="lg:leading-[50px] ml-2 leading-[44px]">
-                  <span
-                    class="lg:text-[22px] text-left text-[16px] font-normal text-color-primary"
-                    >Sem aulas hoje :(</span
-                  >
-                </div>
-              </div>
-            </div>
+            <section
+              class="w-max rounded-xl bg-color-bg-perfil px-6 py-4 shadow"
+            >
+              <h2 class="text-gray-600">Sem aulas hoje :D</h2>
+            </section>
           </div>
           {% endfor %}
         </div>
@@ -80,15 +45,11 @@
         <div class="swiper-button-prev"></div>
       </div>
     </div>
-    <div class="hidden items-center justify-center md:flex">
-      <img
-        src="{% static '/core/images/aluno.png' %}"
-        class="mb-5 ml-10 h-[300px] w-[380px] md:block"
-      />
-    </div>
+    <img
+      src="{% static '/core/images/aluno.png' %}"
+      class="mb-5 ml-10 hidden h-[300px] w-[380px] md:block"
+    />
   </div>
-
-  
 
   <h1
     class="mb-10 mt-6 text-center text-[40px] font-bold text-color-primary md:text-left"
