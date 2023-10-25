@@ -87,6 +87,7 @@ def enroll(request: HttpRequest):
             messages.warning(request, "Failed to upload picture: {}".format(exc.args[0]))
 
         try:
+            print(1)
             profile = Member.objects.create(
                 user=user,
                 contact_email=request.POST.get("contact-email"),
@@ -139,6 +140,10 @@ def enroll(request: HttpRequest):
                 assign_role(user, request.POST.get("role"))
             except Exception as error:
                 messages.warning(request, "Falha ao designar grupo ao usuário")
+
+        except IntegrityError as error:
+            messages.error(request, "Campo de e-mail duplicado: {}".format(error.args[0]))
+            return redirect("enroll")
 
         except Exception as error:
             messages.error(request, "Falha ao criar perfil: {}".format(error.args[0]))
