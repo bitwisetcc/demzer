@@ -22,9 +22,7 @@
       >
         Professores
       </li>
-      <li class="control bg-color-bg" @click="filterDialog = true">
-        Filtros
-      </li>
+      <li class="control bg-color-bg" @click="filterDialog = true">Filtros</li>
       {% if user|can:'create_user' %}
       <li class="btn control bg-color-primary-dimm">
         <a href="{% url 'enroll' %}" class="flex items-center font-semibold">
@@ -74,7 +72,9 @@
   <section class="p-5">
     <table class="w-full">
       <thead>
-        <tr class="border-separate border-spacing-3 font-semibold bg-color-hover">
+        <tr
+          class="border-separate border-spacing-3 bg-color-hover font-semibold"
+        >
           <template x-for="header in headers">
             <td x-text="header"></td>
           </template>
@@ -112,7 +112,7 @@
                 viewBox="0 0 24 24"
                 stroke-width="1.5"
                 stroke="currentColor"
-                class="h-6 w-6 hover:h-7 hover:w-7 transition-all"
+                class="h-6 w-6 transition-all hover:h-7 hover:w-7"
               >
                 <path
                   stroke-linecap="round"
@@ -150,7 +150,9 @@
           </label>
           <label>
             Turma
-            <select class="mx-auto w-full rounded-lg border border-color-primary bg-gray-50 text-sm text-gray-900">
+            <select
+              class="mx-auto w-full rounded-lg border border-color-primary bg-gray-50 text-sm text-gray-900"
+            >
               <option></option>
               <option>teste</option>
               <option>teste</option>
@@ -159,22 +161,12 @@
           <div class="flex flex-row justify-between text-lg font-normal">
             <label>
               Data de nascimento:
-              <input type="date" class="rounded-3xl border-color-primary"
-              />
+              <input type="date" class="rounded-3xl border-color-primary" />
             </label>
+          </div>
           <div class="flex flex-row justify-center space-x-5 pt-6 text-lg">
-            <button
-              type="reset"
-              class="alt"
-            >
-              Limpar
-            </button>
-            <button
-              type="submit"
-              
-            >
-              Aplicar
-            </button>
+            <button type="reset" class="alt">Limpar</button>
+            <button type="submit">Aplicar</button>
           </div>
         </section>
       </div>

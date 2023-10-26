@@ -6,12 +6,17 @@
 </script>
 <title>Turmas</title>
 {% endblock %} {% block content %}
-<main class="framed m-2 mb-20 px-5 md:m-8" x-data="{ createDialog: false }">
-  <h1
-    class="mt-6 text-center text-[40px] font-bold text-color-secondary md:text-left"
-  >
+<main class="mx-10 mb-20 mt-4" x-data="{ createDialog: false }">
+  <h1 class="text-center text-4xl font-bold text-color-primary md:text-left">
     Turma
   </h1>
+
+  <!-- TODO: use a select for mobile smh -->
+  <ul class="mt-10 flex gap-4">
+    {% for c in classrooms %}
+    <button class="alt px-5 py-3" value="{{ c.pk }}">{{ c }}</button>
+    {% endfor %}
+  </ul>
 
   <!--Inicio Menu Filtros -->
 
@@ -19,15 +24,6 @@
     <div
       class="mt-2 flex w-full flex-col items-center justify-center md:flex-row"
     >
-      <div class="my-2 w-full md:mx-3">
-        <span class="my-2 flex justify-center text-xl text-color-primary"
-          >Sala</span
-        >
-        <select name="Sala" class="w-full rounded-full text-center">
-          <option>1ºGT</option>
-          <option>2ºHT</option>
-        </select>
-      </div>
       <div class="my-2 w-full md:mx-3">
         <span class="my-2 flex justify-center text-xl text-color-primary"
           >Turma</span
@@ -43,9 +39,9 @@
           >Aula</span
         >
         <select name="Aula" class="w-full rounded-full text-center">
-          <option>PW1</option>
-          <option>TPA</option>
-          <option>GEO</option>
+          {% for s in subjects %}
+          <option value="{{ s.pk }}">{{ s }}</option>
+          {% endfor %}
         </select>
       </div>
       <div class="my-2 w-full md:mx-3">
@@ -125,60 +121,6 @@
             >Prova | Atividade</a
           >
         </li>
-        <!-- Option Reposições -->
-        <li
-          class="flex items-center px-4 py-2"
-          :class="{ 'border-b-2 border-color-primary': selected === 'option-3' }"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="h-6 w-6 text-color-primary"
-            @click="selected = 'option-3'"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125"
-            />
-          </svg>
-          <a
-            href="#option-3"
-            @click="selected = 'option-3'"
-            class="hidden text-color-primary md:block"
-            >Reposições</a
-          >
-        </li>
-        <!-- Option Plano de Ensino -->
-        <li
-          class="flex items-center px-4 py-2"
-          :class="{ 'border-b-2 border-color-primary': selected === 'option-4' }"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="h-6 w-6 text-color-primary"
-            @click="selected = 'option-4'"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5"
-            />
-          </svg>
-          <a
-            href="#option-4"
-            @click="selected = 'option-4'"
-            class="hidden text-color-primary md:block"
-            >Plano de Ensino</a
-          >
-        </li>
       </ul>
     </nav>
 
@@ -211,22 +153,9 @@
             >Atribuir Nota</span
           >
           <div class="my-4 flex flex-col gap-4 text-center">
-            <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
-            <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
-            <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
-            <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
-            <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
-            <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
-            <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
-            <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
-            <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
-            <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
-            <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
-            <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
-            <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
-            <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
-            <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
-            <span class="text-lg font-normal">Apollo Fonseca da Bezerra</span>
+            {% for s in students %}
+            <span class="text-lg font-normal">{{ s }}</span>
+            {% endfor %}
           </div>
         </div>
         <div
@@ -280,11 +209,7 @@
             ></textarea>
           </div>
           <div class="flex w-full flex-col gap-3 md:block md:gap-2">
-            <input
-              type="submit"
-              value="Enviar"
-              class="text-bold bg-color-secondary-dimm mt-6 rounded-full border border-color-secondary px-12 py-4 text-[21px] font-bold text-color-secondary md:mx-auto md:block"
-            />
+            <button type="submit">Enviar</button>
           </div>
         </div>
       </div>
@@ -539,22 +464,6 @@
           </section>
         </div>
       </div>
-    </div>
-
-    <!-- Fim Provas Screen -->
-
-    <div
-      x-show.transition.in.opacity.duration.750ms="selected === 'option-3'"
-      class="p-4"
-    >
-      Reposições
-    </div>
-
-    <div
-      x-show.transition.in.opacity.duration.750ms="selected === 'option-4'"
-      class="p-4"
-    >
-      Plano de Ensino
     </div>
   </div>
 

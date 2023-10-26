@@ -30,32 +30,30 @@
       },
 
       imports: [{ name: "", slug: "" }],
-
-      sendSubject() {
-        const values = (nl) =>
-          Array.from(nl)
-            .map((i) => i.value)
-            .filter((s) => s != "");
-
-        const csrfToken = document.cookie.slice(
-          document.cookie.indexOf("=") + 1
-        );
-
-        const form = document.getElementById("importSubjects");
-        const names = values(form.querySelectorAll(".input :nth-child(1)"));
-        const slugs = values(form.querySelectorAll(".input :nth-child(2)"));
-
-        fetch("{% url 'import_subject' %}", {
-          method: "POST",
-          headers: { "X-CSRFToken": csrfToken },
-          body: JSON.stringify({ names, slugs }),
-        })
-          .then((res) => res.text())
-          .then(() => location.reload())
-          .catch(console.error);
-      },
     }));
   });
+
+  function sendSubject() {
+    const values = (nl) =>
+      Array.from(nl)
+        .map((i) => i.value)
+        .filter((s) => s != "");
+
+    const csrfToken = document.cookie.slice(document.cookie.indexOf("=") + 1);
+
+    const form = document.getElementById("importSubjects");
+    const names = values(form.querySelectorAll(".input :nth-child(1)"));
+    const slugs = values(form.querySelectorAll(".input :nth-child(2)"));
+
+    fetch("{% url 'import_subject' %}", {
+      method: "POST",
+      headers: { "X-CSRFToken": csrfToken },
+      body: JSON.stringify({ names, slugs }),
+    })
+      .then((res) => res.text())
+      .then(() => location.reload())
+      .catch(console.error);
+  }
 </script>
 {% endblock %} {% block content %}
 <main class="flex flex-col gap-5 px-24 py-10" x-data="dialogs">

@@ -21,7 +21,7 @@
 </script>
 {% endblock %} {% block content %}
 <main class="flex flex-col gap-5 px-24 py-10" x-data="dialogs">
-  <section class="dialog-backdrop" x-show="classroomDialog">
+  <section x-show="classroomDialog" class="dialog-backdrop">
     <div class="dialog">
       <h2 class="mb-3 text-xl font-semibold">Criar turma</h2>
       <form action="{% url 'classrooms' %}" method="POST">
@@ -158,21 +158,15 @@
         </button>
       </h2>
       <div>
-
-        <span class="text-color-primary">
-          Turno:
-        </span>
+        <span class="text-color-primary"> Turno: </span>
         <span class="text-color-secondary">
           {{ classroom.course.get_time_display }}
         </span>
       </div>
       <div>
-        <span class="text-color-primary">
-          Coordenador:
-        </span>
-        <span class="text-color-secondary text-ellipsis">
-          {{ classroom.course.coordinator }}
-          ({{classroom.course.coordinator.pk }})
+        <span class="text-color-primary"> Coordenador: </span>
+        <span class="text-ellipsis text-color-secondary">
+          {{ classroom.course.coordinator }} ({{ classroom.course.coordinator.pk }})
         </span>
       </div>
       <div
