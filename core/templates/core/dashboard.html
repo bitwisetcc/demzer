@@ -1,80 +1,28 @@
-{% extends 'core/base.html' %} {% load static %} {% load permission_tags %} {% block head %}
-<script defer src="{% static 'core/js/dashboard.js' %}"></script>
+{% extends 'core/base.html' %} {% load static %} {% block head %}
+<script src="{% static 'core/js/dashboard.js' %}"></script>
 <link rel="stylesheet" href="{% static 'core/dist/css/dashboard.css' %}" />
-<title>Dashboard</title>
 {% endblock %} {% block content %}
 <main x-data="dashboard">
   <h1 class="m-5 text-2xl font-bold">Dashboard</h1>
-  <header id="sectors" class="bg-color-bg-alt p-5">
+  <header id="sectors" class="bg-slate-300 p-5">
     {% csrf_token %}
     <ul id="sectors" class="flex select-none gap-4">
       <li
-        class="control bg-color-bg"
-        @click="reload('students', 'Alunos', `{% url 'query' 'student' '1' %}`)"
-        x-init="reload('students', 'Alunos', `{% url 'query' 'student' '1' %}`)"
+        @click="reload('students', 'Alunos', `{% url 'query/students' %}`)"
+        x-init="reload('students', 'Alunos', `{% url 'query/students' %}`)"
       >
         Alunos
       </li>
-      <li
-        class="control bg-color-bg"
-        data-section="teachers"
-        @click="reload('teachers', 'Professores', `{% url 'query' 'teacher' '1' %}`)"
-      >
-        Professores
-      </li>
-      <li class="control bg-color-bg" @click="filterDialog = true">
-        Filtros
-      </li>
-      {% if user|can:'create_user' %}
-      <li class="btn control bg-color-primary-dimm">
-        <a href="{% url 'enroll' %}" class="flex items-center font-semibold">
-          <span class="mr-1 font-semibold">Matricular</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.8"
-            stroke="currentColor"
-            class="h-6 w-6"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"
-            />
-          </svg>
-        </a>
-      </li>
-      {% endif %} {% if user|can:'delete_user' %}
-      <li class="btn control">
-        <a
-          href="{% url 'purge' 'student' %}"
-          class="flex items-center font-semibold"
-        >
-          <span class="mr-1 font-semibold">Limpar</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.8"
-            stroke="currentColor"
-            class="h-6 w-6"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M12 9v3.75m0-10.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.249-8.25-3.286zm0 13.036h.008v.008H12v-.008z"
-            />
-          </svg>
-        </a>
-      </li>
-      {% endif %}
+      <li data-section="teachers" @click="reload">Professores</li>
+      <li data-section="courses" @click="reload">Cursos</li>
+      <li data-section="classrooms" @click="reload">Turmas</li>
     </ul>
   </header>
   <section class="p-5">
-    <table class="w-full">
+    <h2 x-text="active" class="mb-4 text-xl font-semibold"></h2>
+    <table>
       <thead>
-        <tr class="border-separate border-spacing-3 font-semibold bg-color-hover">
+        <tr>
           <template x-for="header in headers">
             <td x-text="header"></td>
           </template>
@@ -91,94 +39,5 @@
       </tbody>
     </table>
   </section>
-  <form>
-    <div
-      :class="filterDialog ? 'flex' : 'hidden'"
-      class="fixed inset-0 items-center justify-center bg-black bg-opacity-25"
-    >
-      <div class="h-4/5 w-2/5 rounded-3xl bg-color-grey">
-        <header
-          class="mx-10 mt-8 flex flex-row justify-between text-3xl font-bold"
-        >
-          <h2>Filtrar Alunos</h2>
-          <div>
-            <button
-              @click.prevent="filterDialog = false"
-              class="text-3xl font-bold text-color-primary"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="h-6 w-6 hover:h-7 hover:w-7 transition-all"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          </div>
-        </header>
-        <section class="flex flex-col gap-4 p-10">
-          <label>
-            RM
-            <input
-              type="search"
-              placeholder="Escreva o RM"
-              class="mx-auto w-full rounded-lg border border-color-primary bg-gray-50 text-sm text-gray-900"
-            />
-          </label>
-          <label>
-            CPF
-            <input
-              type="search"
-              placeholder="Escreva o CPF"
-              class="mx-auto w-full rounded-lg border border-color-primary bg-gray-50 text-sm text-gray-900"
-            />
-          </label>
-          <label>
-            Nome
-            <input
-              type="search"
-              placeholder="Escreva o Nome"
-              class="mx-auto w-full rounded-lg border border-color-primary bg-gray-50 text-sm text-gray-900"
-            />
-          </label>
-          <label>
-            Turma
-            <select class="mx-auto w-full rounded-lg border border-color-primary bg-gray-50 text-sm text-gray-900">
-              <option></option>
-              <option>teste</option>
-              <option>teste</option>
-            </select>
-          </label>
-          <div class="flex flex-row justify-between text-lg font-normal">
-            <label>
-              Data de nascimento:
-              <input type="date" class="rounded-3xl border-color-primary"
-              />
-            </label>
-          <div class="flex flex-row justify-center space-x-5 pt-6 text-lg">
-            <button
-              type="reset"
-              class="alt"
-            >
-              Limpar
-            </button>
-            <button
-              type="submit"
-              
-            >
-              Aplicar
-            </button>
-          </div>
-        </section>
-      </div>
-    </div>
-  </form>
 </main>
 {% endblock %}
