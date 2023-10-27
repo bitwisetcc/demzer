@@ -1,15 +1,20 @@
 #menu {
-  @apply flex flex-col items-center gap-3 md:gap-12 md:flex-row mt-9;
+  @apply mt-9 flex flex-col items-center gap-3 md:flex-row md:gap-12;
 }
 
 #menu > div {
-  @apply flex items-center justify-between gap-3 w-full;
+  @apply flex w-full items-center justify-between gap-3;
 }
 
 #menu label {
   @apply text-lg text-color-primary;
 }
 
-#menu select, #menu input {
-  @apply rounded-full w-3/4 md:w-full text-center;
+#menu select,
+#menu input {
+  @apply w-3/4 rounded-full text-center md:w-full;
+}
+
+#tabs button {
+  @apply pb-2 flex gap-1 border-b-2 text-color-primary focus:border-color-primary;
 }
