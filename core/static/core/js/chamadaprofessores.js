@@ -20,7 +20,7 @@ function atualizarTabela() {
   }
 
   // Adiciona linhas de alunos com checkboxes de faltas
-  const alunos = ["João Santana Silva Moderato", "Maria", "Giovanni de Pita Cicero", "João Santana Silva Merato", "Maria", "Giovanni de Pita Cicero", "João Santana Silva Moderato", "Maria", "Giovanni de Pita Cicero"]; // Substitua pelos nomes dos alunos reais
+  const alunos = ["André", "Bernardo", "Caio", "Daniela", "Enrico", "Fernanda", "Giulia", "Hector", "Igor"]; // Substitua pelos nomes dos alunos reais
   for (const aluno of alunos) {
     let newRow = document.createElement("tr");
     let newCell = document.createElement("td");
