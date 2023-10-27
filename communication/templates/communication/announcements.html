@@ -32,7 +32,7 @@
   x-data="{ createDialog: false, filterDialog: false}"
 >
   <header class="flex w-full justify-between text-color-primary">
-    <h1 class="text-4xl font-semibold">Comunicados</h1>
+    <h1>Comunicados</h1>
     <div class="flex gap-2">
       {% if user|has_role:'admin' %}
       <button @click="createDialog = true" class="text-base">
@@ -70,8 +70,9 @@
       </button>
     </div>
   </header>
+
   <div x-data="post">
-    <article class="feed w-full gap-8 pt-14">
+    <article class="feed w-full gap-8 mt-10">
       {% for announcement in announcements %}
       <div
         class="cursor-pointer rounded-2xl bg-color-bg text-left shadow-lg"

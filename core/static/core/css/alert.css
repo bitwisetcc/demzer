@@ -10,12 +10,9 @@
   @apply m-0 h-0 w-0 border-0 p-0 leading-none opacity-0;
 }
 
-.tags label > div {
-  @apply flex flex-col items-center justify-center;
-}
 
 .tags input[type="radio"] + div {
-  @apply rounded-xl border-2 border-transparent px-2 py-3;
+  @apply flex flex-col items-center rounded-xl border-2 border-transparent px-2 py-3 -mt-8;
 }
 
 .tags input[type="radio"]:checked + div {

@@ -6,7 +6,7 @@
   x-data="{ createDialog: false, filterDialog: false }"
 >
   <header class="flex w-full justify-between text-color-primary">
-    <h1 class="text-4xl font-semibold">Eventos</h1>
+    <h1>Eventos</h1>
     {% if user|has_role:'admin' %}
     <div>
       <button @click="createDialog = true" class="text-base">
@@ -45,7 +45,7 @@
     </div>
   </header>
 
-  <article class="mt-10 flex flex-col items-center gap-8">
+  <article class="mt-5 flex flex-col items-center gap-8">
     {% for event in events %}
     <div
       class="rounded-3xl bg-gray-100 shadow md:w-2/3"

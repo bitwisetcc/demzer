@@ -1,0 +1,15 @@
+#menu {
+  @apply flex flex-col items-center gap-3 md:gap-12 md:flex-row mt-9;
+}
+
+#menu > div {
+  @apply flex items-center justify-between gap-3 w-full;
+}
+
+#menu label {
+  @apply text-lg text-color-primary;
+}
+
+#menu select, #menu input {
+  @apply rounded-full w-3/4 md:w-full text-center;
+}

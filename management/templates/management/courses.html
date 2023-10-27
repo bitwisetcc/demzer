@@ -368,7 +368,7 @@
 
   <section class="flex flex-col gap-6">
     <header class="flex justify-between text-color-primary">
-      <h1 class="mb-4 text-4xl font-semibold text-color-primary">Cursos</h1>
+      <h1>Cursos</h1>
       <div class="flex gap-2">
         {% if user|can:'create_course' %}
         <button @click="clear()">
@@ -513,7 +513,7 @@
   </section>
   <section>
     <header class="mb-2 flex justify-between text-color-primary">
-      <h2 class="mb-4 text-4xl font-semibold">Matérias</h2>
+      <h2 class="mb-4 text-4xl">Matérias</h2>
       <div class="flex gap-2">
         {% if user|can:'create_course' %}
         <button @click="subjectDialog = true">
