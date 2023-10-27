@@ -12,9 +12,25 @@
 
 #menu select,
 #menu input {
-  @apply w-3/4 rounded-full text-center md:w-full;
+  @apply w-3/4 text-center md:w-full;
+}
+
+select {
+  @apply rounded-full;
 }
 
 #tabs button {
   @apply pb-2 flex gap-1 border-b-2 text-color-primary focus:border-color-primary;
+}
+
+article section {
+  @apply bg-color-bg-lighter rounded-2xl flex-1 p-8;
+}
+
+section#detail label {
+  @apply text-color-secondary text-xl;
+}
+
+section#detail select {
+  @apply w-3/4 text-center;
 }
