@@ -130,3 +130,7 @@ h1 {
 h2 {
   @apply font-semibold text-color-primary
 }
+
+/* .flex:not(.flex-col) {
+  @apply items-center
+} */

@@ -1,3 +1,4 @@
+from email.policy import default
 from django.contrib.auth.models import User
 from django.db.models import (
     CASCADE,
@@ -18,8 +19,9 @@ class Assessment(Model):
     subject = ForeignKey(Subject, SET_NULL, null=True)
     day = DateField()
     classroom = ForeignKey(Classroom, CASCADE)
+    division = PositiveSmallIntegerField(null=True)
     bimester = PositiveSmallIntegerField()
-    # TODO: connect to azure blobs
+    kind = CharField(max_length=1)
     content = TextField()
 
 
@@ -34,5 +36,7 @@ class Mention(Model):
     student = ForeignKey(User, CASCADE, related_name="mentions")
     teacher = ForeignKey(User, SET_NULL, null=True, related_name="mentions_sent")
     bimester = PositiveSmallIntegerField()
-    category = CharField(max_length=1) # TODO: use an enum: bimester, final, council ...
+    category = CharField(
+        max_length=1
+    )  # TODO: use an enum: bimester, final, council ...
     justification = CharField(max_length=127)

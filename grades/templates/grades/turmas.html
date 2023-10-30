@@ -6,7 +6,9 @@
     Alpine.data("turmas", () => ({
       students: [],
       createDialog: false,
-      tab: 1,
+      tab: 2,
+      subject: '',
+      division: '',
 
       getStudents(pk) {
         fetch(`{% url 'alunos' 0 %}`.replace("0", pk))
@@ -17,79 +19,75 @@
   });
 </script>
 {% endblock %} {% block content %}
-<main
-  class="mx-10 mb-20 mt-4 md:mx-14"
-  x-data="turmas"
->
+<main class="mx-10 mb-20 mt-4 md:mx-14" x-data="turmas">
   <section x-show="createDialog" class="dialog-backdrop">
     <div class="dialog">
-      <header class="mx-10 mt-8 flex justify-between text-3xl font-bold">
-        <h2 class="text-color-primary">Marcar Avaliações</h2>
-        <div>
-          <button
-            @click.prevent="createDialog = false"
-            class="text-3xl font-bold text-color-primary"
+      <header>
+        <h2>Marcar Avaliações</h2>
+        <button
+          @click.prevent="createDialog = false"
+          class="text-3xl font-bold text-color-primary"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-6 w-6"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="h-6 w-6"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        </div>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
       </header>
-      <section class="flex flex-col gap-3 p-10">
-        <div class="flex flex-col text-lg font-normal">
-          <label>Bimestre:</label>
-          <select
-            name="Bimestre"
-            class="mb-1 h-10 w-64 rounded-full text-center"
-          >
-            <option>1ºBimestre</option>
-            <option>2ºBimestre</option>
-            <option>3ºBimestre</option>
-            <option>4ºBimestre</option>
-          </select>
+      <form class="flex w-full flex-col gap-4 p-3" action="{% url 'new_exercise' %}" method="POST">
+        <div class="flex items-center gap-3">
+          <div class="flex gap-1">
+            <label for="txt-title">Título:</label>
+            <input
+              required
+              maxlength="100"
+              minlength="10"
+              type="text"
+              name="title"
+              id="txt-title"
+            />
+          </div>
+          <div class="flex gap-1"><label for="file-cover">Capa:</label>📎</div>
         </div>
+        <div class="flex items-center gap-3">
+          <label for="txt-desc">Descrição:</label>
+          <textarea
+            name="desc"
+            id="txt-desc"
+            cols="30"
+            rows="3"
+            required
+            maxlength="500"
+          ></textarea>
+        </div>
+        <div class="flex gap-3"></div>
+
+        <div class="flex flex-col text-lg font-normal"></div>
         <div class="flex flex-row">
+          <div class="flex w-full flex-col text-lg font-normal"></div>
           <div class="flex w-full flex-col text-lg font-normal">
-            <label>Peso:</label>
-            <select name="Peso" class="h-10 w-36 rounded-full text-center">
-              <option>M1</option>
-              <option>M2</option>
-              <option>M3</option>
-              <option>M4</option>
-            </select>
+            
           </div>
-          <div class="flex w-full flex-col text-lg font-normal">
-            <label>Tipo:</label>
-            <select name="Tipo" class="h-10 w-36 rounded-full text-center">
-              <option>Atividade</option>
-              <option>Prova</option>
-            </select>
-          </div>
-        </div>
-        <div class="flex flex-col px-12 text-lg font-normal">
-          <label>Titulo:</label>
-          <input type="text" class="h-10" name="title" required />
         </div>
         <div
           class="flex items-center gap-1 px-12 text-lg font-normal"
           x-data="{ anexoMencao: 'Anexo' }"
         >
-          <label>Data de Lançamento:</label>
+          <label for="dt-until">Até:</label>
           <input
+            id="dt-until"
+            name="until"
             type="date"
-            :min="new Date().toISOString().split('T')[0]"
             :value="new Date().toISOString().split('T')[0]"
             name="date"
           />
@@ -125,47 +123,36 @@
             hidden
             @input="imageName = $el.files[0].name"
           />
+          <label>Tipo:</label>
+            <select name="type" id="sl-type">
+              <option>Atividade</option>
+              <option>Prova</option>
+            </select>
         </div>
-        <div class="flex h-full flex-col px-12 text-lg font-normal">
-          <label class="pb-2">Conteúdo:</label>
-          <textarea
-            class="h-[180px] w-full resize-none"
-            placeholder="Digite o Comunicado aqui"
-            name="info"
-            required
-          ></textarea>
-        </div>
-        <div class="flex items-center gap-1 px-12 text-lg font-normal">
-          <label>Apenas para professores:</label>
-          <input type="checkbox" name="staff_only" />
-        </div>
-        <div class="flex flex-col px-12 text-lg font-normal">
-          <label>Para o curso:</label>
-          <input
-            type="text"
-            class="h-10"
-            name="course"
-            placeholder="Deixe em branco para um comunicado geral"
-          />
-        </div>
-        <div class="flex flex-col px-12 text-lg font-normal">
-          <label>Para a turma:</label>
-          <input
-            type="text"
-            class="h-10"
-            name="course"
-            placeholder="Deixe em branco para um comunicado geral"
-          />
-        </div>
-        <div class="flex justify-center pt-6">
-          <button
-            type="submit"
-            class="h-12 w-32 rounded-full border-2 border-solid border-color-secondary text-2xl font-bold text-color-secondary transition hover:bg-color-hover"
+        <div class="flex gap-3">
+          <label>Peso:</label>
+          <select name="Peso" class="h-10 w-36 rounded-full text-center">
+            <option>M1</option>
+            <option>M2</option>
+            <option>M3</option>
+            <option>M4</option>
+          </select>
+          <label for="sl-bim">Bimestre:</label>
+          <select
+            id="sl-bim"
+            name="bimestre"
+            class="mb-1 h-10 w-64 rounded-full text-center"
           >
-            Aplicar
-          </button>
+            <option>1ºBimestre</option>
+            <option>2ºBimestre</option>
+            <option>3ºBimestre</option>
+            <option>4ºBimestre</option>
+          </select>
         </div>
-      </section>
+        <input type="hidden" name="division" x-model="division">
+        <input type="hidden" name="subject" x-model="subject">
+        <button type="submit" class="self-center">Enviar</button>
+      </form>
     </div>
   </section>
 
@@ -176,6 +163,9 @@
     {% for c in classrooms %}
     <button class="alt px-5 py-3" @click="getStudents('{{ c.pk }}')">
       {{ c }}
+      {% if forloop.first %}
+      <i x-init="getStudents('{{ c.pk }}')"></i>
+      {% endif %}
     </button>
     {% endfor %}
   </ul>
@@ -183,7 +173,7 @@
   <header id="menu">
     <div>
       <label for="sl-classroom">Turma:</label>
-      <select name="classroom" id="sl-classroom">
+      <select name="classroom" id="sl-classroom" x-model="division">
         <option value="*">Todas</option>
         <option value="A">A</option>
         <option value="B">B</option>
@@ -191,7 +181,7 @@
     </div>
     <div>
       <label for="">Aula:</label>
-      <select name="subject" id="sl-subject">
+      <select name="subject" id="sl-subject" x-model="subject">
         {% for s in subjects %}
         <option value="{{ s.pk }}">{{ s }}</option>
         {% endfor %}
