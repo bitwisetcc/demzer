@@ -346,6 +346,9 @@
               required
               x-ref="cep"
               @keydown="validateNumber"
+              x-mask="99999999"
+              minlength="8"
+              maxlength="8"
             />
           </div>
           <button class="btn block" @click.prevent="fillCEP($refs.cep.value)">

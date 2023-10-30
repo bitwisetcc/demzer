@@ -1,10 +1,25 @@
 {% extends 'core/base.html' %} {% load static %} {% block head %}
 <link rel="stylesheet" href="{% static 'core/dist/css/turmas.css' %}" />
 <title>Turmas</title>
+<script defer>
+  document.addEventListener("alpine:init", () => {
+    Alpine.data("turmas", () => ({
+      students: [],
+      createDialog: false,
+      tab: 1,
+
+      getStudents(pk) {
+        fetch(`{% url 'alunos' 0 %}`.replace("0", pk))
+          .then((r) => r.json())
+          .then((st) => (this.students = st.students));
+      },
+    }));
+  });
+</script>
 {% endblock %} {% block content %}
 <main
   class="mx-10 mb-20 mt-4 md:mx-14"
-  x-data="{ createDialog: false, tab: 1 }"
+  x-data="turmas"
 >
   <section x-show="createDialog" class="dialog-backdrop">
     <div class="dialog">
@@ -159,7 +174,9 @@
   <!-- TODO: use a select for mobile smh -->
   <ul class="mt-10 flex gap-4">
     {% for c in classrooms %}
-    <button class="alt px-5 py-3" value="{{ c.pk }}">{{ c }}</button>
+    <button class="alt px-5 py-3" @click="getStudents('{{ c.pk }}')">
+      {{ c }}
+    </button>
     {% endfor %}
   </ul>
 
@@ -246,9 +263,9 @@
       <section class="overflow-y-scroll">
         <h2 class="mb-3 text-3xl text-color-secondary">Atribuir Notas</h2>
         <ul>
-          {% for s in students %}
-          <li class="mb-1 text-lg font-normal">{{ s }}</li>
-          {% endfor %}
+          <template x-for="s in students">
+            <li class="mb-1 text-lg font-normal" x-text="s"></li>
+          </template>
         </ul>
       </section>
 

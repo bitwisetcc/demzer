@@ -12,7 +12,7 @@
 
 #menu select,
 #menu input {
-  @apply w-3/4 text-center md:w-full;
+  @apply w-3/4 text-center md:w-full rounded-full;
 }
 
 select {
