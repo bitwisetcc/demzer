@@ -13,9 +13,9 @@ def chamada(request: HttpRequest):
 def turmas(request: HttpRequest):
     context = {
         "classrooms": Classroom.objects.all(),
-        "subjects": set(
-            p.subject.name for p in Programming.objects.filter(teacher=request.user)
-        ),
+        "subjects": list(set(
+            p.subject for p in Programming.objects.filter(teacher=request.user)
+        )),
         "students": User.objects.filter(profile__classroom=Classroom.objects.first()),
     }
     return render(request, "grades/turmas.html", context)

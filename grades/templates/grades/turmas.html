@@ -7,19 +7,27 @@
       students: [],
       createDialog: false,
       tab: 2,
-      subject: '',
-      division: '',
+      subject: "{{ subjects.0.pk }}",
+      division: "*",
+      classroom: "",
 
       getStudents(pk) {
+        this.classroom = pk;
         fetch(`{% url 'alunos' 0 %}`.replace("0", pk))
           .then((r) => r.json())
-          .then((st) => (this.students = st.students));
+          .then((st) => {
+            this.students = st.students;
+          });
       },
     }));
   });
 </script>
 {% endblock %} {% block content %}
-<main class="mx-10 mb-20 mt-4 md:mx-14" x-data="turmas">
+<main
+  class="mx-10 mb-20 mt-4 md:mx-14"
+  x-data="turmas"
+  x-init="getStudents('{{ classrooms.0.pk }}')"
+>
   <section x-show="createDialog" class="dialog-backdrop">
     <div class="dialog">
       <header>
@@ -44,7 +52,13 @@
           </svg>
         </button>
       </header>
-      <form class="flex w-full flex-col gap-4 p-3" action="{% url 'new_exercise' %}" method="POST">
+      <form
+        class="flex w-full flex-col gap-4 p-3"
+        action="{% url 'new_exercise' %}"
+        method="POST"
+        enctype="multipart/form-data"
+      >
+        {% csrf_token %}
         <div class="flex items-center gap-3">
           <div class="flex gap-1">
             <label for="txt-title">Título:</label>
@@ -75,9 +89,7 @@
         <div class="flex flex-col text-lg font-normal"></div>
         <div class="flex flex-row">
           <div class="flex w-full flex-col text-lg font-normal"></div>
-          <div class="flex w-full flex-col text-lg font-normal">
-            
-          </div>
+          <div class="flex w-full flex-col text-lg font-normal"></div>
         </div>
         <div
           class="flex items-center gap-1 px-12 text-lg font-normal"
@@ -88,6 +100,7 @@
             id="dt-until"
             name="until"
             type="date"
+            :min="new Date().toISOString().split('T')[0]"
             :value="new Date().toISOString().split('T')[0]"
             name="date"
           />
@@ -124,10 +137,10 @@
             @input="imageName = $el.files[0].name"
           />
           <label>Tipo:</label>
-            <select name="type" id="sl-type">
-              <option>Atividade</option>
-              <option>Prova</option>
-            </select>
+          <select name="type" id="sl-type">
+            <option>Atividade</option>
+            <option>Prova</option>
+          </select>
         </div>
         <div class="flex gap-3">
           <label>Peso:</label>
@@ -149,8 +162,11 @@
             <option>4ºBimestre</option>
           </select>
         </div>
-        <input type="hidden" name="division" x-model="division">
-        <input type="hidden" name="subject" x-model="subject">
+
+        <input type="hidden" name="division" x-model="division" />
+        <input type="hidden" name="subject" x-model="subject" />
+        <input type="hidden" name="classroom" x-model="classroom" />
+
         <button type="submit" class="self-center">Enviar</button>
       </form>
     </div>
@@ -162,10 +178,7 @@
   <ul class="mt-10 flex gap-4">
     {% for c in classrooms %}
     <button class="alt px-5 py-3" @click="getStudents('{{ c.pk }}')">
-      {{ c }}
-      {% if forloop.first %}
-      <i x-init="getStudents('{{ c.pk }}')"></i>
-      {% endif %}
+      {{ c.name }}
     </button>
     {% endfor %}
   </ul>
@@ -174,7 +187,7 @@
     <div>
       <label for="sl-classroom">Turma:</label>
       <select name="classroom" id="sl-classroom" x-model="division">
-        <option value="*">Todas</option>
+        <option value="*" selected x-init="division = '*'">Todas</option>
         <option value="A">A</option>
         <option value="B">B</option>
       </select>
