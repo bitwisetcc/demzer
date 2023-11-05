@@ -20,7 +20,7 @@ select {
 }
 
 #tabs button {
-  @apply pb-2 flex gap-1 border-b-2 text-color-primary focus:border-color-primary;
+  @apply pb-2 px-3 flex gap-1 border-b-2 text-color-primary focus:border-color-primary;
 }
 
 article section {

@@ -8,7 +8,7 @@
       createDialog: false,
       tab: 2,
       subject: "{{ subjects.0.pk }}",
-      division: "*",
+      division: "",
       classroom: "",
 
       getStudents(pk) {
@@ -91,10 +91,7 @@
           <div class="flex w-full flex-col text-lg font-normal"></div>
           <div class="flex w-full flex-col text-lg font-normal"></div>
         </div>
-        <div
-          class="flex items-center gap-1 px-12 text-lg font-normal"
-          x-data="{ anexoMencao: 'Anexo' }"
-        >
+        <div class="flex items-center gap-1 px-12 text-lg font-normal">
           <label for="dt-until">Até:</label>
           <input
             id="dt-until"
@@ -105,41 +102,23 @@
             name="date"
           />
           <label
-            for="file-picture"
-            class="btn ml-3 flex w-max cursor-pointer items-center gap-1"
+            for="attachment"
+            class="file alt mr-4"
+            x-data="{ filename: '' }"
           >
-            <span
-              class="truncate"
-              x-text="anexoMencao ?? 'Foto de perfil'"
-            ></span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="2.2"
-              stroke="currentColor"
-              class="h-5 w-5"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15"
-              />
-            </svg>
+            <input
+              type="file"
+              name="attachment"
+              id="attachment"
+              accept="accept=image/*"
+              @input="filename = $el.files[0].name"
+            />
+            <span x-text="filename || 'Anexo'"></span>
           </label>
-          <input
-            type="file"
-            name="image"
-            id="file-picture"
-            accept="image/*"
-            required
-            hidden
-            @input="imageName = $el.files[0].name"
-          />
-          <label>Tipo:</label>
-          <select name="type" id="sl-type">
-            <option>Atividade</option>
-            <option>Prova</option>
+          <label for="kind">Tipo:</label>
+          <select name="kind" id="sl-kind">
+            <option value="A">Atividade</option>
+            <option value="T">Prova</option>
           </select>
         </div>
         <div class="flex gap-3">
@@ -153,13 +132,13 @@
           <label for="sl-bim">Bimestre:</label>
           <select
             id="sl-bim"
-            name="bimestre"
+            name="bimester"
             class="mb-1 h-10 w-64 rounded-full text-center"
           >
-            <option>1ºBimestre</option>
-            <option>2ºBimestre</option>
-            <option>3ºBimestre</option>
-            <option>4ºBimestre</option>
+            <option value="1">1º Bimestre</option>
+            <option value="2">2º Bimestre</option>
+            <option value="3">3º Bimestre</option>
+            <option value="4">4º Bimestre</option>
           </select>
         </div>
 
@@ -178,7 +157,7 @@
   <ul class="mt-10 flex gap-4">
     {% for c in classrooms %}
     <button class="alt px-5 py-3" @click="getStudents('{{ c.pk }}')">
-      {{ c.name }}
+      {{ c }}
     </button>
     {% endfor %}
   </ul>
@@ -187,7 +166,7 @@
     <div>
       <label for="sl-classroom">Turma:</label>
       <select name="classroom" id="sl-classroom" x-model="division">
-        <option value="*" selected x-init="division = '*'">Todas</option>
+        <option value="" selected>Todas</option>
         <option value="A">A</option>
         <option value="B">B</option>
       </select>
@@ -211,7 +190,7 @@
     </div>
   </header>
 
-  <nav class="my-4 flex gap-3" id="tabs">
+  <nav class="my-4 flex gap-1" id="tabs">
     <button @click="tab = 1" :class="tab == 1 && 'border-color-primary'">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -275,10 +254,10 @@
       <section id="detail">
         <h2 class="mb-9 text-center text-3xl">Nome do Aluno Abençoado</h2>
         <div class="mx-7 mb-5 flex items-center justify-between gap-2">
-          <label for="">Tarefa:</label>
-          <select name="task">
-            <option>Prova</option>
-            <option>Atividade</option>
+          <label for="sl-kind">Tarefa:</label>
+          <select id="sl-kind" name="kind">
+            <option value="T">Prova</option>
+            <option value="A">Atividade</option>
           </select>
         </div>
         <div class="mx-7 mb-5 flex items-center justify-between gap-2">
@@ -407,7 +386,5 @@
       </button>
     </div>
   </div>
-
-  <!-- Fim Tabs -->
 </main>
 {% endblock %}
