@@ -20,13 +20,29 @@ class Assessment(Model):
         ACTIVITY = "A", _("Atividade")
         TEST = "T", _("Prova")
 
+    title = CharField(max_length=60, default="Atividade")
     subject = ForeignKey(Subject, SET_NULL, null=True)
     day = DateField()
     classroom = ForeignKey(Classroom, CASCADE)
     division = PositiveSmallIntegerField(null=True)
     bimester = PositiveSmallIntegerField()
+    weight = PositiveSmallIntegerField(default=1)
     kind = CharField(max_length=1, choices=Kinds.choices, default=Kinds.ACTIVITY)
     content = TextField()
+
+    def json(self):
+        return {
+            "title": self.title,
+            "subject": self.subject.name,
+            "day": str(self.day),
+            "weight": self.weight,
+            "content": self.content,
+            "bimester": self.bimester,
+            "kind": self.kind
+        }
+
+    class Meta:
+        ordering = ["day"]
 
 
 class Grade(Model):

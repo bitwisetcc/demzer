@@ -4,6 +4,6 @@ from grades.views import *
 urlpatterns = [
     path("turmas/", turmas, name="turmas"),
     path("chamada/", chamada, name="chamada"),
-    path("getst/<int:classroom_pk>/", load_students, name="alunos"),
+    path("getcls/<int:classroom_pk>/", load_classroom, name="load_class"),
     path("new_exercise/", book_exercise, name="new_exercise"),
 ]

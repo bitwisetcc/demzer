@@ -1,22 +1,24 @@
-{% extends 'core/base.html' %} {% load static %} {% block head %}
+{% extends 'core/base.html' %} {% load static %} {% load permission_tags %}  {% block head %}
 <link rel="stylesheet" href="{% static 'core/dist/css/turmas.css' %}" />
 <title>Turmas</title>
 <script defer>
   document.addEventListener("alpine:init", () => {
     Alpine.data("turmas", () => ({
       students: [],
+      assessments: [],
       createDialog: false,
       tab: 2,
       subject: "{{ subjects.0.pk }}",
       division: "",
       classroom: "",
 
-      getStudents(pk) {
+      getClassroom(pk) {
         this.classroom = pk;
-        fetch(`{% url 'alunos' 0 %}`.replace("0", pk))
+        fetch(`{% url 'load_class' 0 %}`.replace("0", pk))
           .then((r) => r.json())
           .then((st) => {
             this.students = st.students;
+            this.assessments = st.assessments;
           });
       },
     }));
@@ -26,7 +28,7 @@
 <main
   class="mx-10 mb-20 mt-4 md:mx-14"
   x-data="turmas"
-  x-init="getStudents('{{ classrooms.0.pk }}')"
+  x-init="getClassroom('{{ classrooms.0.pk }}')"
 >
   <section x-show="createDialog" class="dialog-backdrop">
     <div class="dialog">
@@ -135,7 +137,7 @@
             name="bimester"
             class="mb-1 h-10 w-64 rounded-full text-center"
           >
-            <option value="1">1º Bimestre</option>
+            <option value="1">1° Bimestre</option>
             <option value="2">2º Bimestre</option>
             <option value="3">3º Bimestre</option>
             <option value="4">4º Bimestre</option>
@@ -156,7 +158,7 @@
   <!-- TODO: use a select for mobile smh -->
   <ul class="mt-10 flex gap-4">
     {% for c in classrooms %}
-    <button class="alt px-5 py-3" @click="getStudents('{{ c.pk }}')">
+    <button class="alt px-5 py-3" @click="getClassroom('{{ c.pk }}')">
       {{ c }}
     </button>
     {% endfor %}
@@ -180,17 +182,17 @@
       </select>
     </div>
     <div>
-      <label for="dt">Data:</label>
-      <input
-        type="date"
-        name="dt"
-        id="dt"
-        :value="new Date().toISOString().split('T')[0]"
-      />
+      <label for="sl-bimester">Bimestre:</label>
+      <select name="bimester" id="sl-bimester">
+        <option value="1">1° Bimestre</option>
+        <option value="2">2° Bimestre</option>
+        <option value="3">3° Bimestre</option>
+        <option value="4">4° Bimestre</option>
+      </select>
     </div>
   </header>
 
-  <nav class="my-4 flex gap-1" id="tabs">
+  <nav class="my-6 flex gap-1" id="tabs">
     <button @click="tab = 1" :class="tab == 1 && 'border-color-primary'">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -231,16 +233,6 @@
   </nav>
 
   <article x-show.transition.in.opacity.duration.750ms="tab == 1">
-    <div class="my-5">
-      <span class="text-xl font-semibold text-color-primary">Bimestre:</span>
-      <select name="Bimestre" class="ml-3 rounded-full px-16 text-center">
-        <option>1ºBimestre</option>
-        <option>2ºBimestre</option>
-        <option>3ºBimestre</option>
-        <option>4ºBimestre</option>
-      </select>
-    </div>
-
     <div class="flex gap-8">
       <section class="overflow-y-scroll">
         <h2 class="mb-3 text-3xl text-color-secondary">Atribuir Notas</h2>
@@ -355,19 +347,8 @@
     </section>
   </article>
 
-  <div x-show.transition.in.opacity.duration.750ms="tab == 2" class="p-4">
-    <div
-      class="mb-6 mt-4 flex w-full flex-row items-center justify-between text-center"
-    >
-      <select
-        name="Bimestre"
-        class="mr-1 h-10 w-64 rounded-full text-center md:mr-0"
-      >
-        <option>1ºBimestre</option>
-        <option>2ºBimestre</option>
-        <option>3ºBimestre</option>
-        <option>4ºBimestre</option>
-      </select>
+  <article x-show.transition.in.opacity.duration.750ms="tab == 2" class="p-4">
+    <header class="flex w-full justify-end mb-3">
       <button @click="createDialog = true">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -384,7 +365,77 @@
           />
         </svg>
       </button>
-    </div>
-  </div>
+    </header>
+
+    <template x-for="a in assessments">
+      <div
+        class="rounded-2xl bg-gray-100 shadow"
+        x-data="{ options: false, details: false }"
+      >
+        <header class="flex justify-between px-6 py-4">
+          <div>
+            <h2 class="font-semibold text-color-primary" x-text="a.title"></h2>
+            <span class="text-color-secondary" x-text="a.day"></span>
+          </div>
+          <div class="relative">
+            <button @click="details = !details">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="h-6 w-6 transition-transform"
+                :class="details && 'rotate-180'"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                />
+              </svg>
+            </button>
+            {% if user|can:'create_course' %}
+            <button @click="options = !options" class="relative">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="h-6 w-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z"
+                />
+              </svg>
+            </button>
+
+            <div
+              x-show="options"
+              class="absolute z-10 flex flex-col gap-2 rounded-lg border border-slate-400 bg-gray-100 p-3"
+              @click.away="() => options = false"
+            >
+              <button class="hover:text-color-secondary">Editar</button>
+              <button class="hover:text-color-secondary">Excluir</button>
+            </div>
+            {% endif %}
+          </div>
+        </header>
+        <div
+          class="origin-top rounded-b-2xl bg-gray-200 p-5 transition-all flex gap-4"
+          :class="details || 'scale-y-0 h-0 py-0'"
+        >
+          <div>
+            <p>Bimestre: <span x-text="a.bimester"></span></p>
+            <p>Sobre: <span x-text="a.kind"></span></p>
+          </div>
+          <p x-text="a.content"></p>
+        </div>
+      </div>
+    </template>
+  </article>
 </main>
 {% endblock %}

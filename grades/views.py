@@ -38,7 +38,7 @@ def book_exercise(request: HttpRequest):
     return redirect("turmas")
 
 
-def load_students(request: HttpRequest, classroom_pk: int):
+def load_classroom(request: HttpRequest, classroom_pk: int):
     return JsonResponse(
         {
             "students": [
@@ -46,6 +46,10 @@ def load_students(request: HttpRequest, classroom_pk: int):
                 for user in User.objects.filter(
                     profile__classroom=classroom_pk
                 ).order_by("username")
-            ]
+            ],
+            "assessments": [
+                ass.json()
+                for ass in Assessment.objects.filter(classroom=classroom_pk)
+            ],
         }
     )
