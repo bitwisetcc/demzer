@@ -278,10 +278,6 @@ def perfil(request: HttpRequest):
     return render(request, "core/perfil.html")
 
 
-def boletim(request: HttpRequest):
-    return render(request, "core/boletim.html")
-
-
 def read_img(request: HttpRequest, container: str, title: str):
     try:
         service_client = BlobServiceClient(

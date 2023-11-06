@@ -6,4 +6,5 @@ urlpatterns = [
     path("chamada/", chamada, name="chamada"),
     path("getcls/<int:classroom_pk>/", load_classroom, name="load_class"),
     path("new_exercise/", book_exercise, name="new_exercise"),
+    path("boletim/", boletim, name="boletim"),
 ]

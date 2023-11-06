@@ -95,10 +95,10 @@ class Programming(Model):
         THURSDAY = 3, _("Quinta")
         FRIDAY = 4, _("Sexta")
 
-    classroom = ForeignKey(Classroom, CASCADE, related_name="+", null=True)
-    teacher = ForeignKey(User, SET_NULL, null=True)
+    classroom = ForeignKey(Classroom, CASCADE, related_name="programmings", null=True)
+    teacher = ForeignKey(User, SET_NULL, null=True, related_name="programmings")
     group = PositiveSmallIntegerField(null=True)
-    subject = ForeignKey(Subject, SET_NULL, related_name="+", null=True)
+    subject = ForeignKey(Subject, SET_NULL, related_name="programmings", null=True)
     day = PositiveSmallIntegerField(choices=Days.choices, default=Days.MONDAY)
     order = PositiveSmallIntegerField()
 

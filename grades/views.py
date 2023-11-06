@@ -14,11 +14,10 @@ def chamada(request: HttpRequest):
 
 def turmas(request: HttpRequest):
     context = {
-        "classrooms": Classroom.objects.all(),
+        "classrooms": list(set([p.classroom for p in request.user.programmings.all()])),
         "subjects": list(
             set(p.subject for p in Programming.objects.filter(teacher=request.user))
         ),
-        "students": User.objects.filter(profile__classroom=Classroom.objects.first()),
     }
     return render(request, "grades/turmas.html", context)
 
@@ -42,14 +41,23 @@ def load_classroom(request: HttpRequest, classroom_pk: int):
     return JsonResponse(
         {
             "students": [
-                user.username
+                {"username": user.username, "pk": user.pk}
                 for user in User.objects.filter(
                     profile__classroom=classroom_pk
                 ).order_by("username")
             ],
             "assessments": [
-                ass.json()
-                for ass in Assessment.objects.filter(classroom=classroom_pk)
+                ass.json() for ass in Assessment.objects.filter(classroom=classroom_pk)
             ],
         }
     )
+
+
+def boletim(request: HttpRequest):
+    context = {
+        "subjects": list(
+            set(p.subject for p in request.user.profile.classroom.programmings.all())
+        )
+    }
+
+    return render(request, "core/boletim.html", context)

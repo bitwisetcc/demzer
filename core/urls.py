@@ -17,7 +17,6 @@ urlpatterns = [
     path("logout/", logout_user, name="logout"),
     path("enroll/", enroll, name="enroll"),
     path("perfil/", perfil, name="profile"),
-    path("boletim/", boletim, name="boletim"),
     path("fetch_image/<str:container>/<str:title>/", read_img, name="img"),
 
     #RESET PASSOWRD

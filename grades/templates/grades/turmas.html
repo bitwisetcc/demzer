@@ -1,4 +1,4 @@
-{% extends 'core/base.html' %} {% load static %} {% load permission_tags %}  {% block head %}
+{% extends 'core/base.html' %} {% load static %} {% block head %}
 <link rel="stylesheet" href="{% static 'core/dist/css/turmas.css' %}" />
 <title>Turmas</title>
 <script defer>
@@ -7,10 +7,11 @@
       students: [],
       assessments: [],
       createDialog: false,
-      tab: 2,
+      tab: 1,
       subject: "{{ subjects.0.pk }}",
       division: "",
       classroom: "",
+      student: { username: "", pk: 0 },
 
       getClassroom(pk) {
         this.classroom = pk;
@@ -237,14 +238,19 @@
       <section class="overflow-y-scroll">
         <h2 class="mb-3 text-3xl text-color-secondary">Atribuir Notas</h2>
         <ul>
-          <template x-for="s in students">
-            <li class="mb-1 text-lg font-normal" x-text="s"></li>
+          <template x-for="(s, i) in students" :key="index">
+            <li
+              class="mb-1 cursor-pointer text-lg font-normal transition-colors hover:text-color-secondary"
+              x-text="s.username"
+              @click="student = s"
+              x-init="if (i == 0) student = s"
+            ></li>
           </template>
         </ul>
       </section>
 
       <section id="detail">
-        <h2 class="mb-9 text-center text-3xl">Nome do Aluno Abençoado</h2>
+        <h2 class="mb-9 text-center text-3xl" x-text="student.username"></h2>
         <div class="mx-7 mb-5 flex items-center justify-between gap-2">
           <label for="sl-kind">Tarefa:</label>
           <select id="sl-kind" name="kind">
@@ -282,6 +288,7 @@
             class="h-80 w-full resize-none rounded border border-gray-300 px-4 py-2"
             placeholder="Digite sua reclamação aqui"
           ></textarea>
+          <input type="hidden" name="pk" x-model="student.pk">
         </div>
         <div class="flex w-full flex-col gap-3 md:block md:gap-2">
           <button type="submit">Enviar</button>
@@ -348,7 +355,7 @@
   </article>
 
   <article x-show.transition.in.opacity.duration.750ms="tab == 2" class="p-4">
-    <header class="flex w-full justify-end mb-3">
+    <header class="mb-3 flex w-full justify-end">
       <button @click="createDialog = true">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -395,7 +402,6 @@
                 />
               </svg>
             </button>
-            {% if user|can:'create_course' %}
             <button @click="options = !options" class="relative">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -421,11 +427,10 @@
               <button class="hover:text-color-secondary">Editar</button>
               <button class="hover:text-color-secondary">Excluir</button>
             </div>
-            {% endif %}
           </div>
         </header>
         <div
-          class="origin-top rounded-b-2xl bg-gray-200 p-5 transition-all flex gap-4"
+          class="flex origin-top gap-4 rounded-b-2xl bg-gray-200 p-5 transition-all"
           :class="details || 'scale-y-0 h-0 py-0'"
         >
           <div>
