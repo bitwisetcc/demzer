@@ -12,6 +12,7 @@
       division: "",
       classroom: "",
       student: { username: "", pk: 0 },
+      bimester: 1,
 
       getClassroom(pk) {
         this.classroom = pk;
@@ -184,7 +185,7 @@
     </div>
     <div>
       <label for="sl-bimester">Bimestre:</label>
-      <select name="bimester" id="sl-bimester">
+      <select name="bimester" id="sl-bimester" x-model="bimester">
         <option value="1">1° Bimestre</option>
         <option value="2">2° Bimestre</option>
         <option value="3">3° Bimestre</option>
@@ -259,15 +260,16 @@
             <template x-for="assessment in assessments">
               <option :value="assessment.pk" x-text="assessment.title"></option>
             </template>
+            <option value="F">Menção Final</option>
           </select>
         </div>
         <div class="mx-7 mb-5 flex items-center justify-between gap-2">
           <label for="">Nota:</label>
           <select name="value">
-            <option>I</option>
-            <option>R</option>
-            <option>B</option>
-            <option>MB</option>
+            <option value="0">I</option>
+            <option value="1">R</option>
+            <option value="2">B</option>
+            <option value="3">MB</option>
           </select>
         </div>
         <div class="field flex flex-row justify-center text-center px-6">
@@ -282,6 +284,8 @@
             placeholder="Digite a justificativa aqui"
           ></textarea>
           <input type="hidden" name="student" x-model="student.pk" />
+          <input type="hidden" name="bimester" x-model="bimester">
+          <input type="hidden" name="subject" x-model="subject">
           <button type="submit" class="self-center">Enviar</button>
         </div>
       </form>

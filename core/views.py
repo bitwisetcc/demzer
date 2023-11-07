@@ -27,15 +27,23 @@ def dashboard(request: HttpRequest):
     if has_role(request.user, Admin):
         return render(request, "core/dashboard.html")
     else:
-        day = datetime.today().weekday()
+        today = date.today()
+        weekday = today.weekday()
+
+        date_txt = "{}, {} de {}".format(
+            settings.WEEKDAYS[weekday], today.day, settings.MONTHS[today.month]
+        )
+
         programmings = Programming.objects.filter(
             Q(group=None) | Q(group=request.user.profile.division),
             classroom=request.user.profile.classroom,
-            day=day,
+            day=weekday,
         ).order_by("order")
 
+        
+
         return render(
-            request, "core/home.html", {"programmings": programmings, "day": day}
+            request, "core/home.html", {"programmings": programmings, "day": date_txt}
         )
 
 

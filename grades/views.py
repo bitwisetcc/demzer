@@ -3,9 +3,10 @@ from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
-from grades.models import Assessment, Grade
+from grades.models import Assessment, Grade, Mention
 
 from management.models import Classroom, Programming, Subject
+from management.views import students
 
 
 def chamada(request: HttpRequest):
@@ -37,14 +38,26 @@ def book_exercise(request: HttpRequest):
     return redirect("turmas")
 
 
+# TODO: block duplicate finals/grades
 @require_POST
 def post_grade(request: HttpRequest):
-    Grade.objects.create(
-        assessment=Assessment.objects.get(pk=request.POST.get("assessment")),
-        student=User.objects.get(pk=request.POST.get("student")),
-        value=request.POST.get("value"),
-        justification=request.POST.get("justification"),
-    )
+    ass = request.POST.get("assessment")
+    if ass == "F":
+        Mention.objects.create(
+            value=request.POST.get("value"),
+            student=User.objects.get(pk=request.POST.get("student")),
+            teacher=request.user,
+            subject=Subject.objects.get(pk=request.POST.get("subject")),
+            bimester=request.POST.get("bimester"),
+            justification=request.POST.get("justification"),
+        )
+    else:
+        Grade.objects.create(
+            assessment=Assessment.objects.get(pk=ass),
+            student=User.objects.get(pk=request.POST.get("student")),
+            value=request.POST.get("value"),
+            justification=request.POST.get("justification"),
+        )
 
     return redirect("turmas")
 
@@ -66,10 +79,15 @@ def load_classroom(request: HttpRequest, classroom_pk: int):
 
 
 def boletim(request: HttpRequest):
-    context = {
-        "subjects": list(
-            set(p.subject for p in request.user.profile.classroom.programmings.all())
-        )
-    }
-
-    return render(request, "core/boletim.html", context)
+    return render(
+        request,
+        "core/boletim.html",
+        {
+            "subjects": list(
+                set(
+                    p.subject for p in request.user.profile.classroom.programmings.all()
+                )
+            ),
+            "mentions": Mention.objects.filter(student=request.user),
+        },
+    )

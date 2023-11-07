@@ -1,11 +1,13 @@
-{% extends 'core/base.html' %} {% load static %} {% block head %}
+{% extends 'core/base.html' %} {% load static %} {% load permission_tags %} {% block head %}
 <script defer src="{% static 'core/js/dashboard.js' %}"></script>
 <link rel="stylesheet" href="{% static 'core/dist/css/dashboard.css' %}" />
 <title>Home</title>
 {% endblock %} {% block content %}
 <main class="m-8 mb-10 px-5">
-  <h1 class="text-xl  text-color-primary font-bold mb-4">Segunda, 23 de outubro</h1>
+  <h1 class="text-xl  text-color-primary font-bold mb-4">{{ day }}</h1>
+  {% if user|has_role:'student' %}
   <h2 class="text-xl  text-color-primary font-bold">{{ user.profile.classroom }}</h2>
+  {% endif %}
   
   <div class="mt-8 flex justify-center md:mt-16">
     <div class="lg:h-96 lg:w-96 flex h-40 w-96 items-center justify-center">

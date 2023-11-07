@@ -66,11 +66,18 @@ class Mention(Model):
         COUNCIL = "C", _("Conselho")
         FINAL = "F", _("Final")
 
-    value = PositiveSmallIntegerField()
+    class Gradings(IntegerChoices):
+        I = 0, "I"
+        R = 1, "R"
+        B = 2, "B"
+        MB = 3, "MB"
+
+    value = PositiveSmallIntegerField(choices=Gradings.choices, default=Gradings.B)
     student = ForeignKey(User, CASCADE, related_name="mentions")
     teacher = ForeignKey(User, SET_NULL, null=True, related_name="mentions_sent")
     bimester = PositiveSmallIntegerField()
     category = CharField(
         max_length=1, choices=Categories.choices, default=Categories.BIMESTER
     )
+    subject = ForeignKey(Subject, SET_NULL, related_name="mentions", null=True)
     justification = CharField(max_length=127, default="")

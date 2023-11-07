@@ -1,4 +1,4 @@
-{% extends 'core/base.html' %} {% load static %} {% block head %}
+{% extends 'core/base.html' %} {% load static %} {% load demzer_tags %} {% block head %}
 <title>Boletim</title>
 <link rel="stylesheet" href="{% static 'core/dist/css/boletim.css' %}" />
 {% endblock %} {% block content %}
@@ -41,10 +41,10 @@
         {% for s in subjects %}
         <tr>
           <td data-tippy-content="{{ s.name }}">{{ s }}</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>{{ mentions|getsubj:s.pk|getbimester:1 }}</td>
+          <td>{{ mentions|getsubj:s.pk|getbimester:2 }}</td>
+          <td>{{ mentions|getsubj:s.pk|getbimester:3 }}</td>
+          <td>{{ mentions|getsubj:s.pk|getbimester:4 }}</td>
           <td></td>
           <td></td>
           <td><!-- empty --></td>
