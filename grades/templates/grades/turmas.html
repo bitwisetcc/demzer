@@ -57,57 +57,40 @@
         </button>
       </header>
       <form
-        class="flex w-full flex-col gap-4 p-3"
+        class="flex w-full flex-col gap-2 p-3"
         action="{% url 'new_exercise' %}"
         method="POST"
         enctype="multipart/form-data"
       >
         {% csrf_token %}
-        <div class="flex items-center gap-3">
-          <div class="flex gap-1">
-            <label for="txt-title">Título:</label>
-            <input
-              required
-              maxlength="100"
-              minlength="10"
-              type="text"
-              name="title"
-              id="txt-title"
-            />
-          </div>
-          <div class="flex gap-1"><label for="file-cover">Capa:</label>📎</div>
-        </div>
-        <div class="flex items-center gap-3">
-          <label for="txt-desc">Descrição:</label>
-          <textarea
-            name="desc"
-            id="txt-desc"
-            cols="30"
-            rows="3"
-            required
-            maxlength="500"
-          ></textarea>
-        </div>
-        <div class="flex gap-3"></div>
-
-        <div class="flex flex-col text-lg font-normal"></div>
-        <div class="flex flex-row">
-          <div class="flex w-full flex-col text-lg font-normal"></div>
-          <div class="flex w-full flex-col text-lg font-normal"></div>
-        </div>
-        <div class="flex items-center gap-1 px-12 text-lg font-normal">
-          <label for="dt-until">Até:</label>
+        <div class="flex items-center gap-2">
+          <label for="txt-title">Título:</label>
           <input
-            id="dt-until"
-            name="until"
-            type="date"
-            :min="new Date().toISOString().split('T')[0]"
-            :value="new Date().toISOString().split('T')[0]"
-            name="date"
+            required
+            maxlength="100"
+            minlength="10"
+            type="text"
+            name="title"
+            id="txt-title"
+            class="w-full"
           />
           <label
             for="attachment"
-            class="file alt mr-4"
+            class="file alt"
+            x-data="{ filename: '' }"
+          >
+            <input
+              type="file"
+              name="attachment"
+              id="attachment"
+              accept="accept=image/*"
+              @input="filename = $el.files[0].name"
+            />
+            <span x-text="filename || 'Capa'"></span>
+          </label>
+          <label
+            for="attachment"
+            class="file alt"
             x-data="{ filename: '' }"
           >
             <input
@@ -119,36 +102,55 @@
             />
             <span x-text="filename || 'Anexo'"></span>
           </label>
-          <label for="kind">Tipo:</label>
-          <select name="kind" id="sl-kind">
-            <option value="A">Atividade</option>
-            <option value="T">Prova</option>
-          </select>
         </div>
-        <div class="flex gap-3">
-          <label>Peso:</label>
-          <select name="Peso" class="h-10 w-36 rounded-full text-center">
-            <option>M1</option>
-            <option>M2</option>
-            <option>M3</option>
-            <option>M4</option>
-          </select>
-          <label for="sl-bim">Bimestre:</label>
-          <select
-            id="sl-bim"
-            name="bimester"
-            class="mb-1 h-10 w-64 rounded-full text-center"
-          >
-            <option value="1">1° Bimestre</option>
-            <option value="2">2º Bimestre</option>
-            <option value="3">3º Bimestre</option>
-            <option value="4">4º Bimestre</option>
-          </select>
+        <div class="flex items-center gap-2"></div>
+        <div class="flex items-center gap-2">
+          <label for="txt-desc">Descrição:</label>
+          <textarea
+            name="desc"
+            id="txt-desc"
+            rows="2"
+            required
+            maxlength="500"
+            class="w-full"
+          ></textarea>
+        </div>
+        <div class="flex justify-between gap-2 mt-1">
+          <div class="flex items-center gap-2">
+            <label for="dt-until">Até:</label>
+            <input
+              id="dt-until"
+              name="until"
+              type="date"
+              :min="new Date().toISOString().split('T')[0]"
+              :value="new Date().toISOString().split('T')[0]"
+              name="date"
+              class="text-sm"
+            />
+          </div>
+
+          <div class="flex items-center gap-2">
+            <label for="kind">Tipo:</label>
+            <select name="kind" id="sl-kind">
+              <option value="A">Atividade</option>
+              <option value="T">Prova</option>
+            </select>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <label>Menção:</label>
+            <select name="mention" class="h-10 pr-8 pl-3 rounded-full text-center">
+              <option>M1</option>
+              <option>M2</option>
+              <option>M3</option>
+            </select>
+          </div>
         </div>
 
         <input type="hidden" name="division" x-model="division" />
         <input type="hidden" name="subject" x-model="subject" />
         <input type="hidden" name="classroom" x-model="classroom" />
+        <input type="hidden" name="bimester" x-model="bimester" />
 
         <button type="submit" class="self-center">Enviar</button>
       </form>
@@ -272,7 +274,7 @@
             <option value="3">MB</option>
           </select>
         </div>
-        <div class="field flex flex-row justify-center text-center px-6">
+        <div class="field flex flex-row justify-center px-6 text-center">
           <label for="txt-just" class="my-2 text-xl text-color-secondary">
             Justificativa:
           </label>
@@ -280,12 +282,12 @@
             id="txt-just"
             name="justification"
             maxlength="200"
-            class="h-32 w-full resize-none rounded border border-gray-300 px-4 py-2 mb-3"
+            class="mb-3 h-32 w-full resize-none rounded border border-gray-300 px-4 py-2"
             placeholder="Digite a justificativa aqui"
           ></textarea>
           <input type="hidden" name="student" x-model="student.pk" />
-          <input type="hidden" name="bimester" x-model="bimester">
-          <input type="hidden" name="subject" x-model="subject">
+          <input type="hidden" name="bimester" x-model="bimester" />
+          <input type="hidden" name="subject" x-model="subject" />
           <button type="submit" class="self-center">Enviar</button>
         </div>
       </form>
