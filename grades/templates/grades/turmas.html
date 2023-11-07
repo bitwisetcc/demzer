@@ -241,59 +241,50 @@
           <template x-for="(s, i) in students" :key="index">
             <li
               class="mb-1 cursor-pointer text-lg font-normal transition-colors hover:text-color-secondary"
+              :class="s.username == student.username && 'text-color-secondary'"
+              x-init="if (i == 0) student = s"
               x-text="s.username"
               @click="student = s"
-              x-init="if (i == 0) student = s"
             ></li>
           </template>
         </ul>
       </section>
 
-      <section id="detail">
+      <form id="detail" action="{% url 'post_grade' %}" method="post">
+        {% csrf_token %}
         <h2 class="mb-9 text-center text-3xl" x-text="student.username"></h2>
         <div class="mx-7 mb-5 flex items-center justify-between gap-2">
-          <label for="sl-kind">Tarefa:</label>
-          <select id="sl-kind" name="kind">
-            <option value="T">Prova</option>
-            <option value="A">Atividade</option>
+          <label for="sl-assessment">Tarefa:</label>
+          <select id="sl-assessment" name="assessment">
+            <template x-for="assessment in assessments">
+              <option :value="assessment.pk" x-text="assessment.title"></option>
+            </template>
           </select>
         </div>
         <div class="mx-7 mb-5 flex items-center justify-between gap-2">
           <label for="">Nota:</label>
-          <select name="val">
+          <select name="value">
             <option>I</option>
             <option>R</option>
             <option>B</option>
             <option>MB</option>
           </select>
         </div>
-        <div class="mx-7 mb-5 flex items-center justify-between gap-2">
-          <label for="">Menções:</label>
-          <select name="mention">
-            <option>M1</option>
-            <option>M2</option>
-            <option>M3</option>
-          </select>
-        </div>
-        <div class="field flex flex-row justify-center text-center">
-          <div class="w-full">
-            <span
-              class="my-2 flex justify-center text-center text-xl text-color-secondary"
-              >Justificativa</span
-            >
-          </div>
+        <div class="field flex flex-row justify-center text-center px-6">
+          <label for="txt-just" class="my-2 text-xl text-color-secondary">
+            Justificativa:
+          </label>
           <textarea
-            id="reclamacao"
-            name="reclamacao"
-            class="h-80 w-full resize-none rounded border border-gray-300 px-4 py-2"
-            placeholder="Digite sua reclamação aqui"
+            id="txt-just"
+            name="justification"
+            maxlength="200"
+            class="h-32 w-full resize-none rounded border border-gray-300 px-4 py-2 mb-3"
+            placeholder="Digite a justificativa aqui"
           ></textarea>
-          <input type="hidden" name="pk" x-model="student.pk">
+          <input type="hidden" name="student" x-model="student.pk" />
+          <button type="submit" class="self-center">Enviar</button>
         </div>
-        <div class="flex w-full flex-col gap-3 md:block md:gap-2">
-          <button type="submit">Enviar</button>
-        </div>
-      </section>
+      </form>
     </div>
 
     <section class="mt-8 flex flex-col rounded-2xl bg-color-bg-lighter p-7">
@@ -322,9 +313,6 @@
             </svg>
           </div>
         </div>
-        <span class="italic text-gray-500">
-          Entrega de notas entre 23/06 e 27/06
-        </span>
       </header>
 
       <div class="flex justify-center">
@@ -340,13 +328,15 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td data-tippy-content="">Giovanni de Pita Cicero</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
+              <template x-for="s in students">
+                <tr>
+                  <td x-text="s.username"></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </template>
             </tbody>
           </table>
         </section>

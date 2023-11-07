@@ -3,7 +3,7 @@ from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
-from grades.models import Assessment
+from grades.models import Assessment, Grade
 
 from management.models import Classroom, Programming, Subject
 
@@ -32,6 +32,18 @@ def book_exercise(request: HttpRequest):
         bimester=request.POST.get("bimester"),
         kind=request.POST.get("kind"),
         content=request.POST.get("desc"),
+    )
+
+    return redirect("turmas")
+
+
+@require_POST
+def post_grade(request: HttpRequest):
+    Grade.objects.create(
+        assessment=Assessment.objects.get(pk=request.POST.get("assessment")),
+        student=User.objects.get(pk=request.POST.get("student")),
+        value=request.POST.get("value"),
+        justification=request.POST.get("justification"),
     )
 
     return redirect("turmas")

@@ -5,6 +5,7 @@ from django.db.models import (
     CharField,
     DateField,
     ForeignKey,
+    IntegerChoices,
     Model,
     PositiveSmallIntegerField,
     TextChoices,
@@ -32,13 +33,14 @@ class Assessment(Model):
 
     def json(self):
         return {
+            "pk": self.pk,
             "title": self.title,
             "subject": self.subject.name,
             "day": str(self.day),
             "weight": self.weight,
             "content": self.content,
             "bimester": self.bimester,
-            "kind": self.kind
+            "kind": self.kind,
         }
 
     class Meta:
@@ -46,9 +48,16 @@ class Assessment(Model):
 
 
 class Grade(Model):
+    class Gradings(IntegerChoices):
+        I = 0, "I"
+        R = 1, "R"
+        B = 2, "B"
+        MB = 3, "MB"
+
     assessment = ForeignKey(Assessment, SET_NULL, null=True)
     student = ForeignKey(User, CASCADE)
-    value = PositiveSmallIntegerField()
+    value = PositiveSmallIntegerField(choices=Gradings.choices, default=Gradings.R)
+    justification = TextField(null=True)
 
 
 class Mention(Model):

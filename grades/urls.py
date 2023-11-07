@@ -7,4 +7,5 @@ urlpatterns = [
     path("getcls/<int:classroom_pk>/", load_classroom, name="load_class"),
     path("new_exercise/", book_exercise, name="new_exercise"),
     path("boletim/", boletim, name="boletim"),
+    path("new/", post_grade, name="post_grade"),
 ]
