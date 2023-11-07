@@ -34,9 +34,14 @@
         // populate cells
         programmings.forEach((p) => {
           const cell = cells[p.order * 5 + p.day];
-          if (cell.innerHTML == "") cell.innerHTML = p.subject_slug;
-          else if (cell.innerHTML != p.subject_slug)
-            cell.innerHTML += " | " + p.subject_slug;
+
+          if (this.isTeacher) {
+            cell.innerHTML += p.classroom;
+          } else {
+            if (cell.innerHTML == "") cell.innerHTML = p.subject_slug;
+            else if (cell.innerHTML != p.subject_slug)
+              cell.innerHTML += " | " + p.subject_slug;
+          }
         });
 
         // display data to form when click
@@ -83,8 +88,8 @@
             time: this.programmingTime,
           }),
         })
-        // .then(res => console.log(res))
-        .then((res) => res.redirected && location.replace(res.url));
+          // .then(res => console.log(res))
+          .then((res) => res.redirected && location.replace(res.url));
       },
 
       programmingTime: 1,
@@ -97,19 +102,16 @@
       subjectB: "",
       studentGroup: false,
       locked: "{{ user|has_role:'admin' }}" == "False",
+      isTeacher: "{{ user|has_role:'teacher' }}" == "True",
     }));
   });
 </script>
 {% endblock %} {% block content %}
 <main class="p-10" x-data="timeTable">
   <h1 class="mb-4 text-4xl font-semibold text-color-primary">
-    Horários
-    {% if user|has_role:'student' %}
-    - {{ classroom }}
-    {% endif %}
-
+    Horários {% if user|has_role:'student' %} - {{ classroom }} {% endif %}
   </h1>
-  <article class="grid grid-cols-2 gap-20">
+  <article class="grid gap-20" :class="isTeacher || 'grid-cols-2'">
     <table
       class="table-fixed border-separate border-spacing-2 rounded-2xl bg-zinc-300 p-4"
     >
@@ -139,11 +141,16 @@
       </tbody>
     </table>
 
+    {% if not user|has_role:'teacher' %}
     <section class="rounded-xl bg-zinc-300 p-5">
       <h2 class="mb-1 ml-1 mt-1 flex justify-between text-2xl font-semibold">
         {% if user|has_role:'admin' %}
         <span>Editar aula</span>
-        <button @click="exclude()" data-tippy-content="Apagar" class="hover:text-red-600">
+        <button
+          @click="exclude()"
+          data-tippy-content="Apagar"
+          class="hover:text-red-600"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -272,6 +279,7 @@
         </section>
       </form>
     </section>
+    {% endif %}
   </article>
 </main>
 {% endblock %}
