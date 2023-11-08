@@ -34,3 +34,7 @@ article section, article form {
 #detail select {
   @apply w-3/4 text-center;
 }
+
+#vision th {
+  @apply py-2;
+}
