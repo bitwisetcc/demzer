@@ -1,75 +1,88 @@
 {% extends 'core/base.html' %} {% load static %} {% block head %}
-
 <script defer src="{% static 'core/js/chamada.js' %}"></script>
+<script defer>
+  document.addEventListener("alpine:init", () => {
+    Alpine.data("chamada", () => ({
+      students: [],
+      division: "",
+      classroom: "{{ classrooms.0.pk }}",
+      programings: [
+        // {% for p in programmings %}
+        ["{{ p.subject.slug }}", "{{ p.classroom.pk }}"],
+        // {% endfor %}
+      ],
+      student: { username: "", pk: 0 },
 
+      getClassroom(pk) {
+        this.classroom = pk;
+        fetch(`{% url 'load_class' 0 %}`.replace("0", pk))
+          .then((r) => r.json())
+          .then((st) => {
+            this.students = st.students;
+          });
+      },
+
+      init() {
+        console.log(this.programings)
+        console.log(this.classroom)
+      }
+    }));
+  });
+</script>
+<title>Chamada</title>
 {% endblock %} {% block content %}
-<main class="framed m-8 mb-10 px-5">
-  <h1
-    class="mt-6 text-center text-[40px] font-bold text-color-secondary md:text-left"
-  >
-    Turma
-  </h1>
+<main
+  class="framed m-8 flex flex-col gap-3 p-5"
+  x-init="getClassroom('{{ classrooms.0.pk }}')"
+  x-data="chamada"
+>
+  <h1 class="text-color-secondary">Turma</h1>
 
-  <div class="flex w-[100%] justify-center">
-    <div
-      class="mt-2 flex w-full flex-col items-center justify-center md:flex-row"
-    >
-      <div class="my-2 w-full md:mx-3">
-        <span class="my-2 flex justify-center text-xl text-color-primary"
-          >Sala</span
-        >
-        <select name="Sala" class="w-full rounded-full text-center">
-          <option>1ºGT</option>
-          <option>2ºHT</option>
-        </select>
-      </div>
-      <div class="my-2 w-full md:mx-3">
-        <span class="my-2 flex justify-center text-xl text-color-primary"
-          >Turma</span
-        >
-        <select name="Turma" class="w-full rounded-full text-center">
-          <option>Todas</option>
-          <option>A</option>
-          <option>B</option>
-        </select>
-      </div>
-      <div class="my-2 w-full md:mx-3">
-        <span class="my-2 flex justify-center text-xl text-color-primary"
-          >Aula</span
-        >
-        <select name="Aula" class="w-full rounded-full text-center">
-          <option>PW1</option>
-          <option>TPA</option>
-          <option>GEO</option>
-        </select>
-      </div>
-      <div class="my-2 w-full md:mx-3">
-        <span class="my-2 flex justify-center text-xl text-color-primary"
-          >Data</span
-        >
-        <input
-          type="date"
-          class="w-full rounded-full text-center"
-          id="dataAtual"
-        />
-      </div>
-      <div class="my-2 w-full md:mx-3">
-        <span class="my-2 flex justify-center text-xl text-color-primary"
-          >Quantidade</span
-        >
-        <select id="quantidadeAulas" class="w-full rounded-full text-center">
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-        </select>
-      </div>
+  <ul class="flex gap-4">
+    {% for c in classrooms %}
+    <button class="alt px-5 py-3" @click="getClassroom('{{ c.pk }}')">
+      {{ c }}
+    </button>
+    {% endfor %}
+  </ul>
+
+  <div class="mx-5 flex w-full items-center gap-6">
+    <div class="mb-2 w-full text-center">
+      <label class="text-xl text-color-primary">Turma</label>
+      <select name="Turma" class="mt-2 w-full rounded-full text-center">
+        <option>Todas</option>
+        <option>A</option>
+        <option>B</option>
+      </select>
+    </div>
+    <div class="mb-2 w-full text-center">
+      <label class="text-xl text-color-primary">Aula</label>
+      <select name="Aula" class="mt-2 w-full rounded-full text-center">
+        <template x-for="p in programings.filter(p => p[1] == classroom)">
+          <option :value="p[0]" x-text="p[0]"></option>
+        </template>
+      </select>
+    </div>
+    <div class="mb-2 w-full text-center">
+      <label class="text-xl text-color-primary">Data</label>
+      <input
+        type="date"
+        class="mt-2 w-full rounded-full text-center"
+        id="dataAtual"
+      />
+    </div>
+    <div class="mb-2 w-full text-center">
+      <label class="text-xl text-color-primary">Quantidade</label>
+      <select id="quantidadeAulas" class="mt-2 w-full rounded-full text-center">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+      </select>
     </div>
   </div>
-  <h1
-    class="mt-6 text-center text-[40px] font-bold text-color-secondary md:text-left"
-  >
-    Chamada
-  </h1>
+
+  <h1 class="text-color-secondary">Chamada</h1>
+
   <div class="flex flex-col md:flex-row">
     <div class="md:w-1/2">
       <div class="container mx-auto mt-6">
@@ -107,13 +120,7 @@
         </div>
       </div>
 
-      <div class="mt-10">
-        <input
-          type="submit"
-          value="Enviar"
-          class="text-bold bg-color-secondary-dimm block w-full rounded-full border border-color-secondary px-12 py-4 text-[21px] font-bold text-color-secondary md:mx-auto md:mt-3"
-        />
-      </div>
+      <button type="submit" class="mt-5 h-12 w-full">Enviar</button>
     </div>
   </div>
 </main>

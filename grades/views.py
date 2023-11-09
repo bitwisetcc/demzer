@@ -6,21 +6,42 @@ from django.views.decorators.http import require_POST
 from grades.models import Assessment, Grade, Mention
 
 from management.models import Classroom, Programming, Subject
-from management.views import students
 
 
 def chamada(request: HttpRequest):
-    return render(request, "grades/chamada.html")
+    subjects = []
+    classrooms = []
+
+    for p in Programming.objects.filter(teacher=request.user):
+        if p.subject not in subjects:
+            subjects.append(p.subject)
+            classrooms.append(p.classroom.pk)
+
+    return render(
+        request,
+        "grades/chamada.html",
+        {
+            "classrooms": list(
+                set([p.classroom for p in request.user.programmings.all()])
+            ),
+            "programmings": Programming.objects.filter(teacher=request.user),
+        },
+    )
 
 
 def turmas(request: HttpRequest):
-    context = {
-        "classrooms": list(set([p.classroom for p in request.user.programmings.all()])),
-        "subjects": list(
-            set(p.subject for p in Programming.objects.filter(teacher=request.user))
-        ),
-    }
-    return render(request, "grades/turmas.html", context)
+    return render(
+        request,
+        "grades/turmas.html",
+        {
+            "classrooms": list(
+                set([p.classroom for p in request.user.programmings.all()])
+            ),
+            "subjects": list(
+                set(p.subject for p in Programming.objects.filter(teacher=request.user))
+            ),
+        },
+    )
 
 
 @require_POST
@@ -76,6 +97,10 @@ def load_classroom(request: HttpRequest, classroom_pk: int):
             ],
         }
     )
+
+
+def load_chamada(request: HttpRequest, classroom_pk: int, teacher_pk: int, date: str):
+    return JsonResponse({""})
 
 
 def boletim(request: HttpRequest):
