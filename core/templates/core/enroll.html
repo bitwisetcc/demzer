@@ -129,6 +129,7 @@
               name="birthdate"
               id="dt-birthdate"
               value="{{ birthdate|date:'Y-m-d' }}"
+              min="1900-01-01"
               :max="new Date().toISOString().split('T')[0]"
               required
             />
@@ -345,6 +346,9 @@
               required
               x-ref="cep"
               @keydown="validateNumber"
+              x-mask="99999999"
+              minlength="8"
+              maxlength="8"
             />
           </div>
           <button class="btn block" @click.prevent="fillCEP($refs.cep.value)">
@@ -447,7 +451,7 @@
             </div>
           </div>
         </template>
-        <button type="submit" class="btn">Enviar</button>
+        <button type="submit">Enviar</button>
       </article>
       <!-- Show instead a group option, class, subject etc. -->
     </section>

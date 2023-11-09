@@ -1,0 +1,427 @@
+{% extends 'core/base.html' %} {% load static %} {% block head %}
+<link rel="stylesheet" href="{% static 'core/dist/css/turmas.css' %}" />
+<title>Turmas</title>
+<script defer>
+  document.addEventListener("alpine:init", () => {
+    Alpine.data("turmas", () => ({
+      students: [],
+      assessments: [],
+      createDialog: false,
+      tab: 1,
+      subject: "{{ subjects.0.pk }}",
+      division: "",
+      classroom: "",
+      student: { username: "", pk: 0 },
+      bimester: 1,
+
+      getClassroom(pk) {
+        this.classroom = pk;
+        fetch(`{% url 'load_class' 0 %}`.replace("0", pk))
+          .then((r) => r.json())
+          .then((st) => {
+            this.students = st.students;
+            this.assessments = st.assessments;
+          });
+      },
+    }));
+  });
+</script>
+{% endblock %} {% block content %}
+<main
+  class="mx-10 mb-20 mt-4 md:mx-14"
+  x-data="turmas"
+  x-init="getClassroom('{{ classrooms.0.pk }}')"
+>
+  <section x-show="createDialog" class="dialog-backdrop">
+    <div class="dialog">
+      <header>
+        <h2>Marcar Avaliações</h2>
+        <button
+          @click.prevent="createDialog = false"
+          class="text-3xl font-bold text-color-primary"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-6 w-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </header>
+      <form
+        class="flex w-full flex-col gap-2 p-3"
+        action="{% url 'new_exercise' %}"
+        method="POST"
+        enctype="multipart/form-data"
+      >
+        {% csrf_token %}
+        <div class="flex items-center gap-2">
+          <label for="txt-title">Título:</label>
+          <input
+            required
+            maxlength="100"
+            minlength="10"
+            type="text"
+            name="title"
+            id="txt-title"
+            class="w-full"
+          />
+          <label for="attachment" class="file alt" x-data="{ filename: '' }">
+            <input
+              type="file"
+              name="attachment"
+              id="attachment"
+              accept="accept=image/*"
+              @input="filename = $el.files[0].name"
+            />
+            <span x-text="filename || 'Capa'"></span>
+          </label>
+          <label for="attachment" class="file alt" x-data="{ filename: '' }">
+            <input
+              type="file"
+              name="attachment"
+              id="attachment"
+              accept="accept=image/*"
+              @input="filename = $el.files[0].name"
+            />
+            <span x-text="filename || 'Anexo'"></span>
+          </label>
+        </div>
+        <div class="flex items-center gap-2"></div>
+        <div class="flex items-center gap-2">
+          <label for="txt-desc">Descrição:</label>
+          <textarea
+            name="desc"
+            id="txt-desc"
+            rows="2"
+            required
+            maxlength="500"
+            class="w-full"
+          ></textarea>
+        </div>
+        <div class="mt-1 flex justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <label for="dt-until">Até:</label>
+            <input
+              id="dt-until"
+              name="until"
+              type="date"
+              :min="new Date().toISOString().split('T')[0]"
+              :value="new Date().toISOString().split('T')[0]"
+              name="date"
+              class="text-sm"
+            />
+          </div>
+
+          <div class="flex items-center gap-2">
+            <label for="kind">Tipo:</label>
+            <select name="kind" id="sl-kind">
+              <option value="A">Atividade</option>
+              <option value="T">Prova</option>
+            </select>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <label>Menção:</label>
+            <select
+              name="mention"
+              class="h-10 rounded-full pl-3 pr-8 text-center"
+            >
+              <option>M1</option>
+              <option>M2</option>
+              <option>M3</option>
+            </select>
+          </div>
+        </div>
+
+        <input type="hidden" name="division" x-model="division" />
+        <input type="hidden" name="subject" x-model="subject" />
+        <input type="hidden" name="classroom" x-model="classroom" />
+        <input type="hidden" name="bimester" x-model="bimester" />
+
+        <button type="submit" class="self-center">Enviar</button>
+      </form>
+    </div>
+  </section>
+
+  <h1 class="text-center md:text-left">Turmas</h1>
+
+  <!-- TODO: use a select for mobile smh -->
+  <ul class="mt-10 flex gap-4">
+    {% for c in classrooms %}
+    <button class="alt px-5 py-3" @click="getClassroom('{{ c.pk }}')">
+      {{ c }}
+    </button>
+    {% endfor %}
+  </ul>
+
+  <header id="menu">
+    <div>
+      <label for="sl-classroom">Turma:</label>
+      <select name="classroom" id="sl-classroom" x-model="division">
+        <option value="" selected>Todas</option>
+        <option value="A">A</option>
+        <option value="B">B</option>
+      </select>
+    </div>
+    <div>
+      <label for="">Aula:</label>
+      <select name="subject" id="sl-subject" x-model="subject">
+        {% for s in subjects %}
+        <option value="{{ s.pk }}">{{ s }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="sl-bimester">Bimestre:</label>
+      <select name="bimester" id="sl-bimester" x-model="bimester">
+        <option value="1">1° Bimestre</option>
+        <option value="2">2° Bimestre</option>
+        <option value="3">3° Bimestre</option>
+        <option value="4">4° Bimestre</option>
+      </select>
+    </div>
+  </header>
+
+  <nav class="my-6 flex gap-1" id="tabs">
+    <button @click="tab = 1" :class="tab == 1 && 'border-color-primary'">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        class="h-6 w-6"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z"
+        />
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z"
+        />
+      </svg>
+      <span>Notas</span>
+    </button>
+    <button @click="tab = 2" :class="tab == 2 && 'border-color-primary'">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="h-6 w-6"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z"
+        />
+      </svg>
+      <span>Prova | Atividade</span>
+    </button>
+  </nav>
+
+  <article x-show.transition.in.opacity.duration.750ms="tab == 1">
+    <div class="flex gap-8">
+      <section class="overflow-y-scroll">
+        <h2 class="mb-3 text-3xl text-color-secondary">Atribuir Notas</h2>
+        <ul>
+          <template x-for="(s, i) in students" :key="index">
+            <li
+              class="mb-1 cursor-pointer text-lg font-normal transition-colors hover:text-color-secondary"
+              :class="s.username == student.username && 'text-color-secondary'"
+              x-init="if (i == 0) student = s"
+              x-text="s.username"
+              @click="student = s"
+            ></li>
+          </template>
+        </ul>
+      </section>
+
+      <form id="detail" action="{% url 'post_grade' %}" method="post">
+        {% csrf_token %}
+        <h2 class="mb-9 text-center text-3xl" x-text="student.username"></h2>
+        <div class="mx-7 mb-5 flex items-center justify-between gap-2">
+          <label for="sl-assessment">Tarefa:</label>
+          <select id="sl-assessment" name="assessment">
+            <template x-for="assessment in assessments">
+              <option :value="assessment.pk" x-text="assessment.title"></option>
+            </template>
+            <option value="F">Menção Final</option>
+          </select>
+        </div>
+        <div class="mx-7 mb-5 flex items-center justify-between gap-2">
+          <label for="">Nota:</label>
+          <select name="value">
+            <option value="0">I</option>
+            <option value="1">R</option>
+            <option value="2">B</option>
+            <option value="3">MB</option>
+          </select>
+        </div>
+        <div class="field flex flex-row justify-center px-6 text-center">
+          <label for="txt-just" class="my-2 text-xl text-color-secondary">
+            Justificativa:
+          </label>
+          <textarea
+            id="txt-just"
+            name="justification"
+            maxlength="200"
+            class="mb-3 h-32 w-full resize-none rounded border border-gray-300 px-4 py-2"
+            placeholder="Digite a justificativa aqui"
+          ></textarea>
+          <input type="hidden" name="student" x-model="student.pk" />
+          <input type="hidden" name="bimester" x-model="bimester" />
+          <input type="hidden" name="subject" x-model="subject" />
+          <button type="submit" class="self-center">Enviar</button>
+        </div>
+      </form>
+    </div>
+
+    <section class="mt-8 flex flex-col rounded-2xl bg-color-bg-lighter p-7">
+      <header class="flex justify-between">
+        <h2 class="text-3xl text-color-secondary">Visão Geral</h2>
+        <button class="alt flex">
+          <span class="mr-2">Importar</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-6 w-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15"
+            />
+          </svg>
+        </button>
+      </header>
+
+      <table id="vision" class="mt-6 shadow">
+        <thead>
+          <tr>
+            <th></th>
+            <th>M1</th>
+            <th>M2</th>
+            <th>M3</th>
+            <th>MF</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template x-for="s in students" :key="s.pk">
+            <tr>
+              <td x-text="s.username"></td>
+              <td x-text="['I','R','B','MB'][Math.floor(Math.random() * 4)]"></td>
+              <td x-text="['I','R','B','MB'][Math.floor(Math.random() * 4)]"></td>
+              <td x-text="['I','R','B','MB'][Math.floor(Math.random() * 4)]"></td>
+              <td>B</td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </section>
+  </article>
+
+  <article x-show.transition.in.opacity.duration.750ms="tab == 2" class="p-4">
+    <header class="mb-3 flex w-full justify-end">
+      <button @click="createDialog = true">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="h-10 w-10 text-color-primary"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+      </button>
+    </header>
+
+    <template x-for="a in assessments">
+      <div
+        class="rounded-2xl bg-gray-100 shadow"
+        x-data="{ options: false, details: false }"
+      >
+        <header class="flex justify-between px-6 py-4">
+          <div>
+            <h2 class="font-semibold text-color-primary" x-text="a.title"></h2>
+            <span class="text-color-secondary" x-text="a.day"></span>
+          </div>
+          <div class="relative">
+            <button @click="details = !details">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="h-6 w-6 transition-transform"
+                :class="details && 'rotate-180'"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                />
+              </svg>
+            </button>
+            <button @click="options = !options" class="relative">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="h-6 w-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z"
+                />
+              </svg>
+            </button>
+
+            <div
+              x-show="options"
+              class="absolute z-10 flex flex-col gap-2 rounded-lg border border-slate-400 bg-gray-100 p-3"
+              @click.away="() => options = false"
+            >
+              <button class="hover:text-color-secondary">Editar</button>
+              <button class="hover:text-color-secondary">Excluir</button>
+            </div>
+          </div>
+        </header>
+        <div
+          class="flex origin-top gap-4 rounded-b-2xl bg-gray-200 p-5 transition-all"
+          :class="details || 'scale-y-0 h-0 py-0'"
+        >
+          <div>
+            <p>Bimestre: <span x-text="a.bimester"></span></p>
+            <p>Sobre: <span x-text="a.kind"></span></p>
+          </div>
+          <p x-text="a.content"></p>
+        </div>
+      </div>
+    </template>
+  </article>
+</main>
+{% endblock %}

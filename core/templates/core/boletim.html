@@ -1,7 +1,6 @@
-{% extends 'core/base.html' %} {% load static %} {% block head %}
+{% extends 'core/base.html' %} {% load static %} {% load demzer_tags %} {% block head %}
 <title>Boletim</title>
 <link rel="stylesheet" href="{% static 'core/dist/css/boletim.css' %}" />
-<script defer src="{% static 'core/js/filter.js' %}"></script>
 {% endblock %} {% block content %}
 <main class="px-8 pb-10">
   <h1 class="my-8 ml-12 text-3xl font-semibold text-color-primary">Boletim</h1>
@@ -19,7 +18,9 @@
       <option>3º Ano</option>
     </select>
   </label>
-  <section class="box flex justify-left md:justify-center w-full overflow-x-scroll md:overflow-x-hidden">
+  <section
+    class="box justify-left flex w-full overflow-x-scroll md:justify-center md:overflow-x-hidden"
+  >
     <table class="main-table border-separate border-spacing-3 px-10">
       <thead>
         <tr>
@@ -30,8 +31,6 @@
           <th>4 ºBim</th>
           <th>Final</th>
           <th>Conselho</th>
-          <th>Recon</th>
-          <th>Recla.</th>
           <th><!-- empty --></th>
           <th>Aulas</th>
           <th>Faltas</th>
@@ -39,14 +38,13 @@
         </tr>
       </thead>
       <tbody>
+        {% for s in subjects %}
         <tr>
-          <td data-tippy-content="Lingua Portuguesa">LPLC</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td data-tippy-content="{{ s.name }}">{{ s }}</td>
+          <td>{{ mentions|getsubj:s.pk|getbimester:1 }}</td>
+          <td>{{ mentions|getsubj:s.pk|getbimester:2 }}</td>
+          <td>{{ mentions|getsubj:s.pk|getbimester:3 }}</td>
+          <td>{{ mentions|getsubj:s.pk|getbimester:4 }}</td>
           <td></td>
           <td></td>
           <td><!-- empty --></td>
@@ -54,98 +52,7 @@
           <td></td>
           <td></td>
         </tr>
-        <tr>
-          <td data-tippy-content="Inglês">ING</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td><!-- empty --></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td data-tippy-content="Matemática">MAT</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td><!-- empty --></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td data-tippy-content="Planejamento e Desenvolvimento de TCC">
-            TCC
-          </td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td><!-- empty --></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td data-tippy-content="Programação Web I">PW2</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td><!-- empty --></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td data-tippy-content="Banco de Dados II">BD2</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td><!-- empty --></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td data-tippy-content="Programação Mobile II">PM2</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td><!-- empty --></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
+        {% endfor %}
       </tbody>
     </table>
   </section>
@@ -176,25 +83,27 @@
     Ficha de Desempenho - Sala de Aula
   </h2>
   <section
-    class="box lg:w-max lg:grid-cols-4 grid grid-cols-1 gap-6 p-4 px-5 py-3 text-center sm:grid-cols-4 overflow-x-scroll md:overflow-hidden"
+    class="box lg:w-max lg:grid-cols-4 grid grid-cols-1 gap-6 overflow-x-scroll p-4 px-5 py-3 text-center md:overflow-hidden sm:grid-cols-4"
   >
-    <div class="flex flex-row col-span-4 h-10 rounded-3xl justify-center items-center font-semibold bg-color-secondary">
+    <div
+      class="col-span-4 flex h-10 flex-row items-center justify-center rounded-3xl bg-color-secondary font-semibold"
+    >
       <span>Ficha de Desempenho - Sala de Aula</span>
     </div>
     <div class="flex flex-col gap-3">
-      <span class="info text-white bg-color-primary-dimm">Instrumento</span>
+      <span class="info bg-color-primary-dimm text-white">Instrumento</span>
       <span class="info bg-color-grey">oii</span>
     </div>
     <div class="flex flex-col gap-3">
-      <span class="info text-white bg-color-primary-dimm">Datas</span>
+      <span class="info bg-color-primary-dimm text-white">Datas</span>
       <span class="info bg-color-grey">08/11/2005</span>
     </div>
     <div class="flex flex-col gap-3">
-      <span class="info text-white bg-color-primary-dimm">Menção</span>
+      <span class="info bg-color-primary-dimm text-white">Menção</span>
       <span class="info bg-color-grey">MB</span>
     </div>
     <div class="flex flex-col gap-3">
-      <span class="info text-white bg-color-primary-dimm">Observação</span>
+      <span class="info bg-color-primary-dimm text-white">Observação</span>
       <span class="info bg-color-grey">
         <form method="POST">
           {% if request.user.is_superuser %} {% csrf_token %}
@@ -205,18 +114,14 @@
             maxlength="200"
             placeholder="Escreva Aqui!"
           />
-          <div class="flex pt-1 justify-center">
-            <button type="submit" class="rounded-lg pt-3 bg-color-secondary">
+          <div class="flex justify-center pt-1">
+            <button type="submit" class="rounded-lg bg-color-secondary pt-3">
               Enviar
             </button>
           </div>
           {% else %}
-          <div class="cursor-not-allowed w-[100%] rounded-full bg-color-grey">
-            <p
-              name="obs_student"
-              value="{{ request.POST.obs }}"
-              readonly
-            ></p>
+          <div class="w-[100%] cursor-not-allowed rounded-full bg-color-grey">
+            <p name="obs_student" value="{{ request.POST.obs }}" readonly></p>
           </div>
           {% endif %}
         </form>

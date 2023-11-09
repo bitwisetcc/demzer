@@ -12,4 +12,5 @@ urlpatterns = [
     path("matérias/criar/", create_subject, name="create_subject"),
     path("matérias/importar/", import_subject, name="import_subject"),
     path("horários/<int:classroom_id>/", schedules, name="schedules"),
+    path("horários/fix/", delete_schedule, name="fix_schedule"),
 ]

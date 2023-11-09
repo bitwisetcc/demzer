@@ -1,5 +1,5 @@
 .tags {
-  @apply grid w-max grid-cols-6 items-center gap-4 rounded-xl bg-color-bg-perfil p-4 pt-0;
+  @apply m-auto grid w-full grid-cols-3 md:grid-cols-6 items-center gap-4 rounded-xl bg-color-bg-perfil p-4 pt-0;
 }
 
 .tags label {
@@ -7,15 +7,12 @@
 }
 
 .tags input[type="radio"] {
-  @apply m-0 h-0 w-0 border-0 p-0 opacity-0 leading-none;
+  @apply m-0 h-0 w-0 border-0 p-0 leading-none opacity-0;
 }
 
-.tags label > div {
-  @apply flex flex-col items-center justify-center;
-}
 
 .tags input[type="radio"] + div {
-  @apply rounded-xl border-2 border-transparent px-2 py-3;
+  @apply flex flex-col items-center rounded-xl border-2 border-transparent px-2 py-3 -mt-8;
 }
 
 .tags input[type="radio"]:checked + div {
@@ -23,11 +20,11 @@
 }
 
 .tags label div span:first-child {
-  @apply text-[2.5rem];
+  @apply text-[2rem] md:text-[2.5rem];
 }
 
 .tags label div span:last-child {
-  @apply text-lg;
+  @apply text-sm md:text-base;
 }
 
 textarea {

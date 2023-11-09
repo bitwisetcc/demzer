@@ -14,7 +14,8 @@
         "core/static/core/css/boletim.css",
         "core/static/core/css/profile.css",
         "core/static/core/css/schedule.css",
-        "core/static/core/css/alert.css"
+        "core/static/core/css/alert.css",
+        "core/static/core/css/turmas.css"
       ],
       "distDir": "./static/core/dist"
     }

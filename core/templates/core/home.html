@@ -3,161 +3,54 @@
 <link rel="stylesheet" href="{% static 'core/dist/css/dashboard.css' %}" />
 <title>Home</title>
 {% endblock %} {% block content %}
-<main class=" m-8 mb-10 px-5">
-  <div class="mt-10 flex justify-center md:mt-16">
-    <div
-      class="flex h-[300px] w-[360px] items-center justify-center lg:h-[380px] lg:w-[460px]"
-    >
+<main class="m-8 mb-10 px-5">
+  <h1 class="text-xl  text-color-primary font-bold mb-4">{{ day }}</h1>
+  {% if user|has_role:'student' %}
+  <h2 class="text-xl  text-color-primary font-bold">{{ user.profile.classroom }}</h2>
+  {% endif %}
+  
+  <div class="mt-8 flex justify-center md:mt-16">
+    <div class="lg:h-96 lg:w-96 flex h-40 w-96 items-center justify-center">
       <div class="swiper mySwiper carousel1">
         <div class="swiper-wrapper">
+          {% for prog in programmings %}
           <div class="swiper-slide justify-center">
-            <div class="flex justify-center px-12">
-              <div
-                class="h-[280px] w-[360px] flex-col rounded-2xl bg-white px-4 py-8 lg:h-[320px] lg:w-[480px] lg:px-6 lg:py-8"
-              >
-                <div class="ml-2 leading-[44px] lg:leading-[50px]">
-                  <span
-                    class="text-left text-[16px] font-normal text-color-primary lg:text-[22px]"
-                    >Próxima Aula</span
-                  >
-                  <span
-                    class="text-left text-xl font-normal text-color-secondary lg:text-[22px]"
-                    >(13:00-13:50)</span
-                  ><br />
-                  <span
-                    class="text-xl font-bold uppercase text-color-primary lg:text-[26px]"
-                    >Sex, 05 de Maio</span
-                  ><br />
-                  <span
-                    class="text-left text-sm font-normal text-color-secondary lg:text-[18px]"
-                    >Fundamentos da Informática</span
-                  ><br />
-                  <span
-                    class="text-left text-sm font-normal text-color-secondary lg:text-[18px]"
-                    >3º Desenvolvimento de Sistemas</span
-                  ><br />
-                  <span
-                    class="text-left text-sm font-normal text-color-secondary lg:text-[18px]"
-                    >Lab 30 - Área de Informática</span
-                  >
-                </div>
-              </div>
-            </div>
+            <section
+              class="m-4 ml-14 w-8/12 rounded-xl bg-color-bg-perfil px-6 py-4 shadow"
+            >
+              <h2 class="mb-3 font-bold text-color-primary">
+                {% if forloop.first %}Próxima Aula{% endif %}
+                <span class="font-normal text-color-secondary">
+                  (13:00 - 13:50)
+                </span>
+              </h2>
+              <p>
+                {{ prog.subject.name }}
+                <br />
+                {{ prog.teacher }}
+              </p>
+            </section>
           </div>
+          {% empty %}
           <div class="swiper-slide justify-center">
-            <div class="flex justify-center px-12">
-              <div
-                class="h-[280px] w-[360px] flex-col rounded-2xl bg-white px-4 py-8 lg:h-[320px] lg:w-[480px] lg:px-6 lg:py-8"
-              >
-                <div class="ml-2 leading-[44px] lg:leading-[50px]">
-                  <span
-                    class="text-left text-[16px] font-normal text-color-primary lg:text-[22px]"
-                    >Próxima Aula</span
-                  >
-                  <span
-                    class="text-left text-xl font-normal text-color-secondary lg:text-[22px]"
-                    >(13:00-13:50)</span
-                  ><br />
-                  <span
-                    class="text-xl font-bold uppercase text-color-primary lg:text-[26px]"
-                    >Sex, 05 de Maio</span
-                  ><br />
-                  <span
-                    class="text-left text-sm font-normal text-color-secondary lg:text-[18px]"
-                    >Fundamentos da Informática</span
-                  ><br />
-                  <span
-                    class="text-left text-sm font-normal text-color-secondary lg:text-[18px]"
-                    >3º Desenvolvimento de Sistemas</span
-                  ><br />
-                  <span
-                    class="text-left text-sm font-normal text-color-secondary lg:text-[18px]"
-                    >Lab 30 - Área de Informática</span
-                  >
-                </div>
-              </div>
-            </div>
+            <section
+              class="w-max rounded-xl bg-color-bg-perfil px-6 py-4 shadow"
+            >
+              <h2 class="text-gray-600">Sem aulas hoje :D</h2>
+            </section>
           </div>
-          <div class="swiper-slide justify-center">
-            <div class="flex justify-center px-12">
-              <div
-                class="h-[280px] w-[360px] flex-col rounded-2xl bg-white px-4 py-8 lg:h-[320px] lg:w-[480px] lg:px-6 lg:py-8"
-              >
-                <div class="ml-2 leading-[44px] lg:leading-[50px]">
-                  <span
-                    class="text-left text-[16px] font-normal text-color-primary lg:text-[22px]"
-                    >Próxima Aula</span
-                  >
-                  <span
-                    class="text-left text-xl font-normal text-color-secondary lg:text-[22px]"
-                    >(13:00-13:50)</span
-                  ><br />
-                  <span
-                    class="text-xl font-bold uppercase text-color-primary lg:text-[26px]"
-                    >Sex, 05 de Maio</span
-                  ><br />
-                  <span
-                    class="text-left text-sm font-normal text-color-secondary lg:text-[18px]"
-                    >Fundamentos da Informática</span
-                  ><br />
-                  <span
-                    class="text-left text-sm font-normal text-color-secondary lg:text-[18px]"
-                    >3º Desenvolvimento de Sistemas</span
-                  ><br />
-                  <span
-                    class="text-left text-sm font-normal text-color-secondary lg:text-[18px]"
-                    >Lab 30 - Área de Informática</span
-                  >
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="swiper-slide justify-center">
-            <div class="flex justify-center px-12">
-              <div
-                class="h-[280px] w-[360px] flex-col rounded-2xl bg-white px-4 py-8 lg:h-[320px] lg:w-[480px] lg:px-6 lg:py-8"
-              >
-                <div class="ml-2 leading-[44px] lg:leading-[50px]">
-                  <span
-                    class="text-left text-[16px] font-normal text-color-primary lg:text-[22px]"
-                    >Próxima Aula</span
-                  >
-                  <span
-                    class="text-left text-xl font-normal text-color-secondary lg:text-[22px]"
-                    >(13:00-13:50)</span
-                  ><br />
-                  <span
-                    class="text-xl font-bold uppercase text-color-primary lg:text-[26px]"
-                    >Sex, 05 de Maio</span
-                  ><br />
-                  <span
-                    class="text-left text-sm font-normal text-color-secondary lg:text-[18px]"
-                    >Fundamentos da Informática</span
-                  ><br />
-                  <span
-                    class="text-left text-sm font-normal text-color-secondary lg:text-[18px]"
-                    >3º Desenvolvimento de Sistemas</span
-                  ><br />
-                  <span
-                    class="text-left text-sm font-normal text-color-secondary lg:text-[18px]"
-                    >Lab 30 - Área de Informática</span
-                  >
-                </div>
-              </div>
-            </div>
-          </div>
+          {% endfor %}
         </div>
         <div class="swiper-button-next"></div>
         <div class="swiper-button-prev"></div>
       </div>
     </div>
-    <div class="hidden items-center justify-center md:flex">
-      <img
-        src="{% static '/core/images/aluno.png' %}"
-        class="mb-5 ml-10 h-[300px] w-[380px] md:block"
-      />
-    </div>
+    <img
+      src="{% static '/core/images/aluno.png' %}"
+      class="mb-5 ml-10 hidden h-[300px] w-[380px] md:block"
+    />
   </div>
+
   <h1
     class="mb-10 mt-6 text-center text-[40px] font-bold text-color-primary md:text-left"
   >
@@ -165,58 +58,100 @@
   </h1>
 
   <div class="mb-6 mt-6 flex justify-center md:mt-8">
-    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5 gap-10">
+    <div
+      class="lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5 grid grid-cols-1 gap-10 md:grid-cols-3"
+    >
       <!-- Card 1 -->
-      <div class="flex justify-center ">
-        <div class="flex h-[150px] w-[270px] flex-col items-center justify-center rounded-2xl bg-white px-4 py-8 xl:px-2">
+      <div class="flex justify-center">
+        <div
+          class="xl:px-2 flex h-[150px] w-[270px] flex-col items-center justify-center rounded-2xl bg-white px-4 py-8"
+        >
           <div class="ml-2 leading-[30px]">
-            <span class="text-[28px] font-normal text-color-primary">22 | Seg</span><br />
-            <span class="text-left text-sm font-normal text-gray-500">Fundamentos da Informática</span><br />
-            <span class="text-left text-sm font-normal text-gray-500">3º Desenvolvimento de Sistemas</span>
+            <span class="text-[28px] font-normal text-color-primary"
+              >22 | Seg</span
+            ><br />
+            <span class="text-left text-sm font-normal text-gray-500"
+              >Fundamentos da Informática</span
+            ><br />
+            <span class="text-left text-sm font-normal text-gray-500"
+              >3º Desenvolvimento de Sistemas</span
+            >
           </div>
         </div>
       </div>
-  
+
       <!-- Card 2 -->
-      <div class="flex justify-center ">
-        <div class="flex h-[150px] w-[270px] flex-col items-center justify-center rounded-2xl bg-white px-4 py-8 xl:px-2">
+      <div class="flex justify-center">
+        <div
+          class="xl:px-2 flex h-[150px] w-[270px] flex-col items-center justify-center rounded-2xl bg-white px-4 py-8"
+        >
           <div class="ml-2 leading-[30px]">
-            <span class="text-[28px] font-normal text-color-primary">22 | Seg</span><br />
-            <span class="text-left text-sm font-normal text-gray-500">Fundamentos da Informática</span><br />
-            <span class="text-left text-sm font-normal text-gray-500">3º Desenvolvimento de Sistemas</span>
-          </div>
-        </div>
-      </div>
-  
-      <!-- Card 3 -->
-      <div class="flex justify-center ">
-        <div class="flex h-[150px] w-[270px] flex-col items-center justify-center rounded-2xl bg-white px-4 py-8 xl:px-2">
-          <div class="ml-2 leading-[30px]">
-            <span class="text-[28px] font-normal text-color-primary">22 | Seg</span><br />
-            <span class="text-left text-sm font-normal text-gray-500">Fundamentos da Informática</span><br />
-            <span class="text-left text-sm font-normal text-gray-500">3º Desenvolvimento de Sistemas</span>
+            <span class="text-[28px] font-normal text-color-primary"
+              >22 | Seg</span
+            ><br />
+            <span class="text-left text-sm font-normal text-gray-500"
+              >Fundamentos da Informática</span
+            ><br />
+            <span class="text-left text-sm font-normal text-gray-500"
+              >3º Desenvolvimento de Sistemas</span
+            >
           </div>
         </div>
       </div>
 
       <!-- Card 3 -->
-      <div class="flex justify-center ">
-        <div class="flex h-[150px] w-[270px] flex-col items-center justify-center rounded-2xl bg-white px-4 py-8 xl:px-2">
+      <div class="flex justify-center">
+        <div
+          class="xl:px-2 flex h-[150px] w-[270px] flex-col items-center justify-center rounded-2xl bg-white px-4 py-8"
+        >
           <div class="ml-2 leading-[30px]">
-            <span class="text-[28px] font-normal text-color-primary">22 | Seg</span><br />
-            <span class="text-left text-sm font-normal text-gray-500">Fundamentos da Informática</span><br />
-            <span class="text-left text-sm font-normal text-gray-500">3º Desenvolvimento de Sistemas</span>
+            <span class="text-[28px] font-normal text-color-primary"
+              >22 | Seg</span
+            ><br />
+            <span class="text-left text-sm font-normal text-gray-500"
+              >Fundamentos da Informática</span
+            ><br />
+            <span class="text-left text-sm font-normal text-gray-500"
+              >3º Desenvolvimento de Sistemas</span
+            >
           </div>
         </div>
       </div>
-  
+
+      <!-- Card 3 -->
+      <div class="flex justify-center">
+        <div
+          class="xl:px-2 flex h-[150px] w-[270px] flex-col items-center justify-center rounded-2xl bg-white px-4 py-8"
+        >
+          <div class="ml-2 leading-[30px]">
+            <span class="text-[28px] font-normal text-color-primary"
+              >22 | Seg</span
+            ><br />
+            <span class="text-left text-sm font-normal text-gray-500"
+              >Fundamentos da Informática</span
+            ><br />
+            <span class="text-left text-sm font-normal text-gray-500"
+              >3º Desenvolvimento de Sistemas</span
+            >
+          </div>
+        </div>
+      </div>
+
       <!-- Card 4 -->
       <div class="flex justify-center">
-        <div class="flex h-[150px] w-[270px] flex-col items-center justify-center rounded-2xl bg-white px-4 py-8 xl:px-2">
+        <div
+          class="xl:px-2 flex h-[150px] w-[270px] flex-col items-center justify-center rounded-2xl bg-white px-4 py-8"
+        >
           <div class="ml-2 leading-[30px]">
-            <span class="text-[28px] font-normal text-color-primary">22 | Seg</span><br />
-            <span class="text-left text-sm font-normal text-gray-500">Fundamentos da Informática</span><br />
-            <span class="text-left text-sm font-normal text-gray-500">3º Desenvolvimento de Sistemas</span>
+            <span class="text-[28px] font-normal text-color-primary"
+              >22 | Seg</span
+            ><br />
+            <span class="text-left text-sm font-normal text-gray-500"
+              >Fundamentos da Informática</span
+            ><br />
+            <span class="text-left text-sm font-normal text-gray-500"
+              >3º Desenvolvimento de Sistemas</span
+            >
           </div>
         </div>
       </div>

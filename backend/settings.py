@@ -48,6 +48,32 @@ MEDIA_ROOT = BASE_DIR / "user_media"
 
 SECRET_KEY = getenv("CSRF_KEY", "DEMZER-INSECURE-KEY")
 
+WEEKDAYS = [
+    "Segunda",
+    "Terça",
+    "Quarta",
+    "Quinta",
+    "Sexta",
+    "Sábado",
+    "Domingo",
+]
+
+MONTHS = [
+    "janeiro",
+    "fevereiro",
+    "março",
+    "abril",
+    "março",
+    "maio",
+    "junho",
+    "julho",
+    "agosto",
+    "setembro",
+    "outubro",
+    "novembro",
+    "outubro",
+]
+
 DEBUG = True
 
 SECURE_SSL_REDIRECT = False

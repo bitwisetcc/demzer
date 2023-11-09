@@ -1,4 +1,4 @@
-{% extends 'core/base.html' %} {% block head %}
+{% extends 'core/base.html' %} {% load permission_tags %} {% block head %}
 <title>Alertas</title>
 <script>
   document.addEventListener("alpine:init", () => {
@@ -7,6 +7,27 @@
       imgUrl: "",
       info: "",
       date: "",
+      icons: {
+        student: "🧑‍🎓",
+        staff: "🧑‍💼",
+        teacher: "🧑‍🏫",
+        repair: "🔧",
+        cleanup: "🧹",
+        other: "👍",
+      },
+      translations: {
+        student: "Aluno",
+        staff: "Funcionário",
+        teacher: "Professor",
+        repair: "Conserto",
+        cleanup: "Limpeza",
+        other: "Outros",
+      },
+      imgShow: false,
+      show(img) {
+        this.imgUrl = img;
+        this.imgShow = true;
+      },
 
       fillIn(el) {
         this.seeDialog = true;
@@ -18,32 +39,119 @@
   });
 </script>
 {% endblock %} {% block content %}
-<main class="flex-1 p-5">
-  <h1 class="mb-3 font-sans text-3xl font-bold text-color-primary">
-    Alertas
-  </h1>
+<main class="flex-1 p-5 md:mx-16">
+  <h1 class="mb-12 font-sans text-3xl font-bold text-color-primary">Alertas</h1>
 
-  <section class="mt-10 grid grid-cols-2 gap-10 divide-gray-600" x-data="alert">
+  <section x-data="alert">
+    <section class="dialog-backdrop z-10" x-show="imgShow">
+      <div class="dialog w-1/2">
+        <header>
+          <span></span>
+          <button @click="imgShow = false">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="h-6 w-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </header>
+        <img :src="imgUrl" alt="alert image" class="w-full rounded-2xl mt-2" />
+      </div>
+    </section>
     <ul class="flex flex-col gap-5">
       {% for alert in alerts %}
-      <li
-        class="rounded-lg border-2 border-slate-600 bg-color-bg-perfil p-5"
-        @click="fillIn($el)"
+      <div
+        class="rounded-3xl bg-gray-100 shadow"
+        x-data="{ options: false, details: false }"
       >
-        <h3 class="text-slate-500">
-          ({{ alert.tag }}) por {{ alert.emiter }} |
-          <span id="date">{{ alert.date|date:'d/m/Y' }}</span>
-        </h3>
-        <p id="description" class="hidden">{{ alert.description }}</p>
-        <span id="img" class="hidden">{% url 'img' 'alerts' 0 %}</span>
-      </li>
+        <header class="flex justify-between px-6 py-4">
+          <div class="flex items-center gap-3">
+            <span
+              x-text="icons['{{ alert.tag }}']"
+              :data-tippy-content="translations['{{ alert.tag }}']"
+              class="text-[2.5rem]"
+            ></span>
+            <div>
+              <h2 class="text-xl font-semibold text-color-primary">
+                <span>{{ alert.emiter }}</span>
+                <span>
+                  {% if alert.emiter|has_role:'student' %}
+                  <span> - {{ alert.emiter.profile.classroom }} </span>
+                  {% endif %}
+                </span>
+              </h2>
+              <p>
+                <span class="text-slate-500">{{ alert.date }}</span>
+              </p>
+              <p>{{ alert.description }}</p>
+            </div>
+          </div>
+          <div class="relative">
+            <button @click="details = !details">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="h-6 w-6 transition-transform"
+                :class="details && 'rotate-180'"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                />
+              </svg>
+            </button>
+          </div>
+        </header>
+        <div
+          class="origin-top rounded-b-3xl bg-gray-200 p-5 transition-all"
+          :class="details || 'scale-y-0 h-0 py-0'"
+        >
+          <button
+            class="alt"
+            @click="show(`{% url 'img' 'alerts' alert.pk %}`)"
+          >
+            Imagem
+          </button>
+          <form action="">
+            <div class="flex flex-col gap-4 md:flex-row md:gap-8 md:pr-16">
+              <div class="flex flex-1 flex-col gap-1">
+                <label for="txt-res">Resposta:</label>
+                <input type="text" name="" id="" />
+              </div>
+              <div>
+                <div>
+                  <input type="radio" name="state" id="rd-sl" />
+                  <label for="rd-sl">Solucionada</label>
+                </div>
+                <div>
+                  <input type="radio" name="state" id="rd-pr" />
+                  <label for="rd-pr">Solucionando</label>
+                </div>
+                <div>
+                  <input type="radio" name="state" id="rd-na" />
+                  <label for="rd-na">Sem solução</label>
+                </div>
+              </div>
+            </div>
+            <button type="submit" class="m-auto mt-3 block">Enviar</button>
+          </form>
+        </div>
+      </div>
       {% endfor %}
     </ul>
-
-    <article>
-      <p x-text="info"></p>
-      <img :src="imgUrl" alt="imagem do alerta">
-    </article>
   </section>
 </main>
 {% endblock %}

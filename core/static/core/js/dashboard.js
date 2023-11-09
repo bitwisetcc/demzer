@@ -56,7 +56,7 @@ document.addEventListener("alpine:init", () => {
 });
 
 //To make Carousel in dashboard work!
-var carousel1Swiper = new Swiper(".carousel1", {
+const carousel1Swiper = new Swiper(".carousel1", {
   slidesPerView: 1,
   keyboard: {
     enabled: false,

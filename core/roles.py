@@ -14,7 +14,10 @@ class Admin(AbstractUserRole):
 
 
 class Coordinator(AbstractUserRole):
-    available_permissions = {"see_alerts": True}
+    available_permissions = {
+        "see_alerts": True,
+        "create_schedule": True,
+    }
 
 
 class Secretary(AbstractUserRole):

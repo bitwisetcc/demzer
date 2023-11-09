@@ -17,7 +17,7 @@ from django.db.models import (
     FloatField,
     IntegerField,
     SlugField,
-    PositiveSmallIntegerField
+    PositiveSmallIntegerField,
 )
 from django.forms import ValidationError
 from django.http import HttpRequest
@@ -40,6 +40,7 @@ class Subject(Model):
         return self.slug
 
     class Meta:
+        ordering = ["name"]
         verbose_name = _("matéria")
         verbose_name_plural = _("matérias")
 
@@ -92,12 +93,12 @@ class Programming(Model):
         TUESDAY = 1, _("Terça")
         WEDNESDAY = 2, _("Quarta")
         THURSDAY = 3, _("Quinta")
-        SUNDAY = 4, _("Sexta")
+        FRIDAY = 4, _("Sexta")
 
-    classroom = ForeignKey(Classroom, CASCADE, related_name="+", null=True)
-    teacher = ForeignKey(User, SET_NULL, null=True)
+    classroom = ForeignKey(Classroom, CASCADE, related_name="programmings", null=True)
+    teacher = ForeignKey(User, SET_NULL, null=True, related_name="programmings")
     group = PositiveSmallIntegerField(null=True)
-    subject = ForeignKey(Subject, SET_NULL, related_name="+", null=True)
+    subject = ForeignKey(Subject, SET_NULL, related_name="programmings", null=True)
     day = PositiveSmallIntegerField(choices=Days.choices, default=Days.MONDAY)
     order = PositiveSmallIntegerField()
 
@@ -111,7 +112,10 @@ class Programming(Model):
         try:
             day = Programming.Days.choices[int(request.POST.get("day"))][0]
             time = request.POST.get("time")
-            teacher = User.objects.get(username__startswith=teacher_name)
+            teacher = User.objects.get(
+                username__startswith=teacher_name, groups__name__in=["Teacher"]
+            )
+            subject = Subject.objects.get(pk=subject_pk)
 
             if not has_role(teacher, Teacher):
                 raise PermissionError(teacher.username)
@@ -136,7 +140,7 @@ class Programming(Model):
                 classroom=classroom,
                 teacher=teacher,
                 group=group,
-                subject=Subject.objects.get(pk=subject_pk),
+                subject=subject,
                 day=day,
                 order=time,
             )
@@ -152,7 +156,9 @@ class Programming(Model):
         except Subject.DoesNotExist as exc:
             messages.error(request, "Matéria não encontrada")
         except OperationalError as err:
-            messages.error(request, "Falha ao conectar com a BD: {}".format(err.args[0]))
+            messages.error(
+                request, "Falha ao conectar com a BD: {}".format(err.args[0])
+            )
 
     def json(self):
         return json.dumps(

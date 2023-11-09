@@ -116,9 +116,21 @@ dialog h2,
 }
 
 label.file {
-  @apply w-max bg-color-hover cursor-pointer;
+  @apply w-max cursor-pointer;
 }
 
 label.file input {
   @apply hidden;
 }
+
+h1 {
+  @apply mb-4 text-4xl font-semibold text-color-primary;
+}
+
+h2 {
+  @apply font-semibold text-color-primary
+}
+
+/* .flex:not(.flex-col) {
+  @apply items-center
+} */

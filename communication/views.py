@@ -1,13 +1,12 @@
 from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
 from django.http import HttpRequest
 from django.shortcuts import render
 from rolepermissions.checkers import has_role, has_permission
 
 from communication.models import Alert, Announcement, Event
-from core.roles import Admin
+from core.roles import Admin, Student
 from core.utils import UTC_date, upload_img
 from management.models import Classroom, Course
 
@@ -27,12 +26,14 @@ def alerts(request: HttpRequest):
             description=request.POST["description"],
         )
 
-        try:
-            upload_img(request.FILES.get("attachment"), str(alert.pk), "alerts")
-        except Exception as exc:
-            messages.warning(
-                request, "Failed to upload picture: {}".format(exc.args[0])
-            )
+        attachment = request.FILES.get("attachment")
+        if attachment is not None:
+            try:
+                upload_img(attachment, str(alert.pk), "alerts")
+            except Exception as exc:
+                messages.warning(
+                    request, "Failed to upload picture: {}".format(exc.args[0])
+                )
 
         messages.success(request, "Alerta criado com sucesso!")
 
@@ -42,7 +43,7 @@ def alerts(request: HttpRequest):
 @login_required
 def comunicados(request: HttpRequest):
     if request.method == "POST" and has_role(request.user, "admin"):
-        private = "staff_only" not in request.POST
+        private = "staff_only" in request.POST
         course = request.POST.get("course")
         classroom = request.POST.get("classroom")
 
@@ -87,8 +88,10 @@ def comunicados(request: HttpRequest):
         **{k: v for k, v in filters.items() if v}
     )
 
-    if not has_role(request.user, Admin):
+    if has_role(request.user, Student):
         announcements = announcements.filter(private=False)
+
+    if not has_role(request.user, Admin):
         announcements = [a for a in announcements if a.published()]
 
     return render(
@@ -123,9 +126,7 @@ def events(request: HttpRequest):
                 request, "Failed to upload picture: {}".format(exc.args[0])
             )
 
-        messages.success(
-            request, "Evento {} criado com sucesso".format(event)
-        )
+        messages.success(request, "Evento {} criado com sucesso".format(event))
 
     start = request.GET.get("start-date")
     end = request.GET.get("end-date")
@@ -137,7 +138,5 @@ def events(request: HttpRequest):
         "date__lt": end and UTC_date(end),
     }
 
-    events = Event.objects.filter(
-        **{k: v for k, v in filters.items() if v}
-    )
+    events = Event.objects.filter(**{k: v for k, v in filters.items() if v})
     return render(request, "communication/events.html", {"events": events})

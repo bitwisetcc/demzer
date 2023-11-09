@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.http import Http404, HttpRequest, HttpResponse, HttpResponseBadRequest
+from django.db.models import Q
 from django.shortcuts import redirect, render
 from rolepermissions.checkers import has_role
 from rolepermissions.decorators import has_permission_decorator as check_permission
@@ -18,7 +19,7 @@ from rolepermissions.roles import assign_role
 from core.models import Member, Relative
 from core.roles import Admin
 from core.utils import email_address, upload_img
-from management.models import Classroom
+from management.models import Classroom, Programming
 
 
 @login_required
@@ -26,7 +27,24 @@ def dashboard(request: HttpRequest):
     if has_role(request.user, Admin):
         return render(request, "core/dashboard.html")
     else:
-        return render(request, "core/home.html")
+        today = date.today()
+        weekday = today.weekday()
+
+        date_txt = "{}, {} de {}".format(
+            settings.WEEKDAYS[weekday], today.day, settings.MONTHS[today.month]
+        )
+
+        programmings = Programming.objects.filter(
+            Q(group=None) | Q(group=request.user.profile.division),
+            classroom=request.user.profile.classroom,
+            day=weekday,
+        ).order_by("order")
+
+        
+
+        return render(
+            request, "core/home.html", {"programmings": programmings, "day": date_txt}
+        )
 
 
 def login_user(request: HttpRequest, failed=0):
@@ -84,7 +102,9 @@ def enroll(request: HttpRequest):
         try:
             upload_img(request.FILES.get("picture"), str(user.pk))
         except Exception as exc:
-            messages.warning(request, "Failed to upload picture: {}".format(exc.args[0]))
+            messages.warning(
+                request, "Failed to upload picture: {}".format(exc.args[0])
+            )
 
         try:
             print(1)
@@ -269,10 +289,6 @@ def auto_adm(request: HttpRequest):
 
 def perfil(request: HttpRequest):
     return render(request, "core/perfil.html")
-
-
-def boletim(request: HttpRequest):
-    return render(request, "core/boletim.html")
 
 
 def read_img(request: HttpRequest, container: str, title: str):

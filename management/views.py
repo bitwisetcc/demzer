@@ -15,7 +15,7 @@ from rolepermissions.decorators import has_permission_decorator as check_permiss
 from rolepermissions.roles import assign_role
 
 from core.models import Member
-from core.roles import Teacher
+from core.roles import Admin, Teacher
 from core.utils import csv_data, dexc, dfilter, get_coordinator
 from management.models import Course, Subject, Programming, Classroom
 
@@ -291,7 +291,8 @@ def create_subject(request: HttpRequest):
 # TODO: if the cell is empty and you try to create a split programming, only the last one is created
 def schedules(request: HttpRequest, classroom_id: int):
     if request.method == "POST":
-        if not has_permission(request.user, "create_schedule"):
+        # TODO: use `has_permission`
+        if not has_role(request.user, Admin):
             messages.warning(request, "Você não tem permissão para marcar aulas")
             return redirect("schedules", classroom_id=classroom_id)
 
@@ -320,11 +321,18 @@ def schedules(request: HttpRequest, classroom_id: int):
     if has_role(request.user, Teacher):
         # Teachers
         lessons_qtd = 12
-        breaks = [(3, 20), (6, 110), (9, 20)]
+        breaks = [(3, 20), (6, 40), (9, 20)]
 
         programmings = Programming.objects.filter(teacher=request.user)
+
+        for p in programmings:
+            if p.classroom.course.time == Course.Timing.MORNING:
+                p.order += 6
+
         start = dt.strptime(settings.TURNS[Course.Timing.MORNING], "%H:%M")
         classroom = Classroom.objects.first()
+        # TODO: mostrar turma, sala? e divisão? nos detalhes
+        # TODO: consertar horário pra adaptar entre manhã e tarde
     else:
         # Students and Admins
         lessons_qtd = 6
@@ -357,3 +365,20 @@ def schedules(request: HttpRequest, classroom_id: int):
             "programmings": programmings,
         },
     )
+
+
+# TODO: check permission
+@require_POST
+def delete_schedule(request: HttpRequest):
+    body = json.loads(request.body.decode())
+    classroom_id = int(body["classroom"])
+
+    query = Programming.objects.filter(
+        classroom=Classroom.objects.get(pk=classroom_id),
+        day=body["day"],
+        order=body["time"],
+    )
+
+    messages.success(request, "{} aulas foram excluídas".format(query.count()))
+    query.delete()
+    return redirect("schedules", classroom_id=classroom_id)

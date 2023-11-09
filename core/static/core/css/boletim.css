@@ -30,9 +30,9 @@ td {
   @apply bg-color-grey;
 }
 
-.main-table th:nth-child(9),
-.main-table tr td:nth-child(10),
-.main-table thead th:nth-child(10),
+.main-table th:nth-child(7),
+.main-table tr td:nth-child(8),
+.main-table thead th:nth-child(8),
 .main-table thead th:first-child {
   @apply bg-color-boletim;
 }

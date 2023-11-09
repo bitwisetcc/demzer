@@ -30,31 +30,30 @@
       },
 
       imports: [{ name: "", slug: "" }],
-      sendSubject() {
-        const values = (nl) =>
-          Array.from(nl)
-            .map((i) => i.value)
-            .filter((s) => s != "");
-
-        const csrfToken = document.cookie.slice(
-          document.cookie.indexOf("=") + 1
-        );
-
-        const form = document.getElementById("importSubjects");
-        const names = values(form.querySelectorAll(".input :nth-child(1)"));
-        const slugs = values(form.querySelectorAll(".input :nth-child(2)"));
-
-        fetch("{% url 'import_subject' %}", {
-          method: "POST",
-          headers: { "X-CSRFToken": csrfToken },
-          body: JSON.stringify({ names, slugs }),
-        })
-          .then((res) => res.text())
-          .then(() => location.reload())
-          .catch(console.error);
-      },
     }));
   });
+
+  function sendSubject() {
+    const values = (nl) =>
+      Array.from(nl)
+        .map((i) => i.value)
+        .filter((s) => s != "");
+
+    const csrfToken = document.cookie.slice(document.cookie.indexOf("=") + 1);
+
+    const form = document.getElementById("importSubjects");
+    const names = values(form.querySelectorAll(".input :nth-child(1)"));
+    const slugs = values(form.querySelectorAll(".input :nth-child(2)"));
+
+    fetch("{% url 'import_subject' %}", {
+      method: "POST",
+      headers: { "X-CSRFToken": csrfToken },
+      body: JSON.stringify({ names, slugs }),
+    })
+      .then((res) => res.text())
+      .then(() => location.reload())
+      .catch(console.error);
+  }
 </script>
 {% endblock %} {% block content %}
 <main class="flex flex-col gap-5 px-24 py-10" x-data="dialogs">
@@ -369,7 +368,7 @@
 
   <section class="flex flex-col gap-6">
     <header class="flex justify-between text-color-primary">
-      <h1 class="mb-4 text-4xl font-semibold text-color-primary">Cursos</h1>
+      <h1>Cursos</h1>
       <div class="flex gap-2">
         {% if user|can:'create_course' %}
         <button @click="clear()">
@@ -514,7 +513,7 @@
   </section>
   <section>
     <header class="mb-2 flex justify-between text-color-primary">
-      <h2 class="mb-4 text-4xl font-semibold">Matérias</h2>
+      <h2 class="mb-4 text-4xl">Matérias</h2>
       <div class="flex gap-2">
         {% if user|can:'create_course' %}
         <button @click="subjectDialog = true">

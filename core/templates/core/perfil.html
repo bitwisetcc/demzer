@@ -1,29 +1,42 @@
-{% extends 'core/base.html' %} {% load static %} {% block head %}
+{% extends 'core/base.html' %} {% load static %} {% load permission_tags %} {% block head %}
 <link rel="stylesheet" href="{% static 'core/dist/css/profile.css' %}" />
 <title>Perfil de {{ user.username.split.0 }}</title>
 {% endblock %} {% block content %}
 <main class="mb-10 px-8">
   <h1 class="pb-6 text-4xl font-bold text-color-primary">Perfil</h1>
-  <section class="mb-8 flex">
+  <section class="mb-8 flex flex-col md:flex-row">
     <img
       src="{% url 'img' 'pictures' user.pk %}"
       alt="Foto de perfil"
       class="h-36 w-36 cursor-pointer rounded-full border-[6px] border-color-primary"
     />
-    <div class="pl-5">
+    <div class="md:info-card pl-5">
       <h2 class="truncate text-xl font-semibold text-color-primary">
         {{ user.username }}
       </h2>
-      <ul>
+      <ul class="gap-x-5 md:grid md:grid-flow-col md:grid-rows-3">
         <li><span class="info-lbl">RA:</span> {{ user.pk }}</li>
         <li><span class="info-lbl">E-mail:</span> {{ user.email }}</li>
         <li>
           <span class="info-lbl">Telefone:</span> {{ user.profile.phone }}
         </li>
+        {% if user|has_role:'student' %}
+        <li>
+          <span class="info-lbl">Curso:</span> {{ user.profile.classroom.course.name }}
+        </li>
+        <li>
+          <span class="info-lbl">Turma:</span> {{ user.profile.classroom }}
+        </li>
+        {% if user.profile.division %}
+        <li>
+          <span class="info-lbl">Divisão:</span> {{ user.profile.division }}
+        </li>
+        {% endif %}
+        {% endif %}
       </ul>
     </div>
   </section>
-  <article class="mb-2 grid grid-cols-2 gap-6">
+  <article class="mb-2 grid gap-6 md:grid-cols-2">
     <section>
       <h2 class="text-xl font-semibold text-color-secondary">
         Informações Pessoais
@@ -35,13 +48,43 @@
         </li>
         <li><span class="info-lbl">CPF:</span> {{ user.profile.cpf }}</li>
         <li><span class="info-lbl">RG:</span> {{ user.profile.rg }}</li>
+        <li><span class="info-lbl">Gênero:</span> {{ user.profile.gender }}</li>
+        <li>
+          <span class="info-lbl">Contato:</span> {{ user.profile.contact_email }}
+        </li>
       </ul>
     </section>
     <section>
       <h2 class="text-xl font-semibold text-color-secondary">Senha</h2>
       <form class="info-card">
-        calma lá vai ficar pronto
-        <!-- TODO: formulário para trocar senha -->
+        <div class="mb-2 gap-2 md:flex">
+          <label class="info-lbl" for="txt-prev">Senha atual:</label>
+          <input
+            class="py-1 md:flex-1"
+            type="password"
+            name="prev"
+            id="txt-prev"
+          />
+        </div>
+        <div class="mb-2 gap-2 md:flex">
+          <label class="info-lbl" for="txt-new">Nova senha:</label>
+          <input
+            class="py-1 md:flex-1"
+            type="password"
+            name="new"
+            id="txt-new"
+          />
+        </div>
+        <div class="mb-2 gap-2 md:flex">
+          <label class="info-lbl" for="txt-confirm">Confirmação:</label>
+          <input
+            class="py-1 md:flex-1"
+            type="password"
+            name="confirm"
+            id="txt-confirm"
+          />
+        </div>
+        <button type="submit" class="m-auto block">Alterar</button>
       </form>
     </section>
   </article>
