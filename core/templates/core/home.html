@@ -4,11 +4,13 @@
 <title>Home</title>
 {% endblock %} {% block content %}
 <main class="m-8 mb-10 px-5">
-  <h1 class="text-xl  text-color-primary font-bold mb-4">{{ day }}</h1>
+  <h1 class="mb-4 text-xl font-bold text-color-primary">{{ day }}</h1>
   {% if user|has_role:'student' %}
-  <h2 class="text-xl  text-color-primary font-bold">{{ user.profile.classroom }}</h2>
+  <h2 class="text-xl font-bold text-color-primary">
+    {{ user.profile.classroom }}
+  </h2>
   {% endif %}
-  
+
   <div class="mt-8 flex justify-center md:mt-16">
     <div class="lg:h-96 lg:w-96 flex h-40 w-96 items-center justify-center">
       <div class="swiper mySwiper carousel1">
@@ -51,9 +53,7 @@
     />
   </div>
 
-  <h1
-    class="mb-10 mt-6 text-center text-[40px] font-bold text-color-primary md:text-left"
-  >
+  <h1 class="mb-10 mt-6 text-center text-[40px] font-bold md:text-left">
     Semana
   </h1>
 
@@ -61,100 +61,28 @@
     <div
       class="lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5 grid grid-cols-1 gap-10 md:grid-cols-3"
     >
-      <!-- Card 1 -->
-      <div class="flex justify-center">
-        <div
-          class="xl:px-2 flex h-[150px] w-[270px] flex-col items-center justify-center rounded-2xl bg-white px-4 py-8"
-        >
-          <div class="ml-2 leading-[30px]">
-            <span class="text-[28px] font-normal text-color-primary"
-              >22 | Seg</span
-            ><br />
-            <span class="text-left text-sm font-normal text-gray-500"
-              >Fundamentos da Informática</span
-            ><br />
-            <span class="text-left text-sm font-normal text-gray-500"
-              >3º Desenvolvimento de Sistemas</span
-            >
-          </div>
+      {% for a in activities %}
+      <div
+        class="flex h-[150px] w-[270px] flex-col items-center justify-center rounded-2xl bg-white px-4 py-8"
+      >
+        <div class="ml-2 leading-[30px]">
+          <span class="text-[28px] font-normal text-color-primary">
+            {{ a.day.day }} | {{ a.day.weekday }}
+          </span>
+          <br>
+          {% if user|has_role:'teacher' %}
+          <span class="text-left text-sm font-normal text-gray-500">
+            {{ a.classroom }}
+          </span>
+          <br>
+          {% endif %}
+          <span class="text-left text-sm font-normal text-gray-500">
+            {{ a.subject.name }}
+          </span>
+          <br>
         </div>
       </div>
-
-      <!-- Card 2 -->
-      <div class="flex justify-center">
-        <div
-          class="xl:px-2 flex h-[150px] w-[270px] flex-col items-center justify-center rounded-2xl bg-white px-4 py-8"
-        >
-          <div class="ml-2 leading-[30px]">
-            <span class="text-[28px] font-normal text-color-primary"
-              >22 | Seg</span
-            ><br />
-            <span class="text-left text-sm font-normal text-gray-500"
-              >Fundamentos da Informática</span
-            ><br />
-            <span class="text-left text-sm font-normal text-gray-500"
-              >3º Desenvolvimento de Sistemas</span
-            >
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 3 -->
-      <div class="flex justify-center">
-        <div
-          class="xl:px-2 flex h-[150px] w-[270px] flex-col items-center justify-center rounded-2xl bg-white px-4 py-8"
-        >
-          <div class="ml-2 leading-[30px]">
-            <span class="text-[28px] font-normal text-color-primary"
-              >22 | Seg</span
-            ><br />
-            <span class="text-left text-sm font-normal text-gray-500"
-              >Fundamentos da Informática</span
-            ><br />
-            <span class="text-left text-sm font-normal text-gray-500"
-              >3º Desenvolvimento de Sistemas</span
-            >
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 3 -->
-      <div class="flex justify-center">
-        <div
-          class="xl:px-2 flex h-[150px] w-[270px] flex-col items-center justify-center rounded-2xl bg-white px-4 py-8"
-        >
-          <div class="ml-2 leading-[30px]">
-            <span class="text-[28px] font-normal text-color-primary"
-              >22 | Seg</span
-            ><br />
-            <span class="text-left text-sm font-normal text-gray-500"
-              >Fundamentos da Informática</span
-            ><br />
-            <span class="text-left text-sm font-normal text-gray-500"
-              >3º Desenvolvimento de Sistemas</span
-            >
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 4 -->
-      <div class="flex justify-center">
-        <div
-          class="xl:px-2 flex h-[150px] w-[270px] flex-col items-center justify-center rounded-2xl bg-white px-4 py-8"
-        >
-          <div class="ml-2 leading-[30px]">
-            <span class="text-[28px] font-normal text-color-primary"
-              >22 | Seg</span
-            ><br />
-            <span class="text-left text-sm font-normal text-gray-500"
-              >Fundamentos da Informática</span
-            ><br />
-            <span class="text-left text-sm font-normal text-gray-500"
-              >3º Desenvolvimento de Sistemas</span
-            >
-          </div>
-        </div>
-      </div>
+      {% endfor %}
     </div>
   </div>
 </main>

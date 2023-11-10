@@ -1,14 +1,9 @@
 {% extends 'core/base.html' %} {% load static %} {% block head %} {% load permission_tags %}
 <title>Provas</title>
 {% endblock %} {% block content %}
-<main
-  class="mx-10 mb-20 mt-4 md:mx-14"
-  x-data="provas"
-  x-init="getClassroom('{{ classrooms.0.pk }}')"
->
+<main class="mx-10 mb-20 mt-4 md:mx-14">
   <h1 class="text-center md:text-left">Provas</h1>
 
-  <!-- TODO: use a select for mobile smh -->
   {% if user|has_role:'teacher' %}
   <ul class="mt-10 flex gap-4">
     {% for c in classrooms %}
