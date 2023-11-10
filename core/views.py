@@ -302,3 +302,7 @@ def read_img(request: HttpRequest, container: str, title: str):
     except Exception as exc:
         print("falha ao buscar img de perfil: {}" + exc.args[0])
         raise Http404("Falha ao requisitar imagem")
+
+
+def configuracao(request: HttpRequest):
+    return render(request, "core/configuracao.html")

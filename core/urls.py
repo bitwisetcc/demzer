@@ -18,6 +18,7 @@ urlpatterns = [
     path("enroll/", enroll, name="enroll"),
     path("perfil/", perfil, name="profile"),
     path("fetch_image/<str:container>/<str:title>/", read_img, name="img"),
+    path("configuracao/", configuracao, name="config"),
 
     #RESET PASSOWRD
     path('reset_password/', auth_views.PasswordResetView.as_view(template_name="core/password/password_reset_form.html"), name="password_reset"),
