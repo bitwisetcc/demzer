@@ -1,24 +1,5 @@
-{% extends 'core/base.html' %} {% load static %} {% block head %}
+{% extends 'core/base.html' %} {% load static %} {% block head %} {% load permission_tags %}
 <title>Provas</title>
-<script defer>
-  document.addEventListener("alpine:init", () => {
-    Alpine.data("provas", () => ({
-      students: [],
-      assessments: [],
-      classroom: "",
-
-      getClassroom(pk) {
-        this.classroom = pk;
-        fetch(`{% url 'load_class' 0 %}`.replace("0", pk))
-          .then((r) => r.json())
-          .then((st) => {
-            this.students = st.students;
-            this.assessments = st.assessments;
-          });
-      },
-    }));
-  });
-</script>
 {% endblock %} {% block content %}
 <main
   class="mx-10 mb-20 mt-4 md:mx-14"
@@ -31,12 +12,12 @@
   {% if user|has_role:'teacher' %}
   <ul class="mt-10 flex gap-4">
     {% for c in classrooms %}
-    <button class="alt px-5 py-3" @click="getClassroom('{{ c.pk }}')">
-      {{ c }}
-    </button>
+    <a class="alt px-5 py-3" href="{% url 'provas' c.pk %}"> {{ c }} </a>
     {% endfor %}
   </ul>
-  {% endif %} {% for t in tests %}
+  {% endif %}
+  
+  {% for t in tests %}
   <div
     class="rounded-2xl bg-gray-100 shadow"
     x-data="{ options: false, details: false }"
