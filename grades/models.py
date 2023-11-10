@@ -28,6 +28,7 @@ class Assessment(Model):
     division = PositiveSmallIntegerField(null=True)
     bimester = PositiveSmallIntegerField()
     weight = PositiveSmallIntegerField(default=1)
+    teacher = ForeignKey(User, SET_NULL, null=True, related_name="assessments")
     kind = CharField(max_length=1, choices=Kinds.choices, default=Kinds.ACTIVITY)
     content = TextField()
 

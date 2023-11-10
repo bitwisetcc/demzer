@@ -40,8 +40,6 @@ def dashboard(request: HttpRequest):
             day=weekday,
         ).order_by("order")
 
-        
-
         return render(
             request, "core/home.html", {"programmings": programmings, "day": date_txt}
         )
@@ -52,6 +50,10 @@ def login_user(request: HttpRequest, failed=0):
         return redirect("dashboard")
 
     if request.method == "POST":
+        if request.POST.get("code") != settings.SCHOOL_CODE:
+            messages.error(request, "Escola não encontrada")
+            return redirect("login")
+
         user_id = request.POST["user-id"]
         password = request.POST["password"]
 

@@ -3,8 +3,10 @@ from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
-from grades.models import Assessment, Grade, Mention
+from rolepermissions.checkers import has_role
 
+from core.roles import Teacher
+from grades.models import Assessment, Grade, Mention
 from management.models import Classroom, Programming, Subject
 
 
@@ -116,3 +118,13 @@ def boletim(request: HttpRequest):
             "mentions": Mention.objects.filter(student=request.user),
         },
     )
+
+
+def provas(request: HttpRequest, classroom=0):
+    if has_role(request.user, Teacher):
+        tests = request.user.assessments
+        if classroom != 0:
+            tests = tests.filter(classroom__pk=classroom)
+    else:
+        tests = Assessment.objects.filter(classroom=request.user.classroom)
+    return render(request, "grades/provas.html", {"tests": tests})
