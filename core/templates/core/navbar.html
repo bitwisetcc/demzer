@@ -55,6 +55,7 @@
           {% endif %}
         </a>
       </li>
+      {% if not user|has_role:'student' %}
       <li>
         <a href="{% url 'courses' %}">
           <svg
@@ -99,6 +100,7 @@
           <span>Turmas</span>
         </a>
       </li>
+      {% endif %}
       {% if user|has_role:'teacher' %}
       <li>
         <a href="{% url 'chamada' %}">
@@ -251,7 +253,13 @@
             </a>
           </li>
           <li>
-            <a href="">
+            <a
+              {% if user|has_role:'student' %}
+              href="{% url 'provas' user.classroom.pk %}"
+              {% elif user|has_role:'student' %}
+              href="{% url 'provas' 0 %}"
+              {% endif %}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
