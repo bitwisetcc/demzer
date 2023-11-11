@@ -67,19 +67,19 @@
       >
         <div class="ml-2 leading-[30px]">
           <span class="text-[28px] font-normal text-color-primary">
-            {{ a.day.day }} | {{ a.day.weekday }}
+            {{ a.day.day }} / {{ a.day.weekday }}
           </span>
-          <br>
+          <br />
           {% if user|has_role:'teacher' %}
           <span class="text-left text-sm font-normal text-gray-500">
             {{ a.classroom }}
           </span>
-          <br>
+          <br />
           {% endif %}
           <span class="text-left text-sm font-normal text-gray-500">
             {{ a.subject.name }}
           </span>
-          <br>
+          <br />
         </div>
       </div>
       {% endfor %}

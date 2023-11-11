@@ -256,7 +256,7 @@
             <a
               {% if user|has_role:'student' %}
               href="{% url 'provas' user.classroom.pk %}"
-              {% elif user|has_role:'student' %}
+              {% elif user|has_role:'teacher' %}
               href="{% url 'provas' 0 %}"
               {% endif %}
             >

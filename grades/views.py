@@ -127,4 +127,4 @@ def provas(request: HttpRequest, classroom=0):
             tests = tests.filter(classroom__pk=classroom)
     else:
         tests = Assessment.objects.filter(classroom=request.user.classroom)
-    return render(request, "grades/provas.html", {"tests": tests})
+    return render(request, "grades/provas.html", {"tests": tests.all()})
