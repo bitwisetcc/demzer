@@ -20,20 +20,15 @@ from core.utils import csv_data, dexc, dfilter, get_coordinator
 from management.models import Course, Subject, Programming, Classroom
 
 
-# General queries with auth included
-def students(request: HttpRequest, role: str, row=1):
-    # TODO: check for authorization. If it's an admin, allow everything
-    # If it's a teacher, check the classes they're connected to and then get the students
-    # TODO: use Users instead of Members
+def students(request: HttpRequest, role: str, coordinator_of=None):
+    filters = {"user__groups__name": role}
+    if coordinator_of is not None and role == "student":
+        filters["classroom__in"] = Course.objects.get(
+            coordinator__pk=coordinator_of
+        ).classrooms.all()
+
     return JsonResponse(
-        {
-            "users": [
-                user.json()
-                for user in Member.objects.filter(user__groups__name=role)[
-                    40 * (row - 1) : 40 * row
-                ]
-            ]
-        }
+        {"users": [user.json() for user in Member.objects.filter(**filters)]}
     )
 
 

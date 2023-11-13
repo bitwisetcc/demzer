@@ -76,7 +76,7 @@ class Course(Model):
 
 
 class Classroom(Model):
-    course = ForeignKey(Course, SET_NULL, related_name="classroom", null=True)
+    course = ForeignKey(Course, SET_NULL, related_name="classrooms", null=True)
     year = IntegerField(default=2023)
 
     def __str__(self) -> str:

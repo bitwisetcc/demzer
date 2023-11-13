@@ -3,25 +3,46 @@
 <link rel="stylesheet" href="{% static 'core/dist/css/dashboard.css' %}" />
 <title>Dashboard</title>
 {% endblock %} {% block content %}
-<main x-data="dashboard">
-  <h1 class="m-5 text-2xl">Dashboard</h1>
+<main x-data="dashboard" x-init="reload(`{% url 'query' 'student' %}`)">
+  <h1 class="m-5 text-2xl">
+    Dashboard
+  </h1>
   <header id="sectors" class="bg-color-bg-alt p-5">
     {% csrf_token %}
     <ul id="sectors" class="flex select-none gap-4">
+      {% if user|has_role:'coordinator' %}
       <li
         class="control bg-color-bg"
-        @click="reload('students', 'Alunos', `{% url 'query' 'student' '1' %}`)"
-        x-init="reload('students', 'Alunos', `{% url 'query' 'student' '1' %}`)"
+        @click="reload(`{% url 'query' 'student' user.pk %}`)"
       >
         Alunos
       </li>
       <li
         class="control bg-color-bg"
-        data-section="teachers"
-        @click="reload('teachers', 'Professores', `{% url 'query' 'teacher' '1' %}`)"
+        @click="reload(`{% url 'query' 'teacher' user.pk %}`)"
       >
         Professores
       </li>
+      {% elif user|has_role:'admin' %}
+      <li
+        class="control bg-color-bg"
+        @click="reload(`{% url 'query' 'student' %}`)"
+      >
+        Alunos
+      </li>
+      <li
+        class="control bg-color-bg"
+        @click="reload(`{% url 'query' 'teacher' %}`)"
+      >
+        Professores
+      </li>
+      <li
+        class="control bg-color-bg"
+        @click="reload(`{% url 'query' 'coordinator' %}`)"
+      >
+        Coordenadores
+      </li>
+      {% endif %}
       <li class="control bg-color-bg" @click="filterDialog = true">Filtros</li>
       {% if user|can:'create_user' %}
       <li class="btn control bg-color-primary-dimm">

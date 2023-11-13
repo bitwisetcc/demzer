@@ -22,7 +22,7 @@
     <ul class="flex flex-col gap-4" :class="open || 'scale-0'">
       <li>
         <a href="{% url 'dashboard' %}">
-          {% if user|has_role:'admin' %}
+          {% if user|has_role:'admin,coordinator' %}
           <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"

@@ -17,7 +17,7 @@ from rolepermissions.decorators import has_permission_decorator as check_permiss
 from rolepermissions.roles import assign_role
 
 from core.models import Member, Relative
-from core.roles import Admin, Student, Teacher
+from core.roles import Admin, Coordinator, Student, Teacher
 from core.utils import email_address, upload_img
 from grades.models import Assessment
 from management.models import Classroom, Programming
@@ -25,7 +25,7 @@ from management.models import Classroom, Programming
 
 @login_required
 def dashboard(request: HttpRequest):
-    if has_role(request.user, Admin):
+    if has_role(request.user, [Admin, Coordinator]):
         return render(request, "core/dashboard.html")
     else:
         today = date.today()
