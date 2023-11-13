@@ -50,7 +50,9 @@ def dashboard(request: HttpRequest):
             activities = activities.filter(teacher=request.user)
 
         return render(
-            request, "core/home.html", {"programmings": programmings, "day": date_txt, "activities": activities}
+            request,
+            "core/home.html",
+            {"programmings": programmings, "day": date_txt, "activities": activities},
         )
 
 
@@ -59,7 +61,7 @@ def login_user(request: HttpRequest, failed=0):
         return redirect("dashboard")
 
     if request.method == "POST":
-        if request.POST.get("code") != settings.SCHOOL_CODE:
+        if int(request.POST.get("code")) != settings.SCHOOL_CODE:
             messages.error(request, "Escola não encontrada")
             return redirect("login")
 

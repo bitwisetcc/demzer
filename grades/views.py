@@ -55,6 +55,8 @@ def book_exercise(request: HttpRequest):
         bimester=request.POST.get("bimester"),
         kind=request.POST.get("kind"),
         content=request.POST.get("desc"),
+        title=request.POST.get("title"),
+        teacher=request.user,
     )
 
     return redirect("turmas")
