@@ -101,8 +101,25 @@ def load_classroom(request: HttpRequest, classroom_pk: int):
     )
 
 
-def load_chamada(request: HttpRequest, classroom_pk: int, teacher_pk: int, date: str):
-    return JsonResponse({""})
+def load_chamada(request: HttpRequest):
+    cls = request.GET.get("classroom")
+    teacher = request.GET.get("teacher")
+    return JsonResponse(
+        {
+            "students": [
+                {"pk": u.pk, "username": u.username}
+                for u in User.objects.filter(profile__classroom__pk=cls).order_by(
+                    "username"
+                )
+            ],
+            "subjects": [
+                p.json()
+                for p in Programming.objects.filter(
+                    classroom__pk=cls, teacher__pk=teacher
+                )
+            ],
+        }
+    )
 
 
 def boletim(request: HttpRequest):
