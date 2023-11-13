@@ -21,6 +21,10 @@
           .then((st) => {
             this.students = st.students;
             this.assessments = st.assessments;
+          }).catch(err => {
+            console.error(err);
+            this.students = [];
+            this.assessments = [];
           });
       },
     }));

@@ -26,7 +26,6 @@ def chamada(request: HttpRequest):
             "classrooms": list(
                 set([p.classroom for p in request.user.programmings.all()])
             ),
-            "programmings": Programming.objects.filter(teacher=request.user),
         },
     )
 
@@ -102,6 +101,10 @@ def load_classroom(request: HttpRequest, classroom_pk: int):
                     ]
                 )
             ),
+            "assessments": [
+                a.json()
+                for a in request.user.assessments.filter(classroom__pk=classroom_pk)
+            ],
         }
     )
 

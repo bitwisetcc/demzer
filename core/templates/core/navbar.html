@@ -187,7 +187,6 @@
           class="my-2 ml-3 flex origin-top flex-col gap-4 border-l-[3px] border-l-color-primary-dimm py-2 pl-2 transition duration-500"
           :class="open || 'hidden'"
         >
-        <!-- TODO: filtrar horários para professores -->
           {% if user|has_role:'student' %}
           <li>
             <a
