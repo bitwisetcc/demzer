@@ -3,7 +3,7 @@
   document.addEventListener("alpine:init", () => {
     Alpine.data("chamada", () => ({
       students: [],
-      subjects: [],
+      programmings: [],
       qtd: 3,
       division: "",
       classroom: "{{ classrooms.0.pk }}",
@@ -23,8 +23,7 @@
           .then((res) => res.json())
           .then((data) => {
             this.students = data.students;
-            this.subjects = data.subjects;
-            console.log(data);
+            this.programmings = data.programmings;
           })
           .catch(console.error);
       },
@@ -54,8 +53,8 @@
     <div class="mb-2 w-full text-center">
       <label class="text-xl text-color-primary">Aula</label>
       <select name="Aula" class="mt-2 w-full rounded-full text-center">
-        <template x-for="s in subjects">
-          <option :value="s.pk" x-text="s.subject"></option>
+        <template x-for="s in programmings">
+          <option x-text="s.subjectSlug"></option>
         </template>
       </select>
     </div>
@@ -65,6 +64,7 @@
         type="date"
         class="mt-2 w-full rounded-full text-center"
         id="dataAtual"
+        :value="new Date().toISOString().split('T')[0]"
       />
     </div>
     <div class="mb-2 w-full text-center">
@@ -74,9 +74,9 @@
         class="mt-2 w-full rounded-full text-center"
         x-model="qtd"
       >
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
       </select>
     </div>
   </div>

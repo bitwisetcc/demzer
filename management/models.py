@@ -161,18 +161,17 @@ class Programming(Model):
             )
 
     def json(self):
-        return json.dumps(
-            {
-                "classroom": self.classroom.__str__(),
-                "teacher": self.teacher.username,
-                "group": self.group,
-                "subject_slug": self.subject.slug,
-                "subject": self.subject.name,
-                "subject_pk": self.subject.pk,
-                "day": self.day,
-                "order": self.order,
-            },
-        )
+        return {
+            "pk": self.pk,
+            "classroom": self.classroom.__str__(),
+            "teacher": self.teacher.username,
+            "group": self.group,
+            "subjectSlug": self.subject.slug,
+            "subject": self.subject.name,
+            "subjectPk": self.subject.pk,
+            "day": self.day,
+            "order": self.order,
+        }
 
     class Meta:
         ordering = ["group"]

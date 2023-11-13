@@ -94,9 +94,14 @@ def load_classroom(request: HttpRequest, classroom_pk: int):
                     profile__classroom=classroom_pk
                 ).order_by("username")
             ],
-            "assessments": [
-                ass.json() for ass in Assessment.objects.filter(classroom=classroom_pk)
-            ],
+            "subjects": list(
+                set(
+                    [
+                        str(ass.subject)
+                        for ass in Assessment.objects.filter(classroom=classroom_pk)
+                    ]
+                )
+            ),
         }
     )
 
@@ -112,7 +117,7 @@ def load_chamada(request: HttpRequest):
                     "username"
                 )
             ],
-            "subjects": [
+            "programmings": [
                 p.json()
                 for p in Programming.objects.filter(
                     classroom__pk=cls, teacher__pk=teacher
