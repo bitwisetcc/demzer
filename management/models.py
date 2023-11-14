@@ -173,6 +173,21 @@ class Programming(Model):
             "order": self.order,
         }
 
+    def json_str(self):
+        return json.dumps(
+            {
+                "pk": self.pk,
+                "classroom": self.classroom.__str__(),
+                "teacher": self.teacher.username,
+                "group": self.group,
+                "subjectSlug": self.subject.slug,
+                "subject": self.subject.name,
+                "subjectPk": self.subject.pk,
+                "day": self.day,
+                "order": self.order,
+            }
+        )
+
     class Meta:
         ordering = ["group"]
         verbose_name = _("classe")

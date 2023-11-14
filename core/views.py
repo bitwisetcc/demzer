@@ -44,7 +44,7 @@ def dashboard(request: HttpRequest):
         activities = Assessment.objects.filter(day__gt=today)
         if has_role(request.user, Student):
             activities = activities.filter(
-                classroom=request.user.classroom
+                classroom=request.user.profile.classroom
             )  # TODO: check division
         elif has_role(request.user, Teacher):
             activities = activities.filter(teacher=request.user)
