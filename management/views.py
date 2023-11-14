@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_POST
-from rolepermissions.checkers import has_role, has_permission
+from rolepermissions.checkers import has_role
 from rolepermissions.decorators import has_permission_decorator as check_permission
 from rolepermissions.roles import assign_role
 
@@ -21,15 +21,14 @@ from management.models import Course, Subject, Programming, Classroom
 
 
 def students(request: HttpRequest, role: str, coordinator_of=None):
-    filters = {"user__groups__name": role}
+    filters = {"groups__name": role}
+
     if coordinator_of is not None and role == "student":
-        filters["classroom__in"] = Course.objects.get(
+        filters["profile__classroom__in"] = Course.objects.get(
             coordinator__pk=coordinator_of
         ).classrooms.all()
 
-    return JsonResponse(
-        {"users": [user.json() for user in Member.objects.filter(**filters)]}
-    )
+    return JsonResponse({"users": [u.profile.json() for u in User.objects.filter(**filters)]})
 
 
 @check_permission("delete_user", redirect_url="dashboard")

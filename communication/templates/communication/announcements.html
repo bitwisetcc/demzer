@@ -34,7 +34,7 @@
   <header class="flex w-full justify-between text-color-primary">
     <h1>Comunicados</h1>
     <div class="flex gap-2">
-      {% if user|has_role:'admin' %}
+      {% if user|has_role:'admin,coordinator' %}
       <button @click="createDialog = true" class="text-base">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -242,10 +242,13 @@
           <div class="flex flex-col text-lg font-normal">
             <label>Para o curso:</label>
             <input
-              type="text"
-              class="h-10"
-              name="course"
-              placeholder="Deixe em branco para um comunicado geral"
+            type="text"
+            class="h-10"
+            name="course"
+            {% if user|has_role:'coordinator' %}
+            disabled            {% else %}
+            placeholder="Deixe em branco para um comunicado geral"
+            {% endif %}
             />
           </div>
           <div class="flex flex-col text-lg font-normal">

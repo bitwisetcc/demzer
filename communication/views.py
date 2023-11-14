@@ -6,7 +6,7 @@ from django.shortcuts import render
 from rolepermissions.checkers import has_role, has_permission
 
 from communication.models import Alert, Announcement, Event
-from core.roles import Admin, Student
+from core.roles import Admin, Coordinator, Student
 from core.utils import UTC_date, upload_img
 from management.models import Classroom, Course
 
@@ -87,6 +87,9 @@ def comunicados(request: HttpRequest):
     announcements = Announcement.objects.filter(
         **{k: v for k, v in filters.items() if v}
     )
+
+    if has_role(request.user, Coordinator):
+        announcements = announcements.filter(course__in=request.user.courses.all())
 
     if has_role(request.user, Student):
         announcements = announcements.filter(private=False)

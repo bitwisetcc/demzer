@@ -17,8 +17,10 @@ from django.db.models import (
     PositiveSmallIntegerField,
 )
 from django.utils.translation import gettext_lazy as _
+from rolepermissions.checkers import has_role
+from core.roles import Coordinator
 
-from management.models import Classroom
+from management.models import Classroom, Course
 
 
 class Relative(Model):
