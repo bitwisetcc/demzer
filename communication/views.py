@@ -78,9 +78,9 @@ def comunicados(request: HttpRequest):
     end = request.GET.get("end-date")
 
     filters = {
-        "title__startswith": request.GET.get("title"),
-        "date__gt": start and UTC_date(start),
-        "date__lt": end and UTC_date(end),
+        "title__icontains": request.GET.get("title"),
+        "date__gte": start and UTC_date(start),
+        "date__lte": end and UTC_date(end),
         "category__in": [cat for cat in "rap*" if request.GET.get(cat)],
     }
 
@@ -132,10 +132,10 @@ def events(request: HttpRequest):
     end = request.GET.get("end-date")
 
     filters = {
-        "title__startswith": request.GET.get("title"),
-        "place__startswith": request.GET.get("place"),
-        "date__gt": start and UTC_date(start),
-        "date__lt": end and UTC_date(end),
+        "title__icontains": request.GET.get("title"),
+        "place__icontains": request.GET.get("place"),
+        "date__gte": start and UTC_date(start),
+        "date__lte": end and UTC_date(end),
     }
 
     events = Event.objects.filter(**{k: v for k, v in filters.items() if v})

@@ -409,11 +409,10 @@
           </div>
         </div>
       </article>
-
-      <article>
-        <template x-if="role == 'student'">
+    
+      <template x-if="role == 'student'">
+        <article> 
           <h2 class="font-sans mb-2 text-2xl font-bold">Responsáveis</h2>
-
           <div class="field">
             <label for="txt-guardian">Nome</label>
             <input
@@ -450,9 +449,9 @@
               />
             </div>
           </div>
-        </template>
-        <button type="submit">Enviar</button>
-      </article>
+          <button type="submit">Enviar</button>
+        </article>
+      </template>
       <!-- Show instead a group option, class, subject etc. -->
     </section>
   </form>
