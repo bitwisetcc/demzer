@@ -105,7 +105,7 @@ def comunicados(request: HttpRequest):
 
 
 def events(request: HttpRequest):
-    if request.method == "POST" and has_role(request.user, "admin"):
+    if request.method == "POST" and has_role(request.user, [Admin, Coordinator]):
         private = "staff_only" not in request.POST
         course = request.POST.get("course")
         classroom = request.POST.get("classroom")

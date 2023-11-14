@@ -72,7 +72,7 @@
   </header>
 
   <div x-data="post">
-    <article class="feed w-full gap-8 mt-10">
+    <article class="feed mt-10 w-full gap-8">
       {% for announcement in announcements %}
       <div
         class="cursor-pointer rounded-2xl bg-color-bg text-left shadow-lg"
@@ -242,13 +242,15 @@
           <div class="flex flex-col text-lg font-normal">
             <label>Para o curso:</label>
             <input
-            type="text"
-            class="h-10"
-            name="course"
-            {% if user|has_role:'coordinator' %}
-            disabled            {% else %}
-            placeholder="Deixe em branco para um comunicado geral"
-            {% endif %}
+              type="text"
+              class="h-10"
+              name="course"
+              {% if user|has_role:'coordinator' %}
+              disabled
+              value="{{ user.courses.first.slug }}"
+              {% else %}
+              placeholder="Deixe em branco para um comunicado geral"
+              {% endif %}
             />
           </div>
           <div class="flex flex-col text-lg font-normal">

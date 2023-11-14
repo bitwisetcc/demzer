@@ -1,6 +1,6 @@
 {% load permission_tags %}
 <header
-  class="fixed w-full flex items-center justify-between bg-zinc-100 px-8 py-5 shadow-sm z-10"
+  class="fixed w-full flex items-center justify-between bg-zinc-100 px-8 py-5 shadow-sm z-[1]"
   :class="open ? 'rounded-br-3xl' : 'rounded-b-3xl '"
 >
   <div class="flex w-full flex-col justify-between md:flex-row">
@@ -24,7 +24,7 @@
       </svg>
       </button>
       <p class="text-color-primary px-5">
-        Bem {% if user.member.gender == 'F' %}vinda{% else %}vindo{% endif %}, {{ user.username.split.0.title }}!
+        Bem {% if user.profile.gender == 'F' %}vinda{% else %}vindo{% endif %}, {{ user.username.split.0.title }}!
       </p>
     </div>
     <span class="hidden sm:block text-sm md:ml-1 md:mr-3 md:text-base md:text-gray-400">
