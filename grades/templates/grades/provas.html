@@ -1,0 +1,83 @@
+{% extends 'core/base.html' %} {% load static %} {% block head %} {% load permission_tags %}
+<title>Provas</title>
+{% endblock %} {% block content %}
+<main class="mx-10 mb-20 mt-4 md:mx-14">
+  <h1 class="text-center md:text-left">Provas</h1>
+
+  {% if user|has_role:'teacher' %}
+  <ul class="mt-10 flex gap-4">
+    {% for c in classrooms %}
+    <a class="alt px-5 py-3" href="{% url 'provas' c.pk %}"> {{ c }} </a>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  
+  {% for t in tests %}
+  <div
+    class="rounded-2xl bg-gray-100 shadow mb-5"
+    x-data="{ options: false, details: false }"
+  >
+    <header class="flex justify-between px-6 py-4">
+      <div>
+        <h2 class="font-semibold text-color-primary">{{ t.title }}</h2>
+        <span class="text-color-secondary">{{ t.day }}</span>
+      </div>
+      <div class="relative">
+        <button @click="details = !details">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-6 w-6 transition-transform"
+            :class="details && 'rotate-180'"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+            />
+          </svg>
+        </button>
+        <button @click="options = !options" class="relative">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-6 w-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z"
+            />
+          </svg>
+        </button>
+
+        <div
+          x-show="options"
+          class="absolute z-10 flex flex-col gap-2 rounded-lg border border-slate-400 bg-gray-100 p-3"
+          @click.away="() => options = false"
+        >
+          <button class="hover:text-color-secondary">Editar</button>
+          <button class="hover:text-color-secondary">Excluir</button>
+        </div>
+      </div>
+    </header>
+    <div
+      class="flex origin-top gap-4 rounded-b-2xl bg-gray-200 p-5 transition-all"
+      :class="details || 'scale-y-0 h-0 py-0'"
+    >
+      <div>
+        <p>Bimestre: <span>{{ t.bimester }}</span></p>
+        <p>Sobre: <span>{{ t.get_kind_display }}</span></p>
+      </div>
+      <p>{{ t.content }}</p>
+    </div>
+  </div>
+  {% endfor %}
+</main>
+{% endblock %}

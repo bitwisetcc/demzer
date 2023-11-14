@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_POST
-from rolepermissions.checkers import has_role, has_permission
+from rolepermissions.checkers import has_role
 from rolepermissions.decorators import has_permission_decorator as check_permission
 from rolepermissions.roles import assign_role
 
@@ -20,21 +20,15 @@ from core.utils import csv_data, dexc, dfilter, get_coordinator
 from management.models import Course, Subject, Programming, Classroom
 
 
-# General queries with auth included
-def students(request: HttpRequest, role: str, row=1):
-    # TODO: check for authorization. If it's an admin, allow everything
-    # If it's a teacher, check the classes they're connected to and then get the students
-    # TODO: use Users instead of Members
-    return JsonResponse(
-        {
-            "users": [
-                user.json()
-                for user in Member.objects.filter(user__groups__name=role)[
-                    40 * (row - 1) : 40 * row
-                ]
-            ]
-        }
-    )
+def students(request: HttpRequest, role: str, coordinator_of=None):
+    filters = {"groups__name": role}
+
+    if coordinator_of is not None and role == "student":
+        filters["profile__classroom__in"] = Course.objects.get(
+            coordinator__pk=coordinator_of
+        ).classrooms.all()
+
+    return JsonResponse({"users": [u.profile.json() for u in User.objects.filter(**filters)]})
 
 
 @check_permission("delete_user", redirect_url="dashboard")

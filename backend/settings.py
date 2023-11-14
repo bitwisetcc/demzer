@@ -34,6 +34,7 @@ DEFAULT_CITY = "São Caetano do Sul"
 DEFAULT_BIRTHDATE = date(date.today().year - 15, 1, 1)
 
 SCHOOL_NAME = "ETEC Jorge Street"
+SCHOOL_CODE = 11
 EMAIL_PATTERN = "{}.{}@etec.sp.gov.br"
 SECURITY_KEY = getenv("MASTER_KEY")
 
