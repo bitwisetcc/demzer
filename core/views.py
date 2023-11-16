@@ -7,6 +7,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.hashers import check_password
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.http import Http404, HttpRequest, HttpResponse, HttpResponseBadRequest
@@ -308,6 +309,17 @@ def auto_adm(request: HttpRequest):
 
 
 def perfil(request: HttpRequest):
+    if request.method == "POST":
+        if request.POST.get("password") == request.POST.get("confirm"):
+            if check_password(request.POST.get("old"), request.user.password):
+                request.user.password = request.POST.get("password")
+                request.user.save()
+                messages.success(request, "Senha alterada com sucesso")
+            else:
+                messages.error(request, "Senha incorreta")
+        else:
+            messages.warning(request, "Senha de confirmação incorreta")
+
     return render(request, "core/perfil.html")
 
 

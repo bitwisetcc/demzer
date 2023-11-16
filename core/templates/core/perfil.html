@@ -56,13 +56,14 @@
     </section>
     <section>
       <h2 class="text-xl font-semibold text-color-secondary">Senha</h2>
-      <form class="info-card">
+      <form class="info-card" method="post" action="{% url 'profile' %}">
+        {% csrf_token %}
         <div class="mb-2 gap-2 md:flex">
           <label class="info-lbl" for="txt-prev">Senha atual:</label>
           <input
             class="py-1 md:flex-1"
             type="password"
-            name="prev"
+            name="old"
             id="txt-prev"
           />
         </div>
@@ -71,7 +72,7 @@
           <input
             class="py-1 md:flex-1"
             type="password"
-            name="new"
+            name="password"
             id="txt-new"
           />
         </div>
