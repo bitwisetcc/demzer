@@ -52,7 +52,12 @@ def dashboard(request: HttpRequest):
         return render(
             request,
             "core/home.html",
-            {"programmings": programmings, "day": date_txt, "activities": activities},
+            {
+                "programmings": programmings,
+                "day": date_txt,
+                "activities": activities,
+                "classrooms": Classroom.objects.all(),
+            },
         )
 
 
@@ -175,7 +180,9 @@ def enroll(request: HttpRequest):
                 messages.warning(request, "Falha ao designar grupo ao usuário")
 
         except IntegrityError as error:
-            messages.error(request, "Campo de e-mail duplicado: {}".format(error.args[0]))
+            messages.error(
+                request, "Campo de e-mail duplicado: {}".format(error.args[0])
+            )
             return redirect("enroll")
 
         except Exception as error:
