@@ -74,10 +74,11 @@
       :class="details || 'scale-y-0 h-0 py-0'"
     >
       <div>
-        <p>Bimestre: <span>{{ t.bimester }}</span></p>
+        <p>Bimestre:<span>{{ t.bimester }}</span></p>
         <p>Sobre: <span>{{ t.get_kind_display }}</span></p>
+        <p>{{ t.content }}</p>
       </div>
-      <p>{{ t.content }}</p>
+      
     </div>
   </div>
   {% endfor %}
