@@ -6,51 +6,45 @@ function getAge(birthday) {
 
 document.addEventListener("alpine:init", () => {
   Alpine.data("dashboard", () => ({
-    active: "Alunos",
     filterDialog: false,
     headers: [""],
     rows: [[]],
     /**
      * @param {Event} e
      */
-    reload(section, active, url) {
+    reload(url) {
       this.rows = [[]];
-      this.active = active;
       const csrfToken = document.cookie.slice(document.cookie.indexOf("=") + 1);
 
-      switch (section) {
-        default:
-          this.headers = [
-            "RM",
-            "Nome",
-            "Idade",
-            "Nascimento",
-            "Gênero",
-            "Celular",
-            "E-mail",
-            "CPF",
-            "RG",
-          ];
+      this.headers = [
+        "RM",
+        "Nome",
+        "Idade",
+        "Nascimento",
+        "Gênero",
+        "Celular",
+        "E-mail",
+        "CPF",
+        "RG",
+      ];
 
-          fetch(url, { headers: { "X-CSRFToken": csrfToken } })
-            .then((res) => res.json())
-            .then((data) => {
-              data.users.forEach((user) => {
-                this.rows.push([
-                  user.rm,
-                  user.username,
-                  getAge(new Date(user.birthdate)),
-                  user.birthdate,
-                  user.gender,
-                  user.phone,
-                  user.email,
-                  user.cpf,
-                  user.rg,
-                ]);
-              });
-            });
-          break;
-      }
+      fetch(url, { headers: { "X-CSRFToken": csrfToken } })
+        .then((res) => res.json())
+        .then((data) => {
+          data.users.forEach((user) => {
+            this.rows.push([
+              user.rm,
+              user.username,
+              getAge(new Date(user.birthdate)),
+              user.birthdate,
+              user.gender,
+              user.phone,
+              user.email,
+              user.cpf,
+              user.rg,
+            ]);
+          });
+        });
     },
   }));
 });

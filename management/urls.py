@@ -2,7 +2,8 @@ from django.urls import path
 from management.views import *
 
 urlpatterns = [
-    path("query/<str:role>/<int:row>/", students, name="query"),
+    path("query/<str:role>/", students, name="query"),
+    path("query/<str:role>/<int:coordinator_of>/", students, name="query"),
     path("purge/<str:role>/", purge, name="purge"),
     path("importar/usuários/", import_users, name="import/users"),
     path("cursos/", courses, name="courses"),

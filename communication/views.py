@@ -6,7 +6,7 @@ from django.shortcuts import render
 from rolepermissions.checkers import has_role, has_permission
 
 from communication.models import Alert, Announcement, Event
-from core.roles import Admin, Student
+from core.roles import Admin, Coordinator, Student
 from core.utils import UTC_date, upload_img
 from management.models import Classroom, Course
 
@@ -78,15 +78,18 @@ def comunicados(request: HttpRequest):
     end = request.GET.get("end-date")
 
     filters = {
-        "title__startswith": request.GET.get("title"),
-        "date__gt": start and UTC_date(start),
-        "date__lt": end and UTC_date(end),
+        "title__icontains": request.GET.get("title"),
+        "date__gte": start and UTC_date(start),
+        "date__lte": end and UTC_date(end),
         "category__in": [cat for cat in "rap*" if request.GET.get(cat)],
     }
 
     announcements = Announcement.objects.filter(
         **{k: v for k, v in filters.items() if v}
     )
+
+    if has_role(request.user, Coordinator):
+        announcements = announcements.filter(course__in=request.user.courses.all())
 
     if has_role(request.user, Student):
         announcements = announcements.filter(private=False)
@@ -132,10 +135,10 @@ def events(request: HttpRequest):
     end = request.GET.get("end-date")
 
     filters = {
-        "title__startswith": request.GET.get("title"),
-        "place__startswith": request.GET.get("place"),
-        "date__gt": start and UTC_date(start),
-        "date__lt": end and UTC_date(end),
+        "title__icontains": request.GET.get("title"),
+        "place__icontains": request.GET.get("place"),
+        "date__gte": start and UTC_date(start),
+        "date__lte": end and UTC_date(end),
     }
 
     events = Event.objects.filter(**{k: v for k, v in filters.items() if v})

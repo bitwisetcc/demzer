@@ -3,25 +3,44 @@
 <link rel="stylesheet" href="{% static 'core/dist/css/dashboard.css' %}" />
 <title>Dashboard</title>
 {% endblock %} {% block content %}
-<main x-data="dashboard">
+<main x-data="dashboard" x-init="reload(`{% url 'query' 'student' %}`)">
   <h1 class="m-5 text-2xl">Dashboard</h1>
   <header id="sectors" class="bg-color-bg-alt p-5">
     {% csrf_token %}
     <ul id="sectors" class="flex select-none gap-4">
+      {% if user|has_role:'coordinator' %}
       <li
         class="control bg-color-bg"
-        @click="reload('students', 'Alunos', `{% url 'query' 'student' '1' %}`)"
-        x-init="reload('students', 'Alunos', `{% url 'query' 'student' '1' %}`)"
+        @click="reload(`{% url 'query' 'student' user.pk %}`)"
       >
         Alunos
       </li>
       <li
         class="control bg-color-bg"
-        data-section="teachers"
-        @click="reload('teachers', 'Professores', `{% url 'query' 'teacher' '1' %}`)"
+        @click="reload(`{% url 'query' 'teacher' user.pk %}`)"
       >
         Professores
       </li>
+      {% elif user|has_role:'admin' %}
+      <li
+        class="control bg-color-bg"
+        @click="reload(`{% url 'query' 'student' %}`)"
+      >
+        Alunos
+      </li>
+      <li
+        class="control bg-color-bg"
+        @click="reload(`{% url 'query' 'teacher' %}`)"
+      >
+        Professores
+      </li>
+      <li
+        class="control bg-color-bg"
+        @click="reload(`{% url 'query' 'coordinator' %}`)"
+      >
+        Coordenadores
+      </li>
+      {% endif %}
       <li class="control bg-color-bg" @click="filterDialog = true">Filtros</li>
       {% if user|can:'create_user' %}
       <li class="btn control bg-color-primary-dimm">
@@ -81,6 +100,7 @@
         </tr>
       </thead>
       <tbody>
+        <!-- TODO: see info + block/delete profile -->
         <template x-for="row in rows">
           <tr>
             <template x-for="value in row">
@@ -92,13 +112,10 @@
     </table>
   </section>
   <form>
-    <div
-      :class="filterDialog ? 'flex' : 'hidden'"
-      class="fixed inset-0 items-center justify-center bg-black bg-opacity-25"
-    >
-      <div class="h-4/5 w-2/5 rounded-3xl bg-color-grey">
+    <div x-show="filterDialog" class="dialog-backdrop">
+      <div class="dialog no_scroll">
         <header
-          class="mx-10 mt-8 flex flex-row justify-between text-3xl font-bold"
+          class="mt-3 px-4 flex flex-row justify-between text-3xl font-bold"
         >
           <h2>Filtrar Alunos</h2>
           <div>
@@ -123,7 +140,7 @@
             </button>
           </div>
         </header>
-        <section class="flex flex-col gap-4 p-10">
+        <section class="flex flex-col gap-4 px-4">
           <label>
             RM
             <input
@@ -153,9 +170,9 @@
             <select
               class="mx-auto w-full rounded-lg border border-color-primary bg-gray-50 text-sm text-gray-900"
             >
-              <option></option>
-              <option>teste</option>
-              <option>teste</option>
+              {% for c in classrooms %}
+              <option value="{{ c.pk }}">{{ c }}</option>
+              {% endfor %}
             </select>
           </label>
           <div class="flex flex-row justify-between text-lg font-normal">

@@ -24,7 +24,7 @@
         // existing programmings to be displayed
         const programmings = [
           //{% for p in programmings %}
-          JSON.parse("{{ p.json }}".replace(/&quot;/g, '"')),
+          JSON.parse("{{ p.json_str }}".replace(/&quot;/g, '"')),
           // {% endfor %}
         ];
 
@@ -38,9 +38,9 @@
           if (this.isTeacher) {
             cell.innerHTML += p.classroom;
           } else {
-            if (cell.innerHTML == "") cell.innerHTML = p.subject_slug;
-            else if (cell.innerHTML != p.subject_slug)
-              cell.innerHTML += " | " + p.subject_slug;
+            if (cell.innerHTML == "") cell.innerHTML = p.subjectSlug;
+            else if (cell.innerHTML != p.subjectSlug)
+              cell.innerHTML += " | " + p.subjectSlug;
           }
         });
 
@@ -62,9 +62,9 @@
 
             this.studentGroup = split;
             this.teacher = !empty ? selected[0].teacher : null;
-            this.subject = !empty ? selected[0].subject_pk : null;
+            this.subject = !empty ? selected[0].subjectPk : null;
             this.teacherB = split ? selected[1].teacher : null;
-            this.subjectB = split ? selected[1].subject_pk : null;
+            this.subjectB = split ? selected[1].subjectPk : null;
 
             if (selected.length > 2) {
               console.warn("More than 2 programmings detected:");

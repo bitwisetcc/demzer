@@ -7,6 +7,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.hashers import check_password
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.http import Http404, HttpRequest, HttpResponse, HttpResponseBadRequest
@@ -17,14 +18,15 @@ from rolepermissions.decorators import has_permission_decorator as check_permiss
 from rolepermissions.roles import assign_role
 
 from core.models import Member, Relative
-from core.roles import Admin
+from core.roles import Admin, Coordinator, Student, Teacher
 from core.utils import email_address, upload_img
+from grades.models import Assessment
 from management.models import Classroom, Programming
 
 
 @login_required
 def dashboard(request: HttpRequest):
-    if has_role(request.user, Admin):
+    if has_role(request.user, [Admin, Coordinator]):
         return render(request, "core/dashboard.html")
     else:
         today = date.today()
@@ -40,10 +42,23 @@ def dashboard(request: HttpRequest):
             day=weekday,
         ).order_by("order")
 
-        
+        activities = Assessment.objects.filter(day__gt=today)
+        if has_role(request.user, Student):
+            activities = activities.filter(
+                classroom=request.user.profile.classroom
+            )  # TODO: check division
+        elif has_role(request.user, Teacher):
+            activities = activities.filter(teacher=request.user)
 
         return render(
-            request, "core/home.html", {"programmings": programmings, "day": date_txt}
+            request,
+            "core/home.html",
+            {
+                "programmings": programmings,
+                "day": date_txt,
+                "activities": activities,
+                "classrooms": Classroom.objects.all(),
+            },
         )
 
 
@@ -52,6 +67,10 @@ def login_user(request: HttpRequest, failed=0):
         return redirect("dashboard")
 
     if request.method == "POST":
+        if int(request.POST.get("code")) != settings.SCHOOL_CODE:
+            messages.error(request, "Escola não encontrada")
+            return redirect("login")
+
         user_id = request.POST["user-id"]
         password = request.POST["password"]
 
@@ -162,7 +181,9 @@ def enroll(request: HttpRequest):
                 messages.warning(request, "Falha ao designar grupo ao usuário")
 
         except IntegrityError as error:
-            messages.error(request, "Campo de e-mail duplicado: {}".format(error.args[0]))
+            messages.error(
+                request, "Campo de e-mail duplicado: {}".format(error.args[0])
+            )
             return redirect("enroll")
 
         except Exception as error:
@@ -288,6 +309,17 @@ def auto_adm(request: HttpRequest):
 
 
 def perfil(request: HttpRequest):
+    if request.method == "POST":
+        if request.POST.get("password") == request.POST.get("confirm"):
+            if check_password(request.POST.get("old"), request.user.password):
+                request.user.password = request.POST.get("password")
+                request.user.save()
+                messages.success(request, "Senha alterada com sucesso")
+            else:
+                messages.error(request, "Senha incorreta")
+        else:
+            messages.warning(request, "Senha de confirmação incorreta")
+
     return render(request, "core/perfil.html")
 
 

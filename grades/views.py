@@ -3,8 +3,10 @@ from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
-from grades.models import Assessment, Grade, Mention
+from rolepermissions.checkers import has_role
 
+from core.roles import Teacher
+from grades.models import Assessment, Grade, Mention
 from management.models import Classroom, Programming, Subject
 
 
@@ -24,7 +26,6 @@ def chamada(request: HttpRequest):
             "classrooms": list(
                 set([p.classroom for p in request.user.programmings.all()])
             ),
-            "programmings": Programming.objects.filter(teacher=request.user),
         },
     )
 
@@ -54,6 +55,8 @@ def book_exercise(request: HttpRequest):
         bimester=request.POST.get("bimester"),
         kind=request.POST.get("kind"),
         content=request.POST.get("desc"),
+        title=request.POST.get("title"),
+        teacher=request.user,
     )
 
     return redirect("turmas")
@@ -92,15 +95,41 @@ def load_classroom(request: HttpRequest, classroom_pk: int):
                     profile__classroom=classroom_pk
                 ).order_by("username")
             ],
+            "subjects": list(
+                set(
+                    [
+                        str(ass.subject)
+                        for ass in Assessment.objects.filter(classroom=classroom_pk)
+                    ]
+                )
+            ),
             "assessments": [
-                ass.json() for ass in Assessment.objects.filter(classroom=classroom_pk)
+                a.json()
+                for a in request.user.assessments.filter(classroom__pk=classroom_pk)
             ],
         }
     )
 
 
-def load_chamada(request: HttpRequest, classroom_pk: int, teacher_pk: int, date: str):
-    return JsonResponse({""})
+def load_chamada(request: HttpRequest):
+    cls = request.GET.get("classroom")
+    teacher = request.GET.get("teacher")
+    return JsonResponse(
+        {
+            "students": [
+                {"pk": u.pk, "username": u.username}
+                for u in User.objects.filter(profile__classroom__pk=cls).order_by(
+                    "username"
+                )
+            ],
+            "programmings": [
+                p.json()
+                for p in Programming.objects.filter(
+                    classroom__pk=cls, teacher__pk=teacher
+                )
+            ],
+        }
+    )
 
 
 def boletim(request: HttpRequest):
@@ -116,3 +145,13 @@ def boletim(request: HttpRequest):
             "mentions": Mention.objects.filter(student=request.user),
         },
     )
+
+
+def provas(request: HttpRequest, classroom=0):
+    if has_role(request.user, Teacher):
+        tests = request.user.assessments
+        if classroom != 0:
+            tests = tests.filter(classroom__pk=classroom)
+    else:
+        tests = Assessment.objects.filter(classroom=request.user.profile.classroom)
+    return render(request, "grades/provas.html", {"tests": tests.all()})

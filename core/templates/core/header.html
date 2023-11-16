@@ -1,53 +1,56 @@
 {% load permission_tags %}
 <header
-  class="fixed w-full flex items-center justify-between bg-zinc-100 px-8 py-5 shadow-sm z-10"
+  class="fixed z-[1] flex w-full items-center justify-between bg-zinc-100 px-8 py-5 shadow-sm"
   :class="open ? 'rounded-br-3xl' : 'rounded-b-3xl '"
 >
   <div class="flex w-full flex-col justify-between md:flex-row">
     <div class="flex items-center">
       <button
-      class="text-color-primary hover:text-color-secondary"
-      @click="open = !open">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        class="text-color-primary m-1 h-6 w-6 hover:text-color-secondary"
+        class="text-color-primary hover:text-color-secondary"
+        @click="open = !open"
       >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M3 12h18M3 6h18M3 18h18"
-        />
-      </svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          class="m-1 h-6 w-6 text-color-primary hover:text-color-secondary"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M3 12h18M3 6h18M3 18h18"
+          />
+        </svg>
       </button>
-      <p class="text-color-primary px-5">
-        Bem {% if user.member.gender == 'F' %}vinda{% else %}vindo{% endif %}, {{ user.username.split.0.title }}!
+      <p class="px-5 text-color-primary">
+        Bem {% if user.profile.gender == 'F' %}vinda{% else %}vindo{% endif %},
+        {{ user.username.split.0.title }}!
       </p>
     </div>
-    <span class="hidden sm:block text-sm md:ml-1 md:mr-3 md:text-base md:text-gray-400">
+    <span
+      class="hidden text-sm md:ml-1 md:mr-3 md:text-base md:text-gray-400 sm:block"
+    >
       {% if user|has_role:'admin' %}
-        Administrador
+      Administrador
       {% elif user|has_role:'coordinator' %}
-        Coordenador
+      Coordenador
       {% elif user|has_role:'secretary' %}
-        Secretário
+      Secretário
       {% elif user|has_role:'staff' %}
-        Funcionário
+      Funcionário
       {% elif user|has_role:'teacher' %}
-        Professor
+      Professor
       {% else %}
-        Aluno
+      Aluno
       {% endif %}
-       | {{ school_name }}
+      | {{ school_name }}
     </span>
   </div>
-  <div class="" 
-      :class ="open ? 'pr-80' : 'pr-0'"
-      >
-    <div class="rounded-2xl border border-color-secondary p-1.5">
+
+  <!-- TODO: notificações
+    <button class="rounded-2xl border border-color-secondary p-1.5 mr-10">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
@@ -63,6 +66,6 @@
           d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0M3.124 7.5A8.969 8.969 0 015.292 3m13.416 0a8.969 8.969 0 012.168 4.5"
         />
       </svg>
-    </div>
-  </div>
+    </button>
+  -->
 </header>

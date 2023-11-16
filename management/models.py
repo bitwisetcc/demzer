@@ -76,7 +76,7 @@ class Course(Model):
 
 
 class Classroom(Model):
-    course = ForeignKey(Course, SET_NULL, related_name="classroom", null=True)
+    course = ForeignKey(Course, SET_NULL, related_name="classrooms", null=True)
     year = IntegerField(default=2023)
 
     def __str__(self) -> str:
@@ -161,17 +161,31 @@ class Programming(Model):
             )
 
     def json(self):
+        return {
+            "pk": self.pk,
+            "classroom": self.classroom.__str__(),
+            "teacher": self.teacher.username,
+            "group": self.group,
+            "subjectSlug": self.subject.slug,
+            "subject": self.subject.name,
+            "subjectPk": self.subject.pk,
+            "day": self.day,
+            "order": self.order,
+        }
+
+    def json_str(self):
         return json.dumps(
             {
+                "pk": self.pk,
                 "classroom": self.classroom.__str__(),
                 "teacher": self.teacher.username,
                 "group": self.group,
-                "subject_slug": self.subject.slug,
+                "subjectSlug": self.subject.slug,
                 "subject": self.subject.name,
-                "subject_pk": self.subject.pk,
+                "subjectPk": self.subject.pk,
                 "day": self.day,
                 "order": self.order,
-            },
+            }
         )
 
     class Meta:

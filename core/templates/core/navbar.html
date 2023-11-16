@@ -22,7 +22,7 @@
     <ul class="flex flex-col gap-4" :class="open || 'scale-0'">
       <li>
         <a href="{% url 'dashboard' %}">
-          {% if user|has_role:'admin' %}
+          {% if user|has_role:'admin,coordinator' %}
           <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -55,25 +55,28 @@
           {% endif %}
         </a>
       </li>
+      {% if user|has_role:'admin' %}
       <li>
         <a href="{% url 'courses' %}">
           <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="h-6 w-6"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="h-6 w-6"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M2.25 7.125C2.25 6.504 2.754 6 3.375 6h6c.621 0 1.125.504 1.125 1.125v3.75c0 .621-.504 1.125-1.125 1.125h-6a1.125 1.125 0 01-1.125-1.125v-3.75zM14.25 8.625c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v8.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 01-1.125-1.125v-8.25zM3.75 16.125c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v2.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 01-1.125-1.125v-2.25z"
+          <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M2.25 7.125C2.25 6.504 2.754 6 3.375 6h6c.621 0 1.125.504 1.125 1.125v3.75c0 .621-.504 1.125-1.125 1.125h-6a1.125 1.125 0 01-1.125-1.125v-3.75zM14.25 8.625c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v8.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 01-1.125-1.125v-8.25zM3.75 16.125c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v2.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 01-1.125-1.125v-2.25z"
             />
           </svg>
           <span>Cursos</span>
         </a>
       </li>
+      {% endif %}
+      {% if not user|has_role:'student' %}
       <li>
         <a
         {% if user|has_role:'teacher' %}
@@ -99,6 +102,7 @@
           <span>Turmas</span>
         </a>
       </li>
+      {% endif %}
       {% if user|has_role:'teacher' %}
       <li>
         <a href="{% url 'chamada' %}">
@@ -127,6 +131,7 @@
           <span>Comunicados</span>
         </a>
       </li>
+      {% if user|has_role:'student' %}
       <li>
         <a href="{% url 'boletim' %}">
           <svg
@@ -145,6 +150,7 @@
           <span>Boletim</span>
         </a>
       </li>
+      {% endif %}
       <li x-data="{ open: false }" @click="open = !open">
         <a href="#" class="justify-between pr-3">
           <div class="flex items-center gap-3">
@@ -185,7 +191,6 @@
           class="my-2 ml-3 flex origin-top flex-col gap-4 border-l-[3px] border-l-color-primary-dimm py-2 pl-2 transition duration-500"
           :class="open || 'hidden'"
         >
-        <!-- TODO: filtrar horários para professores -->
           {% if user|has_role:'student' %}
           <li>
             <a
@@ -251,7 +256,13 @@
             </a>
           </li>
           <li>
-            <a href="">
+            <a
+              {% if user|has_role:'student' %}
+              href="{% url 'provas' user.profile.classroom.pk %}"
+              {% elif user|has_role:'teacher' %}
+              href="{% url 'provas' 0 %}"
+              {% endif %}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"

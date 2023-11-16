@@ -109,7 +109,12 @@
               type="text"
               class="h-10"
               name="course"
+              {% if user|has_role:'coordinator' %}
+              disabled
+              value="{{ user.courses.first.slug }}"
+              {% else %}
               placeholder="Deixe em branco para um comunicado geral"
+              {% endif %}
             />
           </div>
           <div class="flex flex-col text-lg font-normal">
@@ -122,7 +127,7 @@
             />
           </div>
           <div class="flex justify-center pt-6">
-            <button type="submit">Aplicar</button>
+            <button type="submit">Criar</button>
           </div>
         </section>
       </div>
@@ -189,7 +194,7 @@
 
   <header class="flex w-full justify-between text-color-primary">
     <h1>Eventos</h1>
-    {% if user|has_role:'admin' %}
+    {% if user|has_role:'admin,coordinator' %}
     <div>
       <button @click="createDialog = true" class="text-base">
         <svg
