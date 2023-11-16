@@ -7,7 +7,7 @@
   <h1 class="mb-4 text-xl font-bold text-color-primary">{{ day }}</h1>
   {% if user|has_role:'student' %}
   <h2 class="text-xl font-bold text-color-primary">
-    {{ user.profile.classroom }}
+    Sua turma: {{ user.profile.classroom }}
   </h2>
   {% endif %}
 
