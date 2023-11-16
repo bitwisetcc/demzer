@@ -170,9 +170,9 @@
             <select
               class="mx-auto w-full rounded-lg border border-color-primary bg-gray-50 text-sm text-gray-900"
             >
-              <option></option>
-              <option>teste</option>
-              <option>teste</option>
+              {% for c in classrooms %}
+              <option value="{{ c.pk }}">{{ c }}</option>
+              {% endfor %}
             </select>
           </label>
           <div class="flex flex-row justify-between text-lg font-normal">
