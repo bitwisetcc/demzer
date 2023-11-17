@@ -360,7 +360,7 @@
             </label>
           </div>
           <div class="flex flex-row justify-center space-x-5 pt-6 text-lg">
-            <button type="reset" class="alt">Limpar</button>
+            <button type="reset" class="alt" @click="reload(`{% url 'query' 'student' %}`)">Limpar</button>
             <button type="submit">Aplicar</button>
           </div>
         </section>

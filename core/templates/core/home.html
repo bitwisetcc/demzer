@@ -1,15 +1,13 @@
 {% extends 'core/base.html' %} {% load static %} {% load permission_tags %} {% block head %}
 <script defer>
   const carousel1Swiper = new Swiper(".carousel1", {
-  slidesPerView: 1,
-  keyboard: {
-    enabled: false,
-  },
-  navigation: {
-    nextEl: ".carousel1 .swiper-button-next",
-    prevEl: ".carousel1 .swiper-button-prev",
-  },
-});
+    slidesPerView: 1,
+    keyboard: { enabled: false },
+    navigation: {
+      nextEl: ".carousel1 .swiper-button-next",
+      prevEl: ".carousel1 .swiper-button-prev",
+    },
+  });
 </script>
 <link rel="stylesheet" href="{% static 'core/dist/css/dashboard.css' %}" />
 <title>Home</title>
@@ -23,7 +21,7 @@
   {% endif %}
 
   <div class="mt-8 flex justify-center md:mt-16">
-    <div class="lg:h-96 lg:w-96 flex h-40 w-96 items-center justify-center z-0">
+    <div class="lg:h-96 lg:w-96 z-0 flex h-40 w-96 items-center justify-center">
       <div class="swiper mySwiper carousel1">
         <div class="swiper-wrapper">
           {% for prog in programmings %}
@@ -68,33 +66,27 @@
     Semana
   </h1>
 
-  <div class="mb-6 mt-6 flex justify-center md:mt-8">
+  <div
+    class="mb-6 mt-6 grid grid-cols-4 place-items-center gap-10 md:mt-8"
+  >
+    {% for a in activities %}
     <div
-      class="lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5 grid grid-cols-1 gap-10 md:grid-cols-3"
+      class="flex h-40 w-64 flex-col rounded-2xl bg-color-bg-lighter px-8 py-5 shadow"
     >
-      {% for a in activities %}
-      <div
-        class="flex h-[150px] w-[270px] flex-col items-center justify-center rounded-2xl bg-white px-4 py-8"
+      <h3
+        class="text-2xl text-color-primary text-center"
+        data-tippy-content="{{ a.weekday }}"
       >
-        <div class="ml-2 leading-[30px]">
-          <span class="text-[28px] font-normal text-color-primary">
-            {{ a.day.day }} / {{ a.day.weekday }}
-          </span>
-          <br />
-          {% if user|has_role:'teacher' %}
-          <span class="text-left text-sm font-normal text-gray-500">
-            {{ a.classroom }}
-          </span>
-          <br />
-          {% endif %}
-          <span class="text-left text-sm font-normal text-gray-500">
-            {{ a.subject.name }}
-          </span>
-          <br />
-        </div>
-      </div>
-      {% endfor %}
+        {{ a.day|date:'d/m' }}
+      </h3>
+      <h4 class="mt-2 text-xl text-color-primary truncate text-ellipsis pb-4">{{ a.title }}</h4>
+      <p class="text-gray-500">
+        Matéria: {{ a.subject.name }} {% if user|has_role:'teacher' %}
+        <br />
+        Turma: {{ a.classroom }} {% endif %}
+      </p>
     </div>
+    {% endfor %}
   </div>
 </main>
 {% endblock %}
