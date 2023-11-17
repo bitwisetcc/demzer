@@ -79,26 +79,6 @@
             id="txt-title"
             class="w-full"
           />
-          <label for="attachment" class="file alt" x-data="{ filename: '' }">
-            <input
-              type="file"
-              name="attachment"
-              id="attachment"
-              accept="accept=image/*"
-              @input="filename = $el.files[0].name"
-            />
-            <span x-text="filename || 'Capa'"></span>
-          </label>
-          <label for="attachment" class="file alt" x-data="{ filename: '' }">
-            <input
-              type="file"
-              name="attachment"
-              id="attachment"
-              accept="accept=image/*"
-              @input="filename = $el.files[0].name"
-            />
-            <span x-text="filename || 'Anexo'"></span>
-          </label>
         </div>
         <div class="flex items-center gap-2"></div>
         <div class="flex items-center gap-2">

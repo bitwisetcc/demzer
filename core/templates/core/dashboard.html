@@ -178,7 +178,7 @@
         <template x-for="row in rows">
           <tr>
             <template x-for="(value, i) in row">
-              <td x-text="value" @click="i == 0 && edit(value)"></td>
+              <td x-text="value" @click="i == 0 && edit(value)" :class="i == 0 && 'cursor-pointer hover:text-color-secondary'"></td>
             </template>
           </tr>
         </template>

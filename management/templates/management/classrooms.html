@@ -24,7 +24,7 @@
 <main class="flex flex-col gap-5 px-24 py-10" x-data="dialogs">
   <section x-show="classroomDialog" class="dialog-backdrop">
     <div class="dialog z-30">
-      <h2 class="mb-3 text-xl font-semibold">Criar turma</h2>
+      <h2 class="mb-3 text-xl font-semibold" x-text="pk == 0 ? 'Criar turma' : 'Editar turma'"></h2>
       <form action="{% url 'classrooms' %}" method="POST">
         {% csrf_token %}
         <input type="hidden" name="pk" x-model="pk" />
@@ -219,6 +219,7 @@
         <button
           class="hover:text-color-secondary"
           @click="() => {
+            options = false;
             classroomDialog = true;
             course = '{{ classroom.course.slug }}';
             year = {{ classroom.year }};
@@ -229,7 +230,7 @@
         </button>
         <button
           class="hover:text-color-secondary"
-          @click="() => { deleteDialog = true; pk = '{{ course.pk }}'}"
+          @click="() => { options = false; deleteDialog = true; pk = '{{ course.pk }}'}"
         >
           Excluir
         </button>

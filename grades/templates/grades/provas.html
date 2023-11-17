@@ -151,7 +151,7 @@
   >
     <header class="flex justify-between px-6 py-4">
       <div>
-        <h2 class="font-semibold text-color-primary">{{ t.title }}</h2>
+        <h2 class="font-semibold text-color-primary">{{ t.title }} - {{ t.subject.name }}</h2>
         <span class="text-color-secondary">{{ t.day }}</span>
       </div>
       <div class="relative">
@@ -172,6 +172,8 @@
             />
           </svg>
         </button>
+
+        {% if user|has_role:'teacher' %}
         <button @click="options = !options" class="relative">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -196,6 +198,7 @@
         >
           <button class="hover:text-color-secondary" @click="del('{{ t.pk }}')">Excluir</button>
         </div>
+        {% endif %}
       </div>
     </header>
     <div
