@@ -36,7 +36,7 @@
           const cell = cells[p.order * 5 + p.day];
 
           if (this.isTeacher) {
-            cell.innerHTML += p.classroom;
+            cell.innerHTML += p.classroom + " - " + p.subjectSlug;
           } else {
             if (cell.innerHTML == "") cell.innerHTML = p.subjectSlug;
             else if (cell.innerHTML != p.subjectSlug)

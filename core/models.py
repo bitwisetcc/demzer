@@ -18,7 +18,7 @@ from django.db.models import (
 )
 from django.utils.translation import gettext_lazy as _
 from rolepermissions.checkers import has_role
-from core.roles import Coordinator
+from core.roles import Coordinator, Student, Teacher
 
 from management.models import Classroom, Course
 

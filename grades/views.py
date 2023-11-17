@@ -6,7 +6,8 @@ from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
 from rolepermissions.checkers import has_role
 
-from core.roles import Teacher
+from core.roles import Student, Teacher
+from core.utils import UTC_date
 from grades.models import Assessment, Grade, Mention
 from management.models import Classroom, Programming, Subject
 
@@ -67,7 +68,7 @@ def book_exercise(request: HttpRequest):
 def post_grade(request: HttpRequest):
     ass = request.POST.get("assessment")
     if ass == "F":
-        print('menção')
+        print("menção")
         if Mention.objects.filter(
             student__pk=request.POST.get("student"),
             bimester=request.POST.get("bimester"),
@@ -84,7 +85,7 @@ def post_grade(request: HttpRequest):
                 justification=request.POST.get("justification"),
             )
     else:
-        print('nota')
+        print("nota")
         if Grade.objects.filter(
             student__pk=request.POST.get("student"), assessment__pk=ass
         ).exists():
@@ -167,4 +168,27 @@ def provas(request: HttpRequest, classroom=0):
             tests = tests.filter(classroom__pk=classroom)
     else:
         tests = Assessment.objects.filter(classroom=request.user.profile.classroom)
-    return render(request, "grades/provas.html", {"tests": tests.all()})
+
+    start = request.GET.get("start-date")
+    end = request.GET.get("end-date")
+
+    filters = {
+        "kind": request.GET.get("kind"),
+        "classroom__pk": request.GET.get("classroom"),
+        "subject__pk": request.GET.get("subject"),
+        "day__gte": start and UTC_date(start),
+        "day__lte": end and UTC_date(end),
+    }
+
+    context = {"tests": tests.filter(**{k: v for k, v in filters.items() if v}), "cls": classroom}
+
+    if has_role(request.user, Student):
+        context["subjects"] = list(
+            set(p.subject for p in request.user.profile.classroom.programmings.all())
+        )
+    elif has_role(request.user, Teacher):
+        context["classrooms"] = list(
+            set([p.classroom for p in Programming.objects.filter(teacher=request.user)])
+        )
+
+    return render(request, "grades/provas.html", context)
