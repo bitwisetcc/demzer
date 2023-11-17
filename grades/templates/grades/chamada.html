@@ -40,7 +40,7 @@
 
   <ul class="flex gap-4">
     {% for c in classrooms %}
-    <button class="alt px-5 py-3" @click="load('{{ c.pk }}')">{{ c }}</button>
+    <button class="px-5 py-3" :class="classroom == '{{ c.pk }}' ? 'active' : 'alt'" @click="load('{{ c.pk }}')">{{ c }}</button>
     {% endfor %}
   </ul>
 

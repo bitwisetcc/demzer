@@ -21,7 +21,8 @@
           .then((st) => {
             this.students = st.students;
             this.assessments = st.assessments;
-          }).catch(err => {
+          })
+          .catch((err) => {
             console.error(err);
             this.students = [];
             this.assessments = [];
@@ -161,7 +162,11 @@
   <!-- TODO: use a select for mobile smh -->
   <ul class="mt-10 flex gap-4">
     {% for c in classrooms %}
-    <button class="alt px-5 py-3" @click="getClassroom('{{ c.pk }}')">
+    <button
+      class="px-5 py-3"
+      :class="classroom == '{{ c.pk }}' ? 'active' : 'alt'"
+      @click="getClassroom('{{ c.pk }}')"
+    >
       {{ c }}
     </button>
     {% endfor %}
@@ -328,9 +333,15 @@
           <template x-for="s in students" :key="s.pk">
             <tr>
               <td x-text="s.username"></td>
-              <td x-text="['I','R','B','MB'][Math.floor(Math.random() * 4)]"></td>
-              <td x-text="['I','R','B','MB'][Math.floor(Math.random() * 4)]"></td>
-              <td x-text="['I','R','B','MB'][Math.floor(Math.random() * 4)]"></td>
+              <td
+                x-text="['I','R','B','MB'][Math.floor(Math.random() * 4)]"
+              ></td>
+              <td
+                x-text="['I','R','B','MB'][Math.floor(Math.random() * 4)]"
+              ></td>
+              <td
+                x-text="['I','R','B','MB'][Math.floor(Math.random() * 4)]"
+              ></td>
               <td>B</td>
             </tr>
           </template>
@@ -361,7 +372,7 @@
 
     <template x-for="a in assessments">
       <div
-        class="rounded-2xl bg-gray-100 shadow mb-5"
+        class="mb-5 rounded-2xl bg-gray-100 shadow"
         x-data="{ options: false, details: false }"
       >
         <header class="flex justify-between px-6 py-4">
