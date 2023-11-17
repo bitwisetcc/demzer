@@ -98,11 +98,11 @@ button[type="submit"] {
 
 dialog,
 .dialog {
-  @apply max-h-[80vh] overflow-x-clip overflow-y-scroll rounded-[1.75rem] bg-color-bg-lighter p-6 shadow-2xl backdrop:bg-gray-50;
+  @apply no_scroll max-h-[80vh] overflow-x-clip overflow-y-scroll rounded-[1.75rem] bg-color-bg-lighter p-6 shadow-2xl backdrop:bg-gray-50;
 }
 
 .dialog-backdrop {
-  @apply fixed inset-0 flex items-center justify-center bg-black bg-opacity-25 z-10;
+  @apply fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-25;
 }
 
 dialog header,
@@ -128,7 +128,7 @@ h1 {
 }
 
 h2 {
-  @apply font-semibold text-color-primary
+  @apply font-semibold text-color-primary;
 }
 
 /* .flex:not(.flex-col) {

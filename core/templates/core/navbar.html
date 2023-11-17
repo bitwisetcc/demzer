@@ -255,6 +255,7 @@
               <span>Eventos</span>
             </a>
           </li>
+          {% if user|has_role:'student,teacher' %}
           <li>
             <a
               {% if user|has_role:'student' %}
@@ -280,6 +281,7 @@
               <span>Provas / atividades</span>
             </a>
           </li>
+          {% endif %}
         </ul>
       </li>
     </ul>

@@ -28,7 +28,9 @@ def students(request: HttpRequest, role: str, coordinator_of=None):
             coordinator__pk=coordinator_of
         ).classrooms.all()
 
-    return JsonResponse({"users": [u.profile.json() for u in User.objects.filter(**filters)]})
+    return JsonResponse(
+        {"users": [u.profile.json() for u in User.objects.filter(**filters)]}
+    )
 
 
 @check_permission("delete_user", redirect_url="dashboard")
@@ -230,10 +232,19 @@ def classrooms(request: HttpRequest):
         )
         return redirect("classrooms")
 
+    print(request.GET.dict())
+    print(request.GET.dict().items())
+    # print(dict(request.GET.dict().items()))
+
     return render(
         request,
         "management/classrooms.html",
-        {"classrooms": Classroom.objects.all(), "courses": Course.objects.all()},
+        {
+            "classrooms": Classroom.objects.filter(
+                **{k: v for k, v in request.GET.dict().items() if v}
+            ),
+            "courses": Course.objects.all(),
+        },
     )
 
 

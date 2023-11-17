@@ -110,7 +110,7 @@
             <option value="E">Tarde</option>
             <option value="N">Noite</option>
           </select>
-          <label for="txt-duration">Duração:</label>
+          <label for="txt-duration">Duração (ano):</label>
           <input
             type="number"
             name="duration"
@@ -186,13 +186,14 @@
           <input type="text" maxlength="5" size="4" name="slug" id="txt-slug" />
         </div>
         <div class="mb-1 flex items-center gap-2">
-          <label for="txt-duration">Duração:</label>
+          <label for="txt-duration">Duração (ano):</label>
           <input
             type="number"
             size="4"
             max="10"
             name="duration"
             id="txt-duration"
+            step="0.5"
           />
           <label for="sl-time">Horário:</label>
           <select name="time" id="sl-time" x-model="time">
@@ -200,11 +201,10 @@
             <option value="M">Manhã</option>
             <option value="E">Tarde</option>
             <option value="N">Noite</option>
-            <option value="F">Integral</option>
           </select>
         </div>
         <div class="mt-3 flex justify-center gap-3">
-          <button type="reset" class="alt">Limpar</button>
+          <a class="alt" href="{% url 'courses' %}">Limpar</a>
           <button type="submit">Aplicar</button>
         </div>
       </form>
@@ -257,13 +257,7 @@
             maxlength="127"
           ></textarea>
         </div>
-        <div class="mt-3 flex justify-center gap-2">
-          <button
-            @click.prevent="() => { subjectDialog = false; importDialog = true }"
-            class="alt"
-          >
-            Importar
-          </button>
+        <div class="mt-3 flex justify-center">
           <button type="submit">Criar</button>
         </div>
       </form>

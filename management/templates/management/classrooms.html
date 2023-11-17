@@ -5,6 +5,7 @@
     Alpine.data("dialogs", () => ({
       classroomDialog: false,
       deleteDialog: false,
+      filterDialog: false,
 
       pk: 0,
       year: new Date().getFullYear(),
@@ -51,6 +52,45 @@
       </form>
     </div>
   </section>
+
+  <section x-show="filterDialog" class="dialog-backdrop">
+    <form action="{% url 'classrooms' %}" class="dialog no_scroll">
+      <header>
+        <h2>Filtrar</h2>
+        <button @click.prevent="filterDialog = false">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-6 w-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </header>
+      <div class="flex gap-2 items-center">
+        <label for="course">Curso:</label>
+        <select name="course__pk" id="course" class="mr-2">
+          {% for c in courses %}
+          <option value="{{ c.pk }}">{{ c.slug }}</option>
+          {% endfor %}
+        </select>
+        <label for="year">Ano:</label>
+        <input type="number" name="year" id="year" min="2000" max="2050">
+      </div>
+      <div class="flex gap-4 justify-center mt-5">
+        <a href="{% url 'classrooms' %}" class="alt">Limpar</a>
+        <button type="submit">Aplicar</button>
+      </div>
+    </form>
+  </section>
+
   <section class="dialog-backdrop" x-show="deleteDialog">
     <div class="dialog">
       <form

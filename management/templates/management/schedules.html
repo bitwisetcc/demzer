@@ -176,7 +176,7 @@
         {% csrf_token %}
         <input type="hidden" name="classroom" value="{{ classroom.pk }}" />
         <section class="flex gap-2 p-4">
-          <input type="text" hidden id="txt-classroom" name="classroom" />
+          <input type="text" hidden id="txt-classroom" name="classroom" required />
           <div>
             <label class="text-slate-500" id="txt-day">Dia:</label>
             <input
@@ -186,9 +186,10 @@
               id="txt-day"
               size="8"
               maxlength="3"
+              required
               x-model="programmingDayShow"
             />
-            <input type="number" hidden name="day" x-model="programmingDay" />
+            <input type="number" hidden name="day" x-model="programmingDay" required/>
           </div>
           <div>
             <label class="text-slate-500" id="txt-time">Horário:</label>
@@ -199,8 +200,9 @@
               id="txt-time"
               size="6"
               x-model="programmingTimeShow"
+              required
             />
-            <input type="number" hidden name="time" x-model="programmingTime" />
+            <input type="number" hidden name="time" x-model="programmingTime" required />
           </div>
         </section>
         <section class="flex flex-col gap-3 rounded-xl bg-zinc-200 p-4">
@@ -216,6 +218,7 @@
                   id="sl-subject"
                   x-model="subject"
                   :disabled="locked"
+                  required
                 >
                   {% for subject in subjects %}
                   <option value="{{ subject.pk }}">{{ subject.name }}</option>
@@ -233,6 +236,7 @@
                   id="txt-teacher"
                   x-model="teacher"
                   :disabled="locked"
+                  required
                 />
               </div>
             </div>
@@ -245,6 +249,7 @@
                     id="sl-subject"
                     x-model="subjectB"
                     :disabled="locked"
+                    required
                   >
                     {% for subject in subjects %}
                     <option value="{{ subject.pk }}">{{ subject.name }}</option>
@@ -259,6 +264,7 @@
                     id="txt-teacher"
                     x-model="teacherB"
                     :disabled="locked"
+                    required
                   />
                 </div>
               </div>

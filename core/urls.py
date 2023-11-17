@@ -17,6 +17,8 @@ urlpatterns = [
     path("logout/", logout_user, name="logout"),
     path("enroll/", enroll, name="enroll"),
     path("perfil/", perfil, name="profile"),
+    path("perfil/json", detail, name="profile_detail"),
+    path("perfil/edit", edit_profile, name="profile_edit"),
     path("fetch_image/<str:container>/<str:title>/", read_img, name="img"),
     path("configuracao/", configuracao, name="config"),
 

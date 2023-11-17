@@ -1,5 +1,16 @@
 {% extends 'core/base.html' %} {% load static %} {% load permission_tags %} {% block head %}
-<script defer src="{% static 'core/js/dashboard.js' %}"></script>
+<script defer>
+  const carousel1Swiper = new Swiper(".carousel1", {
+  slidesPerView: 1,
+  keyboard: {
+    enabled: false,
+  },
+  navigation: {
+    nextEl: ".carousel1 .swiper-button-next",
+    prevEl: ".carousel1 .swiper-button-prev",
+  },
+});
+</script>
 <link rel="stylesheet" href="{% static 'core/dist/css/dashboard.css' %}" />
 <title>Home</title>
 {% endblock %} {% block content %}

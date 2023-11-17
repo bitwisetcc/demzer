@@ -1,5 +1,78 @@
 {% extends 'core/base.html' %} {% load static %} {% load permission_tags %} {% block head %}
-<script defer src="{% static 'core/js/dashboard.js' %}"></script>
+<script defer>
+  function getAge(birthday) {
+    let ageDifMs = Date.now() - birthday.getTime();
+    let ageDate = new Date(ageDifMs);
+    return Math.abs(ageDate.getUTCFullYear() - 1970);
+  }
+
+  document.addEventListener("alpine:init", () => {
+    Alpine.data("dashboard", () => ({
+      filterDialog: false,
+      editDialog: false,
+      headers: [""],
+      rows: [[]],
+      reload(url) {
+        this.rows = [[]];
+        const csrfToken = document.cookie.slice(
+          document.cookie.indexOf("=") + 1
+        );
+
+        this.headers = [
+          "RM",
+          "Nome",
+          "Idade",
+          "Nascimento",
+          "Gênero",
+          "Celular",
+          "E-mail",
+          "CPF",
+          "RG",
+        ];
+
+        fetch(url, { headers: { "X-CSRFToken": csrfToken } })
+          .then((res) => res.json())
+          .then((data) => {
+            data.users.forEach((user) => {
+              this.rows.push([
+                user.rm,
+                user.username,
+                getAge(new Date(user.birthdate)),
+                user.birthdate,
+                user.gender,
+                user.phone,
+                user.email,
+                user.cpf,
+                user.rg,
+              ]);
+            });
+          });
+      },
+
+      edit(pk) {
+        this.editDialog = true;
+        fetch("{% url 'profile_detail' %}?" + new URLSearchParams({ pk }))
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data);
+            document.getElementById("pk").innerText = pk;
+            document.getElementById("inp_pk").value = pk;
+            document.getElementById("username").value = data.username;
+            document.getElementById("email").value = data.email;
+            document.getElementById("contact").value = data.contact_email;
+            document.getElementById("phone").value = data.phone;
+            document.getElementById("gender").value = data.gender;
+            document.getElementById("cep").value = data.cep;
+            document.getElementById("city").value = data.city;
+            document.getElementById("neighborhood").value = data.neighborhood;
+            document.getElementById("street").value = data.street;
+            document.getElementById("streetNumber").value = data.street_number;
+            document.getElementById("complement").value = data.complement;
+          });
+      },
+    }));
+  });
+</script>
 <link rel="stylesheet" href="{% static 'core/dist/css/dashboard.css' %}" />
 <title>Dashboard</title>
 {% endblock %} {% block content %}
@@ -103,19 +176,96 @@
         <!-- TODO: see info + block/delete profile -->
         <template x-for="row in rows">
           <tr>
-            <template x-for="value in row">
-              <td x-text="value"></td>
+            <template x-for="(value, i) in row">
+              <td x-text="value" @click="i == 0 && edit(value)"></td>
             </template>
           </tr>
         </template>
       </tbody>
     </table>
   </section>
+
+  <form action="{% url 'profile_edit' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="pk" id="inp_pk">
+    <div class="dialog-backdrop" x-show="editDialog">
+      <div class="dialog no_scroll">
+        <header>
+          <h2>Editar perfil</h2>
+          <button @click.prevent="editDialog = false">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="h-6 w-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </header>
+        <p>ID: <span id="pk"></span></p>
+        <ul class="flex flex-col gap-3">
+          <li>
+            <label for="username">Nome:</label>
+            <input type="text" name="username" id="username" />
+          </li>
+          <li>
+            <label for="email">Email:</label>
+            <input type="email" name="email" id="email" />
+          </li>
+          <li>
+            <label for="contact">Contato:</label>
+            <input type="email" name="contact" id="contact" />
+          </li>
+          <li>
+            <label for="phone">Celular:</label>
+            <input type="tel" name="phone" id="phone" />
+          </li>
+          <li>
+            <label for="gender">Gênero:</label>
+            <input type="text" maxlength="2" name="gender" id="gender" />
+          </li>
+          <li>
+            <label for="cep">CEP:</label>
+            <input type="number" name="cep" id="cep" />
+          </li>
+          <li>
+            <label for="city">Cidade:</label>
+            <input type="text" name="city" id="city" />
+          </li>
+          <li>
+            <label for="neighborhood">Bairro:</label>
+            <input type="text" name="neighborhood" id="neighborhood" />
+          </li>
+          <li>
+            <label for="street">Rua:</label>
+            <input type="text" name="street" id="street" />
+          </li>
+          <li>
+            <label for="streetNumber">Número:</label>
+            <input type="number" name="street_number" id="streetNumber" />
+          </li>
+          <li>
+            <label for="complement">Complemento:</label>
+            <input type="text" name="complement" id="complement" />
+          </li>
+        </ul>
+        <button type="submit">Salvar</button>
+      </div>
+    </div>
+  </form>
+
   <form>
     <div x-show="filterDialog" class="dialog-backdrop">
       <div class="dialog no_scroll">
         <header
-          class="mt-3 px-4 flex flex-row justify-between text-3xl font-bold"
+          class="mt-3 flex flex-row justify-between px-4 text-3xl font-bold"
         >
           <h2>Filtrar Alunos</h2>
           <div>

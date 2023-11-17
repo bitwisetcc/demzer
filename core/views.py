@@ -10,7 +10,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.models import User
 from django.db import IntegrityError
-from django.http import Http404, HttpRequest, HttpResponse, HttpResponseBadRequest
+from django.http import (
+    Http404,
+    HttpRequest,
+    HttpResponse,
+    HttpResponseBadRequest,
+    JsonResponse,
+)
 from django.db.models import Q
 from django.shortcuts import redirect, render
 from rolepermissions.checkers import has_role
@@ -314,6 +320,7 @@ def perfil(request: HttpRequest):
             if check_password(request.POST.get("old"), request.user.password):
                 request.user.password = request.POST.get("password")
                 request.user.save()
+                login(request, request.user)
                 messages.success(request, "Senha alterada com sucesso")
             else:
                 messages.error(request, "Senha incorreta")
@@ -321,6 +328,35 @@ def perfil(request: HttpRequest):
             messages.warning(request, "Senha de confirmação incorreta")
 
     return render(request, "core/perfil.html")
+
+
+def detail(request):
+    user_query = User.objects.filter(pk=request.GET.get("pk"))
+    profile_query = Member.objects.filter(user__pk=request.GET.get("pk"))
+    return JsonResponse(user_query.values().first() | profile_query.values().first())
+
+
+def edit_profile(request: HttpRequest):
+    u = User.objects.get(pk=request.POST.get("pk"))
+    p = u.profile
+
+    u.username = request.POST.get("username")
+    u.email = request.POST.get("email")
+
+    p.contact_email = request.POST.get("contact")
+    p.phone = request.POST.get("phone")
+    p.gender = request.POST.get("gender")
+    p.cep = request.POST.get("cep")
+    p.city = request.POST.get("city")
+    p.neighborhood = request.POST.get("neighborhood")
+    p.street = request.POST.get("street")
+    p.street_number = request.POST.get("street_number")
+    p.complement = request.POST.get("complement")
+
+    u.save()
+    p.save()
+
+    return redirect("dashboard")
 
 
 def read_img(request: HttpRequest, container: str, title: str):
