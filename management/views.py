@@ -22,12 +22,14 @@ from management.models import Course, Subject, Programming, Classroom
 
 def students(request: HttpRequest, role: str, coordinator_of=None):
     filters = {"groups__name": role, **{k: v for k, v in request.GET.dict().items() if v}}
-    print(request.GET.get("profile__birthdate"))
 
     if coordinator_of is not None and role == "student":
         filters["profile__classroom__in"] = Course.objects.get(
             coordinator__pk=coordinator_of
         ).classrooms.all()
+    
+    if filters["groups__name"] == "*":
+        filters.pop("groups__name")
 
     return JsonResponse(
         {"users": [u.profile.json() for u in User.objects.filter(**filters)]}

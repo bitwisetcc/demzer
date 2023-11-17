@@ -324,9 +324,22 @@
             />
           </label>
           <label>
+            Cargo
+            <select
+              name="groups__name"
+              class="mx-auto w-full rounded-lg border border-color-primary bg-gray-50 text-sm text-gray-900"
+            >
+              <option value="*">-</option>
+              <option value="student">Estudante</option>
+              <option value="coordinator">Coordenador</option>
+              <option value="teacher">Professor</option>
+            </select>
+          </label>
+          <label>
             Turma
             <select
-              name="profile__classroom__pk" class="mx-auto w-full rounded-lg border border-color-primary bg-gray-50 text-sm text-gray-900"
+              name="profile__classroom__pk"
+              class="mx-auto w-full rounded-lg border border-color-primary bg-gray-50 text-sm text-gray-900"
             >
               <option value="">-</option>
               {% for c in classrooms %}
