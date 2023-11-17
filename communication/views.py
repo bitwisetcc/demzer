@@ -16,7 +16,7 @@ def alerts(request: HttpRequest):
         return render(
             request,
             "communication/alert/list.html",
-            {"alerts": Alert.objects.all()[:20]},
+            {"alerts": Alert.objects.all().order_by("-date")},
         )
 
     if request.method == "POST":
