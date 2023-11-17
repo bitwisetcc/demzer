@@ -391,7 +391,7 @@
               </svg>
             </div>
             <div x-show="eval(localStorage.getItem('toggleImage'))">
-              <img src="{% url 'img' 'pictures' user.pk %}" class="w-12 h-12">
+              <img src="{% url 'img' 'pictures' user.pk %}" class="w-12 h-12 rounded-full border border-gray-200">
             </div>
           </a>
           <div class="flex w-3/5 flex-col px-1 text-sm">

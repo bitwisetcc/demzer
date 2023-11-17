@@ -38,7 +38,7 @@ class Assessment(Model):
             "pk": self.pk,
             "title": self.title,
             "subject": self.subject.name,
-            "day": str(self.day),
+            "day": str(self.day.strftime("%d/%m/%Y")),
             "weight": self.weight,
             "content": self.content,
             "bimester": self.bimester,

@@ -1,6 +1,7 @@
 from datetime import datetime
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect, render
+from django.contrib import messages
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
 from rolepermissions.checkers import has_role
@@ -62,20 +63,32 @@ def book_exercise(request: HttpRequest):
     return redirect("turmas")
 
 
-# TODO: block duplicate finals/grades
 @require_POST
 def post_grade(request: HttpRequest):
     ass = request.POST.get("assessment")
     if ass == "F":
-        Mention.objects.create(
-            value=request.POST.get("value"),
-            student=User.objects.get(pk=request.POST.get("student")),
-            teacher=request.user,
-            subject=Subject.objects.get(pk=request.POST.get("subject")),
+        print('menção')
+        if Mention.objects.filter(
+            student__pk=request.POST.get("student"),
             bimester=request.POST.get("bimester"),
-            justification=request.POST.get("justification"),
-        )
+            subject__pk=request.POST.get("subject"),
+        ).exists():
+            messages.error(request, "Essa menção já foi lançada")
+        else:
+            Mention.objects.create(
+                value=request.POST.get("value"),
+                student=User.objects.get(pk=request.POST.get("student")),
+                teacher=request.user,
+                subject=Subject.objects.get(pk=request.POST.get("subject")),
+                bimester=request.POST.get("bimester"),
+                justification=request.POST.get("justification"),
+            )
     else:
+        print('nota')
+        if Grade.objects.filter(
+            student__pk=request.POST.get("student"), assessment__pk=ass
+        ).exists():
+            messages.error(request, "A nota dessa avaliação já foi lançada")
         Grade.objects.create(
             assessment=Assessment.objects.get(pk=ass),
             student=User.objects.get(pk=request.POST.get("student")),
