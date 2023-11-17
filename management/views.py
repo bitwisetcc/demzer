@@ -21,7 +21,8 @@ from management.models import Course, Subject, Programming, Classroom
 
 
 def students(request: HttpRequest, role: str, coordinator_of=None):
-    filters = {"groups__name": role}
+    filters = {"groups__name": role, **{k: v for k, v in request.GET.dict().items() if v}}
+    print(request.GET.get("profile__birthdate"))
 
     if coordinator_of is not None and role == "student":
         filters["profile__classroom__in"] = Course.objects.get(
@@ -231,10 +232,6 @@ def classrooms(request: HttpRequest):
             ),
         )
         return redirect("classrooms")
-
-    print(request.GET.dict())
-    print(request.GET.dict().items())
-    # print(dict(request.GET.dict().items()))
 
     return render(
         request,

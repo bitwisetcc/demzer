@@ -46,6 +46,7 @@
                 user.rg,
               ]);
             });
+            this.filterDialog = false;
           });
       },
 
@@ -187,7 +188,7 @@
 
   <form action="{% url 'profile_edit' %}" method="post">
     {% csrf_token %}
-    <input type="hidden" name="pk" id="inp_pk">
+    <input type="hidden" name="pk" id="inp_pk" />
     <div class="dialog-backdrop" x-show="editDialog">
       <div class="dialog no_scroll">
         <header>
@@ -261,7 +262,7 @@
     </div>
   </form>
 
-  <form>
+  <form @submit.prevent="reload(`{% url 'query' 'student' %}?` + new URLSearchParams(new FormData($el)))">
     <div x-show="filterDialog" class="dialog-backdrop">
       <div class="dialog no_scroll">
         <header
@@ -294,7 +295,9 @@
           <label>
             RM
             <input
-              type="search"
+              type="number"
+              name="pk"
+              max="99999"
               placeholder="Escreva o RM"
               class="mx-auto w-full rounded-lg border border-color-primary bg-gray-50 text-sm text-gray-900"
             />
@@ -302,7 +305,10 @@
           <label>
             CPF
             <input
-              type="search"
+              type="text"
+              name="profile__cpf__startswith"
+              maxlength="11"
+              minlength="11"
               placeholder="Escreva o CPF"
               class="mx-auto w-full rounded-lg border border-color-primary bg-gray-50 text-sm text-gray-900"
             />
@@ -310,7 +316,9 @@
           <label>
             Nome
             <input
-              type="search"
+              type="text"
+              name="username__icontains"
+              maxlength="150"
               placeholder="Escreva o Nome"
               class="mx-auto w-full rounded-lg border border-color-primary bg-gray-50 text-sm text-gray-900"
             />
@@ -318,8 +326,9 @@
           <label>
             Turma
             <select
-              class="mx-auto w-full rounded-lg border border-color-primary bg-gray-50 text-sm text-gray-900"
+              name="profile__classroom__pk" class="mx-auto w-full rounded-lg border border-color-primary bg-gray-50 text-sm text-gray-900"
             >
+              <option value="">-</option>
               {% for c in classrooms %}
               <option value="{{ c.pk }}">{{ c }}</option>
               {% endfor %}
@@ -328,7 +337,13 @@
           <div class="flex flex-row justify-between text-lg font-normal">
             <label>
               Data de nascimento:
-              <input type="date" class="rounded-3xl border-color-primary" />
+              <input
+                type="date"
+                name="profile__birthdate"
+                class="rounded-3xl border-color-primary"
+                min="1900-01-01"
+                :max="new Date().toISOString().split('T')[0]"
+              />
             </label>
           </div>
           <div class="flex flex-row justify-center space-x-5 pt-6 text-lg">

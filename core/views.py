@@ -33,7 +33,14 @@ from management.models import Classroom, Programming
 @login_required
 def dashboard(request: HttpRequest):
     if has_role(request.user, [Admin, Coordinator]):
-        return render(request, "core/dashboard.html")
+        return render(
+            request,
+            "core/dashboard.html",
+            {
+                "classrooms": Classroom.objects.all(),
+                "birthdate": settings.DEFAULT_BIRTHDATE,
+            },
+        )
     else:
         today = date.today()
         weekday = today.weekday()
@@ -132,7 +139,6 @@ def enroll(request: HttpRequest):
             )
 
         try:
-            print(1)
             profile = Member.objects.create(
                 user=user,
                 contact_email=request.POST.get("contact-email"),
