@@ -192,3 +192,12 @@ def provas(request: HttpRequest, classroom=0):
         )
 
     return render(request, "grades/provas.html", context)
+
+
+@require_POST
+def delete_assessment(request: HttpRequest, cls: int):
+    ass = Assessment.objects.get(pk=request.POST.get("pk"))
+    ass.delete()
+    txt = "Prova" if ass.kind == 'T' else "Atividade"
+    messages.success(request, "{} {} deletada com sucesso".format(txt, ass.title))
+    return redirect("provas", cls)

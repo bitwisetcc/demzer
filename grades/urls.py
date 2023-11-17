@@ -10,4 +10,5 @@ urlpatterns = [
     path("boletim/", boletim, name="boletim"),
     path("new/", post_grade, name="post_grade"),
     path("provas/<int:classroom>/", provas, name="provas"),
+    path("provas/<int:cls>/delete", delete_assessment, name="delete_prova"),
 ]
