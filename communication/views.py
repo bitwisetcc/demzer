@@ -114,7 +114,7 @@ def events(request: HttpRequest):
             title=request.POST.get("title"),
             place=request.POST.get("place"),
             info=request.POST.get("info"),
-            date=datetime.strptime(request.POST["date"], "%Y-%m-%d").date(),
+            date=datetime.strptime(request.POST.get("date"), "%Y-%m-%d").date(),
             private=private,
             course=Course.objects.get(slug=course) if not private and course else None,
             classroom=Classroom.objects.get(slug=classroom)
@@ -129,7 +129,7 @@ def events(request: HttpRequest):
                 request, "Failed to upload picture: {}".format(exc.args[0])
             )
 
-        messages.success(request, "Evento {} criado com sucesso".format(event))
+        messages.success(request, "Evento '{}' criado com sucesso".format(event.title))
 
     start = request.GET.get("start-date")
     end = request.GET.get("end-date")

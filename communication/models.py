@@ -36,7 +36,18 @@ class Announcement(Model):
 
     def published(self):
         return date.today() >= self.date
-    
+
+    def category_full(self):
+        match self.category:
+            case "r":
+                return "Reuinão"
+            case "p":
+                return "Palestra"
+            case "a":
+                return "Reposição"
+            case _:
+                return "Outro"
+
     def __str__(self) -> str:
         return self.title
 
@@ -45,14 +56,17 @@ class Announcement(Model):
 
 
 class Event(Model):
-    # if both date and course are None and private is False, it's a general announcement, meant for all users
+    # if both classroom and course are None and private is False, it's a general announcement, meant for all users
     title = CharField(max_length=80, default="")
-    date = DateField(auto_now=True)
+    date = DateField()
     course = ForeignKey(Course, SET_NULL, null=True)
     classroom = ForeignKey(Classroom, SET_NULL, null=True)
     private = BooleanField(default=False)
     info = TextField()
     place = CharField(max_length=63, null=True)
+
+    def past(self):
+        return date.today() > self.date
 
     class Meta:
         ordering = ["-date"]

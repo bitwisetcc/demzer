@@ -92,6 +92,7 @@
             <span class="text-gray-500">- Em breve</span>
             {% endif %}
           </h2>
+          <h3>{{ announcement.category_full }}</h3>
           <p id="info" class="hidden">{{ announcement.info }}</p>
         </div>
       </div>
@@ -310,6 +311,7 @@
                 type="date"
                 name="start-date"
                 class="rounded-3xl border-color-primary"
+                :value="new Date().toISOString().split('T')[0]"
             /></label>
             <label>
               Até:
@@ -317,6 +319,7 @@
                 type="date"
                 name="end-date"
                 class="rounded-3xl border-color-primary"
+                :value="new Date().toISOString().split('T')[0]"
             /></label>
           </div>
 
@@ -337,7 +340,7 @@
             Outros
           </label>
           <div class="flex flex-row justify-center space-x-5 pt-4 text-lg">
-            <button type="reset" class="alt">Limpar</button>
+            <a href="{% url 'comunicados' %}" class="alt">Limpar</a>
             <button type="submit">Aplicar</button>
           </div>
         </section>

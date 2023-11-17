@@ -54,6 +54,7 @@
             <input
               type="date"
               :min="new Date().toISOString().split('T')[0]"
+              :max="new Date(new Date().getFullYear() + 1, 12).toISOString().split('T')[0]"
               :value="new Date().toISOString().split('T')[0]"
               name="date"
             />
@@ -174,6 +175,7 @@
                 type="date"
                 name="start-date"
                 class="rounded-3xl border-color-primary"
+                :value="new Date().toISOString().split('T')[0]"
             /></label>
             <label>
               Até:
@@ -181,10 +183,11 @@
                 type="date"
                 name="end-date"
                 class="rounded-3xl border-color-primary"
+                :value="new Date().toISOString().split('T')[0]"
             /></label>
           </div>
           <div class="flex flex-row justify-center space-x-5 pt-4 text-lg">
-            <button type="reset" class="alt">Limpar</button>
+            <a href="{% url 'eventos' %}" class="alt">Limpar</a>
             <button type="submit">Aplicar</button>
           </div>
         </section>
@@ -251,6 +254,9 @@
             <h3 class="w-max pl-10 text-xl font-semibold">{{ event.title }}</h3>
             <p class="pl-10 text-color-secondary">
               {{ event.date|date:'d/m/Y' }}
+              {% if event.past %}
+              - Concluído
+              {% endif %}
             </p>
           </div>
         </div>
