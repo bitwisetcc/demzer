@@ -19,4 +19,5 @@ urlpatterns = [
     path("grades/", include("grades.urls")),
     path("", include("communication.urls")),
     *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
+    *static(settings.STATIC_URL, document_root=settings.STATIC_ROOT),
 ]

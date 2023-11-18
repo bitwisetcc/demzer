@@ -1,0 +1,7 @@
+node_modules
+venv
+samples
+README.md
+.editorconfig
+.vscode
+assets
