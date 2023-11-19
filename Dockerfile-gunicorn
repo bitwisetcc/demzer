@@ -14,7 +14,7 @@ RUN npm run build
 RUN python manage.py collectstatic --no-input
 RUN chmod +x /app/docker_build_gunicorn.sh
 
-ENTRYPOINT ["/bin/bash" , "-c" , "cd /app && source /app/docker_build_gunicorn.sh && gunicorn backend.wsgi:application --bind 0.0.0.0:8000 --timeout 300 --workers 9 --limit-request-line 0 --access-logfile /var/log/gunicorn-access.log --error-logfile /var/log/gunicorn-error.log"]
+ENTRYPOINT ["/bin/bash" , "-c" , "cd /app && source /app/docker_build_gunicorn.sh && gunicorn backend.wsgi:application --bind 0.0.0.0:8000 --timeout 300 --workers 3 --limit-request-line 0 --access-logfile /var/log/gunicorn-access.log --error-logfile /var/log/gunicorn-error.log"]
 #ENTRYPOINT ["tail" , "-f", "/dev/null"]
 
 EXPOSE 8000
