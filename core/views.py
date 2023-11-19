@@ -367,9 +367,15 @@ def edit_profile(request: HttpRequest):
 
 def read_img(request: HttpRequest, container: str, title: str):
     try:
+      
         service_client = BlobServiceClient(
-            settings.STORAGE_BUCKET, DefaultAzureCredential()
+            account_url=settings.STORAGE_BUCKET,credential={"account_name": settings.AZURE_ACCOUNT_NAME, "account_key": settings.AZURE_ACCESS_KEY}
         )
+
+        #service_client = BlobServiceClient(
+        #    settings.STORAGE_BUCKET, DefaultAzureCredential(additionally_allowed_tenants=['*'])
+        #)
+        
         container_client = service_client.get_container_client(container)
         return HttpResponse(container_client.download_blob(title).readall())
 

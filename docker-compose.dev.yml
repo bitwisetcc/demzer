@@ -1,25 +1,13 @@
 version: '3.8'
 
 services:
-  node:
-    image: node:20
-    user: node
-    working_dir: /app
-    volumes:
-      - .:/app
-      - static:/app/static
-    command: npm run watch
-
   web:
-    env_file:
-      - web-variables.env
     build:
       context: .
       dockerfile: Dockerfile-gunicorn
-    command: gunicorn --bind 0.0.0.0:8000 backend.wsgi --workers=4
+    command: cd /app && source /app/docker_build_gunicorn.sh && gunicorn backend.wsgi:application --bind 0.0.0.0:8000 --timeout 300 --workers 9 --limit-request-line 0 --access-logfile /var/log/gunicorn-access.log --error-logfile /var/log/gunicorn-error.log
     volumes:
-      - static:/app/static # Static volume shared with both app and web services
-      - media:/app/media # Media volume shared with web service
+      - static:/app/static
     expose:
       - "8000"
     networks:
@@ -29,8 +17,7 @@ services:
     build: nginx
     restart: always
     volumes:
-      - static:/app/static # Static volume shared with both web and nginx services
-      - media:/app/media # Media volume shared with web service
+      - static:/app/static
     ports:
       - "80:80"
     depends_on:
@@ -43,5 +30,4 @@ networks:
     name: django-network
 
 volumes:
-  media:
   static:

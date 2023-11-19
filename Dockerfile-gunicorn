@@ -7,13 +7,16 @@ WORKDIR /app
 COPY . .
 
 RUN apk add --update --no-cache --virtual build-essential gcc libc-dev linux-headers nodejs npm mysql-dev bash
+RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 RUN npm i
 RUN npm run build
 RUN python manage.py collectstatic --no-input
-RUN chmod +x entrypoint.sh
+RUN chmod +x /app/docker_build_gunicorn.sh
 
-CMD /app/entrypoint.sh
-#CMD ["tail" , "-f", "/dev/null"]
+ENTRYPOINT ["/bin/bash" , "-c" , "cd /app && source /app/docker_build_gunicorn.sh && gunicorn backend.wsgi:application --bind 0.0.0.0:8000 --timeout 300 --workers 9 --limit-request-line 0 --access-logfile /var/log/gunicorn-access.log --error-logfile /var/log/gunicorn-error.log"]
+#ENTRYPOINT ["tail" , "-f", "/dev/null"]
 
 EXPOSE 8000
+
+

@@ -40,13 +40,16 @@ EMAIL_PATTERN = "{}.{}@etec.sp.gov.br"
 SECURITY_KEY = getenv("MASTER_KEY")
 
 STORAGE_BUCKET = getenv("STORAGE_URL")
+AZURE_ACCOUNT_NAME = getenv("AZURE_ACCOUNT_NAME")
+AZURE_ACCESS_KEY = getenv("AZURE_ACCESS_KEY")
+
 
 # MAYBE: add these as a course attribute
 LESSON_DURATION = 50 
 TURNS = {"M": "7:00", "E": "13:00", "N": "19:00"}
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-MEDIA_ROOT = os.path.join(BASE_DIR, 'user_media')
+MEDIA_ROOT = os.path.join(BASE_DIR, '.')
 
 SECRET_KEY = getenv("CSRF_KEY", "DEMZER-INSECURE-KEY")
 
@@ -80,7 +83,7 @@ DEBUG = True
 
 SECURE_SSL_REDIRECT = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -169,8 +172,8 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'staticfiles')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
