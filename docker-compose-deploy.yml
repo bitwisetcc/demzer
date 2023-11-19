@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   web:
-    build: walrus01/gunicorn:linux
+    image: walrus01/gunicorn:linux
     restart: always
     volumes:
       - static:/app/static
@@ -12,7 +12,7 @@ services:
       - django-network
 
   nginx:
-    build: nginx
+    image: walrus01/nginx:linux
     restart: always
     volumes:
       - static:/app/static
