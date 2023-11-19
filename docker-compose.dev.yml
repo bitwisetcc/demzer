@@ -1,22 +1,6 @@
 version: '3.8'
 
 services:
-  app:
-    build:
-      context: .
-    ports:
-      - "8080:8080"
-    volumes:
-      - .:/app
-      - static:/app/static
-    command: python manage.py runserver 0.0.0.0:8080
-    env_file:
-      - .env
-    environment:
-      - DEBUG=1
-    depends_on:
-      - node
-
   node:
     image: node:20
     user: node
@@ -27,9 +11,12 @@ services:
     command: npm run watch
 
   web:
+    env_file:
+      - web-variables.env
     build:
       context: .
-    command: gunicorn --bind 0.0.0.0:8000 gunicorn.wsgi --workers=4
+      dockerfile: Dockerfile-gunicorn
+    command: gunicorn --bind 0.0.0.0:8000 backend.wsgi --workers=4
     volumes:
       - static:/app/static # Static volume shared with both app and web services
       - media:/app/media # Media volume shared with web service

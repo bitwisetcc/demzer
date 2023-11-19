@@ -16,4 +16,4 @@ RUN chmod +x entrypoint.sh
 CMD /app/entrypoint.sh
 #CMD ["tail" , "-f", "/dev/null"]
 
-EXPOSE 8080
+EXPOSE 8000
