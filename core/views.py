@@ -7,7 +7,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.hashers import check_password
+from django.contrib.auth.hashers import check_password, make_password
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.http import (
@@ -49,18 +49,22 @@ def dashboard(request: HttpRequest):
             settings.WEEKDAYS[weekday], today.day, settings.MONTHS[today.month]
         )
 
-        programmings = Programming.objects.filter(
-            Q(group=None) | Q(group=request.user.profile.division),
-            classroom=request.user.profile.classroom,
-            day=weekday,
-        ).order_by("order")
-
         activities = Assessment.objects.filter(day__gt=today)
         if has_role(request.user, Student):
+            programmings = Programming.objects.filter(
+                Q(group=None) | Q(group=request.user.profile.division),
+                classroom=request.user.profile.classroom,
+                day=weekday,
+            ).order_by("order")
+
             activities = activities.filter(
                 classroom=request.user.profile.classroom
             )  # TODO: check division
         elif has_role(request.user, Teacher):
+            programmings = Programming.objects.filter(
+                day=weekday, teacher=request.user
+            ).order_by("order")
+
             activities = activities.filter(teacher=request.user)
 
         return render(
@@ -324,7 +328,7 @@ def perfil(request: HttpRequest):
     if request.method == "POST":
         if request.POST.get("password") == request.POST.get("confirm"):
             if check_password(request.POST.get("old"), request.user.password):
-                request.user.password = request.POST.get("password")
+                request.user.password = make_password(request.POST.get("password"))
                 request.user.save()
                 login(request, request.user)
                 messages.success(request, "Senha alterada com sucesso")
