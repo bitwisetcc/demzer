@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="{% static 'core/dist/css/main.css' %}" />
     <link rel="icon" type="image/png" href="{% static 'core/images/logo.png' %}" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+    <script defer src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
     {% block head %}{% endblock %}
     <script defer src="{% static 'core/dist/js/page.js' %}"></script>
   </head>
@@ -24,7 +25,6 @@
       {% endif %}
         {% block content %}{% endblock %}
       </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    </div>    
   </body>
 </html>
