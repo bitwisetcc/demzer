@@ -85,6 +85,8 @@ SECURE_SSL_REDIRECT = False
 
 ALLOWED_HOSTS = ['*']
 
+CSRF_TRUSTED_ORIGINS = ['https://demzeroficial.azurewebsites.net']
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
