@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="{% static 'core/dist/css/profile.css' %}" />
 <title>Perfil de {{ user.username.split.0 }}</title>
 {% endblock %} {% block content %}
-<main class="mb-10 px-8">
+<main class="p-8 mb-10">
   <h1 class="pb-6 text-4xl font-bold text-color-primary">Perfil</h1>
   <section class="mb-8 flex flex-col md:flex-row">
     <img
@@ -38,7 +38,7 @@
   </section>
   <article class="mb-2 grid gap-6 md:grid-cols-2">
     <section>
-      <h2 class="text-xl font-semibold text-color-secondary">
+      <h2 class="mb-2 text-xl font-semibold text-color-secondary">
         Informações Pessoais
       </h2>
       <ul class="info-card">
@@ -55,7 +55,7 @@
       </ul>
     </section>
     <section>
-      <h2 class="text-xl font-semibold text-color-secondary">Senha</h2>
+      <h2 class="mb-2 text-xl font-semibold text-color-secondary">Senha</h2>
       <form class="info-card" method="post" action="{% url 'profile' %}">
         {% csrf_token %}
         <div class="mb-2 gap-2 md:flex">
@@ -90,7 +90,7 @@
     </section>
   </article>
   <section>
-    <h2 class="text-xl font-semibold text-color-secondary">Endereço</h2>
+    <h2 class="mb-2 text-xl font-semibold text-color-secondary">Endereço</h2>
     <div class="info-card grid grid-cols-2">
       <ul>
         <li>

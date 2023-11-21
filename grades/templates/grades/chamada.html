@@ -1,4 +1,5 @@
 {% extends 'core/base.html' %} {% load static %} {% block head %}
+<link rel="stylesheet" href="{% static 'core/dist/css/turmas.css' %}" />
 <script defer>
   document.addEventListener("alpine:init", () => {
     Alpine.data("chamada", () => ({
@@ -40,38 +41,43 @@
 
   <ul class="flex gap-4">
     {% for c in classrooms %}
-    <button class="px-5 py-3" :class="classroom == '{{ c.pk }}' ? 'active' : 'alt'" @click="load('{{ c.pk }}')">{{ c }}</button>
+    <button
+      class="px-5 py-3"
+      :class="classroom == '{{ c.pk }}' ? 'active' : 'alt'"
+      @click="load('{{ c.pk }}')"
+    >
+      {{ c }}
+    </button>
     {% endfor %}
   </ul>
 
-  <div class="mt-3 flex w-full items-center gap-6">
-    <div class="mb-2 w-full text-center">
-      <label class="text-xl text-color-primary">Turma</label>
-      <select name="Turma" class="mt-2 w-full rounded-full text-center">
+  <header id="menu">
+    <div>
+      <label class="text-xl text-color-primary">Turma:</label>
+      <select name="Turma">
         <option>Todas</option>
         <option>A</option>
         <option>B</option>
       </select>
     </div>
-    <div class="mb-2 w-full text-center">
-      <label class="text-xl text-color-primary">Aula</label>
-      <select name="Aula" class="mt-2 w-full rounded-full text-center">
+    <div>
+      <label class="text-xl text-color-primary">Aula:</label>
+      <select name="Aula">
         <template x-for="s in programmings">
           <option x-text="s.subjectSlug"></option>
         </template>
       </select>
     </div>
-    <div class="mb-2 w-full text-center">
-      <label class="text-xl text-color-primary">Data</label>
+    <div>
+      <label class="text-xl text-color-primary">Data:</label>
       <input
         type="date"
-        class="mt-2 w-full rounded-full text-center"
         id="dataAtual"
         :value="new Date().toISOString().split('T')[0]"
       />
     </div>
-    <div class="mb-2 w-full text-center">
-      <label class="text-xl text-color-primary">Quantidade</label>
+    <div>
+      <label class="text-xl text-color-primary">Quantidade:</label>
       <select
         id="sl-qtd"
         class="mt-2 w-full rounded-full text-center"
@@ -82,7 +88,7 @@
         <option>3</option>
       </select>
     </div>
-  </div>
+  </header>
 
   <h1 class="mt-3">Chamada</h1>
 

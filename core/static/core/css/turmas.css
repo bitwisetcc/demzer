@@ -1,5 +1,5 @@
 #menu {
-  @apply mt-9 flex flex-col items-center gap-3 md:flex-row md:gap-12;
+  @apply mt-9 flex flex-col items-center gap-3 md:flex-row md:gap-10;
 }
 
 #menu > div {
@@ -12,7 +12,7 @@
 
 #menu select,
 #menu input {
-  @apply w-3/4 text-center md:w-full rounded-full;
+  @apply w-3/4 rounded-full text-center md:w-full;
 }
 
 select {
@@ -20,15 +20,16 @@ select {
 }
 
 #tabs button {
-  @apply pb-2 px-3 flex gap-1 border-b-2 text-color-primary focus:border-color-primary;
+  @apply flex gap-1 border-b-2 px-3 pb-2 text-color-primary focus:border-color-primary;
 }
 
-article section, article form {
-  @apply bg-color-bg-lighter rounded-2xl flex-1 p-8;
+article section,
+article form {
+  @apply flex-1 rounded-2xl bg-color-bg-lighter p-8;
 }
 
 #detail label {
-  @apply text-color-secondary text-xl;
+  @apply text-xl text-color-secondary;
 }
 
 #detail select {
@@ -37,4 +38,8 @@ article section, article form {
 
 #vision th {
   @apply py-2;
+}
+
+.field {
+  @apply flex flex-col gap-2 md:flex-row;
 }
