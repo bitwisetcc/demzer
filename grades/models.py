@@ -42,7 +42,7 @@ class Assessment(Model):
             "weight": self.weight,
             "content": self.content,
             "bimester": self.bimester,
-            "kind": self.kind,
+            "kind": self.get_kind_display(),
         }
 
     def weekday(self):

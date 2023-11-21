@@ -180,7 +180,10 @@ def provas(request: HttpRequest, classroom=0):
         "day__lte": end and UTC_date(end),
     }
 
-    context = {"tests": tests.filter(**{k: v for k, v in filters.items() if v}), "cls": classroom}
+    context = {
+        "tests": tests.filter(**{k: v for k, v in filters.items() if v}),
+        "cls": classroom,
+    }
 
     if has_role(request.user, Student):
         context["subjects"] = list(
@@ -198,6 +201,6 @@ def provas(request: HttpRequest, classroom=0):
 def delete_assessment(request: HttpRequest, cls: int):
     ass = Assessment.objects.get(pk=request.POST.get("pk"))
     ass.delete()
-    txt = "Prova" if ass.kind == 'T' else "Atividade"
+    txt = "Prova" if ass.kind == "T" else "Atividade"
     messages.success(request, "{} {} deletada com sucesso".format(txt, ass.title))
     return redirect("provas", cls)

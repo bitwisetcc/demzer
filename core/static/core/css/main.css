@@ -99,7 +99,7 @@ button[type="submit"],
 
 dialog,
 .dialog {
-  @apply no_scroll max-h-[80vh] overflow-x-clip overflow-y-scroll rounded-[1.75rem] bg-color-bg-lighter p-6 shadow-2xl backdrop:bg-gray-50;
+  @apply no_scroll max-w-[90vw] max-h-[80vh] overflow-x-clip overflow-y-scroll rounded-[1.75rem] bg-color-bg-lighter p-6 shadow-2xl backdrop:bg-gray-50;
 }
 
 .dialog-backdrop {

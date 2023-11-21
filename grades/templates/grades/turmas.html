@@ -16,6 +16,7 @@
 
       getClassroom(pk) {
         this.classroom = pk;
+        this.assessments = [];
         fetch(`{% url 'load_class' 0 %}`.replace("0", pk))
           .then((r) => r.json())
           .then((st) => {
@@ -68,7 +69,7 @@
         enctype="multipart/form-data"
       >
         {% csrf_token %}
-        <div class="flex items-center gap-2">
+        <div class="field">
           <label for="txt-title">Título:</label>
           <input
             required
@@ -80,8 +81,7 @@
             class="w-full"
           />
         </div>
-        <div class="flex items-center gap-2"></div>
-        <div class="flex items-center gap-2">
+        <div class="field">
           <label for="txt-desc">Descrição:</label>
           <textarea
             name="desc"
@@ -92,8 +92,8 @@
             class="w-full"
           ></textarea>
         </div>
-        <div class="mt-1 flex justify-between gap-2">
-          <div class="flex items-center gap-2">
+        <div class="field mt-1 justify-between">
+          <div class="field">
             <label for="dt-until">Até:</label>
             <input
               id="dt-until"
@@ -102,23 +102,23 @@
               :min="new Date().toISOString().split('T')[0]"
               :value="new Date().toISOString().split('T')[0]"
               name="date"
-              class="text-sm"
+              class="text-sm w-full"
             />
           </div>
 
-          <div class="flex items-center gap-2">
-            <label for="kind">Tipo:</label>
-            <select name="kind" id="sl-kind">
+          <div class="field">
+            <label for="sl-kind">Tipo:</label>
+            <select name="kind" id="sl-kind" class="w-full">
               <option value="A">Atividade</option>
               <option value="T">Prova</option>
             </select>
           </div>
 
-          <div class="flex items-center gap-2">
+          <div class="field">
             <label>Menção:</label>
             <select
               name="mention"
-              class="h-10 rounded-full pl-3 pr-8 text-center"
+              class="h-10 rounded-full pl-3 pr-8 text-center w-full"
             >
               <option>M1</option>
               <option>M2</option>
@@ -162,7 +162,7 @@
       </select>
     </div>
     <div>
-      <label for="">Aula:</label>
+      <label for="sl-subject">Aula:</label>
       <select name="subject" id="sl-subject" x-model="subject">
         {% for s in subjects %}
         <option value="{{ s.pk }}">{{ s }}</option>
@@ -221,7 +221,7 @@
   </nav>
 
   <article x-show.transition.in.opacity.duration.750ms="tab == 1">
-    <div class="flex gap-8">
+    <div class="flex flex-col gap-8 md:flex-row">
       <section class="overflow-y-scroll">
         <h2 class="mb-3 text-3xl text-color-secondary">Atribuir Notas</h2>
         <ul>
@@ -250,8 +250,8 @@
           </select>
         </div>
         <div class="mx-7 mb-5 flex items-center justify-between gap-2">
-          <label for="">Nota:</label>
-          <select name="value">
+          <label for="sl-value">Nota:</label>
+          <select id="sl-value" name="value">
             <option value="0">I</option>
             <option value="1">R</option>
             <option value="2">B</option>
@@ -357,7 +357,10 @@
       >
         <header class="flex justify-between px-6 py-4">
           <div>
-            <h2 class="font-semibold text-color-primary" x-text="a.title"></h2>
+            <h2
+              class="max-w-[90%] font-semibold text-color-primary"
+              x-text="a.title"
+            ></h2>
             <span class="text-color-secondary" x-text="a.day"></span>
           </div>
           <div class="relative">
@@ -378,7 +381,7 @@
                 />
               </svg>
             </button>
-            <button @click="options = !options" class="relative">
+            <!-- <button @click="options = !options" class="relative">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -402,16 +405,16 @@
             >
               <button class="hover:text-color-secondary">Editar</button>
               <button class="hover:text-color-secondary">Excluir</button>
-            </div>
+            </div> -->
           </div>
         </header>
         <div
-          class="flex origin-top gap-4 rounded-b-2xl bg-gray-200 p-5 transition-all"
+          class="origin-top gap-4 rounded-b-2xl bg-gray-200 p-5 transition-all md:flex"
           :class="details || 'scale-y-0 h-0 py-0'"
         >
           <div>
             <p>Bimestre: <span x-text="a.bimester"></span></p>
-            <p>Sobre: <span x-text="a.kind"></span></p>
+            <p>Tipo: <span x-text="a.kind"></span></p>
           </div>
           <p x-text="a.content"></p>
         </div>
