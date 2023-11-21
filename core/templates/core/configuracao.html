@@ -1,14 +1,10 @@
-{% extends 'core/base.html' %} {% load static %} {% load permission_tags %} {% block head %}
-<link rel="stylesheet" href="{% static 'core/dist/css/profile.css' %}" />
+{% extends 'core/base.html' %} {% block head %}
 <title>Configurações</title>
 {% endblock %} {% block content %}
-
-<h1 class="mb-11 px-8 text-4xl font-bold text-color-primary">Configurações</h1>
-<main class="flex justify-center">
-  <div
-    class="mt-[5%] flex h-96 w-96 items-center justify-center rounded-md bg-zinc-100 shadow-lg"
-  >
-    <div class="h-[90%] w-[90%]">
+<main class="justify-center p-10">
+  <h1 class="mb-10 text-4xl">Configurações</h1>
+  <div class="flex h-96 w-full rounded-lg bg-zinc-100 p-5 shadow-lg">
+    <div>
       <span class="info-lbl flex pb-1 text-lg">Mostrar foto?</span>
       <label class="relative mb-5 inline-flex cursor-pointer items-center">
         <input
