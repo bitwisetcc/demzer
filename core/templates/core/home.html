@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="{% static 'core/dist/css/dashboard.css' %}" />
 <title>Home</title>
 {% endblock %} {% block content %}
-<main class="m-8 mb-10 px-5">
+<main class="mx-8 mb-10 px-5">
   <h1 class="mb-4 text-xl font-bold text-color-primary">{{ day }}</h1>
   {% if user|has_role:'student' %}
   <h2 class="text-xl font-bold text-color-primary">
@@ -11,7 +11,7 @@
   </h2>
   {% endif %}
 
-  <div class="mt-8 flex justify-center md:mt-16">
+  <div class="mt-4 flex justify-center">
     <div class="lg:h-96 lg:w-96 z-0 flex h-40 w-96 items-center justify-center">
       <div class="swiper mySwiper carousel1">
         <div class="swiper-wrapper">
@@ -53,12 +53,12 @@
     />
   </div>
 
-  <h1 class="mb-10 mt-6 text-center text-[40px] font-bold md:text-left">
+  <h1 class="mb-10 text-center text-[40px] font-bold md:text-left">
     Semana
   </h1>
 
   <div
-    class="my-6 grid place-items-center gap-5 md:gap-10 md:mt-8"
+    class="my-2 grid place-items-center gap-5 md:gap-10"
     :class="open ? 'md:grid-cols-2 xl:grid-cols-3' : 'md:grid-cols-2 xl:grid-cols-4'"
   >
     {% for a in activities %}
