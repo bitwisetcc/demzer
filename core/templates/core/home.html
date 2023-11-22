@@ -58,7 +58,8 @@
   </h1>
 
   <div
-    class="mb-6 mt-6 grid md:grid-cols-3 place-items-center gap-5 md:gap-10 md:mt-8"
+    class="my-6 grid place-items-center gap-5 md:gap-10 md:mt-8"
+    :class="open ? 'md:grid-cols-2 xl:grid-cols-3' : 'md:grid-cols-2 xl:grid-cols-4'"
   >
     {% for a in activities %}
     <div

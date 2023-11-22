@@ -152,7 +152,10 @@
     <header class="flex justify-between px-6 py-4">
       <div>
         <h2 class="font-semibold text-color-primary">{{ t.title }} - {{ t.subject.name }}</h2>
-        <span class="text-color-secondary">{{ t.day }}</span>
+        <span class="text-color-secondary">
+          {{ t.day }}
+          {% if t.past %} - Concluído {% endif %}
+        </span>
       </div>
       <div class="relative">
         <button @click="details = !details">
