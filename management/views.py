@@ -324,19 +324,17 @@ def schedules(request: HttpRequest, classroom_id: int):
 
     if has_role(request.user, Teacher):
         # Teachers
-        lessons_qtd = 12
+        lessons_qtd = 18
         breaks = [(3, 20), (6, 40), (9, 20)]
 
         programmings = Programming.objects.filter(teacher=request.user)
 
         for p in programmings:
-            if p.classroom.course.time == Course.Timing.MORNING:
-                p.order += 6
+            p.order += {"M": 0, "E": 6, "N": 12}[p.classroom.course.time]
 
         start = dt.strptime(settings.TURNS[Course.Timing.MORNING], "%H:%M")
         classroom = Classroom.objects.first()
-        # TODO: mostrar turma, sala? e divisão? nos detalhes
-        # TODO: consertar horário pra adaptar entre manhã e tarde
+        # TODO: mostrar sala? e divisão? nos detalhes
     else:
         # Students and Admins
         lessons_qtd = 6

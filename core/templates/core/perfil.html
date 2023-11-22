@@ -29,7 +29,7 @@
         </li>
         {% if user.profile.division %}
         <li>
-          <span class="info-lbl">Divisão:</span> {{ user.profile.division }}
+          <span class="info-lbl" x-text="'Divisão: ' + ['A','B'][{{ user.profile.division }} - 1]"></span>
         </li>
         {% endif %}
         {% endif %}
