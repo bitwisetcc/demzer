@@ -1,14 +1,39 @@
 # DEMZER - um sistema acadêmico geral
 
-## Como rodar o programa
+## Abrindo o servidor localmente
 
-Copie o arquivo `.env` do Discord, no canal de recursos para a raiz do projeto.
-No terminal, execute `npm i` e `pip install -r requirements.txt`.
-Ainda no terminal rode `az login` e depois `npm run watch`. Abra outro terminal e rode `python manage.py runserver`.
+Copie o arquivo `.env`, disponível nos canais de comunicação, para a raiz do projeto.
 
-No seu navegador, visite `http://localhost:8000` e comece a testar o app!
+### Instale as dependências do projeto:
+
+```sh
+pip install -r requirements.txt
+npm i
+```
+
+### Autentique os serviços de nuvem:
+
+```sh
+az login
+```
+
+### Inicie os servidores
+
+```sh
+npm run watch
+python manage.py runserver
+```
+
+No seu navegador, visite `http://localhost:8000` e comece a testar.
+
+> [!TIP]
+> Ao abrir o projeto no VSCode, instale as extensões sugeridas pelo projeto. Isso ajuda a padronizar o estilo de código e agilizam a sua produtividade com as tecnologias utilizadas.
+
+## Modelagem de dados
 
 ![diagrama conceitual da base de dados](assets/db-diagram.png)
+
+## Tela de exemplo
 
 ![tela de login](assets/login-screenshot.png)
 
@@ -18,9 +43,7 @@ O site possui uma área secreta em `/secret`, onde são criadas as contas de adm
 
 ---
 
-Uma **última dica** é que, quando você abrir o projeto no VSCode, deverá aparecer uma mensagem no canto da tela, sugerindo extensões para o editor. Essas extensões forçam um estilo de código unificado no projeto e agilizam a sua produtividade usando algumas das tecnologias instaladas.
-
-## Tutoriais externos
+## Recursos externos
 
 - Adicionando views no Django: [https://docs.djangoproject.com/en/4.2/intro/tutorial01](https://docs.djangoproject.com/en/4.2/intro/tutorial01/#write-your-first-view)
 - Usando templates no Django: [https://docs.djangoproject.com/en/4.2/ref/templates/language](https://docs.djangoproject.com/en/4.2/ref/templates/language/)
