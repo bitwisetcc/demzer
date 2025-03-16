@@ -138,11 +138,12 @@ WSGI_APPLICATION = "backend.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": getenv("DB_NAME", "dev_demzer"),
-        "USER": getenv("DB_USER", "root"),
-        "PASSWORD": getenv("DB_PASSWORD", "root"),
-        "HOST": getenv("DB_HOST", "localhost"),
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+        #"NAME": getenv("DB_NAME", "dev_demzer"),
+        #"USER": getenv("DB_USER", "root"),
+        #"PASSWORD": getenv("DB_PASSWORD", "root"),
+        #"HOST": getenv("DB_HOST", "localhost"),
     }
 }
 
