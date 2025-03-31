@@ -1,8 +1,8 @@
 import re
 from datetime import date, datetime
 
-from azure.identity import DefaultAzureCredential
-from azure.storage.blob import BlobServiceClient
+#from azure.identity import DefaultAzureCredential
+#from azure.storage.blob import BlobServiceClient
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -372,7 +372,7 @@ def edit_profile(request: HttpRequest):
 def read_img(request: HttpRequest, container: str, title: str):
     try:
         service_client = BlobServiceClient(
-            settings.STORAGE_BUCKET, DefaultAzureCredential()
+            #settings.STORAGE_BUCKET, DefaultAzureCredential()
         )
         container_client = service_client.get_container_client(container)
         return HttpResponse(container_client.download_blob(title).readall())

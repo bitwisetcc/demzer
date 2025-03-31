@@ -2,8 +2,8 @@ import os
 from datetime import datetime
 from typing import Any
 
-from azure.identity import DefaultAzureCredential
-from azure.storage.blob import BlobServiceClient
+#from azure.identity import DefaultAzureCredential
+#from azure.storage.blob import BlobServiceClient
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.http import HttpRequest
@@ -28,7 +28,7 @@ def email_address(username: str) -> str:
 def upload_img(file: Any, title: str, container="pictures"):
     # ext = file.name.split(".")[-1]
     service_client = BlobServiceClient(
-        settings.STORAGE_BUCKET, DefaultAzureCredential()
+        #settings.STORAGE_BUCKET, DefaultAzureCredential()
     )
     blob_client = service_client.get_blob_client(container, title)
     blob_client.upload_blob(file.read())
