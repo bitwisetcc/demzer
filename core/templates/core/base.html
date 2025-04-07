@@ -4,12 +4,28 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="{% static 'core/dist/css/main.css' %}" />
+    <link rel="stylesheet" href="{% static 'core/css/main.css' %}" />
     <link rel="icon" type="image/png" href="{% static 'core/images/logo.png' %}" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+
+    <!-- Alpine.js e plugin de máscara -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/mask@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Tippy.js -->
+    <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/themes/light.css" />
+    <script defer src="https://unpkg.com/@popperjs/core@2"></script>
+    <script defer src="https://unpkg.com/tippy.js@6"></script>
+
+    <!-- Script para inicializar os tooltips do Tippy -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        tippy('[data-tippy-content]', { placement: "right" });
+      });
+    </script>
+
     {% block head %}{% endblock %}
-    <script defer src="{% static 'core/dist/js/page.js' %}"></script>
   </head>
   <body class="relative flex h-screen bg-color-bg" x-data="{ open: false }">
     {% include "core/messages.html" %}
@@ -28,3 +44,4 @@
     </div>    
   </body>
 </html>
+

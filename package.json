@@ -22,7 +22,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "parcel watch"
+    "watch": "parcel watch",
+    "build": "tailwindcss -i ./core/static/core/css/main.css -o ./core/static/core/css/main.css --minify"
   },
   "keywords": [],
   "author": "",
