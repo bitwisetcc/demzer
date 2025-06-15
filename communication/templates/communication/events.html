@@ -136,62 +136,85 @@
   </form>
 
   <form method="get" action="{% url 'eventos' %}">
-    <div x-show="filterDialog" class="dialog-backdrop">
-      <div class="dialog">
-        <header
-          class="mt-4 flex flex-row justify-between px-5 text-3xl font-bold"
+  <div
+    x-show="filterDialog"
+    class="dialog-backdrop fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+  >
+    <div
+      class="dialog bg-white rounded-2xl w-11/12 max-w-md p-5 mx-auto
+             shadow-lg
+             md:w-3/4 md:max-w-lg"
+      @click.away="filterDialog = false"
+    >
+      <header class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-bold text-color-primary">Filtrar Eventos</h2>
+        <button
+          @click.prevent="filterDialog = false"
+          class="text-3xl font-bold text-color-primary"
+          aria-label="Fechar filtro"
         >
-          <h2>Filtrar Eventos</h2>
-          <button
-            @click.prevent="filterDialog = false"
-            class="text-3xl font-bold text-color-primary"
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-6 w-6"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="h-6 w-6"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </header>
+      <section class="flex flex-col gap-4">
+        <input
+          type="search"
+          name="title"
+          placeholder="Buscar por título"
+          class="w-full rounded-lg border border-color-primary bg-gray-50 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-color-primary"
+          value="{{ request.GET.title|default:'' }}"
+        />
+
+        <div class="flex flex-col gap-4 md:flex-row md:gap-6">
+          <label class="flex flex-col text-gray-700 font-medium text-lg w-full">
+            De:
+            <input
+              type="date"
+              name="start-date"
+              value="{{ request.GET.start_date|default:'' }}"
+              class="rounded-3xl border border-color-primary px-3 py-2 focus:outline-none focus:ring-2 focus:ring-color-primary"
+            />
+          </label>
+
+          <label class="flex flex-col text-gray-700 font-medium text-lg w-full">
+            Até:
+            <input
+              type="date"
+              name="end-date"
+              value="{{ request.GET.end_date|default:'' }}"
+              class="rounded-3xl border border-color-primary px-3 py-2 focus:outline-none focus:ring-2 focus:ring-color-primary"
+            />
+          </label>
+        </div>
+
+        <div class="flex justify-center space-x-5 pt-4">
+          <a href="{% url 'eventos' %}" class="alt underline text-color-primary hover:text-color-primary-dark">
+            Limpar
+          </a>
+          <button
+            type="submit"
+            class="rounded-lg bg-color-primary px-6 py-2 text-white hover:bg-color-primary-dark transition"
+          >
+            Aplicar
           </button>
-        </header>
-        <section class="flex flex-col gap-4 p-5">
-          <input
-            type="search"
-            name="title"
-            class="mx-auto w-full rounded-lg border border-color-primary bg-gray-50 text-sm text-gray-900"
-          />
-          <div class="flex flex-row justify-between gap-2 text-lg font-normal">
-            <label>
-              De:
-              <input
-                type="date"
-                name="start-date"
-                class="rounded-3xl border-color-primary"
-            /></label>
-            <label>
-              Até:
-              <input
-                type="date"
-                name="end-date"
-                class="rounded-3xl border-color-primary"
-            /></label>
-          </div>
-          <div class="flex flex-row justify-center space-x-5 pt-4 text-lg">
-            <a href="{% url 'eventos' %}" class="alt">Limpar</a>
-            <button type="submit">Aplicar</button>
-          </div>
-        </section>
-      </div>
+        </div>
+      </section>
     </div>
-  </form>
+  </div>
+</form>
 
   <header class="flex w-full justify-between text-color-primary">
     <h1>Eventos</h1>

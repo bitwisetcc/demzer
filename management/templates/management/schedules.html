@@ -1,6 +1,76 @@
 {% extends 'core/base.html' %} {% load permission_tags %} {% load static %} {% block head %}
 <title>Horários</title>
 <link rel="stylesheet" href="{% static 'core/dist/css/schedule.css' %}" />
+<style>
+  
+  @media (max-width: 640px) {
+    main.p-10 {
+      padding: 1rem !important;
+    }
+
+    /* Deixa o article flex-col sempre em telas pequenas */
+    article.flex.flex-col.gap-5.lg\:grid.md\:gap-20 {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 1.5rem !important;
+    }
+
+    /* Tabela com overflow-x scroll e largura 100% */
+    table.table-fixed {
+      width: 100% !important;
+      min-width: 600px; /* Mantém uma largura mínima para a tabela */
+      overflow-x: auto;
+      display: block;
+    }
+
+    /* Ajusta espaçamento e fonte das células para caber melhor */
+    table.table-fixed th,
+    table.table-fixed td {
+      padding: 0.25rem 0.5rem !important;
+      font-size: 0.8rem !important;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    /* Célula do horário com largura menor */
+    table.table-fixed td:first-child {
+      width: 4rem !important;
+      font-size: 0.75rem !important;
+      padding-left: 0.5rem !important;
+      text-align: center;
+    }
+
+    /* Formulário (seção de editar aula) abaixo da tabela */
+    section.rounded-xl.bg-zinc-300.p-5 {
+      width: 100% !important;
+      padding: 1rem !important;
+    }
+
+    /* Inputs e selects largura 100% */
+    section.flex.flex-col.gap-3.rounded-xl.bg-zinc-200.p-4 select,
+    section.flex.flex-col.gap-3.rounded-xl.bg-zinc-200.p-4 input[type="text"],
+    section.flex.gap-2.p-4 > div > input[type="text"] {
+      width: 100% !important;
+      font-size: 0.9rem !important;
+    }
+
+    /* Labels com margem menor */
+    label {
+      margin-bottom: 0.25rem !important;
+      display: block;
+      font-size: 0.85rem !important;
+    }
+
+    /* Botão mais largo e centralizado */
+    button[type="submit"] {
+      width: 100% !important;
+      padding: 0.5rem !important;
+      font-size: 1rem !important;
+      margin-top: 1rem !important;
+    }
+  }
+</style>
+
 <script defer>
   // To whoever may optimize this in the future:
   // Remember to go outside and get some fresh air.
