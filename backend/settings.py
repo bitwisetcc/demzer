@@ -79,7 +79,7 @@ DEBUG = True
 
 SECURE_SSL_REDIRECT = False
 
-ALLOWED_HOSTS = ['54.84.169.255']
+ALLOWED_HOSTS = ['*']
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",

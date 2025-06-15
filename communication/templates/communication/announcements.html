@@ -2,10 +2,60 @@
 <style>
   .feed {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 300px);
-    justify-content: space-between;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
   }
+
+  @media (max-width: 400px) {
+  /* Ajusta a largura da janela do filtro para caber em telas pequenas */
+  .dialog {
+    width: 90vw !important;
+    max-width: 350px !important;
+    padding: 1rem !important;
+    max-height: 90vh;
+    overflow-y: auto;
+    font-size: 0.9rem;
+  }
+
+  /* Diminui espaçamento interno */
+  .dialog section {
+    padding: 0.5rem !important;
+  }
+
+  /* Campos de input mais estreitos */
+  .dialog input[type="search"],
+  .dialog input[type="date"],
+  .dialog select {
+    font-size: 0.85rem;
+    padding: 0.3rem 0.5rem;
+  }
+
+  /* Botões e links menores */
+  .dialog button,
+  .dialog a {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  /* Ajusta títulos e labels para fontes menores */
+  .dialog header h2,
+  .dialog label {
+    font-size: 1rem;
+  }
+  /* Container dos inputs de data */
+  .dialog section > div.flex.flex-row.justify-between.gap-2 {
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+  }
+
+  /* Inputs de data ocupam 100% da largura disponível */
+  .dialog section > div.flex.flex-row.justify-between.gap-2 input[type="date"] {
+    width: 100% !important;
+  }
+}
+
 </style>
+
 <script defer>
   document.addEventListener("alpine:init", () => {
     Alpine.data("post", () => ({

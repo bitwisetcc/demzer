@@ -1,6 +1,58 @@
 {% extends 'core/base.html' %} {% load static %} {% load demzer_tags %} {% block head %}
 <title>Boletim</title>
 <link rel="stylesheet" href="{% static 'core/dist/css/boletim.css' %}" />
+<style>
+  /* Ajustes para telas pequenas até 400px de largura */
+  @media (max-width: 400px) {
+    main {
+      padding-left: 1rem !important;
+      padding-right: 1rem !important;
+      padding-bottom: 2.5rem !important;
+    }
+
+    h1, h2 {
+      font-size: 1.5rem !important;
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+      white-space: normal !important;
+    }
+
+    label.ml-12 {
+      margin-left: 0 !important;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    select {
+      width: 100%;
+      font-size: 0.9rem;
+    }
+
+    /* Tabela: scroll horizontal já tem, mas vamos garantir que cabe no container */
+    .main-table {
+      min-width: 700px; /* mantem largura mínima da tabela para não quebrar as colunas */
+      width: 100%;
+    }
+
+    /* Tornar os cabeçalhos e células da tabela menores */
+    .main-table th, .main-table td {
+      padding: 0.3rem 0.5rem;
+      font-size: 0.75rem;
+      white-space: nowrap; /* evita quebra no meio do texto */
+    }
+
+    /* Boxes da seção Total e Ficha de desempenho */
+    section.box.grid {
+      grid-template-columns: 1fr !important;
+      padding: 1rem !important;
+    }
+
+    section.box.grid > div {
+      text-align: center;
+    }
+  }
+</style>
+
 {% endblock %} {% block content %}
 <main class="px-8 pb-10">
   <h1 class="my-8 ml-12 text-3xl font-semibold text-color-primary">Boletim</h1>
