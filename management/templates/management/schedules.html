@@ -119,7 +119,7 @@
         <tr>
           <th></th>
           {% for day in days %}
-          <th class="text-yellow-900">{{ day.1 }}</th>
+          <th class="text-yellow-900 p-1 w-[80px]">{{ day.1 }}</th>
           {% endfor %}
         </tr>
       </thead>
@@ -127,7 +127,7 @@
         {% for t in time_table %}
         <tr>
           <td
-            class="mr-10 rounded-xl bg-color-primary-dimm text-base text-white"
+            class="mr-10 rounded-xl bg-color-primary-dimm text-base text-white w-[80px] h-[28px]"
           >
             {{ t }}
           </td>
