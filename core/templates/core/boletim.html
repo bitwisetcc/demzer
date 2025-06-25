@@ -1,89 +1,45 @@
-{% extends 'core/base.html' %} {% load static %} {% load demzer_tags %} {% block head %}
-<title>Boletim</title>
-<link rel="stylesheet" href="{% static 'core/dist/css/boletim.css' %}" />
-<style>
-  /* Ajustes para telas pequenas até 400px de largura */
-  @media (max-width: 400px) {
-    main {
-      padding-left: 1rem !important;
-      padding-right: 1rem !important;
-      padding-bottom: 2.5rem !important;
-    }
+{% extends 'core/base.html' %}
+{% load static %}
+{% load demzer_tags %}
+{% block head %}
+  <title>Boletim</title>
+  <link rel="stylesheet" href="{% static 'core/dist/css/boletim.css' %}" />
+{% endblock %}
 
-    h1, h2 {
-      font-size: 1.5rem !important;
-      margin-left: 0 !important;
-      margin-right: 0 !important;
-      white-space: normal !important;
-    }
+{% block content %}
+<main class="px-4 sm:px-8 pb-10 w-full">
+  <h1 class="my-6 sm:my-8 text-2xl sm:text-3xl font-semibold text-color-primary">Boletim</h1>
 
-    label.ml-12 {
-      margin-left: 0 !important;
-      display: block;
-      margin-bottom: 0.5rem;
-    }
+  <div class="flex flex-col sm:flex-row gap-4 sm:gap-12 ml-0 sm:ml-12 text-color-primary">
+    <label>
+      Curso:
+      <select class="text-zinc-500">
+        <option>{{ user.profile.classroom.course.name }}</option>
+      </select>
+    </label>
 
-    select {
-      width: 100%;
-      font-size: 0.9rem;
-    }
+    <label>
+      Ano/Módulo:
+      <select class="text-zinc-500">
+        <option>1º Ano</option>
+        <option>2º Ano</option>
+        <option>3º Ano</option>
+      </select>
+    </label>
+  </div>
 
-    /* Tabela: scroll horizontal já tem, mas vamos garantir que cabe no container */
-    .main-table {
-      min-width: 700px; /* mantem largura mínima da tabela para não quebrar as colunas */
-      width: 100%;
-    }
-
-    /* Tornar os cabeçalhos e células da tabela menores */
-    .main-table th, .main-table td {
-      padding: 0.3rem 0.5rem;
-      font-size: 0.75rem;
-      white-space: nowrap; /* evita quebra no meio do texto */
-    }
-
-    /* Boxes da seção Total e Ficha de desempenho */
-    section.box.grid {
-      grid-template-columns: 1fr !important;
-      padding: 1rem !important;
-    }
-
-    section.box.grid > div {
-      text-align: center;
-    }
-  }
-</style>
-
-{% endblock %} {% block content %}
-<main class="px-8 pb-10">
-  <h1 class="my-8 ml-12 text-3xl font-semibold text-color-primary">Boletim</h1>
-  <label class="ml-12 text-color-primary">
-    Curso:
-    <select class="text-zinc-500">
-      <option>{{ user.profile.classroom.course.name }}</option>
-    </select>
-  </label>
-  <label class="ml-12 text-color-primary">
-    Ano/Módulo:
-    <select class="text-zinc-500">
-      <option>1º Ano</option>
-      <option>2º Ano</option>
-      <option>3º Ano</option>
-    </select>
-  </label>
-  <section
-    class="box justify-left flex w-full overflow-x-scroll md:justify-center md:overflow-x-hidden"
-  >
-    <table class="main-table border-separate border-spacing-3 px-10">
+  <section class="box w-full overflow-x-auto mt-6">
+    <table class="main-table border-separate border-spacing-2 min-w-[800px] w-full px-4">
       <thead>
-        <tr>
-          <th><!-- empty --></th>
+        <tr class="text-sm sm:text-base">
+          <th></th>
           <th>1 ºBim</th>
           <th>2 ºBim</th>
           <th>3 ºBim</th>
           <th>4 ºBim</th>
           <th>Final</th>
           <th>Conselho</th>
-          <th><!-- empty --></th>
+          <th></th>
           <th>Aulas</th>
           <th>Faltas</th>
           <th>Situação</th>
@@ -91,7 +47,7 @@
       </thead>
       <tbody>
         {% for s in subjects %}
-        <tr>
+        <tr class="text-sm sm:text-base">
           <td data-tippy-content="{{ s.name }}">{{ s }}</td>
           <td>{{ mentions|getsubj:s.pk|getbimester:1 }}</td>
           <td>{{ mentions|getsubj:s.pk|getbimester:2 }}</td>
@@ -99,7 +55,7 @@
           <td>{{ mentions|getsubj:s.pk|getbimester:4 }}</td>
           <td></td>
           <td></td>
-          <td><!-- empty --></td>
+          <td></td>
           <td></td>
           <td></td>
           <td></td>
@@ -109,55 +65,54 @@
     </table>
   </section>
 
-  <h2 class="text-3xl font-semibold text-color-primary">Total</h2>
-  <section
-    class="box lg:w-max lg:grid-cols-4 grid grid-cols-1 gap-6 p-4 px-5 py-3 text-center sm:grid-cols-2"
-  >
-    <div class="flex flex-col gap-3">
+  <h2 class="text-2xl sm:text-3xl font-semibold text-color-primary mt-10">Total</h2>
+  <section class="box grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4 text-center w-full">
+    <div class="flex flex-col gap-2">
       <span class="info bg-color-primary-dimm">Aulas Dadas</span>
       <span class="info bg-color-grey">222</span>
     </div>
-    <div class="flex flex-col gap-3">
+    <div class="flex flex-col gap-2">
       <span class="info bg-color-primary-dimm">Faltas</span>
       <span class="info bg-color-grey">222</span>
     </div>
-    <div class="flex flex-col gap-3">
+    <div class="flex flex-col gap-2">
       <span class="info bg-color-primary-dimm">Frequência</span>
       <span class="info bg-color-grey">222</span>
     </div>
-    <div class="flex flex-col gap-3">
+    <div class="flex flex-col gap-2">
       <span class="info bg-color-primary-dimm">Faltas Permitidas</span>
       <span class="info bg-color-grey">222</span>
     </div>
   </section>
 
-  <h2 class="truncate text-3xl font-semibold text-color-primary">
+  <h2 class="text-2xl sm:text-3xl font-semibold text-color-primary mt-10 mb-4">
     Ficha de Desempenho - Sala de Aula
   </h2>
-  <section
-    class="box lg:w-max lg:grid-cols-4 grid grid-cols-1 gap-6 overflow-x-scroll p-4 px-5 py-3 text-center md:overflow-hidden sm:grid-cols-4"
-  >
-    <div
-      class="col-span-4 flex h-10 flex-row items-center justify-center rounded-3xl bg-color-secondary font-semibold"
-    >
+  <section class="box w-full p-4 text-center space-y-4">
+    <div class="flex h-10 items-center justify-center rounded-3xl bg-color-secondary font-semibold text-sm md:text-base lg:text-2xl">
       <span>Ficha de Desempenho - Sala de Aula</span>
     </div>
-    <div class="flex flex-col gap-3">
-      <span class="info bg-color-primary-dimm text-white">Instrumento</span>
-      <span class="info bg-color-grey">Questionário em grupo</span>
-    </div>
-    <div class="flex flex-col gap-3">
-      <span class="info bg-color-primary-dimm text-white">Datas</span>
-      <span class="info bg-color-grey">21/11/2023</span>
-    </div>
-    <div class="flex flex-col gap-3">
-      <span class="info bg-color-primary-dimm text-white">Menção</span>
-      <span class="info bg-color-grey">B</span>
-    </div>
-    <div class="flex flex-col gap-3">
-      <span class="info bg-color-primary-dimm text-white">Observação</span>
-      <span class="info bg-color-grey">-</span>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="flex flex-col gap-3">
+        <span class="info bg-color-primary-dimm text-white">Instrumento</span>
+        <span class="info bg-color-grey">Questionário em grupo</span>
+      </div>
+      <div class="flex flex-col gap-3">
+        <span class="info bg-color-primary-dimm text-white">Datas</span>
+        <span class="info bg-color-grey">21/11/2023</span>
+      </div>
+      <div class="flex flex-col gap-3">
+        <span class="info bg-color-primary-dimm text-white">Menção</span>
+        <span class="info bg-color-grey">B</span>
+      </div>
+      <div class="flex flex-col gap-3">
+        <span class="info bg-color-primary-dimm text-white">Observação</span>
+        <span class="info bg-color-grey">-</span>
+      </div>
     </div>
   </section>
+
+
 </main>
 {% endblock %}

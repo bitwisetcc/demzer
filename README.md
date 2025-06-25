@@ -11,12 +11,6 @@ pip install -r requirements.txt
 npm i
 ```
 
-### Autentique os serviços de nuvem:
-
-```sh
-az login
-```
-
 ### Inicie os servidores
 
 ```sh
