@@ -75,15 +75,15 @@
   >
     <table class="main-table border-separate border-spacing-3 px-10">
       <thead>
-        <tr>
-          <th><!-- empty --></th>
+        <tr class="text-sm sm:text-base">
+          <th></th>
           <th>1 ºBim</th>
           <th>2 ºBim</th>
           <th>3 ºBim</th>
           <th>4 ºBim</th>
           <th>Final</th>
           <th>Conselho</th>
-          <th><!-- empty --></th>
+          <th></th>
           <th>Aulas</th>
           <th>Faltas</th>
           <th>Situação</th>
@@ -91,7 +91,7 @@
       </thead>
       <tbody>
         {% for s in subjects %}
-        <tr>
+        <tr class="text-sm sm:text-base">
           <td data-tippy-content="{{ s.name }}">{{ s }}</td>
           <td>{{ mentions|getsubj:s.pk|getbimester:1 }}</td>
           <td>{{ mentions|getsubj:s.pk|getbimester:2 }}</td>
@@ -99,7 +99,7 @@
           <td>{{ mentions|getsubj:s.pk|getbimester:4 }}</td>
           <td></td>
           <td></td>
-          <td><!-- empty --></td>
+          <td></td>
           <td></td>
           <td></td>
           <td></td>
@@ -109,55 +109,54 @@
     </table>
   </section>
 
-  <h2 class="text-3xl font-semibold text-color-primary">Total</h2>
-  <section
-    class="box lg:w-max lg:grid-cols-4 grid grid-cols-1 gap-6 p-4 px-5 py-3 text-center sm:grid-cols-2"
-  >
-    <div class="flex flex-col gap-3">
+  <h2 class="text-2xl sm:text-3xl font-semibold text-color-primary mt-10">Total</h2>
+  <section class="box grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4 text-center w-full">
+    <div class="flex flex-col gap-2">
       <span class="info bg-color-primary-dimm">Aulas Dadas</span>
       <span class="info bg-color-grey">222</span>
     </div>
-    <div class="flex flex-col gap-3">
+    <div class="flex flex-col gap-2">
       <span class="info bg-color-primary-dimm">Faltas</span>
       <span class="info bg-color-grey">222</span>
     </div>
-    <div class="flex flex-col gap-3">
+    <div class="flex flex-col gap-2">
       <span class="info bg-color-primary-dimm">Frequência</span>
       <span class="info bg-color-grey">222</span>
     </div>
-    <div class="flex flex-col gap-3">
+    <div class="flex flex-col gap-2">
       <span class="info bg-color-primary-dimm">Faltas Permitidas</span>
       <span class="info bg-color-grey">222</span>
     </div>
   </section>
 
-  <h2 class="truncate text-3xl font-semibold text-color-primary">
+  <h2 class="text-2xl sm:text-3xl font-semibold text-color-primary mt-10 mb-4">
     Ficha de Desempenho - Sala de Aula
   </h2>
-  <section
-    class="box lg:w-max lg:grid-cols-4 grid grid-cols-1 gap-6 overflow-x-scroll p-4 px-5 py-3 text-center md:overflow-hidden sm:grid-cols-4"
-  >
-    <div
-      class="col-span-4 flex h-10 flex-row items-center justify-center rounded-3xl bg-color-secondary font-semibold"
-    >
+  <section class="box w-full p-4 text-center space-y-4">
+    <div class="flex h-10 items-center justify-center rounded-3xl bg-color-secondary font-semibold text-sm md:text-base lg:text-2xl">
       <span>Ficha de Desempenho - Sala de Aula</span>
     </div>
-    <div class="flex flex-col gap-3">
-      <span class="info bg-color-primary-dimm text-white">Instrumento</span>
-      <span class="info bg-color-grey">Questionário em grupo</span>
-    </div>
-    <div class="flex flex-col gap-3">
-      <span class="info bg-color-primary-dimm text-white">Datas</span>
-      <span class="info bg-color-grey">21/11/2023</span>
-    </div>
-    <div class="flex flex-col gap-3">
-      <span class="info bg-color-primary-dimm text-white">Menção</span>
-      <span class="info bg-color-grey">B</span>
-    </div>
-    <div class="flex flex-col gap-3">
-      <span class="info bg-color-primary-dimm text-white">Observação</span>
-      <span class="info bg-color-grey">-</span>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="flex flex-col gap-3">
+        <span class="info bg-color-primary-dimm text-white">Instrumento</span>
+        <span class="info bg-color-grey">Questionário em grupo</span>
+      </div>
+      <div class="flex flex-col gap-3">
+        <span class="info bg-color-primary-dimm text-white">Datas</span>
+        <span class="info bg-color-grey">21/11/2023</span>
+      </div>
+      <div class="flex flex-col gap-3">
+        <span class="info bg-color-primary-dimm text-white">Menção</span>
+        <span class="info bg-color-grey">B</span>
+      </div>
+      <div class="flex flex-col gap-3">
+        <span class="info bg-color-primary-dimm text-white">Observação</span>
+        <span class="info bg-color-grey">-</span>
+      </div>
     </div>
   </section>
+
+
 </main>
 {% endblock %}
