@@ -1,0 +1,7 @@
+form > section > article > * {
+  @apply mb-2 last:mb-0;
+}
+
+form section article {
+  @apply border border-slate-300 bg-gray-200 px-11 py-7;
+}

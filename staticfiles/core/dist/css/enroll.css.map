@@ -1,0 +1,1 @@
+{"mappings":"AAAA;;;;AAKA;;;;AAKA","sources":["core/static/core/css/enroll.css"],"sourcesContent":["form > section > article > * {\n  @apply mb-2 last:mb-0;\n}\n\nform section article {\n  @apply border border-slate-300 bg-gray-200 px-11 py-7;\n}\n"],"names":[],"version":3,"file":"enroll.css.map","sourceRoot":"../../../../"}

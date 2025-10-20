@@ -1,0 +1,1 @@
+{"mappings":"AAAA","sources":["core/static/core/css/dashboard.css"],"sourcesContent":[".control {\n  @apply w-40 cursor-pointer rounded-xl p-4 text-lg shadow;\n}\n"],"names":[],"version":3,"file":"dashboard.css.map","sourceRoot":"../../../../"}

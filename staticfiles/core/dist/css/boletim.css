@@ -1,0 +1,59 @@
+.info {
+  text-align: center;
+  border-radius: 1.5rem;
+  padding: .75rem 1rem;
+  font-weight: 600;
+}
+
+.box {
+  --tw-bg-opacity: 1;
+  background-color: rgb(215 212 212 / var(--tw-bg-opacity));
+  --tw-shadow: 0 10px 15px -3px #0000001a, 0 4px 6px -4px #0000001a;
+  --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  border-radius: 1.5rem;
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+td {
+  text-align: center;
+  border-style: none;
+}
+
+.main-table thead th:not(:first-child) {
+  --tw-bg-opacity: 1;
+  background-color: rgb(205 144 40 / var(--tw-bg-opacity));
+  border-radius: .75rem;
+  padding: .75rem;
+}
+
+.main-table tbody tr:first-child td:not(:first-child) {
+  border-top-left-radius: .5rem;
+  border-top-right-radius: .5rem;
+}
+
+.main-table tbody tr:last-child td:not(:last-child) {
+  border-bottom-right-radius: .5rem;
+  border-bottom-left-radius: .5rem;
+}
+
+.main-table tbody td:first-child {
+  --tw-bg-opacity: 1;
+  background-color: rgb(67 115 182 / var(--tw-bg-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
+  border-radius: .75rem;
+}
+
+.main-table tbody td:not(:first-child) {
+  --tw-bg-opacity: 1;
+  background-color: rgb(237 236 236 / var(--tw-bg-opacity));
+}
+
+.main-table th:nth-child(7), .main-table tr td:nth-child(8), .main-table thead th:nth-child(8), .main-table thead th:first-child {
+  --tw-bg-opacity: 1;
+  background-color: rgb(215 212 212 / var(--tw-bg-opacity));
+}
+
+/*# sourceMappingURL=boletim.css.map */

@@ -1,0 +1,35 @@
+th {
+  --tw-bg-opacity: 1;
+  background-color: rgb(232 193 126 / var(--tw-bg-opacity));
+  border-radius: .75rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  padding: .5rem 1.25rem;
+}
+
+th:first-child {
+  background-color: #0000;
+}
+
+tbody tr:first-child td {
+  border-top-left-radius: .75rem;
+  border-top-right-radius: .75rem;
+}
+
+tbody tr:last-child td {
+  border-bottom-right-radius: .75rem;
+  border-bottom-left-radius: .75rem;
+}
+
+tbody tr td {
+  cursor: pointer;
+  --tw-bg-opacity: 1;
+  background-color: rgb(241 245 249 / var(--tw-bg-opacity));
+  text-align: center;
+  border-width: 0;
+  padding: .5rem .75rem;
+  font-size: .875rem;
+  line-height: 1.25rem;
+}
+
+/*# sourceMappingURL=schedule.css.map */
