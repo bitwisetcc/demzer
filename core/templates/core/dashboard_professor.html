@@ -1,0 +1,175 @@
+{% extends 'core/base.html' %}
+{% block head %}
+<title>Dashboard do Professor</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<main class="flex flex-col gap-6 px-24 py-10">
+
+  <!-- Cabeçalho -->
+  <header class="mb-4 flex justify-between text-color-primary items-center">
+    <div>
+      <h1 class="text-4xl font-semibold">Dashboard do Professor</h1>
+    </div>
+    <div class="text-right">
+      <p class="font-medium">Turmas: <span class="text-color-secondary">{{ turmas|length }}</span></p>
+      <p class="font-medium">Presença geral: <span class="text-color-secondary">{{ percentual_presenca }}%</span></p>
+    </div>
+  </header>
+
+  <!-- MÉDIAS POR TURMA -->
+  <section class="rounded-2xl bg-gray-100 p-5">
+    <h2 class="text-2xl font-semibold text-color-primary mb-3">Médias por Turma</h2>
+    <div class="grid grid-cols-3 gap-4">
+      {% for turma in medias_por_turma %}
+      <div class="rounded-xl bg-white shadow-sm p-4 border border-gray-200 flex flex-col">
+        <span class="text-lg font-semibold text-color-primary">{{ turma.nome }}</span>
+        <span class="mt-2 text-3xl font-bold text-color-secondary">{{ turma.media_texto }}</span>
+      </div>
+      {% empty %}
+      <span class="text-slate-500 italic">Nenhuma média registrada ainda.</span>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- TOP 5 ALUNOS / ALUNOS PARA ATENÇÃO -->
+  <section class="grid grid-cols-2 gap-6">
+    <div class="rounded-2xl bg-gray-100 p-5">
+      <h2 class="text-2xl font-semibold text-color-primary mb-3">Top 5 Alunos</h2>
+      <ul class="divide-y divide-gray-300">
+        {% for aluno in top5 %}
+        <li class="py-2 flex justify-between">
+          <span>{{ aluno.nome }}</span>
+          <strong>{{ aluno.media_texto }}</strong>
+        </li>
+        {% empty %}
+        <li class="py-2 text-slate-500 italic">Nenhum dado disponível.</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="rounded-2xl bg-gray-100 p-5">
+      <h2 class="text-2xl font-semibold text-red-500 mb-3">Alunos para Atenção</h2>
+      <ul class="divide-y divide-gray-300">
+        {% for aluno in bottom5 %}
+        <li class="py-2 flex justify-between">
+          <span>{{ aluno.nome }}</span>
+          <strong>{{ aluno.media_texto }}</strong>
+        </li>
+        {% empty %}
+        <li class="py-2 text-slate-500 italic">Nenhum aluno em atenção.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </section>
+
+  <!-- PRÓXIMAS AVALIAÇÕES -->
+  <section class="rounded-2xl bg-gray-100 p-5">
+    <h2 class="text-2xl font-semibold text-color-primary mb-3">Próximas Avaliações</h2>
+    <table class="w-full border-collapse border border-gray-300 text-left">
+      <thead class="bg-gray-200">
+        <tr>
+          <th class="p-2 border border-gray-300">Data</th>
+          <th class="p-2 border border-gray-300">Disciplina</th>
+          <th class="p-2 border border-gray-300">Turma</th>
+          <th class="p-2 border border-gray-300">Tipo</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for avaliacao in proximas_avaliacoes %}
+        <tr class="hover:bg-gray-50">
+          <td class="p-2 border border-gray-300">{{ avaliacao.day|date:"d/m/Y" }}</td>
+          <td class="p-2 border border-gray-300">{{ avaliacao.subject.name }}</td>
+          <td class="p-2 border border-gray-300">{{ avaliacao.classroom.course.name }} ({{ avaliacao.classroom.year }})</td>
+          <td class="p-2 border border-gray-300">
+            {% if avaliacao.kind == 'T' %}Prova{% else %}Atividade{% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" class="p-3 text-center text-slate-500 italic">Nenhuma avaliação próxima.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+
+  <!-- GRÁFICOS -->
+  <section class="grid grid-cols-2 gap-6">
+    <div class="rounded-2xl bg-gray-100 p-5">
+      <h2 class="text-2xl font-semibold text-color-primary mb-3">Evolução das Médias</h2>
+      <canvas id="chartMedias"></canvas>
+      <p class="text-sm text-gray-500 mt-2 italic">1 = I | 2 = R | 3 = B | 4 = MB</p>
+    </div>
+    <div class="rounded-2xl bg-gray-100 p-5">
+      <h2 class="text-2xl font-semibold text-color-primary mb-3">Evolução da Presença</h2>
+      <canvas id="chartPresencas"></canvas>
+    </div>
+  </section>
+</main>
+
+<script>
+  const ctxMedias = document.getElementById('chartMedias');
+  new Chart(ctxMedias, {
+    type: 'line',
+    data: {
+      labels: {{ labels_medias|safe }},
+      datasets: [{
+        label: 'Média Geral por Bimestre',
+        data: {{ dados_medias|safe }},
+        borderColor: '#002b77',
+        backgroundColor: 'rgba(0,43,119,0.2)',
+        tension: 0.4,
+        fill: true,
+        spanGaps: false  // 👈 evita traçar linhas entre bimestres sem nota
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          min: 1,
+          max: 4,
+          ticks: {
+            stepSize: 1,
+            callback: function(value) {
+              const labels = {1: 'I', 2: 'R', 3: 'B', 4: 'MB'};
+              return labels[value] || '';
+            }
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          labels: {
+            boxWidth: 20,
+            color: '#002b77'
+          }
+        }
+      },
+      elements: {
+        point: {
+          radius: 5,
+          backgroundColor: '#002b77'
+        }
+      }
+    }
+  });
+
+  const ctxPresenca = document.getElementById('chartPresencas');
+  new Chart(ctxPresenca, {
+    type: 'line',
+    data: {
+      labels: {{ labels_presenca|safe }},
+      datasets: [{
+        label: 'Presença (%)',
+        data: {{ dados_presenca|safe }},
+        borderColor: '#d19b00',
+        backgroundColor: 'rgba(209,155,0,0.2)',
+        tension: 0.4,
+        fill: true
+      }]
+    },
+    options: { responsive: true }
+  });
+</script>
+{% endblock %}

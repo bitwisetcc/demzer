@@ -113,6 +113,18 @@
         </a>
       </li>
       {% endif %}
+      {% if user|has_role:'teacher' %}
+      <li>
+        <a href="{% url 'dashboard_professor' %}">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+            stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M3 3v18h18V3H3zm3 3h12v12H6V6zm3 3v6h6V9H9z"/>
+          </svg>
+          <span>Dashboard Analítica</span>
+        </a>
+      </li>
+      {% endif %}
       <li>
         <a href="{% url 'comunicados'%}">
           <svg
