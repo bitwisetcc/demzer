@@ -1,6 +1,5 @@
 import re
-from datetime import date, datetime
-
+from datetime import date, datetime, timedelta
 #from azure.identity import DefaultAzureCredential
 #from azure.storage.blob import BlobServiceClient
 from django.conf import settings
@@ -26,8 +25,10 @@ from rolepermissions.roles import assign_role
 from core.models import Member, Relative
 from core.roles import Admin, Coordinator, Student, Teacher
 from core.utils import email_address, upload_img
-from grades.models import Assessment
+from grades.models import Assessment, Grade, Mention
 from management.models import Classroom, Programming
+from datetime import timedelta
+from management.models import Attendance
 
 
 @login_required
@@ -78,6 +79,140 @@ def dashboard(request: HttpRequest):
             },
         )
 
+@login_required
+def dashboard_professor(request):
+    teacher = request.user
+
+    # ======== 1. Turmas do professor ========
+    turmas = Classroom.objects.filter(programmings__teacher=teacher).distinct()
+
+    # ======== 2. Mapeamento de menções ========
+    MAPEAMENTO = {"I": 1, "R": 2, "B": 3, "MB": 4}
+    INVERSO = {1: "I", 2: "R", 3: "B", 4: "MB"}
+
+    def converter_para_mencao(media_num):
+        """Converte média decimal (1-4) em menção textual aproximada."""
+        if media_num < 1.5:
+            return "I"
+        elif media_num < 2.5:
+            return "R"
+        elif media_num < 3.5:
+            return "B"
+        else:
+            return "MB"
+
+    # ======== 3. Média por turma ========
+    medias_por_turma = []
+    for turma in turmas:
+        mencoes = Mention.objects.filter(student__profile__classroom=turma)
+        if not mencoes.exists():
+            continue
+
+        valores = [
+            MAPEAMENTO.get(m.get_value_display(), 0)
+            for m in mencoes
+            if m.get_value_display() in MAPEAMENTO
+        ]
+        if not valores:
+            continue
+
+        media_num = sum(valores) / len(valores)
+        media_texto = converter_para_mencao(media_num)
+
+        medias_por_turma.append({
+            "nome": f"{turma.course.name} ({turma.year})",
+            "media_num": round(media_num, 1),
+            "media_texto": media_texto,
+        })
+
+    # ======== 4. Médias por aluno ========
+    medias_por_aluno = []
+    for turma in turmas:
+        alunos = User.objects.filter(profile__classroom=turma)
+        for aluno in alunos:
+            mencoes_aluno = Mention.objects.filter(student=aluno)
+            if mencoes_aluno.exists():
+                valores = [
+                    MAPEAMENTO.get(m.get_value_display(), 0)
+                    for m in mencoes_aluno
+                    if m.get_value_display() in MAPEAMENTO
+                ]
+                if valores:
+                    media_num = sum(valores) / len(valores)
+                    media_texto = converter_para_mencao(media_num)
+                    nome_completo = (aluno.get_full_name() or aluno.username).strip()
+                    medias_por_aluno.append({
+                        "nome": nome_completo,
+                        "media_num": round(media_num, 1),
+                        "media_texto": media_texto,
+                    })
+
+    # ======== 5. Ordenação dos alunos ========
+    top5 = sorted(medias_por_aluno, key=lambda x: x["media_num"], reverse=True)[:5]
+    bottom5 = sorted(medias_por_aluno, key=lambda x: x["media_num"])[:5]
+
+    # ======== 6. Próximas avaliações ========
+    hoje = date.today()
+    proximas_avaliacoes = (
+        Assessment.objects.filter(
+            classroom__in=turmas,
+            day__gte=hoje,
+            day__lte=hoje + timedelta(days=30),
+        )
+        .select_related("classroom", "subject", "classroom__course")
+        .order_by("day")
+    )
+
+    # ======== 7. Presença geral ========
+    total_presencas = Attendance.objects.filter(
+        lesson__programming__teacher=teacher
+    ).count()
+    percentual_presenca = 100 if total_presencas > 0 else 0
+
+    # ======== 8. Evolução bimestral das médias (corrigida) ========
+    evolucao_medias = []
+    for bimestre in range(1, 5):
+        mencoes_bim = Mention.objects.filter(
+            student__profile__classroom__in=turmas,
+            bimester=bimestre
+        )
+        
+        if mencoes_bim.exists():
+            valores = [
+                MAPEAMENTO.get(m.get_value_display(), 0)
+                for m in mencoes_bim
+                if m.get_value_display() in MAPEAMENTO
+            ]
+            media = sum(valores) / len(valores) if valores else None
+        else:
+            media = None
+
+        evolucao_medias.append({
+            "bimestre": f"{bimestre}º Bim",
+            "media": media
+        })
+
+    labels_medias = [e["bimestre"] for e in evolucao_medias]
+    dados_medias = [e["media"] for e in evolucao_medias]
+
+    # ======== 9. Evolução de presença ========
+    labels_presenca = labels_medias
+    dados_presenca = [percentual_presenca for _ in labels_presenca]
+
+    context = {
+        "turmas": turmas,
+        "medias_por_turma": medias_por_turma,
+        "top5": top5,
+        "bottom5": bottom5,
+        "proximas_avaliacoes": proximas_avaliacoes,
+        "percentual_presenca": percentual_presenca,
+        "labels_medias": labels_medias,
+        "dados_medias": dados_medias,
+        "labels_presenca": labels_presenca,
+        "dados_presenca": dados_presenca,
+    }
+
+    return render(request, "core/dashboard_professor.html", context)
 
 def login_user(request: HttpRequest, failed=0):
     if request.user.is_authenticated:
