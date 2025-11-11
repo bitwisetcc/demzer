@@ -98,6 +98,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "storages",
     "rolepermissions",
     "core",
     "management",
@@ -199,3 +200,29 @@ EMAIL_HOST_PASSWORD = 'dozoitjwtkpjasfm'
 
 ROLEPERMISSIONS_MODULE = "core.roles"
 ROLEPERMISSIONS_SUPERUSER_SUPERPOWERS = False
+
+
+# --- Configuração do AWS S3 ---
+AWS_ACCESS_KEY_ID = 'AKIA6D6JBM4GQWGHCPSW'
+AWS_SECRET_ACCESS_KEY = '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'
+
+# 2. Configurações do Bucket
+AWS_STORAGE_BUCKET_NAME = 'projeto-demzer-midia'
+
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+
+AWS_S3_FILE_OVERWRITE = False
+
+AWS_S3_REGION_NAME = 'us-east-1'
+
+AWS_S3_BASE_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com"
+
+STORAGES = {
+	"default": {
+		"BACKEND": "storages.backends.s3boto3.S3StaticStorage",
+	},
+
+	"staticfiles": {
+		"BACKEND": "storages.backends.s3boto3.S3StaticStorage",
+	},
+}

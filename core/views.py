@@ -1,4 +1,6 @@
 import re
+import boto3
+from botocore.exceptions import ClientError
 from datetime import date, datetime, timedelta
 #from azure.identity import DefaultAzureCredential
 #from azure.storage.blob import BlobServiceClient
@@ -219,6 +221,7 @@ def login_user(request: HttpRequest, failed=0):
         return redirect("dashboard")
 
     if request.method == "POST":
+	
         if int(request.POST.get("code")) != settings.SCHOOL_CODE:
             messages.error(request, "Escola não encontrada")
             return redirect("login")
@@ -503,18 +506,42 @@ def edit_profile(request: HttpRequest):
 
     return redirect("dashboard")
 
+def read_img(request, container: str, title: str):
 
-def read_img(request: HttpRequest, container: str, title: str):
     try:
-        service_client = BlobServiceClient(
-            #settings.STORAGE_BUCKET, DefaultAzureCredential()
+        # Cria cliente S3 usando credenciais configuradas no settings.py ou variáveis de ambiente
+        s3 = boto3.client(
+            's3',
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+            region_name=getattr(settings, 'AWS_REGION', 'us-east-1')
         )
-        container_client = service_client.get_container_client(container)
-        return HttpResponse(container_client.download_blob(title).readall())
 
+        # Faz o download do objeto do S3
+        response = s3.get_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=f"{container}/{title}")
+        content = response['Body'].read()
+
+        # Retorna o conteúdo da imagem como resposta HTTP
+        return HttpResponse(content, content_type=response['ContentType'])
+
+    except s3.exceptions.NoSuchKey:
+        raise Http404("Imagem não encontrada no bucket S3.")
     except Exception as exc:
-        print("falha ao buscar img de perfil: {}" + exc.args[0])
-        raise Http404("Falha ao requisitar imagem")
+        print(f"Falha ao buscar imagem do S3: {exc}")
+        raise Http404("Falha ao requisitar imagem.") 
+
+
+#def read_img(request: HttpRequest, container: str, title: str):
+#    try:
+#        service_client = BlobServiceClient(
+#            #settings.STORAGE_BUCKET, DefaultAzureCredential()
+#        )
+#        container_client = service_client.get_container_client(container)
+#        return HttpResponse(container_client.download_blob(title).readall())
+#
+#    except Exception as exc:
+#        print("falha ao buscar img de perfil: {}" + exc.args[0])
+#        raise Http404("Falha ao requisitar imagem")
 
 
 def configuracao(request: HttpRequest):
