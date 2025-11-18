@@ -5,14 +5,15 @@
 {% endblock %}
 
 {% block content %}
-<main class="flex flex-col gap-6 px-24 py-10">
+<main class="flex flex-col gap-6 px-6 py-8 md:px-16 lg:px-24">
 
-  <!-- Cabeçalho + KPIs -->
+  <!-- Cabeçalho -->
   <header class="mb-2 text-color-primary">
-    <h1 class="text-4xl font-semibold">Painel do Administrador</h1>
+    <h1 class="text-3xl md:text-4xl font-semibold">Painel do Administrador</h1>
   </header>
 
-  <section class="grid grid-cols-5 gap-4">
+  <!-- KPIs -->
+  <section class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
     <div class="rounded-2xl bg-gray-100 p-4">
       <p class="text-sm text-slate-500">Cursos</p>
       <p class="text-3xl font-semibold text-color-primary">{{ kpi.total_cursos }}</p>
@@ -38,7 +39,7 @@
   <!-- Médias por Turma -->
   <section class="rounded-2xl bg-gray-100 p-5">
     <h2 class="text-2xl font-semibold text-color-primary mb-3">Médias por Turma</h2>
-    <div class="grid grid-cols-3 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
       {% for turma in medias_por_turma %}
       <div class="rounded-xl bg-white shadow-sm p-4 border border-gray-200 flex flex-col">
         <span class="text-lg font-semibold text-color-primary">{{ turma.nome }}</span>
@@ -50,8 +51,8 @@
     </div>
   </section>
 
-  <!-- Top / Atenção -->
-  <section class="grid grid-cols-2 gap-6">
+  <!-- Top e Atenção -->
+  <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
     <div class="rounded-2xl bg-gray-100 p-5">
       <h2 class="text-2xl font-semibold text-color-primary mb-3">Top 5 Alunos</h2>
       <ul class="divide-y divide-gray-300">
@@ -82,9 +83,9 @@
   </section>
 
   <!-- Próximas Avaliações -->
-  <section class="rounded-2xl bg-gray-100 p-5">
+  <section class="rounded-2xl bg-gray-100 p-5 overflow-x-auto">
     <h2 class="text-2xl font-semibold text-color-primary mb-3">Próximas Avaliações</h2>
-    <table class="w-full border-collapse border border-gray-300 text-left">
+    <table class="w-full min-w-[600px] border-collapse border border-gray-300 text-left">
       <thead class="bg-gray-200">
         <tr>
           <th class="p-2 border border-gray-300">Data</th>
@@ -111,12 +112,13 @@
   </section>
 
   <!-- Gráficos -->
-  <section class="grid grid-cols-2 gap-6">
+  <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
     <div class="rounded-2xl bg-gray-100 p-5">
       <h2 class="text-2xl font-semibold text-color-primary mb-3">Evolução das Médias</h2>
       <canvas id="chartMedias"></canvas>
       <p class="text-sm text-gray-500 mt-2 italic">1 = I | 2 = R | 3 = B | 4 = MB</p>
     </div>
+
     <div class="rounded-2xl bg-gray-100 p-5">
       <h2 class="text-2xl font-semibold text-color-primary mb-3">Evolução da Presença</h2>
       <canvas id="chartPresencas"></canvas>
@@ -142,6 +144,7 @@
     },
     options: {
       responsive: true,
+      maintainAspectRatio: false,
       scales: {
         y: {
           min: 1,
@@ -172,7 +175,10 @@
         fill: true
       }]
     },
-    options: { responsive: true }
+    options: {
+      responsive: true,
+      maintainAspectRatio: false
+    }
   });
 </script>
 {% endblock %}
