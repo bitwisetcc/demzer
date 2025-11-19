@@ -31,7 +31,7 @@ from grades.models import Assessment, Grade, Mention
 from management.models import Classroom, Programming
 from datetime import timedelta
 from management.models import Attendance
-
+from .forms import LoginForm
 
 @login_required
 def dashboard(request: HttpRequest):
@@ -221,30 +221,52 @@ def login_user(request: HttpRequest, failed=0):
         return redirect("dashboard")
 
     if request.method == "POST":
-	
-        if int(request.POST.get("code")) != settings.SCHOOL_CODE:
-            messages.error(request, "Escola não encontrada")
-            return redirect("login")
+        form = LoginForm(request.POST)
+        
+        if form.is_valid():
+            code = form.cleaned_data['code']
+            user_id = form.cleaned_data['user_id']
+            password = form.cleaned_data['password']
+            
+            # Sua lógica de validação da escola
+            if code != settings.SCHOOL_CODE:
+                messages.error(request, "Escola não encontrada")
+                return render(request, "core/login.html", {
+                    "no_nav": True, 
+                    "failed": failed,
+                    "form": form
+                })
 
-        user_id = request.POST["user-id"]
-        password = request.POST["password"]
+            try:
+                username = User.objects.get(pk=user_id).username
+            except User.DoesNotExist:
+                messages.warning(request, "Usuário com RM {} não existe".format(user_id))
+                return render(request, "core/login.html", {
+                    "no_nav": True, 
+                    "failed": failed,
+                    "form": form
+                })
 
-        try:
-            username = User.objects.get(pk=user_id).username
-        except User.DoesNotExist:
-            messages.warning(request, "Usuário com RM {} não existe".format(user_id))
-            return redirect("login")
-
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect("dashboard")
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect("dashboard")
+            else:
+                messages.warning(request, "Senha incorreta. Tente Novamente")
+                return redirect("login", failed=1)
         else:
-            messages.warning(request, "Senha incorreta. Tente Novamente")
-            return redirect("login", failed=1)
+            # Form inválido (CAPTCHA errado ou outros erros)
+            messages.error(request, "Por favor, corrija os erros abaixo.")
+    
     else:
-        return render(request, "core/login.html", {"no_nav": True, "failed": failed})
+        # GET request - criar formulário vazio
+        form = LoginForm()
 
+    return render(request, "core/login.html", {
+        "no_nav": True, 
+        "failed": failed,
+        "form": form
+    })
 
 @login_required
 def logout_user(request: HttpRequest):

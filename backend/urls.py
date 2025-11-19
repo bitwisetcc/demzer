@@ -18,5 +18,6 @@ urlpatterns = [
     path("management/", include("management.urls")),
     path("grades/", include("grades.urls")),
     path("", include("communication.urls")),
+    path('captcha/', include('captcha.urls')),
     *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
 ]

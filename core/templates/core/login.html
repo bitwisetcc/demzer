@@ -1,4 +1,6 @@
-{% extends 'core/base.html' %} {% load static %} {% block head %}
+{% extends 'core/base.html' %}
+{% load static %}
+{% block head %}
 <script defer>
   function onInit() {
     const failed = Boolean(location.pathname.split("login/")[1][0]);
@@ -20,80 +22,77 @@
       return;
     }
 
-    alert("Espere até 15 minutos para tentar um login novamente"); // TODO: actually block login
+    alert("Espere até 15 minutos para tentar um login novamente");
   }
 </script>
 <title>DEMZER - Login</title>
-{% endblock %} {% block content %}
+{% endblock %}
+
+{% block content %}
 <main class="h-screen w-full bg-color-primary py-5 sm:p-11" x-init="onInit()">
-  <section
-    class="relative h-full w-full justify-between rounded-3xl bg-slate-100 shadow-md shadow-slate-800 sm:flex"
-  >
-    <a
-      href="{% url 'auto_adm' %}"
-      class="absolute right-10 top-3 rounded-full border-2 p-2 hover:border-indigo-500"
-    ></a>
-    <a
-      href="{% url 'secret' %}"
-      class="absolute right-3 top-3 rounded-full border-2 p-2 hover:border-color-secondary"
-    ></a>
-    <form
-      action="{% url 'login' %}"
-      method="POST"
-      class="flex flex-col items-center justify-center px-8 py-9 md:p-14 sm:w-1/2 sm:pt-10"
-    >
+  <section class="relative h-full w-full justify-between rounded-3xl bg-slate-100 shadow-md shadow-slate-800 sm:flex">
+    
+    <form action="{% url 'login' %}" method="POST" class="flex flex-col items-center justify-center px-8 py-9 md:p-14 sm:w-1/2 sm:pt-10">
       {% csrf_token %}
+      
       <header class="mb-6 flex flex-col items-center gap-4">
-        <img
-          src="{% static 'core/images/logo.png' %}"
-          alt="logo"
-          class="h-16"
-        />
+        <img src="{% static 'core/images/logo.png' %}" alt="logo" class="h-16" />
         <h1 class="font-sans text-3xl font-bold">Login</h1>
         <h2 class="text-md font-sans">Entre com seu ID e senha</h2>
       </header>
-      <div class="flex flex-col items-center justify-center sm:block">
-        <div class="mb-3 flex flex-col gap-1">
+      
+      <div class="flex flex-col items-center justify-center sm:block w-full max-w-xs">
+        <!-- Campo Escola -->
+        <div class="mb-3 flex flex-col gap-1 w-full">
           <label for="school-code">Escola:</label>
-          <input type="text" name="code" id="school-code" required />
+          {{ form.code }}
+          {% if form.code.errors %}
+            <div class="text-red-500 text-sm">{{ form.code.errors }}</div>
+          {% endif %}
         </div>
-        <div class="gap-2 md:flex">
-          <div class="mb-3 flex flex-col gap-1">
+        
+        <!-- Campos ID e Senha -->
+        <div class="gap-2 md:flex w-full">
+          <div class="mb-3 flex flex-col gap-1 md:w-1/2">
             <label for="user-id">ID:</label>
-            <input
-              type="text"
-              name="user-id"
-              id="user-id"
-              class="md:w-24"
-              required
-            />
+            {{ form.user_id }}
+            {% if form.user_id.errors %}
+              <div class="text-red-500 text-sm">{{ form.user_id.errors }}</div>
+            {% endif %}
           </div>
-          <div class="mb-3 flex flex-col gap-1">
+          <div class="mb-3 flex flex-col gap-1 md:w-1/2">
             <label for="password">Senha:</label>
-            <input type="password" name="password" id="password" required />
+            {{ form.password }}
+            {% if form.password.errors %}
+              <div class="text-red-500 text-sm">{{ form.password.errors }}</div>
+            {% endif %}
           </div>
         </div>
 
+        <!-- Campo CAPTCHA -->
+        <div class="mb-4 flex flex-col gap-2 w-full">
+          <label for="id_captcha">Digite o texto da imagem:</label>
+          <div class="captcha-container">
+            {{ form.captcha }}
+          </div>
+          {% if form.captcha.errors %}
+            <div class="text-red-500 text-sm">{{ form.captcha.errors }}</div>
+          {% endif %}
+        </div>
+
+        <!-- Links e Botão -->
         <div class="flex w-full flex-col gap-3 md:block md:gap-2">
-          <a href="{% url 'password_reset' %}" class="text-sky-700">
+          <a href="{% url 'password_reset' %}" class="text-sky-700 hover:text-sky-800">
             Esqueci a senha
           </a>
           <br class="hidden md:block" />
-          <input
-            type="submit"
-            value="Entrar"
-            class="px-20 py-2 md:mx-auto md:mt-3 md:block"
-          />
+          <input type="submit" value="Entrar" class="px-20 py-2 md:mx-auto md:mt-3 md:block bg-blue-500 text-white rounded hover:bg-blue-600 cursor-pointer transition duration-200" />
         </div>
       </div>
-      
     </form>
+    
     <aside class="hidden w-1/2 rounded-3xl bg-gray-200 sm:block"></aside>
-    <img
-      src="{% static 'core/images/desenho.png' %}"
-      alt="lineart de alunos em sala de aula"
-      class="absolute bottom-0 right-10 hidden w-4/6 sm:block sm:w-1/2"
-    />
+    <img src="{% static 'core/images/desenho.png' %}" alt="lineart de alunos em sala de aula" class="absolute bottom-0 right-10 hidden w-4/6 sm:block sm:w-1/2" />
   </section>
 </main>
 {% endblock %}

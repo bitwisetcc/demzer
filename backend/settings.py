@@ -104,6 +104,7 @@ INSTALLED_APPS = [
     "management",
     "grades",
     "communication",
+    "captcha",
 ]
 
 REST_FRAMEWORK = {
@@ -226,3 +227,10 @@ STORAGES = {
 		"BACKEND": "storages.backends.s3boto3.S3StaticStorage",
 	},
 }
+
+#Settings captcha
+
+CAPTCHA_IMAGE_SIZE = (200,60)
+CAPTCHA_FONT_SIZE = 48
+CAPTCHA_LETTER_ROTATION = (-35, 35)
+CAPTCHA_TIMEOUT = 5  # minutos
