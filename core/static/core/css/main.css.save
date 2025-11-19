@@ -1,0 +1,138 @@
+@import "npm:tippy.js/dist/tippy.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  [type="text"],
+  [type="email"],
+  [type="url"],
+  [type="password"],
+  [type="number"],
+  [type="date"],
+  [type="datetime-local"],
+  [type="month"],
+  [type="search"],
+  [type="tel"],
+  [type="time"],
+  [type="week"],
+  [multiple],
+  textarea,
+  select {
+    @apply rounded-xl border border-gray-400 shadow-sm transition-all
+    hover:border-sky-600 focus:border-sky-600 focus-visible:outline-none;
+  }
+
+  [type="radio"] {
+    @apply ml-3 mr-1 first:ml-0 checked:bg-cyan-600 hover:border-sky-600 hover:bg-none hover:checked:bg-cyan-600;
+  }
+
+  [type="submit"] {
+    @apply cursor-pointer rounded-3xl bg-color-secondary hover:shadow-md;
+  }
+  [type="checkbox"] {
+    @apply h-5 w-5 rounded-full border-color-primary transition;
+  }
+}
+
+main.framed {
+  @apply border border-zinc-400 shadow-md;
+}
+
+hr {
+  @apply mx-1 my-3;
+}
+
+nav ul li a {
+  @apply flex items-center gap-3 px-1 text-gray-200 transition-all duration-300 hover:text-color-secondary;
+}
+
+nav hr {
+  @apply border-[1px] border-color-secondary;
+}
+
+nav svg {
+  @apply h-7 w-7 transition-transform duration-300;
+}
+
+.field {
+  @apply flex flex-col items-start gap-1;
+}
+
+thead {
+  @apply bg-slate-300;
+}
+
+td {
+  @apply border border-slate-400 p-3;
+}
+
+.btn {
+  @apply rounded bg-color-primary-dimm px-3 py-2 text-slate-100 transition-all duration-300 hover:bg-sky-800 hover:shadow-md disabled:bg-slate-600;
+}
+
+nav#navbar::-webkit-scrollbar {
+  width: 0 !important;
+}
+
+nav#navbar {
+  scrollbar-width: none;
+}
+
+.no_scroll {
+  scrollbar-width: none;
+}
+
+.no_scroll::-webkit-scrollbar {
+  width: 0 !important;
+}
+
+button[type="submit"],
+.active {
+  @apply rounded-full border-2 border-color-secondary bg-color-hover px-5 py-2 font-bold text-yellow-700;
+}
+
+.alt {
+  @apply rounded-full border-2 border-color-secondary bg-transparent px-5 py-2 font-bold text-yellow-700 transition-all hover:bg-color-hover;
+}
+
+dialog,
+.dialog {
+  @apply no_scroll max-w-[90vw] max-h-[80vh] overflow-x-clip overflow-y-scroll rounded-[1.75rem] bg-color-bg-lighter p-6 shadow-2xl backdrop:bg-gray-50;
+}
+
+.dialog-backdrop {
+  @apply fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-25;
+}
+
+dialog header,
+.dialog header {
+  @apply mb-3 flex w-full justify-between text-color-primary;
+}
+
+dialog h2,
+.dialog h2 {
+  @apply text-xl font-semibold text-color-primary;
+}
+
+label.file {
+  @apply w-max cursor-pointer;
+}
+
+label.file input {
+  @apply hidden;
+}
+
+h1 {
+  @apply mb-4 text-4xl font-semibold text-color-primary;
+}
+
+h2 {
+  @apply font-semibold text-color-primary;
+}
+
+/* .flex:not(.flex-col) {
+  @apply items-center
+} */
+

@@ -1,4 +1,7 @@
-{% extends 'core/base.html' %} {% load static %} {% block head %} {% load permission_tags %}
+{% extends 'core/base.html' %}
+{% load static %}
+{% block head %}
+{% load permission_tags %}
 <title>Provas</title>
 <script defer>
   document.addEventListener("alpine:init", () => {
@@ -13,86 +16,76 @@
     }));
   });
 </script>
-{% endblock %} {% block content %}
-<main class="mx-10 mb-20 mt-4 md:mx-14" x-data="provas">
+{% endblock %}
+{% block content %}
+<main class="mx-4 mb-20 mt-4 md:mx-14 lg:mx-20" x-data="provas">
+
+  <!-- Filter Dialog -->
   <section class="dialog-backdrop" x-show="filterDialog">
-    <div class="dialog">
-      <header>
-        <h2>Filtrar</h2>
-        <button @click.prevent="filterDialog = false">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="h-6 w-6"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M6 18L18 6M6 6l12 12"
-            />
+    <div class="dialog max-w-md mx-auto p-4 rounded-lg bg-white shadow-lg">
+      <header class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-semibold">Filtrar</h2>
+        <button @click.prevent="filterDialog = false" aria-label="Fechar filtro">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
           </svg>
         </button>
       </header>
-      <form
-        action="{% url 'provas' cls %}"
-        method="get"
-        class="flex flex-col gap-2"
-      >
-        <div class="mb-1 flex items-center gap-2">
-          <label for="sl-kind">Tipo:</label>
-          <select name="kind" id="sl-kind">
+      <form action="{% url 'provas' cls %}" method="get" class="flex flex-col gap-4">
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+          <label for="sl-kind" class="whitespace-nowrap">Tipo:</label>
+          <select name="kind" id="sl-kind" class="rounded border border-gray-300 p-2 w-full sm:w-auto">
             <option value="A">Atividade</option>
           </select>
+
           {% if user|has_role:'student' %}
-          <label for="sl-subj">Matéria:</label>
-          <select name="subject" id="sl-subj">
+          <label for="sl-subj" class="whitespace-nowrap">Matéria:</label>
+          <select name="subject" id="sl-subj" class="rounded border border-gray-300 p-2 w-full sm:w-auto">
             {% for s in subjects %}
             <option value="{{ s.pk }}">{{ s.name }}</option>
             {% endfor %}
           </select>
           {% elif user|has_role:'teacher' %}
-          <label for="sl-cls">Turma:</label>
-          <select name="classroom" id="sl-cls">
+          <label for="sl-cls" class="whitespace-nowrap">Turma:</label>
+          <select name="classroom" id="sl-cls" class="rounded border border-gray-300 p-2 w-full sm:w-auto">
             {% for c in classrooms %}
             <option value="{{ c.pk }}">{{ c }}</option>
             {% endfor %}
           </select>
           {% endif %}
         </div>
-        <div class="flex flex-row justify-between gap-2 text-lg font-normal">
-          <label>
+
+        <div class="flex flex-col gap-3 sm:flex-row sm:justify-between sm:gap-4 text-lg font-normal">
+          <label class="flex flex-col sm:flex-row sm:items-center sm:gap-2 whitespace-nowrap">
             De:
             <input
               type="date"
               name="start-date"
-              class="rounded-3xl border-color-primary"
-          /></label>
-          <label>
+              class="rounded-3xl border border-color-primary p-1 sm:w-auto w-full"
+            />
+          </label>
+          <label class="flex flex-col sm:flex-row sm:items-center sm:gap-2 whitespace-nowrap">
             Até:
             <input
               type="date"
               name="end-date"
-              class="rounded-3xl border-color-primary"
-          /></label>
+              class="rounded-3xl border border-color-primary p-1 sm:w-auto w-full"
+            />
+          </label>
         </div>
-        <div class="mt-3 flex justify-center gap-3">
-          <a class="alt" href="{% url 'provas' cls %}">Limpar</a>
-          <button type="submit">Aplicar</button>
+
+        <div class="mt-3 flex flex-col gap-3 sm:flex-row sm:justify-center sm:gap-6">
+          <a class="alt text-center sm:text-left" href="{% url 'provas' cls %}">Limpar</a>
+          <button type="submit" class="btn btn-primary">Aplicar</button>
         </div>
       </form>
     </div>
   </section>
 
+  <!-- Delete Dialog -->
   <section class="dialog-backdrop" x-show="deleteDialog">
-    <div class="dialog">
-      <form
-        action="{% url 'delete_prova' cls %}"
-        method="post"
-        class="flex flex-col items-center gap-3"
-      >
+    <div class="dialog max-w-sm mx-auto p-6 rounded-lg bg-white shadow-lg">
+      <form action="{% url 'delete_prova' cls %}" method="post" class="flex flex-col items-center gap-3">
         {% csrf_token %}
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -108,57 +101,50 @@
             d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
           />
         </svg>
-        <p class="text-center">
+        <p class="text-center text-lg font-semibold">
           Cuidado! Isso pode <br />
           desalocar notas e menções.
         </p>
         <input type="hidden" name="pk" x-model="pk" />
         <div class="flex gap-3">
-          <button @click.prevent="deleteDialog = false" class="alt">
-            Voltar
-          </button>
-          <button type="submit">Confirmar</button>
+          <button @click.prevent="deleteDialog = false" class="alt px-4 py-2 rounded border border-gray-400 hover:bg-gray-100">Voltar</button>
+          <button type="submit" class="btn btn-danger px-4 py-2 rounded">Confirmar</button>
         </div>
       </form>
     </div>
   </section>
 
-  <h1 class="flex justify-between text-center md:text-left">
-    Provas e Atividades
+  <!-- Header -->
+  <h1 class="flex flex-col md:flex-row justify-between items-center text-center md:text-left text-2xl md:text-3xl font-bold mb-6 gap-2 md:gap-0">
+  Provas e Atividades
 
-    <button @click="filterDialog = true">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="h-7 w-7"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"
-        />
-      </svg>
-    </button>
-  </h1>
+  <button @click="filterDialog = true" aria-label="Abrir filtros" class="p-2 hover:bg-gray-200 rounded">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-7 w-7">
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"
+      />
+    </svg>
+  </button>
+</h1>
 
+  <!-- Test cards -->
   {% for t in tests %}
   <div
-    class="mb-5 rounded-2xl bg-gray-100 shadow"
+    class="mb-5 rounded-2xl bg-gray-100 shadow p-4"
     x-data="{ options: false, details: false }"
   >
-    <header class="flex justify-between px-6 py-4">
-      <div>
-        <h2 class="font-semibold text-color-primary">{{ t.title }} - {{ t.subject.name }}</h2>
-        <span class="text-color-secondary">
-          {{ t.day }}
-          {% if t.past %} - Concluído {% endif %}
+    <header class="flex flex-col sm:flex-row justify-between px-2 py-3">
+      <div class="mb-2 sm:mb-0">
+        <h2 class="font-semibold text-color-primary text-lg sm:text-xl">{{ t.title }} - {{ t.subject.name }}</h2>
+        <span class="text-color-secondary text-sm">
+          {{ t.day }}{% if t.past %} - Concluído {% endif %}
         </span>
       </div>
-      <div class="relative">
-        <button @click="details = !details">
+
+      <div class="relative flex gap-3 items-center">
+        <button @click="details = !details" aria-label="Mostrar detalhes" class="p-1 hover:bg-gray-200 rounded">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -168,49 +154,37 @@
             class="h-6 w-6 transition-transform"
             :class="details && 'rotate-180'"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M19.5 8.25l-7.5 7.5-7.5-7.5"
-            />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
           </svg>
         </button>
 
         {% if user|has_role:'teacher' %}
-        <button @click="options = !options" class="relative">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="h-6 w-6"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z"
-            />
+        <button @click="options = !options" class="relative p-1 hover:bg-gray-200 rounded" aria-label="Mostrar opções">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
           </svg>
         </button>
 
         <div
           x-show="options"
-          class="absolute z-10 flex flex-col gap-2 rounded-lg border border-slate-400 bg-gray-100 p-3"
-          @click.away="() => options = false"
+          class="absolute right-0 top-full mt-2 z-10 flex flex-col gap-2 rounded-lg border border-slate-400 bg-gray-100 p-3 shadow"
+          @click.away="options = false"
+          style="min-width: 120px;"
         >
-          <button class="hover:text-color-secondary" @click="del('{{ t.pk }}')">Excluir</button>
+          <button class="hover:text-color-secondary text-left" @click="del('{{ t.pk }}')">Excluir</button>
         </div>
         {% endif %}
       </div>
     </header>
+
     <div
-      class="flex origin-top gap-4 rounded-b-2xl bg-gray-200 p-5 transition-all"
+      class="overflow-hidden rounded-b-2xl bg-gray-200 p-5 transition-all"
       :class="details || 'scale-y-0 h-0 py-0'"
+      style="transform-origin: top;"
     >
-      <div>
-        <p>Bimestre:<span>{{ t.bimester }}</span></p>
-        <p>Sobre: <span>{{ t.get_kind_display }}</span></p>
+      <div class="space-y-2 text-sm">
+        <p><strong>Bimestre:</strong> <span>{{ t.bimester }}</span></p>
+        <p><strong>Sobre:</strong> <span>{{ t.get_kind_display }}</span></p>
         <p>{{ t.content }}</p>
       </div>
     </div>
