@@ -25,6 +25,11 @@ from os import environ, getenv
 from pathlib import Path
 from datetime import date
 import dotenv
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 dotenv.load_dotenv()
 
@@ -93,11 +98,13 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "storages",
     "rolepermissions",
     "core",
     "management",
     "grades",
     "communication",
+    "captcha",
 ]
 
 REST_FRAMEWORK = {
@@ -107,6 +114,7 @@ REST_FRAMEWORK = {
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -176,7 +184,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -193,3 +201,36 @@ EMAIL_HOST_PASSWORD = 'dozoitjwtkpjasfm'
 
 ROLEPERMISSIONS_MODULE = "core.roles"
 ROLEPERMISSIONS_SUPERUSER_SUPERPOWERS = False
+
+
+# --- Configuração do AWS S3 ---
+AWS_ACCESS_KEY_ID = 'AKIA6D6JBM4GQWGHCPSW'
+AWS_SECRET_ACCESS_KEY = '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'
+
+# 2. Configurações do Bucket
+AWS_STORAGE_BUCKET_NAME = 'projeto-demzer-midia'
+
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+
+AWS_S3_FILE_OVERWRITE = False
+
+AWS_S3_REGION_NAME = 'us-east-1'
+
+AWS_S3_BASE_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com"
+
+STORAGES = {
+	"default": {
+		"BACKEND": "storages.backends.s3boto3.S3StaticStorage",
+	},
+
+	"staticfiles": {
+		"BACKEND": "storages.backends.s3boto3.S3StaticStorage",
+	},
+}
+
+#Settings captcha
+
+CAPTCHA_IMAGE_SIZE = (200,60)
+CAPTCHA_FONT_SIZE = 48
+CAPTCHA_LETTER_ROTATION = (-35, 35)
+CAPTCHA_TIMEOUT = 5  # minutos

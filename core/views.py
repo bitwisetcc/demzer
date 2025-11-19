@@ -1,4 +1,6 @@
 import re
+import boto3
+from botocore.exceptions import ClientError
 from datetime import date, datetime, timedelta
 #from azure.identity import DefaultAzureCredential
 #from azure.storage.blob import BlobServiceClient
@@ -26,10 +28,10 @@ from core.models import Member, Relative
 from core.roles import Admin, Coordinator, Student, Teacher
 from core.utils import email_address, upload_img
 from grades.models import Assessment, Grade, Mention
-from management.models import Classroom, Programming, Course
+from management.models import Classroom, Programming
 from datetime import timedelta
 from management.models import Attendance
-
+from .forms import LoginForm
 
 @login_required
 def dashboard(request: HttpRequest):
@@ -388,29 +390,52 @@ def login_user(request: HttpRequest, failed=0):
         return redirect("dashboard")
 
     if request.method == "POST":
-        if int(request.POST.get("code")) != settings.SCHOOL_CODE:
-            messages.error(request, "Escola não encontrada")
-            return redirect("login")
+        form = LoginForm(request.POST)
+        
+        if form.is_valid():
+            code = form.cleaned_data['code']
+            user_id = form.cleaned_data['user_id']
+            password = form.cleaned_data['password']
+            
+            # Sua lógica de validação da escola
+            if code != settings.SCHOOL_CODE:
+                messages.error(request, "Escola não encontrada")
+                return render(request, "core/login.html", {
+                    "no_nav": True, 
+                    "failed": failed,
+                    "form": form
+                })
 
-        user_id = request.POST["user-id"]
-        password = request.POST["password"]
+            try:
+                username = User.objects.get(pk=user_id).username
+            except User.DoesNotExist:
+                messages.warning(request, "Usuário com RM {} não existe".format(user_id))
+                return render(request, "core/login.html", {
+                    "no_nav": True, 
+                    "failed": failed,
+                    "form": form
+                })
 
-        try:
-            username = User.objects.get(pk=user_id).username
-        except User.DoesNotExist:
-            messages.warning(request, "Usuário com RM {} não existe".format(user_id))
-            return redirect("login")
-
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect("dashboard")
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect("dashboard")
+            else:
+                messages.warning(request, "Senha incorreta. Tente Novamente")
+                return redirect("login", failed=1)
         else:
-            messages.warning(request, "Senha incorreta. Tente Novamente")
-            return redirect("login", failed=1)
+            # Form inválido (CAPTCHA errado ou outros erros)
+            messages.error(request, "Por favor, corrija os erros abaixo.")
+    
     else:
-        return render(request, "core/login.html", {"no_nav": True, "failed": failed})
+        # GET request - criar formulário vazio
+        form = LoginForm()
 
+    return render(request, "core/login.html", {
+        "no_nav": True, 
+        "failed": failed,
+        "form": form
+    })
 
 @login_required
 def logout_user(request: HttpRequest):
@@ -672,18 +697,42 @@ def edit_profile(request: HttpRequest):
 
     return redirect("dashboard")
 
+def read_img(request, container: str, title: str):
 
-def read_img(request: HttpRequest, container: str, title: str):
     try:
-        service_client = BlobServiceClient(
-            #settings.STORAGE_BUCKET, DefaultAzureCredential()
+        # Cria cliente S3 usando credenciais configuradas no settings.py ou variáveis de ambiente
+        s3 = boto3.client(
+            's3',
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+            region_name=getattr(settings, 'AWS_REGION', 'us-east-1')
         )
-        container_client = service_client.get_container_client(container)
-        return HttpResponse(container_client.download_blob(title).readall())
 
+        # Faz o download do objeto do S3
+        response = s3.get_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=f"{container}/{title}")
+        content = response['Body'].read()
+
+        # Retorna o conteúdo da imagem como resposta HTTP
+        return HttpResponse(content, content_type=response['ContentType'])
+
+    except s3.exceptions.NoSuchKey:
+        raise Http404("Imagem não encontrada no bucket S3.")
     except Exception as exc:
-        print("falha ao buscar img de perfil: {}" + exc.args[0])
-        raise Http404("Falha ao requisitar imagem")
+        print(f"Falha ao buscar imagem do S3: {exc}")
+        raise Http404("Falha ao requisitar imagem.") 
+
+
+#def read_img(request: HttpRequest, container: str, title: str):
+#    try:
+#        service_client = BlobServiceClient(
+#            #settings.STORAGE_BUCKET, DefaultAzureCredential()
+#        )
+#        container_client = service_client.get_container_client(container)
+#        return HttpResponse(container_client.download_blob(title).readall())
+#
+#    except Exception as exc:
+#        print("falha ao buscar img de perfil: {}" + exc.args[0])
+#        raise Http404("Falha ao requisitar imagem")
 
 
 def configuracao(request: HttpRequest):

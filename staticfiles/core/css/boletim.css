@@ -1,0 +1,38 @@
+.info {
+  @apply rounded-3xl px-4 py-3 text-center font-semibold;
+}
+
+.box {
+  @apply my-5 rounded-3xl bg-color-boletim shadow-lg;
+}
+
+td {
+  @apply border-none text-center;
+}
+
+.main-table thead th:not(:first-child) {
+  @apply rounded-xl bg-color-secondary p-3;
+}
+
+.main-table tbody tr:first-child td:not(:first-child) {
+  @apply rounded-t-lg;
+}
+
+.main-table tbody tr:last-child td:not(:last-child) {
+  @apply rounded-b-lg;
+}
+
+.main-table tbody td:first-child {
+  @apply rounded-xl bg-color-primary-dimm text-white;
+}
+
+.main-table tbody td:not(:first-child) {
+  @apply bg-color-grey;
+}
+
+.main-table th:nth-child(7),
+.main-table tr td:nth-child(8),
+.main-table thead th:nth-child(8),
+.main-table thead th:first-child {
+  @apply bg-color-boletim;
+}

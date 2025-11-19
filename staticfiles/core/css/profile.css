@@ -1,0 +1,7 @@
+.info-card {
+  @apply mt-1 rounded-2xl bg-zinc-100 p-6;
+}
+
+.info-lbl {
+  @apply mr-1 font-semibold text-color-primary;
+}

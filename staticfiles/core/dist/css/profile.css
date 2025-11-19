@@ -1,0 +1,16 @@
+.info-card {
+  --tw-bg-opacity: 1;
+  background-color: rgb(244 244 245 / var(--tw-bg-opacity));
+  border-radius: 1rem;
+  margin-top: .25rem;
+  padding: 1.5rem;
+}
+
+.info-lbl {
+  --tw-text-opacity: 1;
+  color: rgb(5 68 153 / var(--tw-text-opacity));
+  margin-right: .25rem;
+  font-weight: 600;
+}
+
+/*# sourceMappingURL=profile.css.map */

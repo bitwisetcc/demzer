@@ -1,0 +1,78 @@
+.tags {
+  width: 100%;
+  --tw-bg-opacity: 1;
+  background-color: rgb(245 245 245 / var(--tw-bg-opacity));
+  border-radius: .75rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: center;
+  gap: 1rem;
+  margin: auto;
+  padding: 0 1rem 1rem;
+  display: grid;
+}
+
+@media (min-width: 768px) {
+  .tags {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+.tags label {
+  min-height: 0;
+  flex-grow: 1;
+  flex-basis: 50%;
+}
+
+.tags input[type="radio"] {
+  height: 0;
+  width: 0;
+  opacity: 0;
+  border-width: 0;
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+}
+
+.tags input[type="radio"] + div {
+  border-width: 2px;
+  border-color: #0000;
+  border-radius: .75rem;
+  flex-direction: column;
+  align-items: center;
+  margin-top: -.5rem;
+  padding: .75rem .5rem;
+  display: flex;
+}
+
+.tags input[type="radio"]:checked + div {
+  --tw-border-opacity: 1;
+  border-color: rgb(67 115 182 / var(--tw-border-opacity));
+}
+
+.tags label div span:first-child {
+  font-size: 2rem;
+}
+
+@media (min-width: 768px) {
+  .tags label div span:first-child {
+    font-size: 2.5rem;
+  }
+}
+
+.tags label div span:last-child {
+  font-size: .875rem;
+  line-height: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .tags label div span:last-child {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+}
+
+textarea {
+  width: 100%;
+}
+
+/*# sourceMappingURL=alert.css.map */

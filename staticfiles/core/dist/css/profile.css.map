@@ -1,0 +1,1 @@
+{"mappings":"AAAA;;;;;;;;AAaA","sources":["core/static/core/css/profile.css"],"sourcesContent":[".info-card {\n  @apply mt-1 rounded-2xl bg-zinc-100 p-6;\n}\n\n.info-lbl {\n  @apply mr-1 font-semibold text-color-primary;\n}\n"],"names":[],"version":3,"file":"profile.css.map","sourceRoot":"../../../../"}

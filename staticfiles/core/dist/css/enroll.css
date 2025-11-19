@@ -1,0 +1,18 @@
+form > section > article > * {
+  margin-bottom: .5rem;
+}
+
+form > section > article > :last-child {
+  margin-bottom: 0;
+}
+
+form section article {
+  --tw-border-opacity: 1;
+  border-width: 1px;
+  border-color: rgb(203 213 225 / var(--tw-border-opacity));
+  --tw-bg-opacity: 1;
+  background-color: rgb(229 231 235 / var(--tw-bg-opacity));
+  padding: 1.75rem 2.75rem;
+}
+
+/*# sourceMappingURL=enroll.css.map */

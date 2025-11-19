@@ -1,4 +1,8 @@
 import os
+import boto3
+
+from botocore.exceptions import ClientError
+
 from datetime import datetime
 from typing import Any
 
@@ -25,13 +29,42 @@ def email_address(username: str) -> str:
     return email
 
 
-def upload_img(file: Any, title: str, container="pictures"):
-    # ext = file.name.split(".")[-1]
-    service_client = BlobServiceClient(
-        #settings.STORAGE_BUCKET, DefaultAzureCredential()
+def upload_img(file, title: str, folder="pictures"):
+    # Conecta ao serviço S3
+    s3 = boto3.client(
+        "s3",
+        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+        region_name=settings.AWS_S3_REGION_NAME,
     )
-    blob_client = service_client.get_blob_client(container, title)
-    blob_client.upload_blob(file.read())
+ 
+    # Gera nome do arquivo no bucket
+    ext = file.name.split(".")[-1]
+    key = f"{folder}/{title}.{ext}"
+ 
+    try:
+        # Faz o upload
+        s3.upload_fileobj(
+            Fileobj=file,
+            Bucket=settings.AWS_STORAGE_BUCKET_NAME,
+            Key=key,
+            ExtraArgs={"ContentType": file.content_type},
+        )
+ 
+        # Retorna a URL pública
+        return f"{settings.AWS_S3_BASE_URL}/{key}"
+ 
+    except ClientError as e:
+        raise Exception(f"Erro ao enviar imagem para S3: {e}")
+
+
+#def upload_img(file: Any, title: str, container="pictures"):
+    # ext = file.name.split(".")[-1]
+#    service_client = BlobServiceClient(
+        #settings.STORAGE_BUCKET, DefaultAzureCredential()
+#    )
+#    blob_client = service_client.get_blob_client(container, title)
+#    blob_client.upload_blob(file.read())
 
 
 def UTC_date(date: str):
