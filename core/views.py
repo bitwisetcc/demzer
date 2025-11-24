@@ -30,9 +30,8 @@ from core.models import Member, Relative
 from core.roles import Admin, Coordinator, Student, Teacher
 from core.utils import email_address, upload_img
 from grades.models import Assessment, Grade, Mention
-from management.models import Classroom, Course, Programming
+from management.models import Classroom, Programming, Attendance, Course
 from datetime import timedelta
-from management.models import Attendance
 from .forms import LoginForm
 
 @login_required
