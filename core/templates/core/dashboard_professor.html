@@ -109,44 +109,32 @@
     </div>
   </section>
 
+  <br>
+
 </main>
 
 <script>
   const ctxMedias = document.getElementById('chartMedias');
+
   new Chart(ctxMedias, {
     type: 'line',
     data: {
       labels: {{ labels_medias|safe }},
-      datasets: [{
-        label: 'Média Geral por Bimestre',
-        data: {{ dados_medias|safe }},
-        borderColor: '#002b77',
-        backgroundColor: 'rgba(0,43,119,0.2)',
-        tension: 0.4,
-        fill: true,
-        spanGaps: false
-      }]
+      datasets: {{ datasets_medias|safe }},
     },
     options: {
       responsive: true,
+      // não usar maintainAspectRatio: false aqui, deixa padrão igual ao professor
       scales: {
         y: {
           min: 1,
           max: 4,
           ticks: {
             stepSize: 1,
-            callback: function(value) {
+            callback: function (value) {
               const labels = {1: 'I', 2: 'R', 3: 'B', 4: 'MB'};
               return labels[value] || '';
             }
-          }
-        }
-      },
-      plugins: {
-        legend: {
-          labels: {
-            boxWidth: 20,
-            color: '#002b77'
           }
         }
       },
@@ -160,6 +148,7 @@
   });
 
   const ctxPresenca = document.getElementById('chartPresencas');
+
   new Chart(ctxPresenca, {
     type: 'line',
     data: {
@@ -170,10 +159,21 @@
         borderColor: '#d19b00',
         backgroundColor: 'rgba(209,155,0,0.2)',
         tension: 0.4,
-        fill: true
+        fill: true,
       }]
     },
-    options: { responsive: true }
+    options: {
+      responsive: true,
+      y: {
+          min: 0,
+          max: 100,
+          ticks: {
+            stepSize: 20,
+            callback: function(value) { return value + '%'; }
+          }
+        }
+    }
   });
 </script>
+
 {% endblock %}
